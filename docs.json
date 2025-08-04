@@ -77,7 +77,6 @@
             "group": "API documentation",
             "pages": [
               "api-reference/introduction",
-              "api-reference/apibaseurl",
               "api-reference/statuscode",
               "api-reference/rate-limit"
             ]
