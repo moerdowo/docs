@@ -1,93 +1,49 @@
 ---
 title: "Business Verification"
-description: "Preview changes locally to update your docs"
+description: "In this section, we'll explore the Business Verification Form and explain the different verification statuses you might come across."
 ---
 
-<Info>
-  **Prerequisites**:
+### Overview
 
-  - Node.js version 19 or higher
-  - A docs repository with a `docs.json` file
-</Info>
+Business verification is a crucial step in setting up your MAYAR account. This process helps us ensure the safety and legitimacy of all businesses using our platform.
 
-Follow these steps to install and run Mintlify on your operating system.
+### Why is Business Verification Required?
 
-<Steps>
-  <Step title="Install the Mintlify CLI">
-    ```bash
-    npm i -g mint
-    ```
-  </Step>
-  <Step title="Preview locally">
-    Navigate to your docs directory where your `docs.json` file is located, and run the following command:
+MAYAR, like many platforms, requires business verification to ensure security, legal compliance, user trust, and to protect the platform as a whole. It also helps us provide a better and safer user experience by making sure registered businesses are legitimate, reducing fraud risk, and maintaining the platform’s integrity and reputation.
 
-    ```bash
-    mint dev
-    ```
+### Business Verification Form
 
-    A local preview of your documentation will be available at `http://localhost:3000`.
-  </Step>
-</Steps>
+The **Business Verification Form** is a detailed form that collects important information about your business. This information helps our team evaluate and verify your business operations. MAYAR provides 5 types of verification, based on the type of business entity: Individual, Business, Foundation (Non-profit), Limited Liability Company (PT), and Sole Proprietorship (PT Perorangan).
 
-## Custom ports
+![image.png](/images/image.png)
 
-By default, Mintlify uses port 3000. You can customize the port Mintlify runs on by using the `--port` flag. For example, to run Mintlify on port 3333, use this command:
+### Types of Business Verification Forms on MAYAR
 
-```bash
-mint dev --port 3333
-```
+1. **Individual**
 
-If you attempt to run Mintlify on a port that's already in use, it will use the next available port:
+   This form is for individuals who want to use MAYAR for personal business purposes without registering a formal business entity. Users must provide personal and business details such as full name (as per ID), national ID number (KTP), business name, and a description of their business, including social media and/or website if available. In addition, users must submit their business address, ID document (KTP), a selfie with their ID, Tax ID (NPWP), and a screenshot or photo of their bank account that clearly shows the account name and number.
+2. **Business**
 
-```md
-Port 3000 is already in use. Trying 3001 instead.
-```
+   This form is for businesses registered as a non-legal business entity, such as a partnership or CV. Business owners must provide the full name and ID number of the company’s director or person in charge, the business name, a detailed business description (including social media or website), and the business address. Required documents include the director’s ID and selfie, Company Deed, Legalization Letter from the Ministry of Law and Human Rights (SK Kemenkumham), Business Registration Certificate (TDP), Business Identification Number (NIB), Business License (SIUP), Company Tax ID (NPWP), and a screenshot or photo of the front page of the company’s bank account with visible name and number.
+3. **Foundation**
 
-## Mintlify versions
+   This form is intended for nonprofit organizations officially registered as foundations. Applicants must provide the full name and ID of the person responsible for the foundation, their ID document, the Foundation Deed, Legalization Letter from the Ministry of Law and Human Rights (SK Kemenkumham), Foundation Registration Certificate (TDY), Foundation Tax ID (NPWP), and a screenshot or image of the bank account showing the name and number clearly.
+4. **Limited Liability Company (PT)**
 
-Please note that each CLI release is associated with a specific version of Mintlify. If your local preview does not align with the production version, please update the CLI:
+   This form is designed for companies with the legal structure of a Limited Liability Company (Perseroan Terbatas), which are formal legal entities with shareholders. Required information includes the name and ID of the company director, the company name, business description (including social media and/or website), and company address. You must also provide the director’s ID, Company Tax ID (NPWP), Business Identification Number (NIB), the latest Director Appointment Deed, its Legalization Letter from the Ministry of Law and Human Rights (SK Kemenkumham), a screenshot or image of the bank account showing the account name and number, and any other relevant industry-specific permits.
+5. **Sole Proprietorship (PT Perorangan)**
 
-```bash
-npm mint update
-```
+   This form is used for a special type of Limited Liability Company owned by one person. It is a simpler legal business form introduced in Indonesia. To complete this verification, users must provide the name and ID of the owner, company name, business description (with social media and/or website), and company address. Required documents include the owner’s ID, Company Tax ID (NPWP), Business Identification Number (NIB), Statement of Establishment of Sole Proprietorship, Certificate of Sole Proprietorship Registration, a screenshot or image of the front page of the bank account, and any other relevant business permits.
 
-## Validating links
+### Verification Statuses
 
-The CLI can assist with validating links in your documentation. To identify any broken links, use the following command:
+| **Verification Statuses** | **Details**                                                                                                                                                                                   |
+| :------------------------ | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Pending**               | Your application is under review. This means our team is checking your submitted documents and information.                                                                                   |
+| **Revision Required**     | Some information or documents are missing or need corrections. You’ll receive an email with feedback or a list of items to fix. Please respond quickly to avoid delays.                       |
+| **Verified**              | Your business has been successfully verified. You can now fully use MAYAR services without any verification restrictions.                                                                     |
+| **Rejected**              | Your verification has been declined. This could be due to missing requirements or issues with your documents. You may need to resubmit your application or contact support for clarification. |
 
-```bash
-mint broken-links
-```
+### Accessing the Checkout Page
 
-## Deployment
-
-If the deployment is successful, you should see the following:
-
-<Frame>
-  <img
-    src="/images/checks-passed.png"
-    alt="Screenshot of a deployment confirmation message that says All checks have passed."
-    style={{ borderRadius:"0.5rem" }}
-  />
-</Frame>
-
-## Code formatting
-
-We suggest using extensions on your IDE to recognize and format MDX. If you're a VSCode user, consider the [MDX VSCode extension](https://marketplace.visualstudio.com/items?itemName=unifiedjs.vscode-mdx) for syntax highlighting, and [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) for code formatting.
-
-## Troubleshooting
-
-<AccordionGroup>
-  <Accordion title='Error: Could not load the "sharp" module using the darwin-arm64 runtime'>
-    This may be due to an outdated version of node. Try the following:
-
-    1. Remove the currently-installed version of the CLI: `npm remove -g mint`
-    2. Upgrade to Node v19 or higher.
-    3. Reinstall the CLI: `npm i -g mint`
-  </Accordion>
-  <Accordion title="Issue: Encountering an unknown error">
-    Solution: Go to the root of your device and delete the `~/.mintlify` folder. Then run `mint dev` again.
-  </Accordion>
-</AccordionGroup>
-
-Curious about what changed in the latest CLI version? Check out the [CLI changelog](https://www.npmjs.com/package/mintlify?activeTab=versions).
+Once your verification is approved and no further documents are needed, you’ll be able to access the checkout page. This allows you to manage your business finances and ensure smooth payment processing. We understand how important timely verification is, and our team is here to support you throughout the process. If you have any questions or need help, feel free to reach out to us—we’re here to make your verification process as smooth as possible.
