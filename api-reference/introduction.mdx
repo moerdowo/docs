@@ -1,22 +1,27 @@
 ---
 title: "Introduction"
-description: "Example section for showcasing API endpoints"
+description: "Section for showcasing API endpoints"
 ---
 
-<Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
-</Note>
+## Get Started
 
-## Welcome
+Headless API is an e-commerce development method where the user interface (Frontend) is separated from the product management and transaction processing systems (Backend). In headless commerce, the front-end can be built using various modern web technologies such as React or Vue.js, while the back-end performs tasks such as product storage, order processing, and integration with payment systems.
 
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
-
-<Card title="Plant Store Endpoints" icon="leaf" href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json">
-  View the OpenAPI specification file
-</Card>
+By separating the front-end and back-end, headless commerce allows development teams to focus on the user experience without being hampered by the limitations of the underlying e-commerce platform. It also helps reduce the cost and time required to update and maintain an e-commerce site.
 
 ## Authentication
+
+For starting using Mayar Headless API, you need account at [https://mayar.id](https://mayar.id[) if you have an account, you can create API KEY from https://web.mayar.id/api-keys.
+
+![Generate API Key](/images/apikeys.png)
+
+<Warning>
+  For Your Account Security, Don't Share Your API KEY\!
+</Warning>
+
+We use Basic Auth to Authorization access to our API. it's simple you just set your API KEY for Authorization Barrier on your request Header. For for example please see our Endpoint bellow.
+
+Please note that any changes to your domain or subdomain require you to create a new API KEY so that the link in the response you receive will also be updated.
 
 All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
 
