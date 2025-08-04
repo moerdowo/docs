@@ -17,32 +17,55 @@
             "group": "Getting started",
             "pages": [
               "index",
-              "quickstart",
-              "development"
+              "accountsetup",
+              "businessverify",
+              "onlinepaymentmethod"
             ]
           },
           {
-            "group": "Customization",
+            "group": "Features",
             "pages": [
-              "essentials/settings",
-              "essentials/navigation"
+              "features/dashboard",
+              "features/product",
+              "features/customform",
+              "features/rating",
+              "features/producttag",
+              "features/checkoutsetting",
+              "features/analytics",
+              "features/track",
+              "features/order",
+              "features/storefront",
+              "features/broadcast",
+              "features/biolinkcatalog",
+              "features/landingpage",
+              "features/affiliate",
+              "features/discount",
+              "features/bundling",
+              "features/crosssell",
+              "features/balance",
+              "features/paymentmethodsetting",
+              "features/shipping",
+              "features/tracking",
+              "features/customermanagement",
+              "features/customerportal"
             ]
           },
           {
-            "group": "Writing content",
-            "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/reusable-snippets"
-            ]
+          "group": "Integration",
+          "pages": [
+            "integration/authentication",
+            "integration/webhook",
+            "integration/whatsapp"
+          ]
           },
           {
-            "group": "AI tools",
-            "pages": [
-              "ai-tools/cursor",
-              "ai-tools/claude-code",
-              "ai-tools/windsurf"
+            "group": "Merchant of Record (MoR)",
+            "pages":[
+              "mor/introduction",
+              "mor/fees",
+              "mor/acceptableuse",
+              "mor/accountreview",
+              "mor/security"
             ]
           }
         ]
