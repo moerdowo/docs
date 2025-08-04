@@ -107,8 +107,8 @@
     }
   },
   "logo": {
-    "light": "/logo/logo.png | DOCS",
-    "dark": "/logo/logo.png | DOCS"
+    "light": "/logo/logo.png"  | DOCS,
+    "dark": "/logo/logo.png"  | DOCS 
   },
   "navbar": {
     "links": [
