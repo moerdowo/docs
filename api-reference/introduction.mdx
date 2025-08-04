@@ -11,24 +11,18 @@ By separating the front-end and back-end, headless commerce allows development t
 
 ## Authentication
 
-For starting using Mayar Headless API, you need account at [https://mayar.id](https://mayar.id[) if you have an account, you can create API KEY from https://web.mayar.id/api-keys.
+For starting using Mayar Headless API, you need account at [https://mayar.id](https://mayar.id[). If you have an account, you can create API KEY from https://web.mayar.id/api-keys.
 
 ![Generate API Key](/images/apikeys.png)
 
 <Warning>
-  For Your Account Security, Don't Share Your API KEY\!
+  For your account security, don't share your API KEY\!
 </Warning>
 
-We use Basic Auth to Authorization access to our API. it's simple you just set your API KEY for Authorization Barrier on your request Header. For for example please see our Endpoint bellow.
+<Note>
+  Please note that any changes to your domain or subdomain require you to create a new API KEY, so the link in the response you receive will also be updated.
+</Note>
 
-Please note that any changes to your domain or subdomain require you to create a new API KEY so that the link in the response you receive will also be updated.
+## Sandbox Environment
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
-
-```json
-"security": [
-  {
-    "bearerAuth": []
-  }
-]
-```
+For testing purposes, you can use the webpage https://web.mayar.club/. You can log in or register first, then generate an API key from https://web.mayar.club/api-keys. (The same method as obtaining an API key on the production page).
