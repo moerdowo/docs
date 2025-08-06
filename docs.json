@@ -72,7 +72,7 @@
                "features/productpage/saas",
                "features/productpage/licensesoftware"
             ]
-          }
+          },
           {
           "group": "Integration",
           "pages": [
