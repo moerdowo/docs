@@ -46,7 +46,7 @@
                   "features/productpage/creatorsupportpage",
                   "features/productpage/membership",
                   "features/productpage/saas",
-                  "features/productpage/licensesoftware",
+                  "features/productpage/licensesoftware"
                 ]
               },
               "features/customform",
