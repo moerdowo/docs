@@ -1,4 +1,67 @@
 ---
 title: "Webhook"
-description: "Description of your new file."
+description: "Enable webhook on Mayar to receive real-time notifications and automate data processes that simplify your business management!"
 ---
+
+### Overview
+
+Webhooks on Mayar allow businesses to receive instant notifications about important events, such as payment transactions or membership status changes, directly into their systems. Once enabled, key data is automatically sent to a specified URL whenever an event occurs, enabling quick and efficient responses without manual checks. This feature supports seamless integration with other applications, keeping your business informed and responsive to customer needs while improving operational efficiency and data management.
+
+### About Webhook
+
+Webhook provide a way for notifications to be delivered to an external web server whenever certain event occur in Mayar.
+
+### Add a New Webhook
+
+You can configure Webhooks via the Mayar dashboard, here are the steps:
+
+1. For starting using Mayar Webhook, you need account at https://mayar.id. Please use https://web.mayar.club for testing
+2.  Go to Integration -\> Webhook page
+3. In the "URL Webhook" field, input the URL you got from a third-party integration platform (such as pipedream, zapier, or others) to trigger and send the webhook event
+4. Click save then test the URL to see the status of the Webhook URL.
+
+### Request Method
+
+The format prepared by the engine is ​JSON​. with Method use POST and application/json for Content-type
+
+### Event Type
+
+Message event webhooks can be triggered by several types of events:
+
+| **Event Name**                            | **Description**                                                                |
+| ----------------------------------------- | ------------------------------------------------------------------------------ |
+| **payment.received**                      | Event triggered after the customer makes a payment / has completed the payment |
+| **payment.reminder**                      | Event triggered if the customer doesn't complete the payment after 29 minutes  |
+| **shipper.status**                        | Event triggered if tracking for physical product purchases changed             |
+| **membership.memberUnsubscribed**         | Event triggered if your membership client unsubscribe                          |
+| **membership.memberExpired**              | Event triggered if your membership client expired                              |
+| **membership.changeTierMemberRegistered** | Event triggered if your membership client change Tier or Package membership    |
+| **membership.newMemberRegistered**        | Event triggered if your membership client subscribe / new subscribe member     |
+
+### Parameter Description
+
+Each type of webhook sends a slightly different payload data.
+
+| **Field**                        | **Type**  | **Description**                                                 |
+| -------------------------------- | --------- | --------------------------------------------------------------- |
+| event.received                   | String    | Event type                                                      |
+| data.id                          | String    | Id webhook                                                      |
+| data.status                      | Booelan   | Status transaction                                              |
+| data.createdAt                   | Timestamp | Date transaction created                                        |
+| data.updatedAt                   | Timestamp | Updated transaction date                                        |
+| data.merchantId                  | String    | Your merchant Id                                                |
+| data.merchantEmail               | String    | Your Account Email                                              |
+| data.merchantName                | String    | Your Account name                                               |
+| data.customerName                | String    | Customer Name                                                   |
+| data.customerEmail               | String    | Customer Email                                                  |
+| data.customerMobile              | String    | Customer Handphone Number                                       |
+| data.amount                      | Int       | Amount for this transaction                                     |
+| data.isAdminFeeBorneByCustomer   | Booelan   | true if admin fee pay by customer                               |
+| data.isChannelFeeBorneByCustomer | Booelan   | true if channel fee pay by customer                             |
+| data.productId                   | String    | Id produc                                                       |
+| data.productName                 | String    | name your product                                               |
+| data.productType                 | String    | type your product                                               |
+| data.pixelFbp                    | String    | pixelFbp for this transaction                                   |
+| data.pixelFbc                    | String    | pixelFbc for this transaction                                   |
+| data.addOn                       | Array     | only available if your customer add addOn option on transaction |
+| data.custom_field                | Array     | it only available if you set custom form on your product        |
