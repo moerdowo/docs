@@ -26,29 +26,7 @@
             "group": "Features",
             "pages": [
               "features/dashboard",
-              {
-                "label": "features/productpage",
-                "children":[
-                  "features/productpage/paymentlink",
-                  "features/productpage/physicalproduct",
-                  "features/productpage/digitalproduct",
-                  "features/productpage/onlinecourse",
-                  "features/productpage/bootcamp",
-                  "features/productpage/webinar",
-                  "features/productpage/event",
-                  "features/productpage/coaching",
-                  "features/productpage/donation",
-                  "features/productpage/ebook",
-                  "features/productpage/podcast",
-                  "features/productpage/audiobook",
-                  "features/productpage/writing",
-                  "features/productpage/comic",
-                  "features/productpage/creatorsupportpage",
-                  "features/productpage/membership",
-                  "features/productpage/saas",
-                  "features/productpage/licensesoftware"
-                ]
-              },
+              "features/productpage",
               "features/customform",
               "features/rating",
               "features/producttag",
@@ -72,6 +50,29 @@
               "features/customerportal"
             ]
           },
+          {
+            "group": "Product Page Types",
+            "pages":[
+               "features/productpage/paymentlink",
+               "features/productpage/physicalproduct",
+               "features/productpage/digitalproduct",
+               "features/productpage/onlinecourse",
+               "features/productpage/bootcamp",
+               "features/productpage/webinar",
+               "features/productpage/event",
+               "features/productpage/coaching",
+               "features/productpage/donation",
+               "features/productpage/ebook",
+               "features/productpage/podcast",
+               "features/productpage/audiobook",
+               "features/productpage/writing",
+               "features/productpage/comic",
+               "features/productpage/creatorsupportpage",
+               "features/productpage/membership",
+               "features/productpage/saas",
+               "features/productpage/licensesoftware"
+            ]
+          }
           {
           "group": "Integration",
           "pages": [
