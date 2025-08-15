@@ -104,12 +104,85 @@
             ]
           },
           {
-            "group": "Endpoint examples",
+            "group": "Product",
             "pages": [
-              "api-reference/endpoint/get",
+              "api-reference/endpointproduct/productpage",
+              "api-reference/endpointproduct/productpagewithfilter",
+              "api-reference/endpointproduct/searchproduct",
+              "api-reference/endpointproduct/detailproduct",
+              "api-reference/endpointproduct/closeproduct",
+              "api-reference/endpointproduct/reopenproduct"
+            ]
+          },
+          {
+            "group": "Invoice",
+            "pages": [
+              "api-reference/endpointinvoice/create",
+              "api-reference/endpointinvoice/edit",
+              "api-reference/endpointinvoice/index",
+              "api-reference/endpointinvoice/filter",
+              "api-reference/endpointinvoice/detail",
+              "api-reference/endpointinvoice/close",
+              "api-reference/endpointinvoice/reopen"
+            ]
+          },
+          {
+            "group": "Request Payment",
+            "pages": [
+              "api-reference/endpointreqpayment/create",
+              "api-reference/endpointreqpayment/edit",
+              "api-reference/endpointreqpayment/index",
+              "api-reference/endpointreqpayment/filter",
+              "api-reference/endpointreqpayment/detail",
+              "api-reference/endpointreqpayment/close",
+              "api-reference/endpointreqpayment/reopen"
+            ]
+          },
+          {
+            "group": "Installment",
+            "pages": [
+              "api-reference/endpointinstallment/create",
+              "api-reference/endpointinstallment/detail"
+            ]
+          },
+          {
+            "group": "Discount & Coupon",
+            "pages": [
+              "api-reference/endpointdiscount/create",
+              "api-reference/endpointdiscount/detail"
+            ]
+          },
+          {
+            "group": "Customer",
+            "pages": [
+              "api-reference/endpointcustomer/getdetail",
               "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
+              "api-reference/endpoint/update",
+              "api-reference/endpoint/createmagiclink"
+            ]
+          },
+          {
+            "group": "Transaction",
+            "pages": [
+              "api-reference/endpointtransaction/accountbalance",
+              "api-reference/endpointtransaction/paidtransaction",
+              "api-reference/endpointtransaction/unpaidtransaction",
+              "api-reference/endpointtransaction/createdynamicqrcode",
+              "api-reference/endpointtransaction/getstaticqrcode"
+            ]
+          },
+          {
+            "group": "Software License Code",
+            "pages": [
+              "api-reference/endpointlicensecode/verifylicense"
+            ]
+          },
+          {
+            "group": "Saas Membership License",
+            "pages": [
+              "api-reference/endpointsaas/verify",
+              "api-reference/endpointsaas/activate",
+              "api-reference/endpointsaas/deactivate"
             ]
           }
         ]
