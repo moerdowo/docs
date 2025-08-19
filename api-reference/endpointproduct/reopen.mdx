@@ -1,4 +1,61 @@
 ---
-title: "Re-open Product"
+title: "GET Re-open Product"
 description: "Description of your new file."
 ---
+
+<RequestExample>
+
+```bash Request Example
+curl --location 'https://api.mayar.id/hl/v1/product/open/a02a76e1-25b4-49dd-9d1f-e84dd34ecbb4' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success"
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v1/product/open/a02a76e1-25b4-49dd-9d1f-e84dd34ecbb4
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v1/product/open/a02a76e1-25b4-49dd-9d1f-e84dd34ecbb4
+```
+
+</CodeGroup>
+
+### Headers
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+### Param
+
+<ParamField path="id_product" type="string" required>
+  Example:
+
+  **If the link on the product details page is as follows:**
+
+  https://web.mayar.id/online-course-detail/a02a76e1-25b4-49dd-9d1f-e84dd34ecbb
+
+  **Then the id_product is:**
+
+  `a02a76e1-25b4-49dd-9d1f-e84dd34ecbb`
+</ParamField>
