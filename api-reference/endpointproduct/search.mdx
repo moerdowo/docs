@@ -1,12 +1,12 @@
 ---
 title: "Search Product"
-description: "Description of your new file."
+description: "Endpoint used to search for products by product name"
 ---
 
 <RequestExample>
 
 ```bash Request Example
-curl --location 'https://api.mayar.id/hl/v1/product?search=Belly' \
+curl --location 'https://api.mayar.id/hl/v1/product?search=UIUX' \
 --header 'Authorization: Bearer Bearer Paste-Your-API-Key-Here'
 ```
 
@@ -19,361 +19,11 @@ curl --location 'https://api.mayar.id/hl/v1/product?search=Belly' \
     "statusCode": 200,
     "messages": "success",
     "hasMore": false,
-    "pageCount": 1,
+    "pageCount": 0,
     "pageSize": 10,
     "page": 1,
-    "data": [
-        {
-            "id": "cc5617fd-e8ff-42b1-90ce-8e162327eb6c",
-            "amount": null,
-            "category": null,
-            "createdAt": 1702545575269,
-            "description": "<p>shsciscigigsigscgiisc</p>\n",
-            "link": "testt-94070",
-            "type": "event",
-            "status": "active",
-            "name": "testt",
-            "limit": null,
-            "redirectUrl": "",
-            "installmentId": null,
-            "event": {
-                "id": "a3123d83-1e69-48c1-b07b-d73d7f942c2b",
-                "event": null,
-                "description": null,
-                "ticketEvent": [
-                    {
-                        "id": "26540baa-ad38-40b6-bd6a-d1a25a4687e1",
-                        "amount": 0,
-                        "createdAt": 1702545603864,
-                        "name": "test 1",
-                        "quantity": 100
-                    },
-                    {
-                        "id": "9e315dfd-8328-4dd2-8df8-013d42e80bf3",
-                        "amount": 0,
-                        "createdAt": 1711094767605,
-                        "name": "test antri",
-                        "quantity": 1
-                    }
-                ]
-            },
-            "order": null,
-            "coverImageId": null,
-            "multipleImageId": null,
-            "coverImage": null,
-            "multipleImage": null
-        },
-        {
-            "id": "66115186-868b-4967-9c6c-103260620e09",
-            "amount": null,
-            "category": null,
-            "createdAt": 1719242658461,
-            "description": "<p><span style=\"color: rgba(0,0,0,0.8);background-color: rgb(255,255,255);font-size: 16.2;font-family: Arial;\">Lorem ipsum dolor sit amet consectetur adipiscing elit nisl elementum taciti, netus nibh nullam facilisi rutrum tristique inceptos ultrices porttitor turpis praesent, leo cubilia eget congue ridiculus justo consequat dui et. Primis tortor augue taciti cubilia pharetra aliquet, potenti non convallis inceptos nibh dictumst leo, arcu tellus quisque bibendum massa. Pulvinar habitasse ligula nostra netus pellentesque, fringilla volutpat imperdiet suspendisse cursus scelerisque, iaculis eleifend montes aenean. Hac vitae diam neque vulputate ligula tristique ante sodales, porta enim viverra pellentesque maecenas consequat tempor massa, justo malesuada per dignissim ornare etiam suspendisse. Consequat nullam sapien placerat feugiat dis hac metus, taciti vulputate penatibus velit interdum ullamcorper, duis tincidunt tempor dui per nibh. Euismod neque tristique quam massa ligula aenean fermentum duis egestas phasellus, morbi nostra enim non imperdiet aptent mauris integer proin accumsan, luctus viverra ad scelerisque eros senectus hac platea nunc.</span><span style=\"font-family: Arial;\">  </span></p>\n",
-            "link": "test-uiux-online",
-            "type": "event",
-            "status": "active",
-            "name": "test UIUX online",
-            "limit": null,
-            "redirectUrl": "",
-            "installmentId": null,
-            "event": {
-                "id": "0f89982a-1823-4891-814b-a390dee9f670",
-                "event": null,
-                "description": null,
-                "ticketEvent": [
-                    {
-                        "id": "c8425bc1-9554-4cf1-b823-5b7a3e599f84",
-                        "amount": 0,
-                        "createdAt": 1719245817527,
-                        "name": "tiket 2",
-                        "quantity": 1000
-                    },
-                    {
-                        "id": "d1a5817c-e934-4243-b5f3-984d772909a3",
-                        "amount": 10000,
-                        "createdAt": 1719245672092,
-                        "name": "tiket 1",
-                        "quantity": 10000
-                    }
-                ]
-            },
-            "order": null,
-            "coverImageId": null,
-            "multipleImageId": "c569e600-f5ac-4eb1-a9de-88203731bb17",
-            "coverImage": null,
-            "multipleImage": [
-                {
-                    "id": "2b35c48e-ad5b-43fa-b9d8-9b59184b6651",
-                    "fileType": "jpeg",
-                    "createdAt": 1719242591419,
-                    "updatedAt": 1719243791419,
-                    "url": "https://media.mayar.id/images/2b35c48e-ad5b-43fa-b9d8-9b59184b6651.jpeg"
-                },
-                {
-                    "id": "3a18c34b-e8df-4245-b565-8a4f97493ea6",
-                    "fileType": "jpeg",
-                    "createdAt": 1719242591480,
-                    "updatedAt": 1719243191480,
-                    "url": "https://media.mayar.id/images/3a18c34b-e8df-4245-b565-8a4f97493ea6.jpeg"
-                }
-            ]
-        },
-        {
-            "id": "edaeb36f-71f8-4501-8445-d33cfa21bbec",
-            "amount": null,
-            "category": null,
-            "createdAt": 1727788580539,
-            "description": "<p>asasasasasa</p>\n",
-            "link": "test-analytic-45512",
-            "type": "event",
-            "status": "active",
-            "name": "test analytic",
-            "limit": null,
-            "redirectUrl": "",
-            "installmentId": null,
-            "event": {
-                "id": "1ce28e11-2547-421e-bfc5-2c38a99974fe",
-                "event": null,
-                "description": null,
-                "ticketEvent": [
-                    {
-                        "id": "ad022121-78db-4ef7-8777-e7ee6f2488cd",
-                        "amount": 10000,
-                        "createdAt": 1727790345913,
-                        "name": "test UIUX",
-                        "quantity": 10000
-                    },
-                    {
-                        "id": "c158905f-46e4-420f-b3a2-98cb0735c79a",
-                        "amount": 0,
-                        "createdAt": 1752489332980,
-                        "name": "test blast bug",
-                        "quantity": 100
-                    }
-                ]
-            },
-            "order": null,
-            "coverImageId": null,
-            "multipleImageId": null,
-            "coverImage": null,
-            "multipleImage": null
-        },
-        {
-            "id": "7b87aa36-052a-403a-a3a0-de463687fb2f",
-            "amount": null,
-            "category": null,
-            "createdAt": 1719243632052,
-            "description": "<p><span style=\"color: rgba(0,0,0,0.8);background-color: rgb(255,255,255);font-family: Arial;\">Lorem ipsum dolor sit amet consectetur adipiscing elit nisl elementum taciti, netus nibh nullam facilisi rutrum tristique inceptos ultrices porttitor turpis praesent, leo cubilia eget congue ridiculus justo consequat dui et. Primis tortor augue taciti cubilia pharetra aliquet, potenti non convallis inceptos nibh dictumst leo, arcu tellus quisque bibendum massa. Pulvinar habitasse ligula nostra netus pellentesque, fringilla volutpat imperdiet suspendisse cursus scelerisque, iaculis eleifend montes aenean. Hac vitae diam neque vulputate ligula tristique ante sodales, porta enim viverra pellentesque maecenas consequat tempor massa, justo malesuada per dignissim ornare etiam suspendisse. Consequat nullam sapien placerat feugiat dis hac metus, taciti vulputate penatibus velit interdum ullamcorper, duis tincidunt tempor dui per nibh. Euismod neque tristique quam massa ligula aenean fermentum duis egestas phasellus, morbi nostra enim non imperdiet aptent mauris integer proin accumsan, luctus viverra ad scelerisque eros senectus hac platea nunc.</span>&nbsp;</p>\n",
-            "link": "test-uiux-offline",
-            "type": "event",
-            "status": "active",
-            "name": "test UIUX offline",
-            "limit": null,
-            "redirectUrl": "",
-            "installmentId": null,
-            "event": {
-                "id": "4787694f-c2ae-4c30-a72e-dc30946fec65",
-                "event": null,
-                "description": null,
-                "ticketEvent": [
-                    {
-                        "id": "21ec636d-593f-4efb-b06b-ce82d1d475f6",
-                        "amount": 10000,
-                        "createdAt": 1719245524565,
-                        "name": "tiket 1",
-                        "quantity": 1000
-                    },
-                    {
-                        "id": "4b99f838-d2d2-4a4c-b222-50d69740ad7b",
-                        "amount": 0,
-                        "createdAt": 1719245565241,
-                        "name": "tiket 2",
-                        "quantity": 1000
-                    }
-                ]
-            },
-            "order": null,
-            "coverImageId": null,
-            "multipleImageId": "a5f8e946-f58d-4de0-8bfa-5356a4ddf1ae",
-            "coverImage": null,
-            "multipleImage": [
-                {
-                    "id": "21be8787-c78c-4930-96f0-8c0a15120f3f",
-                    "fileType": "jpeg",
-                    "createdAt": 1724139309327,
-                    "updatedAt": 1724141109327,
-                    "url": "https://media.mayar.id/images/21be8787-c78c-4930-96f0-8c0a15120f3f.jpeg"
-                },
-                {
-                    "id": "341c5c7f-3d22-4c70-aa62-8fe1b8b2a9d1",
-                    "fileType": "jpeg",
-                    "createdAt": 1724139309315,
-                    "updatedAt": 1724140509315,
-                    "url": "https://media.mayar.id/images/341c5c7f-3d22-4c70-aa62-8fe1b8b2a9d1.jpeg"
-                },
-                {
-                    "id": "55bfbc4a-8dcf-448a-ab49-d9080454cae3",
-                    "fileType": "jpeg",
-                    "createdAt": 1724139309565,
-                    "updatedAt": 1724142309565,
-                    "url": "https://media.mayar.id/images/55bfbc4a-8dcf-448a-ab49-d9080454cae3.jpeg"
-                },
-                {
-                    "id": "568b8eef-ebb7-46ce-91c4-ccf624a58523",
-                    "fileType": "jpeg",
-                    "createdAt": 1724139308916,
-                    "updatedAt": 1724139908916,
-                    "url": "https://media.mayar.id/images/568b8eef-ebb7-46ce-91c4-ccf624a58523.jpeg"
-                },
-                {
-                    "id": "d57a9a03-0876-48be-b6a7-1dc088babcf4",
-                    "fileType": "jpeg",
-                    "createdAt": 1724139309620,
-                    "updatedAt": 1724141709620,
-                    "url": "https://media.mayar.id/images/d57a9a03-0876-48be-b6a7-1dc088babcf4.jpeg"
-                }
-            ]
-        },
-        {
-            "id": "a14295a7-f37c-44e0-a488-7c4732cb8491",
-            "amount": null,
-            "category": null,
-            "createdAt": 1738209522118,
-            "description": "<p><span style=\"color: rgba(0,0,0,0.8);background-color: rgb(255,255,255);font-family: Arial;\">Lorem ipsum dolor sit amet consectetur adipiscing, elit posuere euismod nascetur purus morbi, nam commodo fames sociis non. Litora aliquam imperdiet vulputate iaculis quisque eleifend nam lectus eget facilisi maecenas ullamcorper, sed malesuada nisi est sollicitudin magnis aptent blandit lacus donec. Sed placerat volutpat natoque ullamcorper cubilia senectus, elementum nisi tristique venenatis himenaeos metus felis, faucibus scelerisque cras arcu pretium. Nisl tincidunt nullam imperdiet scelerisque condimentum lectus inceptos, risus suspendisse purus sociosqu hendrerit consequat arcu neque, erat urna donec nunc dapibus maecenas. Nostra id pellentesque bibendum porttitor cubilia etiam luctus platea nec, porta magnis tortor fringilla venenatis conubia enim nisi, dictumst habitasse eros integer dictum praesent accumsan euismod.</span>&nbsp;</p>\n",
-            "link": "test-uiux-event-acara",
-            "type": "event",
-            "status": "active",
-            "name": "test UIUX Event / Acara",
-            "limit": null,
-            "redirectUrl": "",
-            "installmentId": null,
-            "event": {
-                "id": "27b4a80b-3b18-495b-a8cb-404df46aad22",
-                "event": null,
-                "description": null,
-                "ticketEvent": [
-                    {
-                        "id": "019f61ef-5d0f-4a14-9bc6-303b74dd21cf",
-                        "amount": 10000,
-                        "createdAt": 1738919697746,
-                        "name": "test UIUX 2",
-                        "quantity": 100
-                    },
-                    {
-                        "id": "c1dc0cd8-2333-48f1-ac09-9c2309960008",
-                        "amount": 100000,
-                        "createdAt": 1738212420859,
-                        "name": "test UIUX",
-                        "quantity": 100
-                    }
-                ]
-            },
-            "order": null,
-            "coverImageId": null,
-            "multipleImageId": "3e5fb153-7883-425a-87d6-f9bd2c871465",
-            "coverImage": null,
-            "multipleImage": [
-                {
-                    "id": "13d32ea9-76c9-46bf-a252-d57638f240a0",
-                    "fileType": "jpeg",
-                    "createdAt": 1738209481683,
-                    "updatedAt": 1738211281683,
-                    "url": "https://media.mayar.id/images/13d32ea9-76c9-46bf-a252-d57638f240a0.jpeg"
-                },
-                {
-                    "id": "66023e7b-e3d6-4f8f-8445-ff4937d3f9e7",
-                    "fileType": "jpeg",
-                    "createdAt": 1738209481220,
-                    "updatedAt": 1738212481220,
-                    "url": "https://media.mayar.id/images/66023e7b-e3d6-4f8f-8445-ff4937d3f9e7.jpeg"
-                },
-                {
-                    "id": "94883b8d-caa9-49a6-ba10-f7f8461c0fd8",
-                    "fileType": "jpeg",
-                    "createdAt": 1738209481187,
-                    "updatedAt": 1738210081187,
-                    "url": "https://media.mayar.id/images/94883b8d-caa9-49a6-ba10-f7f8461c0fd8.jpeg"
-                },
-                {
-                    "id": "a92719e3-cbb7-4972-bd5a-b363cb38ed31",
-                    "fileType": "jpeg",
-                    "createdAt": 1738209481674,
-                    "updatedAt": 1738211881675,
-                    "url": "https://media.mayar.id/images/a92719e3-cbb7-4972-bd5a-b363cb38ed31.jpeg"
-                },
-                {
-                    "id": "c17f7af3-cd32-456f-a153-39b5af63073d",
-                    "fileType": "jpeg",
-                    "createdAt": 1738209481102,
-                    "updatedAt": 1738210681102,
-                    "url": "https://media.mayar.id/images/c17f7af3-cd32-456f-a153-39b5af63073d.jpeg"
-                }
-            ]
-        },
-        {
-            "id": "be9f09c0-5895-4ada-aa67-8cfd28527881",
-            "amount": null,
-            "category": null,
-            "createdAt": 1698379261186,
-            "description": "<p>Dalam bisnis, produk adalah barang atau jasa yang dapat diperjualbelikan. Dalam marketing, produk adalah apapun yang bisa ditawarkan ke sebuah pasar dan bisa memuaskan sebuah keinginan atau kebutuhan. Dalam tingkat pengecer, produk sering disebut sebagai merchandise.</p>\n",
-            "link": "test-tiket-01",
-            "type": "event",
-            "status": "active",
-            "name": "test tiket 01",
-            "limit": null,
-            "redirectUrl": "",
-            "installmentId": null,
-            "event": {
-                "id": "e09f75e0-d6f2-408d-afee-ae668d462d78",
-                "event": null,
-                "description": null,
-                "ticketEvent": [
-                    {
-                        "id": "647d3adf-8d3a-4d45-b328-1c2ea5b71055",
-                        "amount": 0,
-                        "createdAt": 1698379614115,
-                        "name": "tiket 3",
-                        "quantity": 100
-                    },
-                    {
-                        "id": "7a6d67ea-35b4-41a6-a89a-1e192d3d0fd1",
-                        "amount": 10000,
-                        "createdAt": 1698379380576,
-                        "name": "Tiket 1",
-                        "quantity": 10
-                    },
-                    {
-                        "id": "a5f33172-8621-49d5-bb99-8db8dcfb41d4",
-                        "amount": 0,
-                        "createdAt": 1698379760663,
-                        "name": "tiket 4",
-                        "quantity": 100
-                    },
-                    {
-                        "id": "f87d0063-990c-4a3e-b89b-d47711f204d0",
-                        "amount": 10000,
-                        "createdAt": 1698379465637,
-                        "name": "Tiket 2",
-                        "quantity": 100100
-                    }
-                ]
-            },
-            "order": null,
-            "coverImageId": null,
-            "multipleImageId": "687038e8-ab5c-4300-9a16-d0f163b35c7f",
-            "coverImage": null,
-            "multipleImage": [
-                {
-                    "id": "9b243bb8-2d79-4fff-afe2-7f8007d35bfa",
-                    "fileType": "jpeg",
-                    "createdAt": 1698379235485,
-                    "updatedAt": 1698379835485,
-                    "url": "https://media.mayar.id/images/9b243bb8-2d79-4fff-afe2-7f8007d35bfa.jpeg"
-                }
-            ]
-        }
-    ],
-    "total": 6
+    "data": [],
+    "total": 0
 }
 ```
 
@@ -383,13 +33,13 @@ Endpoint:
 
 <CodeGroup>
 
-``` Production
-https://api.mayar.club/hl/v1/product?search=Belly
+```Sandbox Production
+https://api.mayar.id/hl/v1/product?search=UIUX
 ```
 
 
-``` Sandbox
-https://api.mayar.club/hl/v1/product?search=Belly
+```Sandbox
+https://api.mayar.club/hl/v1/product?search=UIUX
 ```
 
 </CodeGroup>
@@ -407,6 +57,5 @@ https://api.mayar.club/hl/v1/product?search=Belly
 <ParamField path="param" type="string" required>
   Example:
 
-  - `page = 1`
-  - `pageSize = 10`
+  `search = UIUX`
 </ParamField>
