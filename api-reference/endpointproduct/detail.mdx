@@ -1,5 +1,5 @@
 ---
-title: "Detail Product"
+title: "GET Detail Product"
 description: "Endpoint where you can get your detail products"
 ---
 
@@ -285,9 +285,11 @@ https://api.mayar.club/hl/v1/product/a02a76e1-25b4-49dd-9d1f-e84dd34ecbb4
   `Authorization | Bearer Paste-Your-API-Key-Here`
 </ResponseField>
 
-### Params
+### Param
 
-<ParamField path="id_product" type="string" required={false}>
+<ParamField path="id_product" type="string" required>
+  This id_product can be obtained from the link on the product details page.
+
   Example: 
 
   `a02a76e1-25b4-49dd-9d1f-e84dd34ecbb`
