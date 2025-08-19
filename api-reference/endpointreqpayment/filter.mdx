@@ -1,4 +1,82 @@
 ---
-title: "Sort/Filter Single Payment Request Page"
-description: "Description of your new file."
+title: "GET Sort/Filter Single Payment Request Page"
+description: "Endpoint used to filter single payment request that have been created"
 ---
+
+<RequestExample>
+
+```bash Request Example
+curl --location 'https://api.mayar.id/hl/v1/payment?status=paid' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--data ''
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "hasMore": false,
+    "pageCount": 1,
+    "pageSize": 10,
+    "page": 1,
+    "data": [
+        {
+            "id": "abbf58dc-6e12-4bdc-bdcf-e0a53340227d",
+            "amount": 1000,
+            "category": null,
+            "createdAt": 1685960215853,
+            "description": "<p>Pembayaran Uang Demo Produk, mohon untuk menyelesaikan dan melakukan pembayaran.</p>\n",
+            "link": "pagovztwbu",
+            "type": "payment_request",
+            "status": "paid",
+            "name": "Penagihan",
+            "limit": null,
+            "redirectUrl": null,
+            "installmentId": null,
+            "event": null,
+            "order": null,
+            "coverImageId": null,
+            "multipleImageId": null,
+            "coverImage": null,
+            "multipleImage": null
+        }
+    ]
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v1/payment?status=paid
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.id/hl/v1/payment?status=paid
+```
+
+</CodeGroup>
+
+### Headers
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+<ParamField path="param" body="sort" type="string" required>
+  Status:
+
+  - active
+  - paid
+  - closed
+</ParamField>
