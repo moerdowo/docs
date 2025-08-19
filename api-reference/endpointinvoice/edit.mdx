@@ -63,8 +63,16 @@ https://api.mayar.club/hl/v1/invoice/edit
 
 ### Body
 
-<ParamField path="id" type="string<uuid>" required>
-  A unique identifier obtained when creating an invoice. If accessed through the dashboard, it can be found at the URL on the invoice details page.
+<ParamField path="name" type="string" required>
+  Customer Name
+</ParamField>
+
+<ParamField path="email" type="string" required>
+  Customer email used to send proof of payment, or payment reminders
+</ParamField>
+
+<ParamField path="mobile" type="string" required>
+  Customer telephone number
 </ParamField>
 
 <ParamField path="redirectURL" type="string" required>
@@ -73,6 +81,10 @@ https://api.mayar.club/hl/v1/invoice/edit
 
 <ParamField path="description" type="string" required>
   General description of the transaction or order.
+</ParamField>
+
+<ParamField path="expiredAt" type="string (format ISO 8601 date-time)" required>
+  The transaction expiration date and time. This means that after this time, the payment link or order is no longer valid.
 </ParamField>
 
 <ParamField path="items" type="array">
