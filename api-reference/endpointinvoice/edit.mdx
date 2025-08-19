@@ -1,4 +1,88 @@
 ---
-title: "Edit Invoice"
-description: "Description of your new file."
+title: "POST Edit Invoice"
+description: "Endpoint used to edit invoices that have been created."
 ---
+
+<RequestExample>
+
+```bash Request Example
+curl --location 'https://api.mayar.id/hl/v1/invoice/create' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--data-raw '{
+    	"id": "f774034d-d9cc-43a0-97d8-a2520c127f03",
+    	"redirectUrl": "https://web.mayar.id",
+    	"description": "Berubah Jadi Invoice Yang Sudah Diedit",
+    	"items":[{
+        	"quantity": 2,
+        	"rate": 55000,
+        	"description": "Berubah Jadi Invoice Yang Sudah Diedit"
+    	}]
+	}
+'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "data": {
+        "id": "f774034d-d9cc-43a0-97d8-a2520c127f03",
+        "link": "https://andiak.myr.id/invoices/ibzfrf4880"
+    }
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v1/invoice/edit
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v1/invoice/edit
+```
+
+</CodeGroup>
+
+### Headers
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+### Body
+
+<ParamField path="id" type="string (even though it is a UUID, it is still stored as a string).">
+  A unique identifier obtained when creating an invoice. If accessed through the dashboard, it can be found at the URL on the invoice details page.
+</ParamField>
+
+<ParamField path="redirectURL" type="string" required>
+  The destination URL where the customer will be redirected after a successful or completed transaction.
+</ParamField>
+
+<ParamField path="description" type="string" required>
+  General description of the transaction or order.
+</ParamField>
+
+<ParamField path="items" type="array">
+  List of items (products/services) purchased.
+</ParamField>
+
+<ParamField path="quantity" type="number">
+  number of items ordered.
+</ParamField>
+
+<ParamField path="rate" type="number">
+  price per unit of goods.
+</ParamField>
