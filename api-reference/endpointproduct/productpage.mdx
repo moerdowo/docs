@@ -3,19 +3,6 @@ title: "Product Page"
 description: "Endpoint where you can get your products"
 ---
 
-<ResponseField name="Authorization" type="string" required>
-  Bearer Paste-Your-API-Key-Here
-
-  <Tip>
-    You can generate an **API Keys Token** in your Mayar Dashboard on the Integration Page -\> API Keys & Tokens.
-  </Tip>
-  <ParamField path="param" type="string" required placeholder="Page">
-    page = 1
-
-    pageSize = 10
-  </ParamField>
-</ResponseField>
-
 <RequestExample>
 
 ```File Endpoint
@@ -473,3 +460,20 @@ https://api.mayar.id/hl/v1/product?page=1&pageSize=
 ```
 
 </ResponseExample>
+
+### Headers
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+### Params
+
+<ParamField path="param" type="string" required>
+  Example:
+
+  - `page = 1`
+  - `pageSize = 10`
+</ParamField>
