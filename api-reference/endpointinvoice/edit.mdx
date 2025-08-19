@@ -6,7 +6,7 @@ description: "Endpoint used to edit invoices that have been created."
 <RequestExample>
 
 ```bash Request Example
-curl --location 'https://api.mayar.id/hl/v1/invoice/create' \
+curl --location 'https://api.mayar.id/hl/v1/invoice/edit' \
 --header 'Authorization: Bearer Paste-Your-API-Key-Here' \
 --data-raw '{
     	"id": "f774034d-d9cc-43a0-97d8-a2520c127f03",
@@ -62,6 +62,14 @@ https://api.mayar.club/hl/v1/invoice/edit
 </ResponseField>
 
 ### Body
+
+<ParamField path="id | productId" type="string">
+  A unique identifier obtained when creating an invoice. If accessed through the dashboard, it can be found at the URL on the invoice details page.
+
+  Example:
+
+  `f774034d-d9cc-43a0-97d8-a2520c127f03`
+</ParamField>
 
 <ParamField path="name" type="string" required>
   Customer Name

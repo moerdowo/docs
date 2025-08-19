@@ -90,3 +90,11 @@ https://api.mayar.club/hl/v1/payment/edit
 <ParamField path="expiredAt" type="string (format ISO 8601 date-time)" required>
   The transaction expiration date and time. This means that after this time, the payment link or order is no longer valid.
 </ParamField>
+
+<ParamField path="id | productId" type="string" required>
+  A unique identifier obtained when creating an invoice. If accessed through the dashboard, it can be found at the URL on the invoice details page.
+
+  Example:
+
+  `e890d24a-cfc0-4915-83d2-3166b9ffba9e`
+</ParamField>
