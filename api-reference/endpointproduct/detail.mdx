@@ -1,4 +1,495 @@
 ---
 title: "Detail Product"
-description: "Description of your new file."
+description: "Endpoint where you can get your detail products"
 ---
+
+<RequestExample>
+
+```bash Request Example
+curl --location 'https://api.mayar.id/hl/v1/product?page=1&pageSize=10' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "hasMore": true,
+    "pageCount": 10,
+    "pageSize": 10,
+    "page": 1,
+    "data": [
+        {
+            "id": "a02a76e1-25b4-49dd-9d1f-e84dd34ecbb4",
+            "amount": 1000,
+            "category": null,
+            "createdAt": 1738208276345,
+            "description": "<p><span style=\"color: rgba(0,0,0,0.8);background-color: rgb(255,255,255);font-family: Arial;\">Lorem ipsum dolor sit amet consectetur adipiscing, elit posuere euismod nascetur purus morbi, nam commodo fames sociis non. Litora aliquam imperdiet vulputate iaculis quisque eleifend nam lectus eget facilisi maecenas ullamcorper, sed malesuada nisi est sollicitudin magnis aptent blandit lacus donec. Sed placerat volutpat natoque ullamcorper cubilia senectus, elementum nisi tristique venenatis himenaeos metus felis, faucibus scelerisque cras arcu pretium. Nisl tincidunt nullam imperdiet scelerisque condimentum lectus inceptos, risus suspendisse purus sociosqu hendrerit consequat arcu neque, erat urna donec nunc dapibus maecenas. Nostra id pellentesque bibendum porttitor cubilia etiam luctus platea nec, porta magnis tortor fringilla venenatis conubia enim nisi, dictumst habitasse eros integer dictum praesent accumsan euismod.</span>&nbsp;</p>\n",
+            "link": "test-uiux-kelas-online",
+            "type": "course",
+            "status": "active",
+            "name": "test UIUX Kelas Online",
+            "limit": null,
+            "redirectUrl": "",
+            "installmentId": null,
+            "event": null,
+            "order": null,
+            "coverImageId": null,
+            "multipleImageId": "0d2772d0-4dd3-453f-9bab-95169c296f53",
+            "coverImage": null,
+            "multipleImage": [
+                {
+                    "id": "3952a644-b3dc-457f-8919-f17b0da79903",
+                    "fileType": "jpeg",
+                    "createdAt": 1738208224220,
+                    "updatedAt": 1738209424220,
+                    "url": "https://media.mayar.id/images/3952a644-b3dc-457f-8919-f17b0da79903.jpeg"
+                },
+                {
+                    "id": "466a3e0e-e60e-4caf-8da9-983fa4b107b9",
+                    "fileType": "jpeg",
+                    "createdAt": 1738208224218,
+                    "updatedAt": 1738208824218,
+                    "url": "https://media.mayar.id/images/466a3e0e-e60e-4caf-8da9-983fa4b107b9.jpeg"
+                },
+                {
+                    "id": "b457252e-e6c4-4d7c-ae5b-51bca8dfd168",
+                    "fileType": "jpeg",
+                    "createdAt": 1738208223893,
+                    "updatedAt": 1738211223893,
+                    "url": "https://media.mayar.id/images/b457252e-e6c4-4d7c-ae5b-51bca8dfd168.jpeg"
+                },
+                {
+                    "id": "b4a1d1f7-8bd0-4b4b-8fcd-c07f502f8b21",
+                    "fileType": "jpeg",
+                    "createdAt": 1738208224302,
+                    "updatedAt": 1738210024302,
+                    "url": "https://media.mayar.id/images/b4a1d1f7-8bd0-4b4b-8fcd-c07f502f8b21.jpeg"
+                },
+                {
+                    "id": "dcb49424-f00a-4518-9d34-d90f87bda03c",
+                    "fileType": "jpeg",
+                    "createdAt": 1738208224399,
+                    "updatedAt": 1738210624400,
+                    "url": "https://media.mayar.id/images/dcb49424-f00a-4518-9d34-d90f87bda03c.jpeg"
+                }
+            ]
+        },
+        {
+            "id": "a14295a7-f37c-44e0-a488-7c4732cb8491",
+            "amount": null,
+            "category": null,
+            "createdAt": 1738209522118,
+            "description": "<p><span style=\"color: rgba(0,0,0,0.8);background-color: rgb(255,255,255);font-family: Arial;\">Lorem ipsum dolor sit amet consectetur adipiscing, elit posuere euismod nascetur purus morbi, nam commodo fames sociis non. Litora aliquam imperdiet vulputate iaculis quisque eleifend nam lectus eget facilisi maecenas ullamcorper, sed malesuada nisi est sollicitudin magnis aptent blandit lacus donec. Sed placerat volutpat natoque ullamcorper cubilia senectus, elementum nisi tristique venenatis himenaeos metus felis, faucibus scelerisque cras arcu pretium. Nisl tincidunt nullam imperdiet scelerisque condimentum lectus inceptos, risus suspendisse purus sociosqu hendrerit consequat arcu neque, erat urna donec nunc dapibus maecenas. Nostra id pellentesque bibendum porttitor cubilia etiam luctus platea nec, porta magnis tortor fringilla venenatis conubia enim nisi, dictumst habitasse eros integer dictum praesent accumsan euismod.</span>&nbsp;</p>\n",
+            "link": "test-uiux-event-acara",
+            "type": "event",
+            "status": "active",
+            "name": "test UIUX Event / Acara",
+            "limit": null,
+            "redirectUrl": "",
+            "installmentId": null,
+            "event": {
+                "id": "27b4a80b-3b18-495b-a8cb-404df46aad22",
+                "event": null,
+                "description": null,
+                "ticketEvent": [
+                    {
+                        "id": "019f61ef-5d0f-4a14-9bc6-303b74dd21cf",
+                        "amount": 10000,
+                        "createdAt": 1738919697746,
+                        "name": "test UIUX 2",
+                        "quantity": 100
+                    },
+                    {
+                        "id": "c1dc0cd8-2333-48f1-ac09-9c2309960008",
+                        "amount": 100000,
+                        "createdAt": 1738212420859,
+                        "name": "test UIUX",
+                        "quantity": 100
+                    }
+                ]
+            },
+            "order": null,
+            "coverImageId": null,
+            "multipleImageId": "3e5fb153-7883-425a-87d6-f9bd2c871465",
+            "coverImage": null,
+            "multipleImage": [
+                {
+                    "id": "13d32ea9-76c9-46bf-a252-d57638f240a0",
+                    "fileType": "jpeg",
+                    "createdAt": 1738209481683,
+                    "updatedAt": 1738211281683,
+                    "url": "https://media.mayar.id/images/13d32ea9-76c9-46bf-a252-d57638f240a0.jpeg"
+                },
+                {
+                    "id": "66023e7b-e3d6-4f8f-8445-ff4937d3f9e7",
+                    "fileType": "jpeg",
+                    "createdAt": 1738209481220,
+                    "updatedAt": 1738212481220,
+                    "url": "https://media.mayar.id/images/66023e7b-e3d6-4f8f-8445-ff4937d3f9e7.jpeg"
+                },
+                {
+                    "id": "94883b8d-caa9-49a6-ba10-f7f8461c0fd8",
+                    "fileType": "jpeg",
+                    "createdAt": 1738209481187,
+                    "updatedAt": 1738210081187,
+                    "url": "https://media.mayar.id/images/94883b8d-caa9-49a6-ba10-f7f8461c0fd8.jpeg"
+                },
+                {
+                    "id": "a92719e3-cbb7-4972-bd5a-b363cb38ed31",
+                    "fileType": "jpeg",
+                    "createdAt": 1738209481674,
+                    "updatedAt": 1738211881675,
+                    "url": "https://media.mayar.id/images/a92719e3-cbb7-4972-bd5a-b363cb38ed31.jpeg"
+                },
+                {
+                    "id": "c17f7af3-cd32-456f-a153-39b5af63073d",
+                    "fileType": "jpeg",
+                    "createdAt": 1738209481102,
+                    "updatedAt": 1738210681102,
+                    "url": "https://media.mayar.id/images/c17f7af3-cd32-456f-a153-39b5af63073d.jpeg"
+                }
+            ]
+        },
+        {
+            "id": "a3a6dd76-3d08-46ec-904d-68def89eb9e7",
+            "amount": 1000,
+            "category": null,
+            "createdAt": 1738209842478,
+            "description": "<p><span style=\"color: rgba(0,0,0,0.8);background-color: rgb(255,255,255);font-family: Arial;\">Lorem ipsum dolor sit amet consectetur adipiscing, elit posuere euismod nascetur purus morbi, nam commodo fames sociis non. Litora aliquam imperdiet vulputate iaculis quisque eleifend nam lectus eget facilisi maecenas ullamcorper, sed malesuada nisi est sollicitudin magnis aptent blandit lacus donec. Sed placerat volutpat natoque ullamcorper cubilia senectus, elementum nisi tristique venenatis himenaeos metus felis, faucibus scelerisque cras arcu pretium. Nisl tincidunt nullam imperdiet scelerisque condimentum lectus inceptos, risus suspendisse purus sociosqu hendrerit consequat arcu neque, erat urna donec nunc dapibus maecenas. Nostra id pellentesque bibendum porttitor cubilia etiam luctus platea nec, porta magnis tortor fringilla venenatis conubia enim nisi, dictumst habitasse eros integer dictum praesent accumsan euismod.</span>&nbsp;</p>\n",
+            "link": "test-uiux-coaching-mentoring",
+            "type": "coaching",
+            "status": "active",
+            "name": "test UIUX Coaching / Mentoring",
+            "limit": null,
+            "redirectUrl": null,
+            "installmentId": null,
+            "event": null,
+            "order": null,
+            "coverImageId": null,
+            "multipleImageId": "bbe4b171-a342-4fe2-bf6e-b8a0efc2e2d5",
+            "coverImage": null,
+            "multipleImage": [
+                {
+                    "id": "28fadbce-367f-416d-ae56-4f99645c91a7",
+                    "fileType": "jpeg",
+                    "createdAt": 1738209806251,
+                    "updatedAt": 1738212806251,
+                    "url": "https://media.mayar.id/images/28fadbce-367f-416d-ae56-4f99645c91a7.jpeg"
+                },
+                {
+                    "id": "2c937e12-b02e-4cd3-ac4e-2ae082361aff",
+                    "fileType": "jpeg",
+                    "createdAt": 1738209806127,
+                    "updatedAt": 1738211006127,
+                    "url": "https://media.mayar.id/images/2c937e12-b02e-4cd3-ac4e-2ae082361aff.jpeg"
+                },
+                {
+                    "id": "909767b5-c8b6-42f4-a648-edc7823c9120",
+                    "fileType": "jpeg",
+                    "createdAt": 1738209806276,
+                    "updatedAt": 1738212206276,
+                    "url": "https://media.mayar.id/images/909767b5-c8b6-42f4-a648-edc7823c9120.jpeg"
+                },
+                {
+                    "id": "965cabd9-d8fd-411d-9aef-7bff6c8e0c09",
+                    "fileType": "jpeg",
+                    "createdAt": 1738209806439,
+                    "updatedAt": 1738210406439,
+                    "url": "https://media.mayar.id/images/965cabd9-d8fd-411d-9aef-7bff6c8e0c09.jpeg"
+                },
+                {
+                    "id": "c806a16a-b91b-408d-8550-2f2d7dbfca07",
+                    "fileType": "jpeg",
+                    "createdAt": 1738209806341,
+                    "updatedAt": 1738211606341,
+                    "url": "https://media.mayar.id/images/c806a16a-b91b-408d-8550-2f2d7dbfca07.jpeg"
+                }
+            ]
+        },
+        {
+            "id": "a3cb05a0-c86c-4ee0-ad7f-197ec1aaef8e",
+            "amount": 100000,
+            "category": null,
+            "createdAt": 1732254187506,
+            "description": "<p>Nddjdnjddjdj</p>\n",
+            "link": "Test-2",
+            "type": "webinar",
+            "status": "active",
+            "name": "Test 5",
+            "limit": 10,
+            "redirectUrl": "https://google.com",
+            "installmentId": null,
+            "event": null,
+            "order": null,
+            "coverImageId": "bd59bc2b-8070-457a-90f3-1e4b9f51b8fd",
+            "multipleImageId": null,
+            "multipleImage": null,
+            "coverImage": {
+                "id": "bd59bc2b-8070-457a-90f3-1e4b9f51b8fd",
+                "fileType": "jpeg",
+                "url": "https://media.mayar.id/images/bd59bc2b-8070-457a-90f3-1e4b9f51b8fd.jpeg"
+            }
+        },
+        {
+            "id": "a47aa4bc-3e69-4813-871d-11760baeb3c4",
+            "amount": 0,
+            "category": null,
+            "createdAt": 1721758101237,
+            "description": "<p><span style=\"color: rgba(0,0,0,0.8);background-color: rgb(255,255,255);font-family: Arial;\">Lorem ipsum dolor sit amet consectetur adipiscing elit aliquam, curabitur consequat ultrices penatibus imperdiet nunc proin, molestie per dui sociosqu semper fringilla gravida. Fames vitae a purus ad tortor commodo pretium id, duis sodales tristique pharetra massa aliquam in primis vestibulum, habitasse natoque donec lacus auctor sed senectus.</span>&nbsp;</p>\n",
+            "link": "invisibel-man",
+            "type": "audiobook",
+            "status": "active",
+            "name": "Invisibel Man",
+            "limit": null,
+            "redirectUrl": null,
+            "installmentId": null,
+            "event": null,
+            "order": null,
+            "coverImageId": "aa4fdf9f-b2bc-4537-aed2-fc588e83b355",
+            "multipleImageId": "1c95debe-cef5-41d6-a906-1da1acc1f8fa",
+            "coverImage": {
+                "id": "aa4fdf9f-b2bc-4537-aed2-fc588e83b355",
+                "fileType": "jpeg",
+                "url": "https://media.mayar.id/images/aa4fdf9f-b2bc-4537-aed2-fc588e83b355.jpeg"
+            },
+            "multipleImage": [
+                {
+                    "id": "3dbb408d-bce9-479f-9215-54eab0b4dbdb",
+                    "fileType": "jpeg",
+                    "createdAt": 1724140001298,
+                    "updatedAt": 1724142401298,
+                    "url": "https://media.mayar.id/images/3dbb408d-bce9-479f-9215-54eab0b4dbdb.jpeg"
+                },
+                {
+                    "id": "61b93d70-a5c7-4209-8bce-21102c5d4690",
+                    "fileType": "jpeg",
+                    "createdAt": 1724140000736,
+                    "updatedAt": 1724143000736,
+                    "url": "https://media.mayar.id/images/61b93d70-a5c7-4209-8bce-21102c5d4690.jpeg"
+                },
+                {
+                    "id": "653e0a69-1f62-44fa-9ebe-aea7c52a39d1",
+                    "fileType": "jpeg",
+                    "createdAt": 1724140003063,
+                    "updatedAt": 1724141203063,
+                    "url": "https://media.mayar.id/images/653e0a69-1f62-44fa-9ebe-aea7c52a39d1.jpeg"
+                },
+                {
+                    "id": "6b340e80-90be-43cf-8495-4f6d3ee4f5cd",
+                    "fileType": "jpeg",
+                    "createdAt": 1724140000542,
+                    "updatedAt": 1724140600542,
+                    "url": "https://media.mayar.id/images/6b340e80-90be-43cf-8495-4f6d3ee4f5cd.jpeg"
+                },
+                {
+                    "id": "e8dc7f04-0d75-4714-83c9-236e85d9c96d",
+                    "fileType": "jpeg",
+                    "createdAt": 1724140000948,
+                    "updatedAt": 1724141800948,
+                    "url": "https://media.mayar.id/images/e8dc7f04-0d75-4714-83c9-236e85d9c96d.jpeg"
+                }
+            ]
+        },
+        {
+            "id": "a9329957-5e3d-43cb-8709-dd9c17c8468f",
+            "amount": 1000,
+            "category": "Pakaian",
+            "createdAt": 1738207654321,
+            "description": "<p><span style=\"color: rgba(0,0,0,0.8);background-color: rgb(255,255,255);font-family: Arial;\">Lorem ipsum dolor sit amet consectetur adipiscing, elit posuere euismod nascetur purus morbi, nam commodo fames sociis non. Litora aliquam imperdiet vulputate iaculis quisque eleifend nam lectus eget facilisi maecenas ullamcorper, sed malesuada nisi est sollicitudin magnis aptent blandit lacus donec. Sed placerat volutpat natoque ullamcorper cubilia senectus, elementum nisi tristique venenatis himenaeos metus felis, faucibus scelerisque cras arcu pretium. Nisl tincidunt nullam imperdiet scelerisque condimentum lectus inceptos, risus suspendisse purus sociosqu hendrerit consequat arcu neque, erat urna donec nunc dapibus maecenas. Nostra id pellentesque bibendum porttitor cubilia etiam luctus platea nec, porta magnis tortor fringilla venenatis conubia enim nisi, dictumst habitasse eros integer dictum praesent accumsan euismod.</span>&nbsp;</p>\n",
+            "link": "test-uiux-produk-fisik",
+            "type": "physical_product",
+            "status": "active",
+            "name": "test UIUX Produk Fisik",
+            "limit": null,
+            "redirectUrl": "",
+            "installmentId": null,
+            "event": null,
+            "order": {
+                "id": "f861d0c8-11f1-4184-bd03-9155c510aeb7",
+                "variant": "{\"options\":[{\"name\":\"ukuran\",\"options\":[\"S\",\"M\",\"L\"]}],\"details\":[{\"details\":[{\"name\":\"ukuran\",\"value\":\"S\"}],\"amount\":1000,\"sku\":\"PAK/TES/S/000\",\"qty\":2,\"isVisible\":true,\"option\":\"S\"},{\"details\":[{\"name\":\"ukuran\",\"value\":\"M\"}],\"amount\":1000,\"sku\":\"PAK/TES/M/001\",\"qty\":2,\"isVisible\":true,\"option\":\"M\"},{\"details\":[{\"name\":\"ukuran\",\"value\":\"L\"}],\"amount\":1000,\"sku\":\"PAK/TES/L/002\",\"qty\":2,\"isVisible\":true,\"option\":\"L\"}]}",
+                "length": 1,
+                "width": 1,
+                "weight": 1
+            },
+            "coverImageId": null,
+            "multipleImageId": "41235a6b-73c8-4c40-b78f-48d3699e015d",
+            "coverImage": null,
+            "multipleImage": [
+                {
+                    "id": "12133e5e-2374-4638-9799-a92facea3f0b",
+                    "fileType": "jpeg",
+                    "createdAt": 1738207638228,
+                    "updatedAt": 1738209438228,
+                    "url": "https://media.mayar.id/images/12133e5e-2374-4638-9799-a92facea3f0b.jpeg"
+                },
+                {
+                    "id": "15fa687b-8c89-461b-8bbc-ac1ab0bdb69b",
+                    "fileType": "jpeg",
+                    "createdAt": 1738207638189,
+                    "updatedAt": 1738210038190,
+                    "url": "https://media.mayar.id/images/15fa687b-8c89-461b-8bbc-ac1ab0bdb69b.jpeg"
+                },
+                {
+                    "id": "2e45da8c-30ee-4193-adcc-1af18dbf2d75",
+                    "fileType": "jpeg",
+                    "createdAt": 1738207638827,
+                    "updatedAt": 1738208838827,
+                    "url": "https://media.mayar.id/images/2e45da8c-30ee-4193-adcc-1af18dbf2d75.jpeg"
+                },
+                {
+                    "id": "476103c6-6ff0-41ff-bb40-e763d4c268d2",
+                    "fileType": "jpeg",
+                    "createdAt": 1738207638075,
+                    "updatedAt": 1738208238075,
+                    "url": "https://media.mayar.id/images/476103c6-6ff0-41ff-bb40-e763d4c268d2.jpeg"
+                },
+                {
+                    "id": "60ba529c-8e72-43f9-81c6-a1769dda4dc2",
+                    "fileType": "jpeg",
+                    "createdAt": 1738207638168,
+                    "updatedAt": 1738210638169,
+                    "url": "https://media.mayar.id/images/60ba529c-8e72-43f9-81c6-a1769dda4dc2.jpeg"
+                }
+            ]
+        },
+        {
+            "id": "abadfa21-911f-45dc-b5a7-211556def6d6",
+            "amount": 1000,
+            "category": "Pakaian",
+            "createdAt": 1691032680072,
+            "description": "<p>vbhdvhjdvhdbhdv</p>\n",
+            "link": "harus-buat-auto-testing-41844",
+            "type": "physical_product",
+            "status": "active",
+            "name": "Harus Buat auto testing",
+            "limit": null,
+            "redirectUrl": "",
+            "installmentId": null,
+            "event": null,
+            "order": {
+                "id": "37b2f4d9-a29e-49ad-aa50-c766146d2609",
+                "variant": null,
+                "length": 1,
+                "width": 1,
+                "weight": 8
+            },
+            "coverImageId": null,
+            "multipleImageId": "f2321285-830d-47a1-8314-12c3319b1dcc",
+            "coverImage": null,
+            "multipleImage": [
+                {
+                    "id": "6facd450-3e22-4609-8f56-021787127d8a",
+                    "fileType": "jpeg",
+                    "createdAt": 1691032664755,
+                    "updatedAt": 1691033264755,
+                    "url": "https://media.mayar.id/images/6facd450-3e22-4609-8f56-021787127d8a.jpeg"
+                }
+            ]
+        },
+        {
+            "id": "c15b2db3-3304-44f0-aee3-04aa5154c55c",
+            "amount": 1000,
+            "category": null,
+            "createdAt": 1702965647373,
+            "description": "<p>kekekekkekekek</p>\n",
+            "link": "tes-voluntary",
+            "type": "digital_product",
+            "status": "active",
+            "name": "test 03",
+            "limit": null,
+            "redirectUrl": "",
+            "installmentId": null,
+            "event": null,
+            "order": null,
+            "coverImageId": null,
+            "multipleImageId": null,
+            "coverImage": null,
+            "multipleImage": null
+        },
+        {
+            "id": "c99498c2-2a7b-4f42-92bd-502c43375012",
+            "amount": null,
+            "category": "Bencana Alam",
+            "createdAt": 1691031609353,
+            "description": "<p><span style=\"color: rgba(0,0,0,0.8);background-color: rgb(255,255,255);font-size: 16.2;font-family: Source Sans Pro\">Lorem ipsum dolor sit amet consectetur adipiscing elit augue, mi ac tempus imperdiet non auctor eget. Ultricies nulla et netus ante bibendum odio eleifend quisque, tempor felis porta gravida rhoncus senectus pulvinar, egestas sociosqu vestibulum arcu condimentum maecenas habitant. Per fames nascetur facilisis primis nunc cursus suscipit bibendum magna venenatis pulvinar tristique, parturient pharetra etiam sociis tellus donec cras accumsan taciti mus. Odio mus augue tempus quis tellus lacinia vivamus porttitor suspendisse, cras blandit curabitur metus ligula fermentum felis ante ad, quisque luctus viverra convallis cubilia neque accumsan habitasse. Hendrerit eros etiam eget morbi fringilla nunc bibendum mollis, cum dictum rutrum est montes parturient nascetur pretium, ultricies quisque tellus natoque egestas integer blandit. Pellentesque sociis tellus non maecenas diam enim congue senectus sed, libero dictum massa fusce suscipit parturient potenti commodo et, aliquam montes condimentum phasellus dapibus etiam dui felis. Sed cursus porta egestas aptent cras interdum fusce ac nascetur, vehicula primis quam netus magnis malesuada euismod molestie enim est, eros purus sodales sollicitudin vitae ornare cubilia augue.</span>&nbsp;</p>\n",
+            "link": "ddddbdbdd",
+            "type": "fundraising",
+            "status": "active",
+            "name": "Bencana Alam",
+            "limit": null,
+            "redirectUrl": "",
+            "installmentId": null,
+            "event": null,
+            "order": null,
+            "coverImageId": null,
+            "multipleImageId": null,
+            "coverImage": null,
+            "multipleImage": null
+        },
+        {
+            "id": "ca0a1de5-02d1-4d98-9cf8-407f0a27e2ed",
+            "amount": 10000,
+            "category": null,
+            "createdAt": 1717497877251,
+            "description": "<p><span style=\"color: rgba(0,0,0,0.8);background-color: rgb(255,255,255);font-family: Open Sans;\">Lorem ipsum dolor sit amet consectetur adipiscing elit, rhoncus euismod quam magna purus primis cubilia hac, natoque vivamus tristique ad cras luctus. Maecenas facilisis dapibus lacinia aliquam tempus condimentum viverra, nullam montes leo eu vulputate sociis erat lectus, eros integer torquent facilisi a dictumst. Sem facilisi commodo feugiat eleifend rhoncus aliquet bibendum sollicitudin dapibus taciti, vulputate vestibulum conubia euismod ante mauris mollis vivamus mattis, semper elementum suspendisse montes urna placerat penatibus eros duis. Mus dis faucibus accumsan venenatis et quis gravida tempor integer neque dui, vulputate facilisi mi habitant libero id himenaeos iaculis etiam torquent, sodales leo fusce proin platea aenean erat nostra lacinia porta. Ad commodo nulla consequat tellus condimentum malesuada senectus erat eleifend lacinia, vivamus phasellus taciti est ante elementum curae velit. Tempus vestibulum odio fusce magna nibh nullam senectus dictumst felis nisi, neque sem torquent feugiat praesent commodo tellus habitasse morbi, massa nostra facilisi taciti congue ultrices ut varius ridiculus. Posuere nullam vehicula donec dictumst arcu id primis penatibus, lobortis ante litora placerat tincidunt condimentum tempor per et, dignissim magnis rhoncus nibh duis euismod velit. Praesent luctus tempus odio congue pretium habitant molestie egestas consequat, nostra taciti convallis imperdiet pharetra lacinia aliquam nulla penatibus, nam dapibus sociis a vitae eleifend donec vehicula.</span>&nbsp;</p>\n",
+            "link": "varian-1-47680-1aov",
+            "type": "ebook",
+            "status": "active",
+            "name": "E-books varian 2",
+            "limit": 1,
+            "redirectUrl": null,
+            "installmentId": null,
+            "event": null,
+            "order": null,
+            "coverImageId": "035deae3-b858-4f50-83ba-d3b8f71be780",
+            "multipleImageId": null,
+            "multipleImage": null,
+            "coverImage": {
+                "id": "035deae3-b858-4f50-83ba-d3b8f71be780",
+                "fileType": "jpeg",
+                "url": "https://media.mayar.id/images/035deae3-b858-4f50-83ba-d3b8f71be780.jpeg"
+            }
+        }
+    ],
+    "total": 93
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v1/product/00a1cd6a-0a30-4746-bd30-06d2f619041e
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v1/product/00a1cd6a-0a30-4746-bd30-06d2f619041e
+```
+
+</CodeGroup>
+
+### Headers
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+### Params
+
+<ParamField path="param" type="string" required>
+  Example:
+
+  - `page = 1`
+  - `pageSize = 10`
+</ParamField>
