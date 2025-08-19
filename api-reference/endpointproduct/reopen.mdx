@@ -48,14 +48,10 @@ https://api.mayar.club/hl/v1/product/open/a02a76e1-25b4-49dd-9d1f-e84dd34ecbb4
 
 ### Param
 
-<ParamField path="id_product" type="string" required>
+<ParamField path="id<product>" type="string" required={false}>
+  A unique identifier obtained when creating an invoice. If accessed through the dashboard, it can be found at the URL on the invoice details page.
+
   Example:
 
-  **If the link on the product details page is as follows:**
-
-  https://web.mayar.id/online-course-detail/a02a76e1-25b4-49dd-9d1f-e84dd34ecbb
-
-  **Then the id_product is:**
-
-  `a02a76e1-25b4-49dd-9d1f-e84dd34ecbb`
+  `a02a76e1-25b4-49dd-9d1f-e84dd34ecbb4`
 </ParamField>

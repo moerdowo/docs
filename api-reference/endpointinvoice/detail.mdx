@@ -1,12 +1,12 @@
 ---
 title: "GET Detail / Status Invoice"
-description: "Endpoint used to view details of invoices that have been created"
+description: "Endpoint used to view details and status of invoices that have been created"
 ---
 
 <RequestExample>
 
 ```bash Request Example
-curl --location 'https://api.mayar.id/hl/v1/invoice' \
+curl --location 'https://api.mayar.id/hl/v1/invoice/f774034d-d9cc-43a0-97d8-a2520c127f03' \
 --header 'Authorization: Bearer Paste-Your-API-Key-Here' \
 --data ''
 ```
@@ -19,267 +19,28 @@ curl --location 'https://api.mayar.id/hl/v1/invoice' \
 {
     "statusCode": 200,
     "messages": "success",
-    "hasMore": true,
-    "pageCount": 2,
-    "pageSize": 10,
-    "page": 1,
-    "data": [
-        {
-            "id": "01918da0-704b-45d8-bf14-afbd738eb682",
-            "amount": 2000,
-            "category": null,
-            "createdAt": 1691046324713,
-            "description": "",
-            "link": "75py7f7vwwr",
-            "type": "invoice",
-            "status": "paid",
-            "name": "INVOICE",
-            "redirectUrl": null,
-            "customerId": "6a38cf26-6bab-42c8-92be-72f3a9fd4c33",
-            "transactions": [
-                {
-                    "id": "d442dcbd-6dbb-4e26-aec5-8c4b5f5e13a2",
-                    "status": "created"
-                },
-                {
-                    "id": "5824155d-e125-418e-abb6-bd25e1cb6eaf",
-                    "status": "paid"
-                }
-            ],
-            "customer": {
-                "id": "6a38cf26-6bab-42c8-92be-72f3a9fd4c33",
-                "email": "mayartesting05@gmail.com",
-                "mobile": "081320547877",
-                "name": "Harus Buat auto testing"
+    "data": {
+        "id": "f774034d-d9cc-43a0-97d8-a2520c127f03",
+        "amount": 110000,
+        "status": "unpaid",
+        "link": "ibzfrf4880",
+        "expiredAt": 1764582069401,
+        "transactions": [
+            {
+                "id": "23fa41c5-c6ed-45d4-8302-5fac4a165dfa"
             }
+        ],
+        "customerId": "ae57ce73-89a2-46a7-84d7-93a616ef220e",
+        "customer": {
+            "id": "ae57ce73-89a2-46a7-84d7-93a616ef220e",
+            "email": "azumiikecee@gmail.com",
+            "mobile": "08996136751",
+            "name": "Azumii"
         },
-        {
-            "id": "0c0505d8-8265-4299-baa3-9fd4d7759588",
-            "amount": 10000,
-            "category": null,
-            "createdAt": 1726051915939,
-            "description": "Belajar",
-            "link": "w2wdxisnbtp",
-            "type": "invoice",
-            "status": "closed",
-            "name": "INVOICE",
-            "redirectUrl": null,
-            "customerId": "eaf5cd15-49c4-433b-b57b-a2175f4c41d8",
-            "transactions": [
-                {
-                    "id": "9a5e044b-07b3-4dc5-a5a7-65aaef019728",
-                    "status": "created"
-                }
-            ],
-            "customer": {
-                "id": "eaf5cd15-49c4-433b-b57b-a2175f4c41d8",
-                "email": "mayartesting11@gmail.com",
-                "mobile": "081320549499",
-                "name": "Andika01"
-            }
-        },
-        {
-            "id": "11d15244-7ca1-42c0-9d06-def8574fd4f3",
-            "amount": 9000,
-            "category": null,
-            "createdAt": 1737302488652,
-            "description": "Terimakasih telah membeli prodak ini",
-            "link": "oby6el1hf4",
-            "type": "invoice",
-            "status": "closed",
-            "name": "INVOICE",
-            "redirectUrl": null,
-            "customerId": "6a38cf26-6bab-42c8-92be-72f3a9fd4c33",
-            "transactions": [
-                {
-                    "id": "752a5838-353c-4e68-84d6-fcd78a563889",
-                    "status": "created"
-                }
-            ],
-            "customer": {
-                "id": "6a38cf26-6bab-42c8-92be-72f3a9fd4c33",
-                "email": "mayartesting05@gmail.com",
-                "mobile": "081320547877",
-                "name": "Harus Buat auto testing"
-            }
-        },
-        {
-            "id": "1545a45b-8b18-47b4-8371-532afd040f61",
-            "amount": 575000,
-            "category": null,
-            "createdAt": 1730269014120,
-            "description": "buat keterangan yang OCR mending gini gimana?\nSheets in one file that has OCR are limited to a maximum of 100 pages",
-            "link": "3rjngpjzys8",
-            "type": "invoice",
-            "status": "closed",
-            "name": "INVOICE",
-            "redirectUrl": null,
-            "customerId": "e74850ba-bd72-4703-a7fa-b99c4166352e",
-            "transactions": [
-                {
-                    "id": "c887e49c-0b47-43b9-b22c-263fb3fdfe79",
-                    "status": "created"
-                }
-            ],
-            "customer": {
-                "id": "e74850ba-bd72-4703-a7fa-b99c4166352e",
-                "email": "aldobaik18@gmail.com",
-                "mobile": "0877828291999",
-                "name": "Aldoghandika"
-            }
-        },
-        {
-            "id": "52aadb07-18a8-4b1b-be30-c35923890252",
-            "amount": 10000,
-            "category": null,
-            "createdAt": 1737105096056,
-            "description": "xcxcxc",
-            "link": "g0mlnqxi84n",
-            "type": "invoice",
-            "status": "closed",
-            "name": "INVOICE",
-            "redirectUrl": null,
-            "customerId": "6a38cf26-6bab-42c8-92be-72f3a9fd4c33",
-            "transactions": [
-                {
-                    "id": "00151cc8-858e-4dfb-a63d-57a4e74b88aa",
-                    "status": "created"
-                }
-            ],
-            "customer": {
-                "id": "6a38cf26-6bab-42c8-92be-72f3a9fd4c33",
-                "email": "mayartesting05@gmail.com",
-                "mobile": "081320547877",
-                "name": "Harus Buat auto testing"
-            }
-        },
-        {
-            "id": "634e664e-a7bf-4f85-a321-ebeae0aa01cd",
-            "amount": 100000,
-            "category": null,
-            "createdAt": 1732254931782,
-            "description": "Jsjwhsbsbs",
-            "link": "gqevn4vro1f",
-            "type": "invoice",
-            "status": "closed",
-            "name": "INVOICE",
-            "redirectUrl": null,
-            "customerId": "627bc86f-44c8-401b-b4fc-50127183f9f9",
-            "transactions": [
-                {
-                    "id": "ff388716-35ca-4427-b737-7d7d23329290",
-                    "status": "created"
-                }
-            ],
-            "customer": {
-                "id": "627bc86f-44c8-401b-b4fc-50127183f9f9",
-                "email": "Andiak@gmail.com",
-                "mobile": "081320547855",
-                "name": "Aandika"
-            }
-        },
-        {
-            "id": "89400a8d-276b-4b07-aad3-ac6cd3112281",
-            "amount": 1000000,
-            "category": null,
-            "createdAt": 1732255465802,
-            "description": "Bajwwhwh",
-            "link": "0aq2mvgze91",
-            "type": "invoice",
-            "status": "closed",
-            "name": "INVOICE",
-            "redirectUrl": null,
-            "customerId": "627bc86f-44c8-401b-b4fc-50127183f9f9",
-            "transactions": [
-                {
-                    "id": "6464ad54-0e60-44d8-8056-f20ee601eab0",
-                    "status": "created"
-                }
-            ],
-            "customer": {
-                "id": "627bc86f-44c8-401b-b4fc-50127183f9f9",
-                "email": "Andiak@gmail.com",
-                "mobile": "081320547855",
-                "name": "Aandika"
-            }
-        },
-        {
-            "id": "8cb09626-aad6-4589-aabb-5d7887991922",
-            "amount": 9000,
-            "category": null,
-            "createdAt": 1739088135842,
-            "description": "Lorem ipsum dolor sit amet consectetur adipiscing elit risus etiam, eu vitae dapibus dui bibendum litora facilisis aliquet fames, velit cum mauris ultrices facilisi montes lobortis feugiat. Varius etiam eu cursus senectus magna orci pharetra vitae proin ornare, fusce ut molestie mi nascetur tellus quis mattis sem maecenas, ultrices montes vel sollicitudin duis auctor tincidunt aliquet primis. Tempus a cras sagittis sapien viverra maecenas non justo pharetra, sociosqu convallis vestibulum malesuada feugiat morbi hendrerit sociis, molestie fermentum sed orci urna pellentesque mollis faucibus. Nostra ad tempor sed venenatis eros fringilla semper euismod praesent, egestas eget purus proin vivamus est sagittis felis.",
-            "link": "2l2xp7qz3bs",
-            "type": "invoice",
-            "status": "closed",
-            "name": "INVOICE",
-            "redirectUrl": null,
-            "customerId": "6a38cf26-6bab-42c8-92be-72f3a9fd4c33",
-            "transactions": [
-                {
-                    "id": "31917bf2-1073-4655-8bf4-1229fa0d6d80",
-                    "status": "created"
-                }
-            ],
-            "customer": {
-                "id": "6a38cf26-6bab-42c8-92be-72f3a9fd4c33",
-                "email": "mayartesting05@gmail.com",
-                "mobile": "081320547877",
-                "name": "Harus Buat auto testing"
-            }
-        },
-        {
-            "id": "a52e905f-3366-4199-9dfc-8ddeca679328",
-            "amount": 100000,
-            "category": null,
-            "createdAt": 1730285756976,
-            "description": "Bugs\n- kalo akunnya belum pernah login lewat web mayar ga bisa daftar di app mayarbuat keterangan yang OCR mending gini gimana?\nSheets in one file that has OCR are limited to a maximum of 100 pagesbuat keterangan yang OCR mending gini gimana?\nSheets in one file that has OCR are limited to a maximum of 100 pages",
-            "link": "r4lhlfqzv",
-            "type": "invoice",
-            "status": "closed",
-            "name": "INVOICE",
-            "redirectUrl": null,
-            "customerId": "eaf5cd15-49c4-433b-b57b-a2175f4c41d8",
-            "transactions": [
-                {
-                    "id": "86f439f4-55cf-4789-9e60-9701531f5499",
-                    "status": "created"
-                }
-            ],
-            "customer": {
-                "id": "eaf5cd15-49c4-433b-b57b-a2175f4c41d8",
-                "email": "mayartesting11@gmail.com",
-                "mobile": "081320549499",
-                "name": "Andika01"
-            }
-        },
-        {
-            "id": "bc8c1d9f-68e2-4f9c-a7b8-2718acec2f8c",
-            "amount": 1000000,
-            "category": null,
-            "createdAt": 1731459885215,
-            "description": "",
-            "link": "ly6bm0jkqhf",
-            "type": "invoice",
-            "status": "closed",
-            "name": "INVOICE",
-            "redirectUrl": null,
-            "customerId": "eaf5cd15-49c4-433b-b57b-a2175f4c41d8",
-            "transactions": [
-                {
-                    "id": "9f509c2e-0910-4b5a-9fcf-b7259b9f3324",
-                    "status": "created"
-                }
-            ],
-            "customer": {
-                "id": "eaf5cd15-49c4-433b-b57b-a2175f4c41d8",
-                "email": "mayartesting11@gmail.com",
-                "mobile": "081320549499",
-                "name": "Andika01"
-            }
-        }
-    ],
-    "total": 17
+        "transactionId": "23fa41c5-c6ed-45d4-8302-5fac4a165dfa",
+        "paymentUrl": "https://andiak.myr.id/invoices/ibzfrf4880",
+        "paymentLinkId": "f774034d-d9cc-43a0-97d8-a2520c127f03"
+    }
 }
 ```
 
@@ -290,12 +51,12 @@ Endpoint:
 <CodeGroup>
 
 ```Production Production
-https://api.mayar.id/hl/v1/invoice
+https://api.mayar.club/hl/v1/invoice/f774034d-d9cc-43a0-97d8-a2520c127f03
 ```
 
 
 ```Sandbox Sandbox
-https://api.mayar.club/hl/v1/invoice
+https://api.mayar.club/hl/v1/invoice/f774034d-d9cc-43a0-97d8-a2520c127f03
 ```
 
 </CodeGroup>
@@ -307,3 +68,13 @@ https://api.mayar.club/hl/v1/invoice
 
   `Authorization | Bearer Paste-Your-API-Key-Here`
 </ResponseField>
+
+### Param
+
+<ParamField path="param" type="string" required>
+  A unique identifier obtained when creating an invoice. If accessed through the dashboard, it can be found at the URL on the invoice details page.
+
+  Example:
+
+  `f774034d-d9cc-43a0-97d8-a2520c127f03`
+</ParamField>
