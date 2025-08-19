@@ -1,12 +1,12 @@
 ---
-title: "Create Installment"
+title: "POST Create Installment"
 description: "Endpoint used to create installment"
 ---
 
 <RequestExample>
 
 ```bash Request Example
-curl --location 'https://api.mayar.id/hl/v1/invoice/create' \
+curl --location 'https://api.mayar.id/hl/v1/installment/create' \
 --header 'Authorization: Bearer Paste-Your-API-Key-Here' \
 --data-raw '{
   		"email": "azumiikecee@gmail.com", 
@@ -147,6 +147,10 @@ https://api.mayar.club/hl/v1/installment/create
 
 <ParamField path="installment" type="Object" required>
   Installment details
+</ParamField>
+
+<ParamField path="description" type="string" required>
+  General description of the transaction or order.
 </ParamField>
 
 <ParamField path="interest" type="number | integer" required>

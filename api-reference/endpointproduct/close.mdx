@@ -36,12 +36,12 @@ Endpoint:
 <CodeGroup>
 
 ```Production Production
-https://api.mayar.id/hl/v1/product/close/a02a76e1-25b4-49dd-9d1f-e84dd34ecbb4
+https://api.mayar.id/hl/v1/product/close/(productId)
 ```
 
 
 ```Sandbox Sandbox
-https://api.mayar.club/hl/v1/product/close/a02a76e1-25b4-49dd-9d1f-e84dd34ecbb4
+https://api.mayar.club/hl/v1/product/close/(productId)
 ```
 
 </CodeGroup>
@@ -56,7 +56,7 @@ https://api.mayar.club/hl/v1/product/close/a02a76e1-25b4-49dd-9d1f-e84dd34ecbb4
 
 ### Param
 
-<ParamField path="id<product>" type="string" required="false">
+<ParamField path="productId" type="string" required>
   A unique identifier obtained when creating an invoice. If accessed through the dashboard, it can be found at the URL on the invoice details page.
 
   Example:
