@@ -63,7 +63,7 @@ https://api.mayar.club/hl/v1/invoice/edit
 
 ### Body
 
-<ParamField path="id" type="string (even though it is a UUID, it is still stored as a string).">
+<ParamField path="id" type="string<uuid>" required>
   A unique identifier obtained when creating an invoice. If accessed through the dashboard, it can be found at the URL on the invoice details page.
 </ParamField>
 
