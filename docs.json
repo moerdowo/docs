@@ -156,9 +156,9 @@
             "group": "Customer",
             "pages": [
               "api-reference/endpointcustomer/getdetail",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/update",
-              "api-reference/endpoint/createmagiclink"
+              "api-reference/endpointcustomer/create",
+              "api-reference/endpointcustomer/update",
+              "api-reference/endpointcustomer/createmagiclink"
             ]
           },
           {
