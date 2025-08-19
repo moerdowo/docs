@@ -1,4 +1,65 @@
 ---
-title: "Re-open Single Payment Request"
-description: "Description of your new file."
+title: "GET Re-open Single Payment Request"
+description: "Endpoint used to change single payment request status from closed to open"
 ---
+
+<RequestExample>
+
+```bash Request Example
+curl --location 'https://api.mayar.id/hl/v1/payment/close/e890d24a-cfc0-4915-83d2-3166b9ffba9e' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response example if success
+{
+    "statusCode": 200,
+    "messages": "success"
+}
+```
+
+
+```json Response example if failed
+{
+    "statusCode": 200,
+    "messages": "failed"
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v1/payment/close/e890d24a-cfc0-4915-83d2-3166b9ffba9e
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v1/payment/close/e890d24a-cfc0-4915-83d2-3166b9ffba9e
+```
+
+</CodeGroup>
+
+### Headers
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+### Param
+
+<ParamField path="id<product>" type="string" required="false">
+  A unique identifier obtained when creating an invoice. If accessed through the dashboard, it can be found at the URL on the invoice details page.
+
+  Example:
+
+  `a02a76e1-25b4-49dd-9d1f-e84dd34ecbb4`
+</ParamField>

@@ -14,10 +14,18 @@ curl --location 'https://api.mayar.id/hl/v1/product/close/a02a76e1-25b4-49dd-9d1
 
 <ResponseExample>
 
-```json Response Example 200
+```json Response example if success
 {
     "statusCode": 200,
     "messages": "success"
+}
+```
+
+
+```json Response example if failed
+{
+    "statusCode": 200,
+    "messages": "failed"
 }
 ```
 
@@ -48,7 +56,7 @@ https://api.mayar.club/hl/v1/product/close/a02a76e1-25b4-49dd-9d1f-e84dd34ecbb4
 
 ### Param
 
-<ParamField path="id<product>" type="string" required={false}>
+<ParamField path="id<product>" type="string" required="false">
   A unique identifier obtained when creating an invoice. If accessed through the dashboard, it can be found at the URL on the invoice details page.
 
   Example:
