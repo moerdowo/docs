@@ -1,4 +1,77 @@
 ---
-title: "Detail Single Payment Request"
-description: "Description of your new file."
+title: "GET Detail Single Payment Request"
+description: "Endpoint used to view details of single payment request that have been created"
 ---
+
+<RequestExample>
+
+```bash Request Example
+curl --location 'https://api.mayar.id/hl/v1/payment/e890d24a-cfc0-4915-83d2-3166b9ffba9e' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--data ''
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "data": {
+        "id": "e890d24a-cfc0-4915-83d2-3166b9ffba9e",
+        "link": "ohsjrd3wko",
+        "name": "Azumii",
+        "category": null,
+        "limit": null,
+        "type": "payment_request",
+        "userId": "348e083d-315a-4e5c-96b1-5a2a98c48413",
+        "event": null,
+        "order": null,
+        "qty": null,
+        "amount": 100000,
+        "status": "unpaid",
+        "description": "Ubah ReqPayment",
+        "coverImageId": null,
+        "multipleImageId": null,
+        "coverImage": null,
+        "multipleImage": null
+    }
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v1/payment/e890d24a-cfc0-4915-83d2-3166b9ffba9e
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v1/payment/e890d24a-cfc0-4915-83d2-3166b9ffba9e
+```
+
+</CodeGroup>
+
+### Headers
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+### Param
+
+<ParamField path="id<product>" type="string" required>
+  A unique identifier obtained when creating an invoice. If accessed through the dashboard, it can be found at the URL on the invoice details page.
+
+  Example:
+
+  `e890d24a-cfc0-4915-83d2-3166b9ffba9e`
+</ParamField>
