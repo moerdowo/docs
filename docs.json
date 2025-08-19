@@ -108,10 +108,10 @@
             "pages": [
               "api-reference/endpointproduct/productpage",
               "api-reference/endpointproduct/productpagewithfilter",
-              "api-reference/endpointproduct/searchproduct",
-              "api-reference/endpointproduct/detailproduct",
-              "api-reference/endpointproduct/closeproduct",
-              "api-reference/endpointproduct/reopenproduct"
+              "api-reference/endpointproduct/search",
+              "api-reference/endpointproduct/detail",
+              "api-reference/endpointproduct/close",
+              "api-reference/endpointproduct/reopen"
             ]
           },
           {
