@@ -1,4 +1,254 @@
 ---
-title: " Index Single Payment Request Page"
-description: "Description of your new file."
+title: "GET Index Single Payment Request"
+description: "Endpoint used to view details of the number of single payment request that have been created"
 ---
+
+<RequestExample>
+
+```bash Request Example
+curl --location 'https://api.mayar.id/hl/v1/payment' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--data ''
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "hasMore": true,
+    "pageCount": 3,
+    "pageSize": 10,
+    "page": 1,
+    "data": [
+        {
+            "id": "07e1d023-3bc4-46cd-9a30-2102cd0770f4",
+            "amount": 100000,
+            "category": null,
+            "createdAt": 1753681216049,
+            "description": "<p>Asasasasasasasasas</p>\n",
+            "link": "xnxivrq8ple",
+            "type": "payment_request",
+            "status": "unpaid",
+            "name": "Penagihan",
+            "limit": null,
+            "redirectUrl": null,
+            "installmentId": null,
+            "event": null,
+            "order": null,
+            "coverImageId": null,
+            "multipleImageId": null,
+            "coverImage": null,
+            "multipleImage": null
+        },
+        {
+            "id": "1013df14-f5c7-4228-bac8-cc1b6e27f7d5",
+            "amount": 10000,
+            "category": null,
+            "createdAt": 1692086977655,
+            "description": "Dana Tambahan Kelas Online",
+            "link": "4n7wcwt2whi",
+            "type": "payment_request",
+            "status": "unpaid",
+            "name": null,
+            "limit": null,
+            "redirectUrl": null,
+            "installmentId": null,
+            "event": null,
+            "order": null,
+            "coverImageId": null,
+            "multipleImageId": null,
+            "coverImage": null,
+            "multipleImage": null
+        },
+        {
+            "id": "17f51633-3302-4dc6-9d5c-ee1a20b52dd4",
+            "amount": 3000,
+            "category": null,
+            "createdAt": 1705046062681,
+            "description": "<p>adadadad</p>\n",
+            "link": "cnyg2trlhu5",
+            "type": "payment_request",
+            "status": "unpaid",
+            "name": "Penagihan",
+            "limit": null,
+            "redirectUrl": null,
+            "installmentId": null,
+            "event": null,
+            "order": null,
+            "coverImageId": null,
+            "multipleImageId": null,
+            "coverImage": null,
+            "multipleImage": null
+        },
+        {
+            "id": "19850f6f-b51c-473e-b14d-f4c37e3543d7",
+            "amount": 1000,
+            "category": null,
+            "createdAt": 1685956367899,
+            "description": "<p>Pembayaran Uang Makan</p>\n",
+            "link": "sbz05wc6b0b",
+            "type": "payment_request",
+            "status": "unpaid",
+            "name": "Penagihan",
+            "limit": null,
+            "redirectUrl": null,
+            "installmentId": null,
+            "event": null,
+            "order": null,
+            "coverImageId": null,
+            "multipleImageId": null,
+            "coverImage": null,
+            "multipleImage": null
+        },
+        {
+            "id": "1fdc61da-6aff-482b-aaae-57147fbc80df",
+            "amount": 1000,
+            "category": null,
+            "createdAt": 1718964285753,
+            "description": "<p>testt</p>\n",
+            "link": "1xz940k653p",
+            "type": "payment_request",
+            "status": "unpaid",
+            "name": "Penagihan",
+            "limit": null,
+            "redirectUrl": null,
+            "installmentId": null,
+            "event": null,
+            "order": null,
+            "coverImageId": null,
+            "multipleImageId": null,
+            "coverImage": null,
+            "multipleImage": null
+        },
+        {
+            "id": "311e0185-6991-4abf-bf01-a831b19c4b7d",
+            "amount": 100000,
+            "category": null,
+            "createdAt": 1744690223494,
+            "description": "Produk Mahal Tapi Cuma Test Ajasih",
+            "link": "1btrq4v0ch",
+            "type": "payment_request",
+            "status": "unpaid",
+            "name": "Penagihan",
+            "limit": null,
+            "redirectUrl": "https://kelaskami.com/nexst23",
+            "installmentId": null,
+            "event": null,
+            "order": null,
+            "coverImageId": null,
+            "multipleImageId": null,
+            "coverImage": null,
+            "multipleImage": null
+        },
+        {
+            "id": "32b569e3-c90f-46dc-8fa6-65b6a4193ee3",
+            "amount": 500000,
+            "category": null,
+            "createdAt": 1695229210213,
+            "description": "Pembayaran Paket Membership Reguler - Malo Gusto",
+            "link": "rx1f57nhc7",
+            "type": "payment_request",
+            "status": "closed",
+            "name": "Tagihan Membership - Reguler",
+            "limit": null,
+            "redirectUrl": null,
+            "installmentId": null,
+            "event": null,
+            "order": null,
+            "coverImageId": null,
+            "multipleImageId": null,
+            "coverImage": null,
+            "multipleImage": null
+        },
+        {
+            "id": "3ca6a235-f112-42d3-8be7-9836c1b43ee0",
+            "amount": 10000,
+            "category": null,
+            "createdAt": 1687021203866,
+            "description": "Pembayaran Paket Membership Kamar Lantai 1 - Contoh",
+            "link": "wzbs5tbuz5h",
+            "type": "payment_request",
+            "status": "closed",
+            "name": "Tagihan Membership - Kamar Lantai 1",
+            "limit": null,
+            "redirectUrl": null,
+            "installmentId": null,
+            "event": null,
+            "order": null,
+            "coverImageId": null,
+            "multipleImageId": null,
+            "coverImage": null,
+            "multipleImage": null
+        },
+        {
+            "id": "3f6755ee-8e34-4a63-b01f-771da2b3d01d",
+            "amount": 170000,
+            "category": null,
+            "createdAt": 1747718816365,
+            "description": "kemana ini menjadi a",
+            "link": "9f9c6d2v5f",
+            "type": "payment_request",
+            "status": "closed",
+            "name": "Penagihan",
+            "limit": null,
+            "redirectUrl": "https://kelaskami.com/nexst23",
+            "installmentId": null,
+            "event": null,
+            "order": null,
+            "coverImageId": null,
+            "multipleImageId": null,
+            "coverImage": null,
+            "multipleImage": null
+        },
+        {
+            "id": "4513063f-adf2-4374-b0bd-bd89339c4406",
+            "amount": 1500000,
+            "category": null,
+            "createdAt": 1706236280845,
+            "description": "Pembayaran Paket Membership Express - Dr Aldow",
+            "link": "xjz8aytqsdq",
+            "type": "payment_request",
+            "status": "closed",
+            "name": "Tagihan Membership - Express",
+            "limit": null,
+            "redirectUrl": null,
+            "installmentId": null,
+            "event": null,
+            "order": null,
+            "coverImageId": null,
+            "multipleImageId": null,
+            "coverImage": null,
+            "multipleImage": null
+        }
+    ]
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v1/payment
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v1/payment
+```
+
+</CodeGroup>
+
+### Headers
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
