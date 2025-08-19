@@ -3,22 +3,15 @@ title: "Product Page"
 description: "Endpoint where you can get your products"
 ---
 
-<Steps>
-  <Step title="Headers" iconType="regular">
-    **Authorization** Bearer Paste-Your-API-Key-Here
-  </Step>
-  <Step title="Params">
-    **page **= 1 | **pageSize **= 10
-  </Step>
-</Steps>
+<ResponseField name="Authorization" type="string | header" required>
+  You can generate an API Keys Token in your Mayar Dashboard on the Integration Page -\> API Keys & Tokens.
+</ResponseField>
 
 **Endpoint Product Page: **
 
 ```
 https://api.mayar.id/hl/v1/product?page=1&pageSize=10
 ```
-
-**List all product. Example response: **
 
 <ResponseExample>
 
