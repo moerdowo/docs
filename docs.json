@@ -167,8 +167,7 @@
               "api-reference/endpointtransaction/accountbalance",
               "api-reference/endpointtransaction/paidtransaction",
               "api-reference/endpointtransaction/unpaidtransaction",
-              "api-reference/endpointtransaction/createdynamicqrcode",
-              "api-reference/endpointtransaction/getstaticqrcode"
+              "api-reference/endpointtransaction/createdynamicqrcode"
             ]
           },
           {
