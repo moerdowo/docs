@@ -1,4 +1,162 @@
 ---
-title: "Customer"
-description: "Description of your new file."
+title: "GET Customer"
+description: "Endpoint where you can get your customer details"
 ---
+
+<RequestExample>
+
+```bash Request Example
+curl --location 'https://api.mayar.id/hl/v1/customer?page=1&pageSize=10' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "hasMore": true,
+    "pageCount": 10,
+    "pageSize": 10,
+    "page": 1,
+    "data": [
+        {
+            "id": "0468202a-7e09-4949-adbf-99c91ef231cf",
+            "createdAt": 1724214459643,
+            "email": "aherliningtyas@gmail.com",
+            "mobile": "081927095672",
+            "name": "Adisti",
+            "status": "active",
+            "updatedAt": 1724214459644,
+            "userId": "348e083d-315a-4e5c-96b1-5a2a98c48413"
+        },
+        {
+            "id": "0652ef69-e48f-4a48-9ccd-1892cf2bd604",
+            "createdAt": 1741921269829,
+            "email": "aldodwierrr@gmail.com",
+            "mobile": "085797522261",
+            "name": "andre",
+            "status": "active",
+            "updatedAt": 1741921269829,
+            "userId": "348e083d-315a-4e5c-96b1-5a2a98c48413"
+        },
+        {
+            "id": "0723ff8d-244d-4627-9e1c-dcebd993d0e8",
+            "createdAt": 1726217069353,
+            "email": "aldododw@gmail.com",
+            "mobile": "08996136751",
+            "name": "Testing",
+            "status": "active",
+            "updatedAt": 1726217069353,
+            "userId": "348e083d-315a-4e5c-96b1-5a2a98c48413"
+        },
+        {
+            "id": "0d5783d6-2306-414c-84a6-73a162cd29f5",
+            "createdAt": 1722051950207,
+            "email": "testing@testing.com",
+            "mobile": "628112208301",
+            "name": "Testings",
+            "status": "active",
+            "updatedAt": 1722051950207,
+            "userId": "348e083d-315a-4e5c-96b1-5a2a98c48413"
+        },
+        {
+            "id": "0e609ca9-784b-4dc0-a98b-14d11b11168e",
+            "createdAt": 1699793152456,
+            "email": "tes@gmail.com",
+            "mobile": "08121213123123",
+            "name": "tes",
+            "status": "active",
+            "updatedAt": 1699793152456,
+            "userId": "348e083d-315a-4e5c-96b1-5a2a98c48413"
+        },
+        {
+            "id": "1091baf2-5d7d-42aa-af6b-66b60827bca2",
+            "createdAt": 1684127909997,
+            "email": "suherman@gmail.com",
+            "mobile": "081918235535",
+            "name": "Suherman ",
+            "status": "active",
+            "updatedAt": 1684127909997,
+            "userId": "348e083d-315a-4e5c-96b1-5a2a98c48413"
+        },
+        {
+            "id": "121add7e-59c7-436e-a05a-373593babf49",
+            "createdAt": 1670375034981,
+            "email": "ahmad@gmail.com",
+            "mobile": "089726376718",
+            "name": "Ahmad Miftahu Rizki",
+            "status": "active",
+            "updatedAt": 1670375034981,
+            "userId": "348e083d-315a-4e5c-96b1-5a2a98c48413"
+        },
+        {
+            "id": "13ed78cc-f2fe-4178-b6ad-92227ec668d3",
+            "createdAt": 1707738091055,
+            "email": "asd@s.s",
+            "mobile": "0895048123123",
+            "name": "asd",
+            "status": "active",
+            "updatedAt": 1707738091055,
+            "userId": "348e083d-315a-4e5c-96b1-5a2a98c48413"
+        },
+        {
+            "id": "17f30db9-59f5-4276-8636-9b56b3ec1be7",
+            "createdAt": 1726214049277,
+            "email": "testajah123@gmail.com",
+            "mobile": "08996136751",
+            "name": "Testajah",
+            "status": "active",
+            "updatedAt": 1726214049277,
+            "userId": "348e083d-315a-4e5c-96b1-5a2a98c48413"
+        },
+        {
+            "id": "1a51f8cd-80f0-490f-9d27-e3194fa7512d",
+            "createdAt": 1721903354721,
+            "email": "amadeusz@gmail.com",
+            "mobile": "089515151515",
+            "name": "amadeusz",
+            "status": "active",
+            "updatedAt": 1721903354721,
+            "userId": "348e083d-315a-4e5c-96b1-5a2a98c48413"
+        }
+    ]
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v1/customer?page=1&pageSize=10
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v1/customer?page=1&pageSize=10
+```
+
+</CodeGroup>
+
+### Headers
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+### Params
+
+<ParamField path="param" type="string" required>
+  Example:
+
+  - `page = 1`
+  - `pageSize = 10`
+</ParamField>
