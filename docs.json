@@ -171,6 +171,15 @@
             ]
           },
           {
+            "group": "Webhook",
+            "pages": [
+              "api-reference/endpointwebhook/history",
+              "api-reference/endpointwebhook/registerurlhook",
+              "api-reference/endpointwebhook/testurlhook",
+              "api-reference/endpointwebhook/retryhistory"
+            ]
+          },
+          {
             "group": "Software License Code",
             "pages": [
               "api-reference/endpointlicensecode/verifylicense"
