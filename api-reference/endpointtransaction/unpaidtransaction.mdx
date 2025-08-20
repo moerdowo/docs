@@ -1,4 +1,555 @@
 ---
-title: "Unpaid Transaction"
-description: "Description of your new file."
+title: "GET Unpaid Transaction"
+description: "Endpoint for get unpaid data transactions"
 ---
+
+<RequestExample>
+
+```bash Request Example
+curl --location 'https://api.mayar.id/hl/v1/transactions?page=1&pageSize=10' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "hasMore": true,
+    "pageCount": 70,
+    "pageSize": 10,
+    "page": 1,
+    "data": [
+        {
+            "id": "ff5e591d-6740-442b-8aec-26e72b60c29e",
+            "credit": 0,
+            "status": "settled",
+            "balanceHistoryType": "webinar",
+            "paymentMethod": "Gratis",
+            "customerId": "ce1234f3-6843-4d5c-8838-b7d6f7506955",
+            "createdAt": 1755534083905,
+            "paymentLinkTransactionId": "98f26871-de3c-4bca-ac59-d079ca44d5bd",
+            "fee": [],
+            "paymentLinkId": "015ff1af-c83f-4684-9401-dd74a7c6da0f",
+            "subscriptionId": null,
+            "xenditTransactionId": null,
+            "subscription": null,
+            "xenditTransaction": null,
+            "paymentLinkTransaction": {
+                "id": "98f26871-de3c-4bca-ac59-d079ca44d5bd",
+                "urlParamTrackingData": null,
+                "isAdminFeeBorneByCustomer": null,
+                "isChannelFeeBorneByCustomer": null
+            },
+            "customeField": null,
+            "customer": {
+                "id": "ce1234f3-6843-4d5c-8838-b7d6f7506955",
+                "name": "trial",
+                "email": "trial@gmail.com",
+                "mobile": "0884444730242"
+            },
+            "paymentLink": {
+                "id": "015ff1af-c83f-4684-9401-dd74a7c6da0f",
+                "name": "test outlook"
+            }
+        },
+        {
+            "id": "40067bb5-e06f-4dc6-bd65-e2f6ac35643f",
+            "credit": 0,
+            "status": "settled",
+            "balanceHistoryType": "membership",
+            "paymentMethod": "Gratis",
+            "customerId": "ce1234f3-6843-4d5c-8838-b7d6f7506955",
+            "createdAt": 1755244097529,
+            "paymentLinkTransactionId": "00617429-fc1c-44db-a0ba-e31d3f0edd70",
+            "fee": [],
+            "paymentLinkId": "a6be24df-1335-4682-902c-f0474c1826c0",
+            "subscriptionId": null,
+            "xenditTransactionId": null,
+            "subscription": null,
+            "xenditTransaction": null,
+            "paymentLinkTransaction": {
+                "id": "00617429-fc1c-44db-a0ba-e31d3f0edd70",
+                "urlParamTrackingData": null,
+                "isAdminFeeBorneByCustomer": null,
+                "isChannelFeeBorneByCustomer": null
+            },
+            "customeField": null,
+            "customer": {
+                "id": "ce1234f3-6843-4d5c-8838-b7d6f7506955",
+                "name": "trial",
+                "email": "trial@gmail.com",
+                "mobile": "0884444730242"
+            },
+            "paymentLink": {
+                "id": "a6be24df-1335-4682-902c-f0474c1826c0",
+                "name": "test membership cohort analisis"
+            }
+        },
+        {
+            "id": "306aa4ae-e41b-4dc3-89c5-585ec0ae92dd",
+            "credit": 1059,
+            "status": "settled",
+            "balanceHistoryType": "digital_product",
+            "paymentMethod": "QRIS",
+            "customerId": "6a38cf26-6bab-42c8-92be-72f3a9fd4c33",
+            "createdAt": 1755012459984,
+            "paymentLinkTransactionId": "8e7646b1-8c65-4219-9c49-50de5e2f0420",
+            "fee": [
+                {
+                    "id": "66e365d3-9afc-4dec-ad2d-ed925433ddd9",
+                    "balanceHistoryType": "xendit_fee",
+                    "debit": 6
+                },
+                {
+                    "id": "973d31bb-c3cf-4b80-b09f-783b0a7fec88",
+                    "balanceHistoryType": "mayar_fee",
+                    "debit": 53
+                }
+            ],
+            "paymentLinkId": "d071116a-4359-4262-90dc-a7bd137c1baa",
+            "subscriptionId": null,
+            "xenditTransactionId": "a57b842e-8ffe-4851-9d15-7716c2f56902",
+            "subscription": null,
+            "paymentLinkTransaction": {
+                "id": "8e7646b1-8c65-4219-9c49-50de5e2f0420",
+                "urlParamTrackingData": null,
+                "isAdminFeeBorneByCustomer": true,
+                "isChannelFeeBorneByCustomer": true
+            },
+            "customeField": null,
+            "customer": {
+                "id": "6a38cf26-6bab-42c8-92be-72f3a9fd4c33",
+                "name": "Harus Buat auto testing",
+                "email": "mayartesting05@gmail.com",
+                "mobile": "081320547877"
+            },
+            "paymentLink": {
+                "id": "d071116a-4359-4262-90dc-a7bd137c1baa",
+                "name": "test UIUX Produk Digital"
+            },
+            "xenditTransaction": {
+                "id": "a57b842e-8ffe-4851-9d15-7716c2f56902",
+                "paymentLinkTransactionId": "8e7646b1-8c65-4219-9c49-50de5e2f0420",
+                "paymentLinkTransaction": {
+                    "id": "8e7646b1-8c65-4219-9c49-50de5e2f0420",
+                    "couponUsage": null
+                }
+            }
+        },
+        {
+            "id": "59be9cd3-503b-446b-92cf-8df6b2b96345",
+            "credit": 1059,
+            "status": "settled",
+            "balanceHistoryType": "digital_product",
+            "paymentMethod": "QRIS",
+            "customerId": "6a38cf26-6bab-42c8-92be-72f3a9fd4c33",
+            "createdAt": 1755012407864,
+            "paymentLinkTransactionId": "e1f9298c-01ad-4a1a-8677-e1afdc964a45",
+            "fee": [
+                {
+                    "id": "b9356032-dd15-4808-869a-43d6b6d8fa18",
+                    "balanceHistoryType": "xendit_fee",
+                    "debit": 6
+                },
+                {
+                    "id": "c172f92e-711d-4759-8236-1cd9ab3a5bd0",
+                    "balanceHistoryType": "mayar_fee",
+                    "debit": 53
+                }
+            ],
+            "paymentLinkId": "d071116a-4359-4262-90dc-a7bd137c1baa",
+            "subscriptionId": null,
+            "xenditTransactionId": "0f62b59a-ca73-4ee5-ae33-bfe1631f2218",
+            "subscription": null,
+            "paymentLinkTransaction": {
+                "id": "e1f9298c-01ad-4a1a-8677-e1afdc964a45",
+                "urlParamTrackingData": null,
+                "isAdminFeeBorneByCustomer": true,
+                "isChannelFeeBorneByCustomer": true
+            },
+            "customeField": null,
+            "customer": {
+                "id": "6a38cf26-6bab-42c8-92be-72f3a9fd4c33",
+                "name": "Harus Buat auto testing",
+                "email": "mayartesting05@gmail.com",
+                "mobile": "081320547877"
+            },
+            "paymentLink": {
+                "id": "d071116a-4359-4262-90dc-a7bd137c1baa",
+                "name": "test UIUX Produk Digital"
+            },
+            "xenditTransaction": {
+                "id": "0f62b59a-ca73-4ee5-ae33-bfe1631f2218",
+                "paymentLinkTransactionId": "e1f9298c-01ad-4a1a-8677-e1afdc964a45",
+                "paymentLinkTransaction": {
+                    "id": "e1f9298c-01ad-4a1a-8677-e1afdc964a45",
+                    "couponUsage": null
+                }
+            }
+        },
+        {
+            "id": "618a2e42-fea1-49e7-8a2a-3b3b7b9d42e0",
+            "credit": 1059,
+            "status": "settled",
+            "balanceHistoryType": "digital_product",
+            "paymentMethod": "QRIS",
+            "customerId": "6a38cf26-6bab-42c8-92be-72f3a9fd4c33",
+            "createdAt": 1755012388185,
+            "paymentLinkTransactionId": "11a8a7ee-88d5-4a36-9523-9e14fc845155",
+            "fee": [
+                {
+                    "id": "2a043370-b62a-4f14-967f-5060224434a6",
+                    "balanceHistoryType": "xendit_fee",
+                    "debit": 6
+                },
+                {
+                    "id": "8dc17d96-fa3f-4467-a21f-e316ab68b2ca",
+                    "balanceHistoryType": "mayar_fee",
+                    "debit": 53
+                }
+            ],
+            "paymentLinkId": "d071116a-4359-4262-90dc-a7bd137c1baa",
+            "subscriptionId": null,
+            "xenditTransactionId": "15e8a711-e99b-4a54-acf9-67cdcf3c034e",
+            "subscription": null,
+            "paymentLinkTransaction": {
+                "id": "11a8a7ee-88d5-4a36-9523-9e14fc845155",
+                "urlParamTrackingData": null,
+                "isAdminFeeBorneByCustomer": true,
+                "isChannelFeeBorneByCustomer": true
+            },
+            "customeField": null,
+            "customer": {
+                "id": "6a38cf26-6bab-42c8-92be-72f3a9fd4c33",
+                "name": "Harus Buat auto testing",
+                "email": "mayartesting05@gmail.com",
+                "mobile": "081320547877"
+            },
+            "paymentLink": {
+                "id": "d071116a-4359-4262-90dc-a7bd137c1baa",
+                "name": "test UIUX Produk Digital"
+            },
+            "xenditTransaction": {
+                "id": "15e8a711-e99b-4a54-acf9-67cdcf3c034e",
+                "paymentLinkTransactionId": "11a8a7ee-88d5-4a36-9523-9e14fc845155",
+                "paymentLinkTransaction": {
+                    "id": "11a8a7ee-88d5-4a36-9523-9e14fc845155",
+                    "couponUsage": null
+                }
+            }
+        },
+        {
+            "id": "1d55351c-940f-4eb7-99ad-1ab6b1f0fd29",
+            "credit": 1077,
+            "status": "settled",
+            "balanceHistoryType": "digital_product",
+            "paymentMethod": "Ewallet - Gopay",
+            "customerId": "6a38cf26-6bab-42c8-92be-72f3a9fd4c33",
+            "createdAt": 1754909424974,
+            "paymentLinkTransactionId": "d6c93069-3c65-4235-8392-5644987a3a52",
+            "fee": [
+                {
+                    "id": "16d2c286-f081-4e74-b481-6d6d25ed83af",
+                    "balanceHistoryType": "xendit_fee",
+                    "debit": 23
+                },
+                {
+                    "id": "7b1353b9-2c12-488b-af5a-5950308e6fc2",
+                    "balanceHistoryType": "mayar_fee",
+                    "debit": 54
+                }
+            ],
+            "paymentLinkId": "d071116a-4359-4262-90dc-a7bd137c1baa",
+            "subscriptionId": null,
+            "xenditTransactionId": "1e3e3905-0fac-419a-b919-019ecfe3f7f9",
+            "subscription": null,
+            "paymentLinkTransaction": {
+                "id": "d6c93069-3c65-4235-8392-5644987a3a52",
+                "urlParamTrackingData": null,
+                "isAdminFeeBorneByCustomer": true,
+                "isChannelFeeBorneByCustomer": true
+            },
+            "customeField": null,
+            "customer": {
+                "id": "6a38cf26-6bab-42c8-92be-72f3a9fd4c33",
+                "name": "Harus Buat auto testing",
+                "email": "mayartesting05@gmail.com",
+                "mobile": "081320547877"
+            },
+            "paymentLink": {
+                "id": "d071116a-4359-4262-90dc-a7bd137c1baa",
+                "name": "test UIUX Produk Digital"
+            },
+            "xenditTransaction": {
+                "id": "1e3e3905-0fac-419a-b919-019ecfe3f7f9",
+                "paymentLinkTransactionId": "d6c93069-3c65-4235-8392-5644987a3a52",
+                "paymentLinkTransaction": {
+                    "id": "d6c93069-3c65-4235-8392-5644987a3a52",
+                    "couponUsage": null
+                }
+            }
+        },
+        {
+            "id": "41c9ffd1-388d-40a1-8cef-965e33d459a1",
+            "credit": 1059,
+            "status": "settled",
+            "balanceHistoryType": "digital_product",
+            "paymentMethod": "QRIS",
+            "customerId": "6a38cf26-6bab-42c8-92be-72f3a9fd4c33",
+            "createdAt": 1754909018059,
+            "paymentLinkTransactionId": "f62c271c-a7fd-443c-a437-80929ea6d98c",
+            "fee": [
+                {
+                    "id": "9c37092d-780a-4ca1-963c-264280a9d944",
+                    "balanceHistoryType": "xendit_fee",
+                    "debit": 6
+                },
+                {
+                    "id": "d29f93d8-06f1-4f9d-a348-3998bde669d8",
+                    "balanceHistoryType": "mayar_fee",
+                    "debit": 53
+                }
+            ],
+            "paymentLinkId": "d071116a-4359-4262-90dc-a7bd137c1baa",
+            "subscriptionId": null,
+            "xenditTransactionId": "f05f4764-2561-4ef3-8ba5-0a644d7eed16",
+            "subscription": null,
+            "paymentLinkTransaction": {
+                "id": "f62c271c-a7fd-443c-a437-80929ea6d98c",
+                "urlParamTrackingData": null,
+                "isAdminFeeBorneByCustomer": true,
+                "isChannelFeeBorneByCustomer": true
+            },
+            "customeField": null,
+            "customer": {
+                "id": "6a38cf26-6bab-42c8-92be-72f3a9fd4c33",
+                "name": "Harus Buat auto testing",
+                "email": "mayartesting05@gmail.com",
+                "mobile": "081320547877"
+            },
+            "paymentLink": {
+                "id": "d071116a-4359-4262-90dc-a7bd137c1baa",
+                "name": "test UIUX Produk Digital"
+            },
+            "xenditTransaction": {
+                "id": "f05f4764-2561-4ef3-8ba5-0a644d7eed16",
+                "paymentLinkTransactionId": "f62c271c-a7fd-443c-a437-80929ea6d98c",
+                "paymentLinkTransaction": {
+                    "id": "f62c271c-a7fd-443c-a437-80929ea6d98c",
+                    "couponUsage": null
+                }
+            }
+        },
+        {
+            "id": "8ad2dfe7-ca76-4d97-b7de-6f6e58480404",
+            "credit": 10493,
+            "status": "settled",
+            "balanceHistoryType": "event",
+            "paymentMethod": "QRIS",
+            "customerId": "6a38cf26-6bab-42c8-92be-72f3a9fd4c33",
+            "createdAt": 1754908707277,
+            "paymentLinkTransactionId": "61617dfd-cf70-4cd8-9f20-b5ef77ebb390",
+            "fee": [
+                {
+                    "id": "8d118e9a-393b-40b5-a559-def7f347c195",
+                    "balanceHistoryType": "mayar_fee",
+                    "debit": 420
+                },
+                {
+                    "id": "92424261-0f69-4c79-bb99-9b389aadca44",
+                    "balanceHistoryType": "xendit_fee",
+                    "debit": 73
+                }
+            ],
+            "paymentLinkId": "a14295a7-f37c-44e0-a488-7c4732cb8491",
+            "subscriptionId": null,
+            "xenditTransactionId": "31ab6c69-12c6-4234-b29f-59bba82b44d8",
+            "subscription": null,
+            "paymentLinkTransaction": {
+                "id": "61617dfd-cf70-4cd8-9f20-b5ef77ebb390",
+                "urlParamTrackingData": null,
+                "isAdminFeeBorneByCustomer": true,
+                "isChannelFeeBorneByCustomer": true
+            },
+            "customeField": null,
+            "customer": {
+                "id": "6a38cf26-6bab-42c8-92be-72f3a9fd4c33",
+                "name": "Harus Buat auto testing",
+                "email": "mayartesting05@gmail.com",
+                "mobile": "081320547877"
+            },
+            "paymentLink": {
+                "id": "a14295a7-f37c-44e0-a488-7c4732cb8491",
+                "name": "test UIUX Event / Acara"
+            },
+            "xenditTransaction": {
+                "id": "31ab6c69-12c6-4234-b29f-59bba82b44d8",
+                "paymentLinkTransactionId": "61617dfd-cf70-4cd8-9f20-b5ef77ebb390",
+                "paymentLinkTransaction": {
+                    "id": "61617dfd-cf70-4cd8-9f20-b5ef77ebb390",
+                    "couponUsage": null
+                }
+            }
+        },
+        {
+            "id": "e258dc42-191a-43a5-8856-582622553486",
+            "credit": 15042,
+            "status": "settled",
+            "balanceHistoryType": "event",
+            "paymentMethod": "Transfer VA - MANDIRI",
+            "customerId": "6a38cf26-6bab-42c8-92be-72f3a9fd4c33",
+            "createdAt": 1754908251426,
+            "paymentLinkTransactionId": "0d8efb5a-403b-4060-ae31-6f9de016662c",
+            "fee": [
+                {
+                    "id": "48bc4322-bd98-47d1-95db-e51f9805b19a",
+                    "balanceHistoryType": "xendit_fee",
+                    "debit": 4440
+                },
+                {
+                    "id": "a1aa2545-f38a-41f3-afda-5d7bbddf46ae",
+                    "balanceHistoryType": "mayar_fee",
+                    "debit": 602
+                }
+            ],
+            "paymentLinkId": "a14295a7-f37c-44e0-a488-7c4732cb8491",
+            "subscriptionId": null,
+            "xenditTransactionId": "f5f50c26-a484-4105-badf-94c67a5528c7",
+            "subscription": null,
+            "paymentLinkTransaction": {
+                "id": "0d8efb5a-403b-4060-ae31-6f9de016662c",
+                "urlParamTrackingData": null,
+                "isAdminFeeBorneByCustomer": true,
+                "isChannelFeeBorneByCustomer": true
+            },
+            "customeField": null,
+            "customer": {
+                "id": "6a38cf26-6bab-42c8-92be-72f3a9fd4c33",
+                "name": "Harus Buat auto testing",
+                "email": "mayartesting05@gmail.com",
+                "mobile": "081320547877"
+            },
+            "paymentLink": {
+                "id": "a14295a7-f37c-44e0-a488-7c4732cb8491",
+                "name": "test UIUX Event / Acara"
+            },
+            "xenditTransaction": {
+                "id": "f5f50c26-a484-4105-badf-94c67a5528c7",
+                "paymentLinkTransactionId": "0d8efb5a-403b-4060-ae31-6f9de016662c",
+                "paymentLinkTransaction": {
+                    "id": "0d8efb5a-403b-4060-ae31-6f9de016662c",
+                    "couponUsage": null
+                }
+            }
+        },
+        {
+            "id": "be5bfd6f-28b8-4729-8304-05a8cf95abcf",
+            "credit": 1059,
+            "status": "settled",
+            "balanceHistoryType": "digital_product",
+            "paymentMethod": "QRIS",
+            "customerId": "6a38cf26-6bab-42c8-92be-72f3a9fd4c33",
+            "createdAt": 1754906098343,
+            "paymentLinkTransactionId": "1ed9252b-d56b-4be3-8bb5-f75f654ec3ab",
+            "fee": [
+                {
+                    "id": "5324f5c2-3520-481d-a106-889696a89f61",
+                    "balanceHistoryType": "xendit_fee",
+                    "debit": 6
+                },
+                {
+                    "id": "e16e0178-ab58-4d10-9e33-d05d761d5969",
+                    "balanceHistoryType": "mayar_fee",
+                    "debit": 53
+                }
+            ],
+            "paymentLinkId": "d071116a-4359-4262-90dc-a7bd137c1baa",
+            "subscriptionId": null,
+            "xenditTransactionId": "7454ad4f-307a-4917-b3cc-ad87ab9fc26a",
+            "subscription": null,
+            "paymentLinkTransaction": {
+                "id": "1ed9252b-d56b-4be3-8bb5-f75f654ec3ab",
+                "urlParamTrackingData": null,
+                "isAdminFeeBorneByCustomer": true,
+                "isChannelFeeBorneByCustomer": true
+            },
+            "customeField": null,
+            "customer": {
+                "id": "6a38cf26-6bab-42c8-92be-72f3a9fd4c33",
+                "name": "Harus Buat auto testing",
+                "email": "mayartesting05@gmail.com",
+                "mobile": "081320547877"
+            },
+            "paymentLink": {
+                "id": "d071116a-4359-4262-90dc-a7bd137c1baa",
+                "name": "test UIUX Produk Digital"
+            },
+            "xenditTransaction": {
+                "id": "7454ad4f-307a-4917-b3cc-ad87ab9fc26a",
+                "paymentLinkTransactionId": "1ed9252b-d56b-4be3-8bb5-f75f654ec3ab",
+                "paymentLinkTransaction": {
+                    "id": "1ed9252b-d56b-4be3-8bb5-f75f654ec3ab",
+                    "couponUsage": null
+                }
+            }
+        }
+    ]
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v1/transactions/unpaid?page=1&pageSize=10
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v1/transactions/unpaid?page=1&pageSize=10
+```
+
+</CodeGroup>
+
+### Headers
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+### Params
+
+<ParamField path="param" type="string" required>
+  Example:
+
+  - `page = 1`
+  - `pageSize = 10`
+</ParamField>
+
+### Extra Parameter
+
+<ParamField path="param" type="string">
+  Examples:
+
+  - `startAt`
+  - `endAt`
+  - `status`
+  - `customerId`
+  - `fields` (For field projection)
+</ParamField>
+
+<Tabs>
+  <Tab title="List of status">
+    - `paid`
+    - `settled`
+  </Tab>
+</Tabs>
