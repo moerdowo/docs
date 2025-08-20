@@ -1,5 +1,56 @@
 ---
-title: 'New file'
-description: 'Description of your new file.'
+title: "GET Register URL Hook"
+description: "Endpoint to register your URL Hook for Webhook"
 ---
 
+<RequestExample>
+
+```bash Request Example
+curl --location 'https://api.mayar.id/hl/v1/webhook/register' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--data '{
+    "urlHook": "https://example.mayar.com"
+}'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+  "statusCode": 200,
+  "messages": "success"
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v1/webhook/register
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v1/webhook/register
+```
+
+</CodeGroup>
+
+### Headers
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+### Body
+
+<ParamField path="urlHook" type="string" required>
+  URL for webhook callback
+</ParamField>
