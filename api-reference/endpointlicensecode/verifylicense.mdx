@@ -1,4 +1,75 @@
 ---
-title: "Product Page"
-description: "Description of your new file."
+title: "POST Verify License"
+description: "Endpoint to verify a license by providing the license code and product ID."
 ---
+
+<RequestExample>
+
+```bash Request Example
+curl --location 'https://api.mayar.id/software/v1/license/verify' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--data '{
+    "licenseCode": "YOUR-LICENSE-CODE",
+    "productId": "YOUR-PRODUCT-ID"
+}'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "isLicenseActive": true,
+    "licenseCode": {
+        "licenseCode": "LICENSECODE12345",
+        "status": "ACTIVE",
+        "expiredAt": "2025-12-12T19:46:24.000Z",
+        "transactionId": "994d4071-a81e-4558-a854-47530eea9b6d",
+        "productId": "84d1d247-a8b3-4c7d-96f0-cf276edb7c33",
+        "customerId": "6a38cf26-6bab-42c8-92be-72f3a9fd4c33",
+        "customerName": "John Doe",
+        "customerEmail": "johndoe@gmail.com",
+        "activationLimit": "Tidak terbatas",
+        "useCount": 10,
+        "createdAt": "2024-02-12T08:41:13.579Z",
+        "updatedAt": "2024-02-12T08:57:36.047Z"
+    }
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/software/v1/license/verify
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/software/v1/license/verify
+```
+
+</CodeGroup>
+
+### Headers
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+### Body
+
+<ParamField path="licenseCode" type="string" required>
+  The license code to be activated.
+</ParamField>
+
+<ParamField path="productId" type="string" required>
+  The ID of the product associated with the license.
+</ParamField>
