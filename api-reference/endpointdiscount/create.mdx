@@ -1,3 +1,144 @@
 ---
 title: "POST Create Discount with Coupon"
+description: "Endpoint used to create discount coupons"
 ---
+
+<RequestExample>
+
+```bash Request Example
+curl --location 'https://api.mayar.id/hl/v1/coupon/create' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--data-raw '{
+  		"expiredAt": "2030-01-01T09:06:14.933Z", 
+  		"name": "Diskon Murmer",
+  		"discount": {
+    			"discountType": "monetary",
+    			"eligibleCustomerType": "all",
+    			"minimumPurchase": 500000,
+    			"value": 100000,   
+    			"totalCoupons": 100
+  				},
+  			"coupon": {
+    		"code": "haribaik",
+    		"type": "reusable"
+  			},
+  		"products": []
+	}
+'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "Success",
+    "data": {
+        "id": "c9aa143a-53f9-44e7-a9c6-83229ad7199b",
+        "createdAt": 1755665561029,
+        "expiredAt": 1893488774933,
+        "discountType": "monetary",
+        "discountProductType": "all",
+        "eligibleCustomerType": "all",
+        "name": "Diskon Murmer",
+        "minimumPurchase": 500000,
+        "isLifeTime": null,
+        "totalCoupons": 100,
+        "value": 100000,
+        "coupons": [
+            {
+                "code": "haribaik",
+                "type": "reusable",
+                "expiredAt": "2030-01-01T09:06:14.933Z",
+                "isActive": true
+            }
+        ],
+        "productDiscount": []
+    }
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v1/coupon/create
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v1/coupon/create
+```
+
+</CodeGroup>
+
+### Headers
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+### Body
+
+<ParamField path="expiredAt" type="string | datetime" required>
+  Discount coupon expiration date
+</ParamField>
+
+<ParamField path="name" type="string" required>
+  Discount name
+</ParamField>
+
+<ParamField path="discount" type="{object}" required>
+  Details of discount conditions
+</ParamField>
+
+<ParamField path="discountType" type="string" required>
+  Discount type 
+
+  - monetary
+  - percentage
+</ParamField>
+
+<ParamField path="eligibleCustomerType" type="string" required>
+  Target customers who can use discount coupons
+
+  - all
+</ParamField>
+
+<ParamField path="minimumPurchase" type="number | integer" required>
+  Minimum purchase to be able to use the discount
+</ParamField>
+
+<ParamField path="value" type="number | integer" required>
+  Discount amount
+</ParamField>
+
+<ParamField path="totalCoupons" type="number | integer" required>
+  Available coupon quota
+</ParamField>
+
+<ParamField path="coupon" type="{object}" required>
+  Coupon code details
+</ParamField>
+
+<ParamField path="code" type="string" required>
+  Discount coupon code
+</ParamField>
+
+<ParamField path="type" type="string" required>
+  Coupon type
+
+  - reusable
+  - onetime
+</ParamField>
+
+<ParamField path="products" type="Array">
+  List of eligible products
+</ParamField>
