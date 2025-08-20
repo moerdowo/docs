@@ -1,4 +1,60 @@
 ---
-title: "Create magic link"
-description: "Description of your new file."
+title: "POST Create Magic Link"
+description: "Endpoint to create magic link and send to customer email for their login in our customer portal"
 ---
+
+<RequestExample>
+
+```bash Request Example
+curl --location 'https://api.mayar.id/hl/v1/customer/login/portal' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--data-raw '{
+    	"email": "mraihannanewpatch@gmail.com"
+	}
+'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "data": {
+        "url": "Sudah kami kirim ke email anda"
+    }
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v1/customer/login/portal
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v1/customer/login/portal
+```
+
+</CodeGroup>
+
+### Headers
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+### Body
+
+<ParamField path="email" type="string" required>
+  Customer email
+</ParamField>

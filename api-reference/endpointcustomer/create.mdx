@@ -1,4 +1,74 @@
 ---
-title: "Create Customer"
-description: "Description of your new file."
+title: "POST Create Customer"
+description: "Endpoint used to create customer"
 ---
+
+<RequestExample>
+
+```bash Request Example
+curl --location 'https://api.mayar.id/hl/v1/customer/create' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--data-raw '{
+   		"name": "Raihan Nur Azmii",
+    	"email": "mraihanna19@gmail.com",
+    	"mobile": "089912345678"
+	}
+'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "data": {
+        "name": "Raihan Nur Azmii",
+        "email": "mraihanna19@gmail.com",
+        "mobile": "089912345678",
+        "userId": "348e083d-315a-4e5c-96b1-5a2a98c48413",
+        "customerId": "b0356d4c-516a-403e-abfe-b144da7068b4"
+    }
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v1/customer/create
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v1/customer/create
+```
+
+</CodeGroup>
+
+### Headers
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+### Body
+
+<ParamField path="name" type="string" required>
+  Customer Name
+</ParamField>
+
+<ParamField path="email" type="string" required>
+  Customer email
+</ParamField>
+
+<ParamField path="mobile" type="string" required>
+  Customer telephone number
+</ParamField>

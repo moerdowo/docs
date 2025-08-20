@@ -1,4 +1,62 @@
 ---
-title: "Update Customer"
-description: "Description of your new file."
+title: "POST Update Customer Email"
+description: "Endpoint is used to update customer email."
 ---
+
+<RequestExample>
+
+```bash Request Example
+curl --location 'https://api.mayar.id/hl/v1/customer/update' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--data-raw '{
+   		"fromEmail": "mraihanna19@gmail.com",
+   		"toEmail": "mraihannanewpatch@gmail.com"
+}
+'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "sukses"
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v1/customer/update
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v1/customer/update
+```
+
+</CodeGroup>
+
+### Headers
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+### Body
+
+<ParamField path="fromEmail" type="string" required>
+  The email of the customer to be updated from.
+</ParamField>
+
+<ParamField path="toEmail" type="string" required>
+  The new email of the customer.
+</ParamField>
