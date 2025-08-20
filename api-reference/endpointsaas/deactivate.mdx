@@ -2,3 +2,64 @@
 title: "Deactivate License"
 description: "Description of your new file."
 ---
+
+<RequestExample>
+
+```bash Request Example
+curl --location 'https://api.mayar.id/saas/v1/license/deactivate' \
+--header 'Authorization: Bearer YOUR-TOKEN-API' \
+--data '{
+    "licenseCode":  "YOUR-LICENSE-CODE",
+    "productId":  "YOUR-PRODUCT-ID"
+}'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "message": "Success updating license code status to INACTIVE."
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/saas/v1/license/deactivate
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/saas/v1/license/deactivate
+```
+
+</CodeGroup>
+
+### Headers
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+### Body
+
+<ParamField path="licenseCode" type="string" required>
+  The license code to be activated.
+</ParamField>
+
+<ParamField path="productId" type="string" required>
+  The ID of the product associated with the license.
+</ParamField>
+
+<Info>
+  By performing this action, the status of the license code will change to INACTIVE.
+</Info>
