@@ -1,4 +1,52 @@
 ---
-title: "Account Balance"
-description: "Description of your new file."
+title: "GET Account Balance"
+description: "Endpoint where you can get your account balance"
 ---
+
+<RequestExample>
+
+```bash Request Example
+curl --location 'https://api.mayar.id/hl/v1/balance' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "data": {
+        "balanceActive": 0,
+        "balancePending": 0,
+        "balance": 0
+    }
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v1/balance
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v1/balance
+```
+
+</CodeGroup>
+
+### Headers
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
