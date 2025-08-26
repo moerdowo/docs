@@ -6,7 +6,7 @@ description: "Endpoint used to search for products by product name"
 <RequestExample>
 
 ```bash Request Example
-curl --location 'https://api.mayar.id/hl/v1/product?search=UIUX' \
+curl --location 'https://api.mayar.id/hl/v1/product?search=Testing' \
 --header 'Authorization: Bearer Bearer Paste-Your-API-Key-Here'
 ```
 
@@ -19,11 +19,32 @@ curl --location 'https://api.mayar.id/hl/v1/product?search=UIUX' \
     "statusCode": 200,
     "messages": "success",
     "hasMore": false,
-    "pageCount": 0,
+    "pageCount": 1,
     "pageSize": 10,
     "page": 1,
-    "data": [],
-    "total": 0
+    "data": [
+        {
+            "id": "45637d0b-cdcd-4637-a605-572ed0b92e5b",
+            "amount": 0,
+            "category": null,
+            "createdAt": 1709544354622,
+            "description": "<p>fjhfhgdfgxfsxdfrxdxd</p>\n",
+            "link": "testing-12654",
+            "type": "ebook",
+            "status": "active",
+            "name": "Testing",
+            "limit": null,
+            "redirectUrl": null,
+            "installmentId": null,
+            "event": null,
+            "order": null,
+            "coverImageId": null,
+            "multipleImageId": null,
+            "coverImage": null,
+            "multipleImage": null
+        }
+    ],
+    "total": 1
 }
 ```
 
@@ -34,7 +55,7 @@ Endpoint:
 <CodeGroup>
 
 ```Sandbox Production
-https://api.mayar.id/hl/v1/product?search=UIUX
+https://api.mayar.id/hl/v1/product?search=Testing
 ```
 
 
