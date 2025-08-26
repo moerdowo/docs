@@ -6,7 +6,7 @@ description: "Endpoint retry your webhook history data"
 <RequestExample>
 
 ```bash Request Example
-curl --location 'https://api.mayar.id/hl/v1/webhook/retry' \
+curl --request POST 'https://api.mayar.id/hl/v1/webhook/retry' \
 --header 'Authorization: Bearer Bearer Paste-Your-API-Key-Here' \
 --data '{
     "webhookHistoryId": "9f8050f0-9a58-4432-bf36-a7eeff7d6aea"
@@ -51,6 +51,6 @@ https://api.mayar.club/hl/v1/webhook/retry
 
 ### Body
 
-<ParamField path="webhookHistoryId" type="string" required={false}>
+<ParamField path="webhookHistoryId" type="string" required="false">
   Unique ID for webhook delivery history log
 </ParamField>

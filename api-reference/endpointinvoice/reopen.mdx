@@ -6,7 +6,7 @@ description: "Endpoint used to change invoice status from closed to open"
 <RequestExample>
 
 ```bash Request Example
-curl --location 'https://api.mayar.id/hl/v1/invoice/open/f774034d-d9cc-43a0-97d8-a2520c127f03' \
+curl --request GET 'https://api.mayar.id/hl/v1/invoice/open/f774034d-d9cc-43a0-97d8-a2520c127f03' \
 --header 'Authorization: Bearer Paste-Your-API-Key-Here' \
 --data ''
 ```
@@ -57,7 +57,7 @@ https://api.mayar.club/hl/v1/invoice/open/(productId)
 
 ### Param
 
-<ParamField path="productId" type="string" required={false}>
+<ParamField path="productId" type="string" required="false">
   A unique identifier obtained when creating an invoice. If accessed through the dashboard, it can be found at the URL on the invoice details page.
 
   Example:

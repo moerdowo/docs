@@ -6,7 +6,7 @@ description: "Endpoint to verify a license by providing the license code and pro
 <RequestExample>
 
 ```bash Request Example
-curl --location 'https://api.mayar.id/software/v1/license/verify' \
+curl --request POST 'https://api.mayar.id/software/v1/license/verify' \
 --header 'Authorization: Bearer Paste-Your-API-Key-Here' \
 --data '{
     "licenseCode": "YOUR-LICENSE-CODE",

@@ -6,7 +6,7 @@ description: "Endpoint to deactivate a license by providing the license code and
 <RequestExample>
 
 ```bash Request Example
-curl --location 'https://api.mayar.id/saas/v1/license/deactivate' \
+curl --request POST 'https://api.mayar.id/saas/v1/license/deactivate' \
 --header 'Authorization: Bearer YOUR-TOKEN-API' \
 --data '{
     "licenseCode":  "YOUR-LICENSE-CODE",
