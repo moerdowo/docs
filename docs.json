@@ -94,7 +94,7 @@
       },
       {
         "tab": "API reference",
-        "group": [
+        "groups": [
           {
             "group": "API documentation",
             "pages": [
@@ -161,25 +161,13 @@
               "api-reference/endpointcustomer/createmagiclink"
             ]
           },
-          {
+{
             "group": "Transaction",
             "pages": [
-              {
-                "page": "api-reference/endpointtransaction/accountbalance",
-                "tag": "GET"
-              },
-              {
-                "page": "api-reference/endpointtransaction/paidtransaction",
-                "tag": "GET"
-              },
-              {
-                "page": "api-reference/endpointtransaction/unpaidtransaction",
-                "tag": "GET"
-              },
-              {
-                "page": "api-reference/endpointtransaction/createdynamicqrcode",
-                "tag": "POST"
-              }
+              "api-reference/endpointtransaction/accountbalance",
+              "api-reference/endpointtransaction/paidtransaction",
+              "api-reference/endpointtransaction/unpaidtransaction",
+              "api-reference/endpointtransaction/createdynamicqrcode"
             ]
           },
           {
