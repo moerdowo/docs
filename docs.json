@@ -94,7 +94,7 @@
       },
       {
         "tab": "API reference",
-        "groups": [
+        "group": [
           {
             "group": "API documentation",
             "pages": [
