@@ -1,11 +1,11 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Mayar - No Code Payment and Commerce Platform for Any Business",
+  "name": "Mint Starter Kit",
   "colors": {
     "primary": "#0951EF",
-    "light": "#0951EF",
-    "dark": "#0951EF"
+    "light": "#07C983",
+    "dark": "#15803D"
   },
   "favicon": "/favicon.svg",
   "navigation": {
@@ -69,8 +69,7 @@
                "features/productpage/creatorsupportpage",
                "features/productpage/membership",
                "features/productpage/saas",
-               "features/productpage/licensesoftware",
-              "features/productpage/usagebasedmembership"
+               "features/productpage/licensesoftware"
             ]
           },
           {
@@ -165,10 +164,22 @@
           {
             "group": "Transaction",
             "pages": [
-              "api-reference/endpointtransaction/accountbalance",
-              "api-reference/endpointtransaction/paidtransaction",
-              "api-reference/endpointtransaction/unpaidtransaction",
-              "api-reference/endpointtransaction/createdynamicqrcode"
+              {
+                "page": "api-reference/endpointtransaction/accountbalance",
+                "tag": "GET"
+              },
+              {
+                "page": "api-reference/endpointtransaction/paidtransaction",
+                "tag": "GET"
+              },
+              {
+                "page": "api-reference/endpointtransaction/unpaidtransaction",
+                "tag": "GET"
+              },
+              {
+                "page": "api-reference/endpointtransaction/createdynamicqrcode",
+                "tag": "POST"
+              }
             ]
           },
           {
@@ -192,17 +203,6 @@
               "api-reference/endpointsaas/verify",
               "api-reference/endpointsaas/activate",
               "api-reference/endpointsaas/deactivate"
-            ]
-          },
-          {
-            "group": "usage-based membership",
-            "pages": [
-              "api-reference/endpointusagebasedmembership/registnewmembershipcustomer",
-              "api-reference/endpointusagebasedmembership/addcustomercredit",
-              "api-reference/endpointusagebasedmembership/spendcustomercredit",
-              "api-reference/endpointusagebasedmembership/paginatecustomercredithistory",
-              "api-reference/endpointusagebasedmembership/customercredithistory",
-              "api-reference/endpointusagebasedmembership/customerbalance"
             ]
           }
         ]
@@ -228,6 +228,12 @@
     "dark": "/logo/logo.png"
   },
   "navbar": {
+    "links": [
+      {
+        "label": "Support",
+        "href": "mailto:info@mayar.id"
+      }
+    ],
     "primary": {
       "type": "button",
       "label": "Dashboard",
@@ -236,8 +242,9 @@
   },
   "footer": {
     "socials": {
-      "x": "https://x.com/mayar_id_/",
-      "instagram": "https://www.instagram.com/mayar_id/"
+      "x": "https://x.com/mintlify",
+      "github": "https://github.com/mintlify",
+      "linkedin": "https://linkedin.com/company/mintlify"
     }
   }
 }
