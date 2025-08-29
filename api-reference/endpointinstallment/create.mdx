@@ -1,6 +1,5 @@
 ---
-title: "Create Installment"
-openapi: "POST /endpointinstallment/create"
+title: "POST Create Installment"
 description: "Endpoint used to create installment"
 ---
 
@@ -164,4 +163,122 @@ https://api.mayar.club/hl/v1/installment/create
 
 <ParamField path="dueDate" type="number | integer" required>
   Due date each month
+</ParamField>
+
+### Struktur Utama (Root Object)
+
+<ParamField path="statusCode" type="number">
+  HTTP status code (example: `200`).
+</ParamField>
+
+<ParamField path="messages" type="string">
+  Status message (example: `"Success"`).
+</ParamField>
+
+<ParamField path="data" type="object">
+  Main response data.
+</ParamField>
+
+### Data (object)
+
+<ParamField path="id" type="string">
+  Main ID (UUID).
+</ParamField>
+
+<ParamField path="createdAt" type="number">
+  Creation time (timestamp in ms).
+</ParamField>
+
+<ParamField path="dueDate" type="number">
+  Due date value (example: `11`).
+</ParamField>
+
+<ParamField path="interest" type="number">
+  Interest value.
+</ParamField>
+
+<ParamField path="interestType" type="string">
+  Type of interest (example: `"FLAT"`).
+</ParamField>
+
+<ParamField path="period" type="string">
+  Installment period (example: `"MONTHLY"`).
+</ParamField>
+
+<ParamField path="tenure" type="number">
+  Installment duration (in months).
+</ParamField>
+
+<ParamField path="invoices" type="array<object>">
+  List of invoices.
+</ParamField>
+
+### Invoices (array of object)
+
+Setiap **invoice** punya struktur seperti ini:
+
+<ParamField path="id" type="string">
+  Invoice ID (UUID).
+</ParamField>
+
+<ParamField path="amount" type="number">
+  Invoice amount.
+</ParamField>
+
+<ParamField path="updatedAt" type="number">
+  Last updated time (timestamp in ms).
+</ParamField>
+
+<ParamField path="category" type="string | null">
+  Invoice category.
+</ParamField>
+
+<ParamField path="status" type="string">
+  Payment status (example: `"unpaid"`).
+</ParamField>
+
+<ParamField path="index" type="number">
+  Invoice order number.
+</ParamField>
+
+<ParamField path="link" type="string">
+  Unique invoice link.
+</ParamField>
+
+<ParamField path="description" type="string">
+  Invoice description.
+</ParamField>
+
+<ParamField path="interestAmount" type="number">
+  Interest amount for the invoice.
+</ParamField>
+
+<ParamField path="remainingAmount" type="number">
+  Remaining balance.
+</ParamField>
+
+<ParamField path="ustomerId" type="string">
+  Customer ID.
+</ParamField>
+
+<ParamField path="customer" type="object">
+  Customer details.
+</ParamField>
+
+### Iustomer (object)
+
+<ParamField path="id" type="string">
+  Customer ID (UUID).
+</ParamField>
+
+<ParamField path="email" type="string">
+  Customer email address.
+</ParamField>
+
+<ParamField path="mobile" type="string">
+  Customer phone number.
+</ParamField>
+
+<ParamField path="name" type="string">
+  Customer name.
 </ParamField>
