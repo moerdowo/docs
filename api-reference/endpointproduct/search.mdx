@@ -66,7 +66,7 @@ https://api.mayar.club/hl/v1/product?search=UIUX
 
 </CodeGroup>
 
-### Authorization
+## Authorization
 
 <ResponseField name="Authorization" type="string" required>
   Example:
@@ -129,7 +129,7 @@ Successful Response
 </ResponseField>
 
 <ResponseField name="category" type="string | null" required>
-  Product category, can be empty/null if there is no category.
+  Product category, can be null if there is no category.
 </ResponseField>
 
 <ResponseField name="createdAt" type="number | timestamp" required>
@@ -161,7 +161,7 @@ Successful Response
 </ResponseField>
 
 <ResponseField name="redirectUrl" type="string | null" required>
-  Redirect destination URL, can be an empty string.
+  Redirect destination URL, can be null.
 </ResponseField>
 
 <ResponseField name="installmentId" type="string | null" required>

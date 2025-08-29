@@ -484,7 +484,7 @@ Successful Response
 </ResponseField>
 
 <ResponseField name="category" type="string | null" required>
-  Product category, can be empty/null if there is no category.
+  Product category, can be null if there is no category.
 </ResponseField>
 
 <ResponseField name="createdAt" type="number | timestamp" required>
@@ -512,11 +512,11 @@ Successful Response
 </ResponseField>
 
 <ResponseField name="limit" type="number | null" required>
-  Certain amount limit, can be empty/null.
+  Certain amount limit, can be /null.
 </ResponseField>
 
 <ResponseField name="redirectUrl" type="string | null" required>
-  Redirect destination URL, can be an empty string.
+  Redirect destination URL, can be null.
 </ResponseField>
 
 <ResponseField name="installmentId" type="string | null" required>
