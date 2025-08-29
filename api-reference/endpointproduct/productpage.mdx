@@ -489,11 +489,11 @@ https://api.mayar.club/hl/v1/product?page=1&pageSize=10
 ## Query Parameters
 
 <ParamField query="page" path="page" default="1" type="integer" required>
-  Determine which page
+  Determine which page.
 </ParamField>
 
 <ParamField query="pageSize" path="pageSize" default="10" type="integer" required>
-  How much data is displayed on the page
+  How much data is displayed on the page.
 </ParamField>
 
 ## Response
@@ -503,11 +503,11 @@ Successful Response
 ### Main Structure (Root)
 
 <ResponseField name="statusCode" type="integer" required>
-  Status code form API
+  Status code form API.
 </ResponseField>
 
 <ResponseField name="messages" type="string" required>
-  Status message that describes the status code
+  Status message that describes the status code.
 </ResponseField>
 
 <ResponseField name="hasMore" type="boolean" required>
@@ -536,7 +536,7 @@ Successful Response
   Unique product ID.
 </ResponseField>
 
-<ResponseField name="amount" type="integer" required>
+<ResponseField name="amount" type="integer | null" required>
   Product price or nominal value.
 </ResponseField>
 
@@ -545,23 +545,23 @@ Successful Response
 </ResponseField>
 
 <ResponseField name="createdAt" type="number | timestamp" required>
-  Product creation time in epoch milliseconds format
+  Product creation time in epoch milliseconds format.
 </ResponseField>
 
 <ResponseField name="description" type="string" required>
-  Product description
+  Product description.
 </ResponseField>
 
 <ResponseField name="link" type="string" required>
-  Product slug/short URL
+  Product slug/short URL.
 </ResponseField>
 
 <ResponseField name="type" type="string" required>
-  Product type
+  Product type.
 </ResponseField>
 
 <ResponseField name="status" type="string" required>
-  Product status
+  Product status.
 </ResponseField>
 
 <ResponseField name="name" type="string" required>
@@ -580,11 +580,11 @@ Successful Response
   Installment ID if the product supports installments, can be null.
 </ResponseField>
 
-<ResponseField name="event" type="string | null" required>
+<ResponseField name="event" type="object | null" required>
   Related event data, can be null.
 </ResponseField>
 
-<ResponseField name="order" type="string | null" required>
+<ResponseField name="order" type="object | null" required>
   Related order data, can be null.
 </ResponseField>
 
