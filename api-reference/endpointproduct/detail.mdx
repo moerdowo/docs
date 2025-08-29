@@ -268,7 +268,7 @@ Endpoint:
 <CodeGroup>
 
 ```Production Production
-https://api.mayar.id/hl/v1/product/(productId)
+https://api.mayar.id/hl/v1/product/id
 ```
 
 
@@ -278,7 +278,7 @@ https://api.mayar.club/hl/v1/product/(productId)
 
 </CodeGroup>
 
-### Headers
+## Authorization
 
 <ResponseField name="Authorization" type="string" required>
   Example:
@@ -286,12 +286,114 @@ https://api.mayar.club/hl/v1/product/(productId)
   `Authorization | Bearer Paste-Your-API-Key-Here`
 </ResponseField>
 
-### Param
+## Path Parameters
 
-<ParamField path="productId" type="string" required="false">
-  A unique identifier obtained when creating an product. If accessed through the dashboard, it can be found at the URL on the product details page.
-
-  Example:
-
-  `a02a76e1-25b4-49dd-9d1f-e84dd34ecbb4`
+<ParamField path="id" type="string <uuid>" required>
+  Unique product ID.
 </ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer" required>
+  Status code form API.
+</ResponseField>
+
+<ResponseField name="messages" type="string" required>
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="array of object">
+  List of products displayed.
+</ResponseField>
+
+### data Structure (Array Of Object)
+
+<ResponseField name="id" type="string<uuid>" required>
+  Unique product ID.
+</ResponseField>
+
+<ResponseField name="amount" type="integer | null" required>
+  Product price or nominal value.
+</ResponseField>
+
+<ResponseField name="category" type="string | null" required>
+  Product category, can be null if there is no category.
+</ResponseField>
+
+<ResponseField name="createdAt" type="number | timestamp" required>
+  Product creation time in epoch milliseconds format.
+</ResponseField>
+
+<ResponseField name="description" type="string" required>
+  Product description.
+</ResponseField>
+
+<ResponseField name="link" type="string" required>
+  Product slug/short URL.
+</ResponseField>
+
+<ResponseField name="type" type="string" required>
+  Product type.
+</ResponseField>
+
+<ResponseField name="status" type="string" required>
+  Product status.
+</ResponseField>
+
+<ResponseField name="name" type="string" required>
+  Product name.
+</ResponseField>
+
+<ResponseField name="limit" type="number | null" required>
+  Certain amount limit, can be /null.
+</ResponseField>
+
+<ResponseField name="redirectUrl" type="string | null" required>
+  Redirect destination URL, can be null.
+</ResponseField>
+
+<ResponseField name="installmentId" type="string | null" required>
+  Installment ID if the product supports installments, can be null.
+</ResponseField>
+
+<ResponseField name="event" type="object" required>
+  Related event data.
+</ResponseField>
+
+<ResponseField name="order" type="object | null" required>
+  Related order data, can be null.
+</ResponseField>
+
+<ResponseField name="coverImageId" type="string | null" required>
+  ID cover image, can be null.
+</ResponseField>
+
+<ResponseField name="multipleImageId" type="string <uuid>" required>
+  ID for multiple image group.
+</ResponseField>
+
+<ResponseField name="coverImage" type="object | null" required>
+  Cover image data, can be null.
+</ResponseField>
+
+<ResponseField name="multimpleImage" type="array of object">
+  List of additional images for the product.
+</ResponseField>
+
+### multipleImage Structure (Array Of Object)
+
+<ResponseField name="id" type="string <uuid>" required>
+  Unique ID for the image.
+</ResponseField>
+
+<ResponseField name="fileType" type="string" required>
+  File type, for example, "jpeg".
+</ResponseField>
+
+<ResponseField name="url" type="string" required>
+  Direct link to the image.
+</ResponseField>
