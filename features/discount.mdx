@@ -17,7 +17,96 @@ Follow these simple steps to create a discount in Mayar:
 2. Then, select "Discount" from the dropdown options.
 
    ![Gambar HD33 Pn](/images/gambarHD33.png)
-3. You will see the "Create Discount" form. Fill in the required details, including: Discount Name: Enter the name of the discount. Applicable Products: Select which products the discount will apply to. Discount Type: Choose whether it’s a percentage or a fixed amount.  Discount Value: Specify the amount or percentage of the discount. Minimum Purchase: Set the minimum order value required to apply the discount. Coupon Type: Choose whether the coupon can be used multiple times or just once. Eligible Customers: Select who can use the discount, such as all customers, new customers, or returning customers. Coupon Code: You can create your own code or use the system to generate one. Usage Limit: Set how many times the coupon can be used. Expiration Date: Define the expiry date of the discount.
+3. You will see the "Create Discount" form. Fill in the required details, including: 
+
+   | Input Form              | Description                                                                                    |
+   | ----------------------- | ---------------------------------------------------------------------------------------------- |
+   | **Discount Name**       | Enter the name of the discount.                                                                |
+   | **Applicable Products** | Select which products the discount will apply to.                                              |
+   | **Discount Type**       | Choose whether it’s a percentage or a fixed amount.                                            |
+   | **Discount Value**      | Specify the amount or percentage of the discount.                                              |
+   | **Minimum Purchase**    | Set the minimum order value required to apply the discount.                                    |
+   | **Coupon Type**         | Choose whether the coupon can be used multiple times or just once.                             |
+   | **Eligible Customers**  | Select who can use the discount, such as all customers, new customers, or returning customers. |
+   | **Coupon Code**         | You can create your own code or use the system to generate one.                                |
+   | **Usage Limit**         | Set how many times the coupon can be used.                                                     |
+   | **Expiration Date**     | Define the expiry date of the discount.                                                        |
 
    ![Gambar HD34 Pn](/images/gambarHD34.png)
-4. After completing the "Create Discount" form, you’ll be redirected to the discount’s detail page. Congratulations\! You've successfully created a discount.
+4. Once you complete the form, you’ll be redirected to the **Discount Details** page. Here, you’ll see the complete discount information, for example:
+
+   ![Gambar HD40 Pn](/images/gambarHD40.png)
+
+   | **Discount Title**      | 50% off for all products.                          |
+   | ----------------------- | -------------------------------------------------- |
+   | **Discount Name**       | Holiday Sale.                                      |
+   | **Discount Status**     | Active, meaning the discount is currently running. |
+   | **Applicable Products** | Valid for all available products.                  |
+   | **Discount Value**      | 50% off.                                           |
+   | **Minimum Purchase**    | Rp 10,000.                                         |
+   | **Eligible Customers**  | Available to all customers.                        |
+   | **Coupon Type**         | Recurring, meaning it can be used more than once.  |
+   | **Coupon Code**         | WOQRS37                                            |
+   | **Created On**          | August 29, 2025.                                   |
+
+   At the bottom of the page, you’ll also find **Generated Coupon Codes,** which include:
+
+   | **Coupon Code**     | WOQRS37                            |
+   | ------------------- | ---------------------------------- |
+   | **Limit**           | No usage limit                     |
+   | **Expiration Date** | No expiry (valid forever)          |
+   | **Details**         | Option to view more coupon details |
+
+   On the **Coupon Details** page, you can also see:
+
+   ![Gambar HD41 Pn](/images/gambarHD41.png)
+
+   | **Coupon Code**     | WOQRS37                   |
+   | ------------------- | ------------------------- |
+   | **Usage Limit**     | None (unlimited)          |
+   | **Total Usage**     | Currently 0               |
+   | **Created On**      | August 29, 2025, at 12:39 |
+   | **Expiration Date** | None (valid forever)      |
+5. Once all steps are completed, your discount is ready to use. **Congratulations, you’ve successfully created a Discount in Mayar\!**
+
+### How to Use Auto-Apply Discount Codes
+
+The **Auto-Apply Discount Code** feature in Mayar allows discounts to be applied automatically at checkout, without customers needing to enter a code manually. This makes shopping easier, improves customer experience, and reduces errors when entering codes. Eligible discounts will automatically apply to relevant products during checkout. Here’s how to set it up:
+
+<Steps>
+  <Step title="Create a Discount">
+    Either use an existing coupon or create a new one to auto-apply.
+  </Step>
+  <Step title="Copy the Coupon Code">
+    Get the coupon code from your discount details page.
+
+    ![Gambar HD43 Pn](/images/gambarHD43.png)
+  </Step>
+  <Step title="Edit Checkout URL">
+    Add `?coupon=COUPONCODE` at the end of your product checkout URL. Replace `COUPONCODE` with the actual code.
+  </Step>
+  <Step title="Share the URL">
+    Give this modified URL to your customers. Example: `https://andiak.myr.id/pl/test-uiux-produk-digital?coupon=WOQRS37`
+
+    ![Gambar HD44 Pn](/images/gambarHD44.png)
+  </Step>
+  <Step title="Checkout Process">
+    When customers visit the URL, the discount will be applied automatically—no need to type in the code. **Congrats\! You’ve successfully used the Auto-Apply Discount feature in Mayar.**
+
+    ![Gambar HD45 Pn](/images/gambarHD45.png)
+  </Step>
+</Steps>
+
+### Using a Discount Coupon at Checkout
+
+On the Mayar checkout page, customers can easily apply discount coupons. For example, if the customer enters the coupon code **“WOQRS37”**, the system shows a **“SUCCESS”** status, meaning the discount has been applied.
+
+\* Original Price: Rp 10,000
+
+\* Discount: 50%
+
+\* Final Price: Rp 5,000
+
+The order summary clearly shows the applied discount, ensuring transparency and a smooth checkout experience for customers.
+
+![Gambar HD42 Pn](/images/gambarHD42.png)
