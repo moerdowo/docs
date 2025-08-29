@@ -478,7 +478,7 @@ https://api.mayar.club/hl/v1/product?page=1&pageSize=10
 
 </CodeGroup>
 
-### Headers
+## Authorizations
 
 <ResponseField name="Authorization" type="string" required>
   Example:
@@ -486,11 +486,142 @@ https://api.mayar.club/hl/v1/product?page=1&pageSize=10
   `Authorization | Bearer Paste-Your-API-Key-Here`
 </ResponseField>
 
-### Params
+## Query Parameters
 
-<ParamField path="param" type="string" required>
-  Example:
-
-  - `page = 1`
-  - `pageSize = 10`
+<ParamField query="page" path="page" default="1" type="integer" required>
+  Determine which page
 </ParamField>
+
+<ParamField query="pageSize" path="pageSize" default="10" type="integer" required>
+  How much data is displayed on the page
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer" required>
+  Status code form API
+</ResponseField>
+
+<ResponseField name="messages" type="string" required>
+  Status message that describes the status code
+</ResponseField>
+
+<ResponseField name="hasMore" type="boolean" required>
+  Information on whether there is additional data to be retrieved (true/false).
+</ResponseField>
+
+<ResponseField name="pageCount" type="integer" required>
+  Total number of data pages.
+</ResponseField>
+
+<ResponseField name="pageSize" type="integer" required>
+  Number of items per page.
+</ResponseField>
+
+<ResponseField name="page" type="integer" required>
+  The page currently displayed.
+</ResponseField>
+
+<ResponseField name="data" type="array of object">
+  List of products displayed.
+</ResponseField>
+
+### data Structure (Array Of Object)
+
+<ResponseField name="id" type="string<uuid>" required>
+  Unique product ID.
+</ResponseField>
+
+<ResponseField name="amount" type="integer" required>
+  Product price or nominal value.
+</ResponseField>
+
+<ResponseField name="category" type="string | null" required>
+  Product category, can be empty/null if there is no category.
+</ResponseField>
+
+<ResponseField name="createdAt" type="number | timestamp" required>
+  Product creation time in epoch milliseconds format
+</ResponseField>
+
+<ResponseField name="description" type="string" required>
+  Product description
+</ResponseField>
+
+<ResponseField name="link" type="string" required>
+  Product slug/short URL
+</ResponseField>
+
+<ResponseField name="type" type="string" required>
+  Product type
+</ResponseField>
+
+<ResponseField name="status" type="string" required>
+  Product status
+</ResponseField>
+
+<ResponseField name="name" type="string" required>
+  Product name.
+</ResponseField>
+
+<ResponseField name="limit" type="number | null" required>
+  Certain amount limit, can be empty/null.
+</ResponseField>
+
+<ResponseField name="redirectUrl" type="string | null" required>
+  Redirect destination URL, can be an empty string.
+</ResponseField>
+
+<ResponseField name="installmentId" type="string | null" required>
+  Installment ID if the product supports installments, can be null.
+</ResponseField>
+
+<ResponseField name="event" type="string | null" default="null" required>
+  Related event data, can be null.
+</ResponseField>
+
+<ResponseField name="order" type="string | null" default="null" required>
+  Related order data, can be null.
+</ResponseField>
+
+<ResponseField name="coverImageId" type="string | null" default="null" required>
+  ID cover image, can be null.
+</ResponseField>
+
+<ResponseField name="multipleImageId" type="string <uuid>" required>
+  ID for multiple image group.
+</ResponseField>
+
+<ResponseField name="coverImage" type="object | null" default="null" required>
+  Cover image data, can be null.
+</ResponseField>
+
+<ResponseField name="multimpleImage" type="array of object">
+  List of additional images for the product.
+</ResponseField>
+
+### multipleImage Structure (Array Of Object)
+
+<ResponseField name="id" type="string <uuid>" required>
+  Unique ID for the image.
+</ResponseField>
+
+<ResponseField name="fileType" type="string" required>
+  File type, for example, "jpeg".
+</ResponseField>
+
+<ResponseField name="createdAt" type="number | timestamp" required>
+  Image creation time (epoch milliseconds).
+</ResponseField>
+
+<ResponseField name="updateAt" type="number | timestamp" required>
+  Image last updated time.
+</ResponseField>
+
+<ResponseField name="url" type="string" required>
+  Direct link to the image.
+</ResponseField>
