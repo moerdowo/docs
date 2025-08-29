@@ -523,8 +523,8 @@ Successful Response
   Installment ID if the product supports installments, can be null.
 </ResponseField>
 
-<ResponseField name="event" type="object | null" required>
-  Related event data, can be null.
+<ResponseField name="event" type="object" required>
+  Related event data.
 </ResponseField>
 
 <ResponseField name="order" type="object | null" required>
@@ -554,11 +554,11 @@ Successful Response
 </ResponseField>
 
 <ResponseField name="event" type="string | null" required>
-  Event name/type.
+  Event name/type, can be null.
 </ResponseField>
 
 <ResponseField name="description" type="string | null" required>
-  Event description
+  Event description, can be null
 </ResponseField>
 
 <ResponseField name="ticketevent" type="array of object" required>
