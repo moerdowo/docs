@@ -232,3 +232,35 @@ https://api.mayar.club/hl/v1/webhook/history?page=1&pageSize=10
     - membership.newMemberRegistered
   </Tab>
 </Tabs>
+
+### Root
+
+<ParamField path="statusCode" type="number">
+  EHTTP status code (example: `200`).
+</ParamField>
+
+<ParamField path="messages" type="string">
+  Response message (example: `"success"`).
+</ParamField>
+
+<ParamField path="hasMore" type="boolean">
+  Indicates whether there are more pages of data.
+</ParamField>
+
+<ParamField path="pageCount" type="number">
+  Total number of available pages.
+</ParamField>
+
+<ParamField path="pageSize" type="number">
+  Number of items per page.
+</ParamField>
+
+<ParamField path="page" type="number">
+  Current page number.
+</ParamField>
+
+<ParamField path="data" type="array<object>">
+  List of webhook delivery logs.
+</ParamField>
+
+### Data [object]
