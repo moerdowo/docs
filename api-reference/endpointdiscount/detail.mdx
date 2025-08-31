@@ -80,9 +80,123 @@ https://api.mayar.club/hl/v1/coupon/(couponId)
 ### Param
 
 <ParamField path="couponId" type="string" required="false">
-  A unique identifier obtained when creating an discount. If accessed through the dashboard, it can be found at the URL on the discount details page.
+  A unique identifier obtained when creating a discount. If accessed through the dashboard, it can be found at the URL on the discount details page.
 
   Example:
 
   `c9aa143a-53f9-44e7-a9c6-83229ad7199b`
+</ParamField>
+
+### Root
+
+<ParamField path="statusCode" type="number">
+  HTTP status code (example: `200`).
+</ParamField>
+
+<ParamField path="messages" type="string">
+  Status message (example: `"Success"`).
+</ParamField>
+
+<ParamField path="data" type="object">
+  Main response data.
+</ParamField>
+
+### Data
+
+<ParamField path="id" type="string">
+  Discount ID (UUID).
+</ParamField>
+
+<ParamField path="createdAt" type="number">
+  Creation time (timestamp in ms).
+</ParamField>
+
+<ParamField path="expiredAt" type="number">
+  Expiration time (timestamp in ms).
+</ParamField>
+
+<ParamField path="productDiscount" type="array<object>">
+  Product-specific discount rules (empty if not applied).
+</ParamField>
+
+<ParamField path="discountType" type="string">
+  Discount type (example: `"monetary"`).
+</ParamField>
+
+<ParamField path="discountProductType" type="string">
+  Discount product scope (example: `"all"`).
+</ParamField>
+
+<ParamField path="eligibleCustomerType" type="string">
+  Eligible customer scope (example: `"all"`).
+</ParamField>
+
+<ParamField path="name" type="string">
+  Discount name (example: `"Diskon Murmer"`).
+</ParamField>
+
+<ParamField path="minimumPurchase" type="number">
+  Minimum purchase amount required to apply the discount.
+</ParamField>
+
+<ParamField path="isLifeTime" type="boolean | null">
+  Indicates if the discount is lifetime (`true`/`false`) or `null`.
+</ParamField>
+
+<ParamField path="totalCoupons" type="number">
+  Total number of coupons available.
+</ParamField>
+
+<ParamField path="value" type="number">
+  Discount value (example: `100000`).
+</ParamField>
+
+<ParamField path="coupons" type="array<object>">
+  List of coupons associated with this discount.
+</ParamField>
+
+### Coupons[]
+
+<ParamField path="id" type="string">
+  Coupon ID (UUID).
+</ParamField>
+
+<ParamField path="code" type="string">
+  Coupon code (example: `"haribaik"`).
+</ParamField>
+
+<ParamField path="createdAt" type="number">
+  Coupon creation time (timestamp in ms).
+</ParamField>
+
+<ParamField path="discountId" type="string">
+  Related Discount ID (UUID).
+</ParamField>
+
+<ParamField path="endMonthTrial" type="string | null">
+  End of trial month (if applicable).
+</ParamField>
+
+<ParamField path="expiredAt" type="number">
+  Coupon expiration time (timestamp in ms).
+</ParamField>
+
+<ParamField path="isActive" type="boolean">
+  Whether the coupon is active (`true` or `false`).
+</ParamField>
+
+<ParamField path="limit" type="number">
+  Maximum usage limit for the coupon.
+</ParamField>
+
+<ParamField path="type" type="string">
+  Coupon type (example: `"reusable"`).
+</ParamField>
+
+<ParamField path="updatedAt" type="number">
+  Last updated time (timestamp in ms).
+</ParamField>
+
+<ParamField path="userId" type="string">
+  ID of the user who created/owns the coupon.
 </ParamField>

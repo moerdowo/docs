@@ -143,3 +143,95 @@ https://api.mayar.club/hl/v1/coupon/create
 <ParamField path="products" type="Array">
   List of eligible products
 </ParamField>
+
+### Root
+
+<ParamField path="statusCode" type="number">
+  HTTP status code (example: `200`).
+</ParamField>
+
+<ParamField path="messages" type="string">
+  Status message (example: `"Success"`).
+</ParamField>
+
+<ParamField path="data" type="object">
+  Main response data.
+</ParamField>
+
+### Data
+
+<ParamField path="id" type="string">
+  Discount ID (UUID).
+</ParamField>
+
+<ParamField path="createdAt" type="number">
+  Creation time (timestamp in ms).
+</ParamField>
+
+<ParamField path="expiredAt" type="number">
+  Expiration time (timestamp in ms).
+</ParamField>
+
+<ParamField path="discountType" type="string">
+  Discount type (example: `"monetary"`).
+</ParamField>
+
+<ParamField path="discountProductType" type="string">
+  Discount product scope (example: `"all"`).
+</ParamField>
+
+<ParamField path="eligibleCustomerType" type="string">
+  Eligible customer scope (example: `"all"`).
+</ParamField>
+
+<ParamField path="name" type="string">
+  Discount name (example: `"Diskon Murmer"`).
+</ParamField>
+
+<ParamField path="minimumPurchase" type="number">
+  Minimum purchase amount required to apply discount.
+</ParamField>
+
+<ParamField path="isLifeTime" type="boolean | null">
+  Indicates if discount is lifetime (`true`/`false`) or `null`.
+</ParamField>
+
+<ParamField path="totalCoupons" type="number">
+  Total number of coupons available.
+</ParamField>
+
+<ParamField path="value" type="number">
+  Discount value (example: `100000`).
+</ParamField>
+
+<ParamField path="coupons" type="array<object>">
+  List of coupons associated with this discount.
+</ParamField>
+
+<ParamField path="productDiscount" type="array<object>">
+  Product-specific discount rules (empty if not applied).
+</ParamField>
+
+### coupons[]
+
+<ParamField path="code" type="string">
+  Coupon code (example: `"haribaik"`).
+</ParamField>
+
+<ParamField path="type" type="string">
+  Coupon type (example: `"reusable"`).
+</ParamField>
+
+<ParamField path="expiredAt" type="string (ISO 8601 datetime)">
+  Coupon expiration date (example: `"2030-01-01T09:06:14.933Z"`).
+</ParamField>
+
+<ParamField path="isActive" type="boolean">
+  Whether the coupon is active (`true` or `false`).
+</ParamField>
+
+### Product Discount[]
+
+<ParamField path="param(empty object for now)">
+  Represents specific product discounts if applicable.
+</ParamField>
