@@ -76,3 +76,19 @@ https://api.mayar.club/saas/v1/license/verify
 <ParamField path="productId" type="string" required>
   The ID of the product associated with the license.
 </ParamField>
+
+### Root
+
+<ParamField path="statusCode" type="number">
+  HTTP status code (example: `200`).
+</ParamField>
+
+<ParamField path="isLicenseActive" type="boolean">
+  Indicates whether the license is currently active (`true` or `false`).
+</ParamField>
+
+<ParamField path="licenseCode" type="object">
+  License code details.
+</ParamField>
+
+### licenseCode
