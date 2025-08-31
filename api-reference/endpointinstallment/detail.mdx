@@ -114,3 +114,131 @@ https://api.mayar.club/hl/v1/installment/(installmentId)
 
   `ba82c2dd-06c1-4b6c-bc59-a9c00801c842`
 </ParamField>
+
+### Root
+
+<ParamField path="statusCode" type="number">
+  HTTP status code (example: `200`).
+</ParamField>
+
+<ParamField path="messages" type="string">
+  Status message (example: `"Success"`).
+</ParamField>
+
+<ParamField path="data" type="object">
+  Main response data.
+</ParamField>
+
+### Data
+
+<ParamField path="id" type="string">
+  Main ID (UUID).
+</ParamField>
+
+<ParamField path="createdAt" type="number">
+  Creation time (timestamp in ms).
+</ParamField>
+
+<ParamField path="period" type="string">
+  Installment period (example: `"MONTHLY"`).
+</ParamField>
+
+<ParamField path="tenure" type="number">
+  Installment duration (in months).
+</ParamField>
+
+<ParamField path="dueDate" type="number">
+  Due date value (example: `11`).
+</ParamField>
+
+<ParamField path="interest" type="number">
+  Interest value.
+</ParamField>
+
+<ParamField path="interestType" type="string">
+  Type of interest (example: `"FLAT"`).
+</ParamField>
+
+<ParamField path="paymentLinkId" type="string">
+  Associated Payment Link ID (UUID).
+</ParamField>
+
+<ParamField path="updatedAt" type="number">
+  Last update time (timestamp in ms).
+</ParamField>
+
+<ParamField path="userId" type="string">
+  User ID (UUID).
+</ParamField>
+
+<ParamField path="paymentLink" type="object">
+  Payment link details.
+</ParamField>
+
+<ParamField path="invoices" type="array<object>">
+  List of invoices.
+</ParamField>
+
+### Payment Link
+
+<ParamField path="id" type="string">
+  Payment link ID (UUID).
+</ParamField>
+
+<ParamField path="name" type="string">
+  Customer name for the payment link.
+</ParamField>
+
+<ParamField path="amount" type="number">
+  Total payment amount.
+</ParamField>
+
+<ParamField path="description" type="string">
+  Description of the payment.
+</ParamField>
+
+<ParamField path="customerId" type="string">
+  Customer ID.
+</ParamField>
+
+### invoices[]
+
+<ParamField path="id" type="string">
+  Enter a description
+</ParamField>
+
+<ParamField path="expiredAt" type="number">
+  Invoice ID (UUID).
+</ParamField>
+
+<ParamField path="amount" type="number">
+  nvoice amount.
+</ParamField>
+
+<ParamField path="status" type="string | null">
+  Invoice category.
+</ParamField>
+
+<ParamField path="status" type="string">
+  Payment status (example: `"unpaid"`).
+</ParamField>
+
+<ParamField path="link" type="number">
+  IInvoice order number.
+</ParamField>
+
+<ParamField path="link" type="string">
+  Unique invoice link.
+</ParamField>
+
+<ParamField path="description" type="string">
+  Invoice description.
+</ParamField>
+
+<ParamField query="remainingAmount" path="param" type="number">
+  Interest amount for the invoice.
+</ParamField>
+
+<ParamField path="param" type="number">
+  IRemaining balance for this invoice.
+</ParamField>
