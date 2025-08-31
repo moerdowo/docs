@@ -59,7 +59,7 @@ https://api.mayar.club/hl/v1/invoice/create
 
 </CodeGroup>
 
-### Headers
+## Authorization
 
 <ResponseField name="Authorization" type="string" required>
   Example:
@@ -67,7 +67,7 @@ https://api.mayar.club/hl/v1/invoice/create
   `Authorization | Bearer Paste-Your-API-Key-Here`
 </ResponseField>
 
-### Body
+## Request Body
 
 <ParamField path="name" type="string" required>
   Customer Name
@@ -104,3 +104,39 @@ https://api.mayar.club/hl/v1/invoice/create
 <ParamField path="rate" type="integer">
   Price per unit of goods.
 </ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer" required>
+  Status code form API.
+</ResponseField>
+
+<ResponseField name="messages" type="string" required>
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="array of object">
+  The main data returned (invoice details).
+</ResponseField>
+
+### data Structure (Array Of Object)
+
+<ResponseField name="id" type="string<uuid>" required>
+  Unique invoice ID.
+</ResponseField>
+
+<ResponseField name="transactionId" type="string<uuid>" required>
+  Unique transaction ID associated with this invoice.
+</ResponseField>
+
+<ResponseField name="link" type="string" required>
+  The URL that users/clients can access to open invoices.
+</ResponseField>
+
+<ResponseField name="expiredAt" type="number" required>
+  Invoice expiration time in epoch timestamp (ms) format.
+</ResponseField>
