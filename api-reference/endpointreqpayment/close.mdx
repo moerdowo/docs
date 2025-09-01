@@ -38,17 +38,17 @@ Endpoint:
 <CodeGroup>
 
 ```Production Production
-https://api.mayar.id/hl/v1/payment/close/(productId)
+https://api.mayar.id/hl/v1/payment/close/{id}
 ```
 
 
 ```Sandbox Sandbox
-https://api.mayar.club/hl/v1/payment/close/(productId)
+https://api.mayar.club/hl/v1/payment/close/{id}
 ```
 
 </CodeGroup>
 
-### Headers
+## Authorization
 
 <ResponseField name="Authorization" type="string" required>
   Example:
@@ -56,12 +56,20 @@ https://api.mayar.club/hl/v1/payment/close/(productId)
   `Authorization | Bearer Paste-Your-API-Key-Here`
 </ResponseField>
 
-### Param
+## Path Parameters
 
-<ParamField path="productId" type="string" required>
-  A unique identifier obtained when creating an single request payment. If accessed through the dashboard, it can be found at the URL on the request payment details page.
-
-  Example:
-
-  `e890d24a-cfc0-4915-83d2-3166b9ffba9e`
+<ParamField path="id" type="string <uuid>" required>
+  Unique request payment ID.
 </ParamField>
+
+## Response
+
+Successful Response
+
+<ResponseField name="statusCode" type="integer" required>
+  Status code form API.
+</ResponseField>
+
+<ResponseField name="messages" type="string" required>
+  Status message that describes the status code.
+</ResponseField>

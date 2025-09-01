@@ -49,17 +49,17 @@ Endpoint:
 <CodeGroup>
 
 ```Production Production
-https://api.mayar.id/hl/v1/payment/(productId)
+https://api.mayar.id/hl/v1/payment/{id}
 ```
 
 
 ```Sandbox Sandbox
-https://api.mayar.club/hl/v1/payment/(productId)
+https://api.mayar.club/hl/v1/payment/{id}
 ```
 
 </CodeGroup>
 
-### Headers
+## Authorization
 
 <ResponseField name="Authorization" type="string" required>
   Example:
@@ -67,12 +67,100 @@ https://api.mayar.club/hl/v1/payment/(productId)
   `Authorization | Bearer Paste-Your-API-Key-Here`
 </ResponseField>
 
-### Param
+## Path Parameter
 
-<ParamField path="productId" type="string" required>
+<ParamField path="id" type="string" required>
   A unique identifier obtained when creating an single request payment. If accessed through the dashboard, it can be found at the URL on the request payment details page.
 
   Example:
 
   `e890d24a-cfc0-4915-83d2-3166b9ffba9e`
 </ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer" required>
+  Status code form API.
+</ResponseField>
+
+<ResponseField name="messages" type="string" required>
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="array of object">
+  List of products displayed.
+</ResponseField>
+
+### data Structure (Array Of Object)
+
+<ResponseField name="id" type="string<uuid>" required>
+  Unique request payment ID.
+</ResponseField>
+
+<ResponseField name="link" type="string" required>
+  Product slug/short URL.
+</ResponseField>
+
+<ResponseField name="name" type="string" required>
+  Product name.
+</ResponseField>
+
+<ResponseField name="category" type="string | null" required>
+  Product category, can be null if there is no category.
+</ResponseField>
+
+<ResponseField name="limit" type="number | null" required>
+  Certain amount limit, can be null.
+</ResponseField>
+
+<ResponseField name="type" type="string" required>
+  Product type.
+</ResponseField>
+
+<ResponseField name="userId" type="string<uuid>" required>
+  Unique ID of the user making the request.
+</ResponseField>
+
+<ResponseField name="event" type="object | null" required>
+  Related event data, can be null.
+</ResponseField>
+
+<ResponseField name="order" type="object | null" required>
+  Related order data, can be null.
+</ResponseField>
+
+<ResponseField name="qty" type="string | null" required>
+  Quantity (if the request relates to specific goods/services).
+</ResponseField>
+
+<ResponseField name="amount" type="integer" required={false}>
+  Product price or nominal value.
+</ResponseField>
+
+<ResponseField name="status" type="string" required>
+  Product status.
+</ResponseField>
+
+<ResponseField name="description" type="string" required>
+  Product description.
+</ResponseField>
+
+<ResponseField name="coverImageId" type="string | null" required>
+  ID cover image, can be null.
+</ResponseField>
+
+<ResponseField name="multipleImageId" type="string | null" required>
+  ID for multiple image group. can be null.
+</ResponseField>
+
+<ResponseField name="coverImage" type="object | null" required>
+  Cover image data, can be null.
+</ResponseField>
+
+<ResponseField name="multimpleImage" type="array of object">
+  List of additional images for the product.
+</ResponseField>
