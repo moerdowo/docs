@@ -145,7 +145,7 @@ https://api.mayar.club/hl/v1/customer?page=1&pageSize=10
 
 </CodeGroup>
 
-### Headers
+### Authorizations
 
 <ResponseField name="Authorization" type="string" required>
   Example:
@@ -153,11 +153,80 @@ https://api.mayar.club/hl/v1/customer?page=1&pageSize=10
   `Authorization | Bearer Paste-Your-API-Key-Here`
 </ResponseField>
 
-### Params
+## Query Parameters
 
-<ParamField path="param" type="string" required>
-  Example:
-
-  - `page = 1`
-  - `pageSize = 10`
+<ParamField query="page" path="page" default={1} type="integer" required>
+  Determine which page.
 </ParamField>
+
+<ParamField query="pageSize" path="pageSize" default={10} type="integer" required>
+  How much data is displayed on the page.
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer" required>
+  Status code form API.
+</ResponseField>
+
+<ResponseField name="messages" type="string" required>
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="hasMore" type="boolean" required>
+  Information on whether there is additional data to be retrieved (true/false).
+</ResponseField>
+
+<ResponseField name="pageCount" type="integer" required>
+  Total number of data pages.
+</ResponseField>
+
+<ResponseField name="pageSize" type="integer" required>
+  Number of items per page.
+</ResponseField>
+
+<ResponseField name="page" type="integer" required>
+  The page currently displayed.
+</ResponseField>
+
+<ResponseField name="data" type="array of object">
+  List of products displayed.
+</ResponseField>
+
+### data Structure (Array Of Object)
+
+<ResponseField name="id" type="string<uuid>" required>
+  Unique customer ID.
+</ResponseField>
+
+<ResponseField name="createdAt" type="integer | timestamp - Unix epoch in milliseconds" required>
+  The time the data was created.
+</ResponseField>
+
+<ResponseField name="email" type="string" required>
+  Customer's email address.
+</ResponseField>
+
+<ResponseField name="mobile" type="string" required>
+  Customer's phone number.
+</ResponseField>
+
+<ResponseField name="name" type="string" required>
+  Customer's name.
+</ResponseField>
+
+<ResponseField name="status" type="string" required>
+  Customer status, e.g., "active", "inactive".
+</ResponseField>
+
+<ResponseField name="updateAt" type="integer | timestamp - Unix epoch in milliseconds" required>
+  The last time the data was updated.
+</ResponseField>
+
+<ResponseField name="userId" type="string<uuid>" required>
+  The user ID of the owner of this data/customer.
+</ResponseField>

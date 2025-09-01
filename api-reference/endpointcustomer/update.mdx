@@ -44,7 +44,7 @@ https://api.mayar.club/hl/v1/customer/update
 
 </CodeGroup>
 
-### Headers
+## Authorization
 
 <ResponseField name="Authorization" type="string" required>
   Example:
@@ -52,7 +52,7 @@ https://api.mayar.club/hl/v1/customer/update
   `Authorization | Bearer Paste-Your-API-Key-Here`
 </ResponseField>
 
-### Body
+## Request Body
 
 <ParamField path="fromEmail" type="string" required>
   The email of the customer to be updated from.
@@ -61,3 +61,17 @@ https://api.mayar.club/hl/v1/customer/update
 <ParamField path="toEmail" type="string" required>
   The new email of the customer.
 </ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer" required>
+  Status code form API.
+</ResponseField>
+
+<ResponseField name="messages" type="string" required>
+  Status message that describes the status code.
+</ResponseField>

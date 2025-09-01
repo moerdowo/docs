@@ -46,7 +46,7 @@ https://api.mayar.club/hl/v1/customer/login/portal
 
 </CodeGroup>
 
-### Headers
+## Authorization
 
 <ResponseField name="Authorization" type="string" required>
   Example:
@@ -54,8 +54,32 @@ https://api.mayar.club/hl/v1/customer/login/portal
   `Authorization | Bearer Paste-Your-API-Key-Here`
 </ResponseField>
 
-### Body
+## Request Body
 
 <ParamField path="email" type="string" required>
-  Customer email
+  Customer email.
 </ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer" required>
+  Status code form API.
+</ResponseField>
+
+<ResponseField name="messages" type="string" required>
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="array of object">
+  The main data returned (detailed customer/user information).
+</ResponseField>
+
+### data Structure (Array Of Object)
+
+<ResponseField name="url" type="string" required>
+  Information about the magic link request that was made.
+</ResponseField>

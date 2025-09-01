@@ -52,7 +52,7 @@ https://api.mayar.club/hl/v1/customer/create
 
 </CodeGroup>
 
-### Headers
+## Authorization
 
 <ResponseField name="Authorization" type="string" required>
   Example:
@@ -60,16 +60,56 @@ https://api.mayar.club/hl/v1/customer/create
   `Authorization | Bearer Paste-Your-API-Key-Here`
 </ResponseField>
 
-### Body
+## Request Body
 
 <ParamField path="name" type="string" required>
-  Customer Name
+  Customer Name.
 </ParamField>
 
 <ParamField path="email" type="string" required>
-  Customer email
+  Customer email.
 </ParamField>
 
 <ParamField path="mobile" type="string" required>
-  Customer telephone number
+  Customer telephone number.
 </ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer" required>
+  Status code form API.
+</ResponseField>
+
+<ResponseField name="messages" type="string" required>
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="array of object">
+  The main data returned (detailed customer/user information).
+</ResponseField>
+
+### data Structure (Array Of Object)
+
+<ResponseField name="name" type="string" required>
+  Customer name.
+</ResponseField>
+
+<ResponseField name="email" type="string" required>
+  Customer email address.
+</ResponseField>
+
+<ResponseField name="mobile" type="string" required>
+  Customer phone number.
+</ResponseField>
+
+<ResponseField name="userId" type="string<uuid>" required>
+  Unique ID for the user (the account owner).
+</ResponseField>
+
+<ResponseField name="response" type="string<uuid>" required>
+  Unique ID for the customer associated with the user.
+</ResponseField>
