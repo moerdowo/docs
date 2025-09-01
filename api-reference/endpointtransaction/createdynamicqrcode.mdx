@@ -47,7 +47,7 @@ https://api.mayar.club/hl/v1/qrcode/create
 
 </CodeGroup>
 
-### Headers
+## Authorization
 
 <ResponseField name="Authorization" type="string" required>
   Example:
@@ -55,8 +55,36 @@ https://api.mayar.club/hl/v1/qrcode/create
   `Authorization | Bearer Paste-Your-API-Key-Here`
 </ResponseField>
 
-### Body
+## Request Body
 
-<ParamField path="amount" type="number | integer" required>
-  Nominal Payment
+<ParamField path="amount" type="integer" required>
+  Nominal Payment.
 </ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer" required>
+  Status code form API.
+</ResponseField>
+
+<ResponseField name="messages" type="string" required>
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="array of object">
+  The main data returned (detailed customer/user information).
+</ResponseField>
+
+### data Structure (Array Of Object)
+
+<ResponseField name="url" type="string" required>
+  File link (QR image file provided).
+</ResponseField>
+
+<ResponseField name="amount" type="integer" required>
+  Nominal Payment.
+</ResponseField>
