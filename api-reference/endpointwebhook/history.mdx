@@ -195,7 +195,7 @@ https://api.mayar.club/hl/v1/webhook/history?page=1&pageSize=10
 
 </CodeGroup>
 
-### Headers
+## Authorization
 
 <ResponseField name="Authorization" type="string" required>
   Example:
@@ -203,69 +203,53 @@ https://api.mayar.club/hl/v1/webhook/history?page=1&pageSize=10
   `Authorization | Bearer Paste-Your-API-Key-Here`
 </ResponseField>
 
-### Params
+## Query Parameters
 
-<ParamField path="param" type="string" required>
-  Example:
-
-  - `page = 1`
-  - `pageSize = 10`
-  - `startAt`
-  - `endAt`
-  - `status`
-  - `type`
-  - `urlDestination`
+<ParamField query="page" path="page" default={1} type="integer" required>
+  Determine which page.
 </ParamField>
 
-<Tabs>
-  <Tab title="List of status">
-    - SUCCESS
-    - FAILED
-  </Tab>
-  <Tab title="List of type">
-    - payment.reminder
-    - payment.received
-    - shipper.status
-    - membership.memberUnsubscribed
-    - membership.memberExpired
-    - membership.changeTierMemberRegistered
-    - membership.newMemberRegistered
-  </Tab>
-</Tabs>
-
-### Root
-
-<ParamField path="statusCode" type="number">
-  EHTTP status code (example: `200`).
+<ParamField query="pageSize" path="pageSize" default={10} type="integer" required>
+  How much data is displayed on the page.
 </ParamField>
 
-<ParamField path="messages" type="string">
-  Response message (example: `"success"`).
-</ParamField>
+## Response
 
-<ParamField path="hasMore" type="boolean">
-  Indicates whether there are more pages of data.
-</ParamField>
+Successful Response
 
-<ParamField path="pageCount" type="number">
-  Total number of available pages.
-</ParamField>
+### Main Structure (Root)
 
-<ParamField path="pageSize" type="number">
+<ResponseField name="statusCode" type="integer" required>
+  Status code form API.
+</ResponseField>
+
+<ResponseField name="messages" type="string" required>
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="hasMore" type="boolean" required>
+  Information on whether there is additional data to be retrieved (true/false).
+</ResponseField>
+
+<ResponseField name="pageCount" type="integer" required>
+  Total number of data pages.
+</ResponseField>
+
+<ResponseField name="pageSize" type="integer" required>
   Number of items per page.
-</ParamField>
+</ResponseField>
 
-<ParamField path="page" type="number">
-  Current page number.
-</ParamField>
+<ResponseField name="page" type="integer" required>
+  The page currently displayed.
+</ResponseField>
 
-<ParamField path="data" type="array<object>">
-  List of webhook delivery logs.
-</ParamField>
+<ResponseField name="data" type="array of object">
+  List of products displayed.
+</ResponseField>
 
-### Data [object]
+### data Structure (Array Of Object)
 
-<ParamField path="id" type="string (UUID)" required>
+<ParamField path="id" type="string<uuid>" required>
   Webhook delivery record ID.
 </ParamField>
 
@@ -277,7 +261,7 @@ https://api.mayar.club/hl/v1/webhook/history?page=1&pageSize=10
   Timestamp of the next delivery attempt (if any).
 </ParamField>
 
-<ParamField path="paymentLinkId" type="string (UUID)" required>
+<ParamField path="paymentLinkId" type="string<uuid>" required>
   Associated payment link ID.
 </ParamField>
 
@@ -301,7 +285,7 @@ https://api.mayar.club/hl/v1/webhook/history?page=1&pageSize=10
   User ID who owns this webhook.
 </ParamField>
 
-<ParamField path="paymentLinkTransactionId" type="string (UUID)" required>
+<ParamField path="paymentLinkTransactionId" type="string<uuid>" required>
   Associated transaction ID.
 </ParamField>
 

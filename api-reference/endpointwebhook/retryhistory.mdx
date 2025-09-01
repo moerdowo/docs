@@ -42,7 +42,7 @@ https://api.mayar.club/hl/v1/webhook/retry
 
 </CodeGroup>
 
-### Headers
+## Authorization
 
 <ResponseField name="Authorization" type="string" required>
   Example:
@@ -50,18 +50,22 @@ https://api.mayar.club/hl/v1/webhook/retry
   `Authorization | Bearer Paste-Your-API-Key-Here`
 </ResponseField>
 
-### Body
+## Request Body
 
 <ParamField path="webhookHistoryId" type="string" required="false">
-  Unique ID for webhook delivery history log
+  Unique ID for webhook delivery history log.
 </ParamField>
 
-### Root
+## Response
 
-<ParamField path="statusCode" type="number">
-  HTTP status code (example: `200`).
-</ParamField>
+Successful Response
 
-<ParamField path="messages" type="string">
-  Status message (example: `"success"`).
-</ParamField>
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer" required>
+  Status code form API.
+</ResponseField>
+
+<ResponseField name="messages" type="string" required>
+  Status message that describes the status code.
+</ResponseField>
