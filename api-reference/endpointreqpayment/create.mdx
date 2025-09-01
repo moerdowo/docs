@@ -55,7 +55,7 @@ https://api.mayar.club/hl/v1/payment/create
 
 </CodeGroup>
 
-### Headers
+## Authorization
 
 <ResponseField name="Authorization" type="string" required>
   Example:
@@ -63,7 +63,7 @@ https://api.mayar.club/hl/v1/payment/create
   `Authorization | Bearer Paste-Your-API-Key-Here`
 </ResponseField>
 
-### Body
+## Request Body
 
 <ParamField path="name" type="string" required>
   Customer Name
@@ -92,3 +92,35 @@ https://api.mayar.club/hl/v1/payment/create
 <ParamField path="expiredAt" type="string (format ISO 8601 date-time)" required>
   The transaction expiration date and time. This means that after this time, the payment link or order is no longer valid.
 </ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer" required>
+  Status code form API.
+</ResponseField>
+
+<ResponseField name="messages" type="string" required>
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="array of object">
+  The main data returned (invoice details).
+</ResponseField>
+
+### data Structure (Array Of Object)
+
+<ResponseField name="id" type="string<uuid>" required>
+  Unique request payment ID.
+</ResponseField>
+
+<ResponseField name="transactionId" type="string<uuid>" required>
+  Unique transaction ID associated with this request payment.
+</ResponseField>
+
+<ResponseField name="link" type="string" required>
+  The URL that users/clients can access to open request payment.
+</ResponseField>
