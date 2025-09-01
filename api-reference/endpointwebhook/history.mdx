@@ -265,10 +265,54 @@ https://api.mayar.club/hl/v1/webhook/history?page=1&pageSize=10
 
 ### Data [object]
 
-<ParamField path="param" type="string">
-  Enter a description
+<ParamField path="id" type="string (UUID)" required>
+  Webhook delivery record ID.
 </ParamField>
 
-<ParamField path="param" type="string">
-  Enter a description
+<ParamField path="createdAt" type="integer (timestamp)" required>
+  Creation time of the webhook delivery log.
+</ParamField>
+
+<ParamField path="nextDelivery" type="string | null" required>
+  Timestamp of the next delivery attempt (if any).
+</ParamField>
+
+<ParamField path="paymentLinkId" type="string (UUID)" required>
+  Associated payment link ID.
+</ParamField>
+
+<ParamField path="payload" type="string (JSON string)" required>
+  Original webhook payload sent (contains event \+ transaction data).
+</ParamField>
+
+<ParamField path="status" type="string" required>
+  Delivery status (example: `"SUCCESS"`).
+</ParamField>
+
+<ParamField path="type" type="string" required>
+  Webhook event type (example: `"payment.received"`, `"payment.reminder"`).
+</ParamField>
+
+<ParamField path="updatedAt" type="integer (timestamp)" required>
+  Last update timestamp.
+</ParamField>
+
+<ParamField path="userId" type="string" required>
+  User ID who owns this webhook.
+</ParamField>
+
+<ParamField path="paymentLinkTransactionId" type="string (UUID)" required>
+  Associated transaction ID.
+</ParamField>
+
+<ParamField path="urlDestination" type="string (URL)" required>
+  Destination endpoint where the webhook is delivered.
+</ParamField>
+
+<ParamField path="responsePayload" type="string | null" required>
+  Response returned from the destination endpoint.
+</ParamField>
+
+<ParamField path="source" type="string" required>
+  Indicates whether the webhook was sent automatically or manually (example: `"AUTOMATIC"`).
 </ParamField>
