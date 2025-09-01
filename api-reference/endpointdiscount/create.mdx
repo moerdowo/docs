@@ -78,7 +78,7 @@ https://api.mayar.club/hl/v1/coupon/create
 
 </CodeGroup>
 
-### Headers
+## Authorization
 
 <ResponseField name="Authorization" type="string" required>
   Example:
@@ -86,35 +86,37 @@ https://api.mayar.club/hl/v1/coupon/create
   `Authorization | Bearer Paste-Your-API-Key-Here`
 </ResponseField>
 
-### Body
+## Request Body
 
 <ParamField path="expiredAt" type="string | datetime" required>
-  Discount coupon expiration date
+  Discount coupon expiration date.
 </ParamField>
 
 <ParamField path="name" type="string" required>
-  Discount name
+  Discount name.
 </ParamField>
 
-<ParamField path="discount" type="{object}" required>
-  Details of discount conditions
+<ParamField path="discount" type="array of object" required="false">
+  Details of discount conditions.
 </ParamField>
+
+### discount Structure (Array Of Object)
 
 <ParamField path="discountType" type="string" required>
-  Discount type
+  Discount type;
 
   - monetary
   - percentage
 </ParamField>
 
 <ParamField path="eligibleCustomerType" type="string" required>
-  Target customers who can use discount coupons
+  Target customers who can use discount coupons.
 
   - all
 </ParamField>
 
 <ParamField path="minimumPurchase" type="number | integer" required>
-  Minimum purchase to be able to use the discount
+  Minimum purchase to be able to use the discount.
 </ParamField>
 
 <ParamField path="value" type="number | integer" required>
@@ -122,116 +124,116 @@ https://api.mayar.club/hl/v1/coupon/create
 </ParamField>
 
 <ParamField path="totalCoupons" type="number | integer" required>
-  Available coupon quota
+  Available coupon quota.
 </ParamField>
 
-<ParamField path="coupon" type="{object}" required>
-  Coupon code details
+<ParamField path="coupon" type="array of object">
+  Coupon code details.
 </ParamField>
+
+### coupon Structure (Array Of Object)
 
 <ParamField path="code" type="string" required>
-  Discount coupon code
+  Discount coupon code.
 </ParamField>
 
 <ParamField path="type" type="string" required>
-  Coupon type
+  Coupon type;
 
   - reusable
   - onetime
 </ParamField>
 
 <ParamField path="products" type="Array">
-  List of eligible products
+  List of eligible products.
 </ParamField>
 
-### Root
+## Response
 
-<ParamField path="statusCode" type="number">
-  HTTP status code (example: `200`).
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer" required>
+  Status code form API.
+</ResponseField>
+
+<ResponseField name="messages" type="string" required>
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="array of object">
+  The main data returned (request payment details).
+</ResponseField>
+
+### data Structure (Array Of Object)
+
+<ParamField path="id" type="string<uuid>" required>
+  Discount ID.
 </ParamField>
 
-<ParamField path="messages" type="string">
-  Status message (example: `"Success"`).
-</ParamField>
-
-<ParamField path="data" type="object">
-  Main response data.
-</ParamField>
-
-### Data
-
-<ParamField path="id" type="string">
-  Discount ID (UUID).
-</ParamField>
-
-<ParamField path="createdAt" type="number">
+<ParamField path="createdAt" type="integer" required>
   Creation time (timestamp in ms).
 </ParamField>
 
-<ParamField path="expiredAt" type="number">
+<ParamField path="expiredAt" type="integer" required>
   Expiration time (timestamp in ms).
 </ParamField>
 
-<ParamField path="discountType" type="string">
-  Discount type (example: `"monetary"`).
+<ParamField path="discountType" type="string" required>
+  Discount type.
 </ParamField>
 
-<ParamField path="discountProductType" type="string">
-  Discount product scope (example: `"all"`).
+<ParamField path="discountProductType" type="string" required>
+  Discount product scope.
 </ParamField>
 
-<ParamField path="eligibleCustomerType" type="string">
-  Eligible customer scope (example: `"all"`).
+<ParamField path="eligibleCustomerType" type="string" required>
+  Eligible customer scope.
 </ParamField>
 
-<ParamField path="name" type="string">
-  Discount name (example: `"Diskon Murmer"`).
+<ParamField path="name" type="string" required>
+  Discount name.
 </ParamField>
 
-<ParamField path="minimumPurchase" type="number">
+<ParamField path="minimumPurchase" type="integer" required>
   Minimum purchase amount required to apply discount.
 </ParamField>
 
-<ParamField path="isLifeTime" type="boolean | null">
+<ParamField path="isLifeTime" type="boolean | null" required>
   Indicates if discount is lifetime (`true`/`false`) or `null`.
 </ParamField>
 
-<ParamField path="totalCoupons" type="number">
+<ParamField path="totalCoupons" type="integer" required>
   Total number of coupons available.
 </ParamField>
 
 <ParamField path="value" type="number">
-  Discount value (example: `100000`).
+  Discount value.
 </ParamField>
 
-<ParamField path="coupons" type="array<object>">
+<ParamField path="coupons" type="array of object">
   List of coupons associated with this discount.
 </ParamField>
 
-<ParamField path="productDiscount" type="array<object>">
+<ParamField path="productDiscount" type="array of objext">
   Product-specific discount rules (empty if not applied).
 </ParamField>
 
-### coupons[]
+### coupons Structure (Array Of Object)
 
 <ParamField path="code" type="string">
-  Coupon code (example: `"haribaik"`).
+  Coupon code.
 </ParamField>
 
 <ParamField path="type" type="string">
-  Coupon type (example: `"reusable"`).
+  Coupon type.
 </ParamField>
 
 <ParamField path="expiredAt" type="string (ISO 8601 datetime)">
-  Coupon expiration date (example: `"2030-01-01T09:06:14.933Z"`).
+  Coupon expiration date.
 </ParamField>
 
 <ParamField path="isActive" type="boolean">
   Whether the coupon is active (`true` or `false`).
-</ParamField>
-
-### Product Discount[]
-
-<ParamField path="param(empty object for now)">
-  Represents specific product discounts if applicable.
 </ParamField>
