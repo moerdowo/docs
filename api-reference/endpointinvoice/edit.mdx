@@ -54,7 +54,7 @@ https://api.mayar.club/hl/v1/invoice/edit
 
 </CodeGroup>
 
-### Headers
+## Authorization
 
 <ResponseField name="Authorization" type="string" required>
   Example:
@@ -62,9 +62,9 @@ https://api.mayar.club/hl/v1/invoice/edit
   `Authorization | Bearer Paste-Your-API-Key-Here`
 </ResponseField>
 
-### Body
+## Request Body
 
-<ParamField path="id | productId" type="string">
+<ParamField path="id" type="string">
   A unique identifier obtained when creating an invoice. If accessed through the dashboard, it can be found at the URL on the invoice details page.
 
   Example:
@@ -107,3 +107,31 @@ https://api.mayar.club/hl/v1/invoice/edit
 <ParamField path="rate" type="integer">
   Price per unit of goods.
 </ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer" required>
+  Status code form API.
+</ResponseField>
+
+<ResponseField name="messages" type="string" required>
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="array of object">
+  The main data returned (invoice details).
+</ResponseField>
+
+### data Structure (Array Of Object)
+
+<ResponseField name="id" type="string<uuid>" required>
+  Unique invoice ID.
+</ResponseField>
+
+<ResponseField name="link" type="string" required>
+  The URL that users/clients can access to open invoices.
+</ResponseField>

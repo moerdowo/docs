@@ -301,10 +301,126 @@ https://api.mayar.club/hl/v1/invoice
 
 </CodeGroup>
 
-### Headers
+## Authorization
 
 <ResponseField name="Authorization" type="string" required>
   Example:
 
   `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer" required>
+  Status code form API.
+</ResponseField>
+
+<ResponseField name="messages" type="string" required>
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="hasMore" type="boolean" required>
+  Information on whether there is additional data to be retrieved (true/false).
+</ResponseField>
+
+<ResponseField name="pageCount" type="integer" required>
+  Total number of data pages.
+</ResponseField>
+
+<ResponseField name="pageSize" type="integer" required>
+  Number of items per page.
+</ResponseField>
+
+<ResponseField name="page" type="integer" required>
+  The page currently displayed.
+</ResponseField>
+
+<ResponseField name="data" type="array of object">
+  List of invoices displayed.
+</ResponseField>
+
+### data Structure (Array Of Object)
+
+<ResponseField name="id" type="string<uuid>" required>
+  Unique invoice ID.
+</ResponseField>
+
+<ResponseField name="amount" type="integer" required>
+  Invoice price or nominal value.
+</ResponseField>
+
+<ResponseField name="category" type="string | null" required>
+  Product category, can be null if there is no category.
+</ResponseField>
+
+<ResponseField name="createdAt" type="number | timestamp" required>
+  Product creation time in epoch milliseconds format.
+</ResponseField>
+
+<ResponseField name="description" type="string" required>
+  Product description.
+</ResponseField>
+
+<ResponseField name="link" type="string" required>
+  Product slug/short URL.
+</ResponseField>
+
+<ResponseField name="type" type="string" required>
+  Product type.
+</ResponseField>
+
+<ResponseField name="status" type="string" required>
+  Product status.
+</ResponseField>
+
+<ResponseField name="name" type="string" required>
+  Product name.
+</ResponseField>
+
+<ResponseField name="redirectUrl" type="string | null" required>
+  Redirect destination URL, can be null.
+</ResponseField>
+
+<ResponseField name="customerId" type="string<uuid>" required>
+  The customer ID associated with this invoice.
+</ResponseField>
+
+<ResponseField name="transactions" type="array of object">
+  List of invoice related transactions.
+</ResponseField>
+
+<ResponseField name="customer" type="array of object">
+  Details of the customer who paid the invoice.
+</ResponseField>
+
+### transactions Structure (Array Of Object)
+
+<ResponseField name="id" type="string <uuid>" required>
+  Unique transaction ID.
+</ResponseField>
+
+<ResponseField name="status" type="string" required="false">
+  Transaction status (example: "created", "paid").
+</ResponseField>
+
+### customer Structure (Array Of Object)
+
+<ResponseField name="id" type="string <uuid>" required>
+  Unique customer ID.
+</ResponseField>
+
+<ResponseField name="email" type="string" required>
+  Customer's email address.
+</ResponseField>
+
+<ResponseField name="mobile" type="string" required>
+  Customer's mobile phone number.
+</ResponseField>
+
+<ResponseField name="name" type="string" required>
+  Customer's name.
 </ResponseField>
