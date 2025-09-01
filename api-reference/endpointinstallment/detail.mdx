@@ -87,17 +87,17 @@ Endpoint:
 <CodeGroup>
 
 ```Production Production
-https://api.mayar.id/hl/v1/installment/(installmentId)
+https://api.mayar.id/hl/v1/installment/{id}
 ```
 
 
 ```Sandbox Sandbox
-https://api.mayar.club/hl/v1/installment/(installmentId)
+https://api.mayar.club/hl/v1/installment/{id}
 ```
 
 </CodeGroup>
 
-### Headers
+## Authorization
 
 <ResponseField name="Authorization" type="string" required>
   Example:
@@ -105,7 +105,7 @@ https://api.mayar.club/hl/v1/installment/(installmentId)
   `Authorization | Bearer Paste-Your-API-Key-Here`
 </ResponseField>
 
-### Param
+## Path Parameter
 
 <ParamField path="installmentID" type="string" required>
   A unique identifier obtained when creating an installment. If accessed through the dashboard, it can be found at the URL on the installment details page.
@@ -115,130 +115,134 @@ https://api.mayar.club/hl/v1/installment/(installmentId)
   `ba82c2dd-06c1-4b6c-bc59-a9c00801c842`
 </ParamField>
 
-### Root
+## Response
 
-<ParamField path="statusCode" type="number">
-  HTTP status code (example: `200`).
+Successful Response
+
+### Main Structure (Root Object)
+
+<ParamField path="statusCode" type="integer" required>
+  Status code form API.
 </ParamField>
 
-<ParamField path="messages" type="string">
-  Status message (example: `"Success"`).
+<ParamField path="messages" type="string" required>
+  Status message that describes the status code.
 </ParamField>
 
-<ParamField path="data" type="object">
+<ParamField path="data" type="array of object">
   Main response data.
 </ParamField>
 
-### Data
+### data Structure (Array Of Object)
 
-<ParamField path="id" type="string">
+<ParamField path="id" type="string" required>
   Main ID (UUID).
 </ParamField>
 
-<ParamField path="createdAt" type="number">
+<ParamField path="createdAt" type="integer" required>
   Creation time (timestamp in ms).
 </ParamField>
 
-<ParamField path="period" type="string">
+<ParamField path="period" type="string" required>
   Installment period (example: `"MONTHLY"`).
 </ParamField>
 
-<ParamField path="tenure" type="number">
+<ParamField path="tenure" type="integer" required>
   Installment duration (in months).
 </ParamField>
 
-<ParamField path="dueDate" type="number">
+<ParamField path="dueDate" type="integer" required>
   Due date value (example: `11`).
 </ParamField>
 
-<ParamField path="interest" type="number">
+<ParamField path="interest" type="integer" required>
   Interest value.
 </ParamField>
 
-<ParamField path="interestType" type="string">
+<ParamField path="interestType" type="string" required>
   Type of interest (example: `"FLAT"`).
 </ParamField>
 
-<ParamField path="paymentLinkId" type="string">
-  Associated Payment Link ID (UUID).
+<ParamField path="paymentLinkId" type="string<uuid>" required>
+  Associated Payment Link ID.
 </ParamField>
 
-<ParamField path="updatedAt" type="number">
+<ParamField path="updatedAt" type="integer" required>
   Last update time (timestamp in ms).
 </ParamField>
 
-<ParamField path="userId" type="string">
-  User ID (UUID).
+<ParamField path="userId" type="string<uuid>" required>
+  User ID.
 </ParamField>
 
-<ParamField path="paymentLink" type="object">
+<ParamField path="paymentLink" type="array of object">
   Payment link details.
 </ParamField>
 
-<ParamField path="invoices" type="array<object>">
+<ParamField path="invoices" type="array of object">
   List of invoices.
 </ParamField>
 
-### Payment Link
+### PaymentLink Structure (Array Of Object)
 
-<ParamField path="id" type="string">
-  Payment link ID (UUID).
+<ParamField path="id" type="string<uuid>" required>
+  Payment link ID.
 </ParamField>
 
-<ParamField path="name" type="string">
+<ParamField path="name" type="string" required>
   Customer name for the payment link.
 </ParamField>
 
-<ParamField path="amount" type="number">
+<ParamField path="amount" type="integer" required>
   Total payment amount.
 </ParamField>
 
-<ParamField path="description" type="string">
+<ParamField path="description" type="string" required>
   Description of the payment.
 </ParamField>
 
-<ParamField path="customerId" type="string">
+<ParamField path="customerId" type="string<uuid>" required>
   Customer ID.
 </ParamField>
 
-### invoices[]
+### invoices Structure (Array Of Object)
 
-<ParamField path="id" type="string">
-  Enter a description
+<ParamField path="id" type="string<uuid>" required>
+  Invoices ID.
 </ParamField>
 
-<ParamField path="expiredAt" type="number">
-  Invoice ID (UUID).
+<ParamField path="expiredAt" type="integer" required>
+  Expiration time of the installment created.
 </ParamField>
 
-<ParamField path="amount" type="number">
+<ParamField path="amount" type="integer" required>
   nvoice amount.
 </ParamField>
 
-<ParamField path="status" type="string | null">
+<ParamField path="status" type="string | null" required>
   Invoice category.
 </ParamField>
 
-<ParamField path="status" type="string">
+<ParamField path="status" type="string" required>
   Payment status (example: `"unpaid"`).
 </ParamField>
 
-<ParamField path="link" type="number">
+<ParamField path="link" type="integer" required>
   IInvoice order number.
 </ParamField>
 
-<ParamField path="link" type="string">
+<ParamField path="link" type="string" required>
   Unique invoice link.
 </ParamField>
 
-<ParamField path="description" type="string">
+<ParamField path="description" type="string" required>
   Invoice description.
 </ParamField>
 
-<ParamField query="remainingAmount" path="param" type="number">
+<ParamField query="interestAmount" path="param" type="integer" required>
   Interest amount for the invoice.
 </ParamField>
 
-<ParamField path="param" type="number">
-  IRemaining balance for this invoice.
+<ParamField path="remainingAmount" type="integer" required>
+  Remaining balance for this invoice.
 </ParamField>
