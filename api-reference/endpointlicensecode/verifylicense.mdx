@@ -68,7 +68,7 @@ https://api.mayar.club/software/v1/license/verify
 ### Body
 
 <ParamField path="licenseCode" type="string" required>
-  The license code to be activated.
+  The license code is to be activated.
 </ParamField>
 
 <ParamField path="productId" type="string" required>
@@ -90,3 +90,51 @@ https://api.mayar.club/software/v1/license/verify
 </ParamField>
 
 ### licenseCode
+
+<ParamField path="licenseCode" type="string">
+  The license code value (example: `"LICENSECODE12345"`).
+</ParamField>
+
+<ParamField path="status" type="string">
+  License status (example: `"ACTIVE"`).
+</ParamField>
+
+<ParamField path="expiredAt" type="string (ISO 8601 datetime)">
+  License expiration date (example: `"2025-12-12T19:46:24.000Z"`).
+</ParamField>
+
+<ParamField path="transactionId" type="string (UUID)">
+  Related transaction ID.
+</ParamField>
+
+<ParamField path="productId" type="string (UUID)">
+  ID of the associated product.
+</ParamField>
+
+<ParamField path="customerId" type="string">
+  Customer ID linked to the license.
+</ParamField>
+
+<ParamField path="customerName" type="string">
+  Customer’s full name.
+</ParamField>
+
+<ParamField path="customerEmail" type="string">
+  Customer’s email address.
+</ParamField>
+
+<ParamField path="activationLimit" type="string">
+  Maximum number of allowed activations (example: `"Tidak terbatas"` → means “Unlimited”).
+</ParamField>
+
+<ParamField path="useCount" type="number">
+  Number of times the license has been used.
+</ParamField>
+
+<ParamField path="createdAt" type="string (ISO 8601 datetime)">
+  License creation timestamp.
+</ParamField>
+
+<ParamField path="updatedAt" type="string (ISO 8601 datetime)">
+  Last updated timestamp.
+</ParamField>
