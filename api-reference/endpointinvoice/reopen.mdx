@@ -38,17 +38,17 @@ Endpoint:
 <CodeGroup>
 
 ```Production Production
-https://api.mayar.id/hl/v1/invoice/open/(productId)
+https://api.mayar.id/hl/v1/invoice/open/{id}
 ```
 
 
 ```Sandbox Sandbox
-https://api.mayar.club/hl/v1/invoice/open/(productId)
+https://api.mayar.club/hl/v1/invoice/open/{id}
 ```
 
 </CodeGroup>
 
-### Headers
+### Authorization
 
 <ResponseField name="Authorization" type="string" required>
   Example:
@@ -56,12 +56,26 @@ https://api.mayar.club/hl/v1/invoice/open/(productId)
   `Authorization | Bearer Paste-Your-API-Key-Here`
 </ResponseField>
 
-### Param
+## Path Parameters
 
-<ParamField path="productId" type="string" required="false">
+<ParamField path="id" type="string<uuid>" required>
   A unique identifier obtained when creating an invoice. If accessed through the dashboard, it can be found at the URL on the invoice details page.
 
   Example:
 
   `f774034d-d9cc-43a0-97d8-a2520c127f03`
 </ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer" required>
+  Status code form API.
+</ResponseField>
+
+<ResponseField name="messages" type="string" required>
+  Status message that describes the status code.
+</ResponseField>
