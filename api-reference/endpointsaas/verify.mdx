@@ -59,7 +59,7 @@ https://api.mayar.club/saas/v1/license/verify
 
 </CodeGroup>
 
-### Headers
+## Authorization
 
 <ResponseField name="Authorization" type="string" required>
   Example:
@@ -67,84 +67,88 @@ https://api.mayar.club/saas/v1/license/verify
   `Authorization | Bearer Paste-Your-API-Key-Here`
 </ResponseField>
 
-### Body
+## Request Body
 
 <ParamField path="licenseCode" type="string" required>
-  The license code to be activated.
+  The license code to be verify.
 </ParamField>
 
 <ParamField path="productId" type="string" required>
   The ID of the product associated with the license.
 </ParamField>
 
-### Root
+### Response
 
-<ParamField path="statusCode" type="number">
-  HTTP status code (example: `200`).
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer" required>
+  Status code form API.
+</ResponseField>
+
+<ParamField path="isLicenseActive" type="boolean" required>
+  Shows whether the license is currently active (`true` or `false`).
 </ParamField>
 
-<ParamField path="isLicenseActive" type="boolean">
-  Indicates whether the license is currently active (`true` or `false`).
+<ParamField path="licenseCode" type="array of object">
+  Detailed information about the license code.
 </ParamField>
 
-<ParamField path="licenseCode" type="object">
-  License code details.
+### licenseCode Structure (Array Of Object)
+
+<ParamField path="licenseCode" type="string" required>
+  The license code value.
 </ParamField>
 
-### licenseCode
-
-<ParamField path="licenseCode" type="string">
-  The license code value (example: `"LICENSECODE12345"`).
-</ParamField>
-
-<ParamField path="status" type="string">
+<ParamField path="status" type="string" required>
   License status (example: `"ACTIVE"`).
 </ParamField>
 
-<ParamField path="expiredAt" type="string (ISO 8601 datetime)">
-  License expiration date (example: `"2025-12-12T19:46:24.000Z"`).
+<ParamField path="expiredAt" type="string (ISO 8601 datetime)" required>
+  License expiration date.
 </ParamField>
 
-<ParamField path="transactionId" type="string (UUID)">
+<ParamField path="transactionId" type="string<uuid>" required>
   Related transaction ID.
 </ParamField>
 
-<ParamField path="productId" type="string (UUID)">
-  Associated product ID.
+<ParamField path="productId" type="string<uuid>" required>
+  ID of the associated product.
 </ParamField>
 
-<ParamField path="customerId" type="string">
-  Customer ID linked to this license.
+<ParamField path="customerId" type="string<uuid>" required>
+  Customer ID linked to the license.
 </ParamField>
 
-<ParamField path="customerName" type="string (UUID)">
+<ParamField path="customerName" type="string" required>
   Customer’s full name.
 </ParamField>
 
-<ParamField path="customerEmail" type="string">
+<ParamField path="customerEmail" type="string" required>
   Customer’s email address.
 </ParamField>
 
-<ParamField path="activationLimit" type="string">
-  Maximum allowed activations (example: `"Tidak terbatas"` → means “Unlimited”).
+<ParamField path="activationLimit" type="string" required>
+  Maximum number of allowed activations (example: `"Tidak terbatas"` → means “Unlimited”).
 </ParamField>
 
-<ParamField path="useCount" type="number">
+<ParamField path="useCount" type="number" required>
   Number of times the license has been used.
 </ParamField>
 
-<ParamField path="createdAt" type="string (ISO 8601 datetime)">
+<ParamField path="createdAt" type="string (ISO 8601 datetime)" required>
   License creation timestamp.
 </ParamField>
 
-<ParamField path="updatedAt" type="string (ISO 8601 datetime)">
-  Last update timestamp.
+<ParamField path="updatedAt" type="string (ISO 8601 datetime)" required>
+  Last updated timestamp.
 </ParamField>
 
-<ParamField path="membershipTierId" type="string (UUID)">
+<ParamField path="membershipTierId" type="string<uuid>" required>
   ID of the membership tier associated with the license.
 </ParamField>
 
-<ParamField path="param" type="string">
-  Name of the membership tier (example: `"Master Black Belt Membership"`).
+<ParamField path="membershipTierName" type="string" required>
+  Name of the membership tier.
 </ParamField>
