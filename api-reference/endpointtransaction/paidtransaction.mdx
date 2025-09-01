@@ -519,7 +519,7 @@ https://api.mayar.club/hl/v1/transactions?page=1&pageSize=10
 
 </CodeGroup>
 
-### Headers
+## Authorizations
 
 <ResponseField name="Authorization" type="string" required>
   Example:
@@ -527,50 +527,166 @@ https://api.mayar.club/hl/v1/transactions?page=1&pageSize=10
   `Authorization | Bearer Paste-Your-API-Key-Here`
 </ResponseField>
 
-### Params
+## Query Parameters
 
-<ParamField path="param" type="string" required>
-  Example:
-
-  - `page = 1`
-  - `pageSize = 10`
+<ParamField query="page" path="page" default={1} type="integer" required>
+  Determine which page.
 </ParamField>
 
-### Extra Parameter
-
-<ParamField path="param" type="string">
-  Examples:
-
-  - `startAt`
-  - `endAt`
-  - `status`
-  - `type`
-  - `customerId`
-  - `fields` (For field projection)
+<ParamField query="pageSize" path="pageSize" default={10} type="integer" required>
+  How much data is displayed on the page.
 </ParamField>
 
-<Tabs>
-  <Tab title="List of status">
-    - `paid`
-    - `settled`
-  </Tab>
-  <Tab title="List of product">
-    - `generic_link`
-    - `payment_request`
-    - `payme`
-    - `invoice`
-    - `bundling`
-    - `physical_product`
-    - `event`
-    - `webinar`
-    - `digital_product`
-    - `coaching`
-    - `course`
-    - `cohort_based`
-    - `fundraising`
-    - `ebook`
-    - `podcast`
-    - `audiobook`
-    - `membership`
-  </Tab>
-</Tabs>
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer" required>
+  Status code form API.
+</ResponseField>
+
+<ResponseField name="messages" type="string" required>
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="hasMore" type="boolean" required>
+  Information on whether there is additional data to be retrieved (true/false).
+</ResponseField>
+
+<ResponseField name="pageCount" type="integer" required>
+  Total number of data pages.
+</ResponseField>
+
+<ResponseField name="pageSize" type="integer" required>
+  Number of items per page.
+</ResponseField>
+
+<ResponseField name="page" type="integer" required>
+  The page currently displayed.
+</ResponseField>
+
+<ResponseField name="data" type="array of object">
+  List of invoices displayed.
+</ResponseField>
+
+### data Structure (Array Of Object)
+
+<ResponseField name="id" type="string<uuid>" required>
+  Unique ID for the balance transaction history.
+</ResponseField>
+
+<ResponseField name="credit" type="integer" required>
+  The amount of credit received from the transaction (here 0).
+</ResponseField>
+
+<ResponseField name="status" type="string" required>
+  The status of the balance transaction (settled = completed/successful).
+</ResponseField>
+
+<ResponseField name="balanceHistoryType" type="string" required>
+  The type of transaction.
+</ResponseField>
+
+<ResponseField name="paymentMethod" type="string" required>
+  The payment method.
+</ResponseField>
+
+<ResponseField name="customerId" type="string<uuid>" required>
+  The unique ID of the customer who made the transaction.
+</ResponseField>
+
+<ResponseField name="createdAt" type="number (timestamp)" required>
+  The transaction creation time in epoch format (ms).
+</ResponseField>
+
+<ResponseField name="paymentLinkTransactionId" type="string<uuid>" required>
+  The transaction ID associated with the payment link.
+</ResponseField>
+
+<ResponseField name="fee" type="array of object" required>
+  Additional fee, here empty
+</ResponseField>
+
+<ResponseField name="paymentLinkId" type="string<uuid>" required>
+  The ID of the payment link used.
+</ResponseField>
+
+<ResponseField name="subscriptionId" type="string | null" required>
+  The subscription ID (if the transaction is a subscription)
+</ResponseField>
+
+<ResponseField name="xenditTransactionId" type="string" required>
+  The Xendit transaction ID (if using the Xendit gateway)
+</ResponseField>
+
+<ResponseField name="subscription" type="string" required>
+  Subscription details (if any).
+</ResponseField>
+
+<ResponseField name="xenditTransaction" type="string" required>
+  Xendit transaction details (if any)
+</ResponseField>
+
+<ResponseField name="paymentLinkTransaction" type="array of object">
+  Object that stores transaction details related to payment link.
+</ResponseField>
+
+<ResponseField name="customeField" type="object | null">
+  additional custom fields that can be filled in by the user (if any).
+</ResponseField>
+
+<ResponseField name="customer" type="array of object">
+  Customer data that makes transactions.
+</ResponseField>
+
+<ResponseField name="paymentLink" type="array of object">
+  Payment link information used for transactions.
+</ResponseField>
+
+### paymentLinkTransaction Structure (Array Of Object)
+
+<ResponseField name="id" type="string <uuid>" required>
+  Payment link transaction ID.
+</ResponseField>
+
+<ResponseField name="urlParamTrackingData" type="string" required>
+  Tracking URL data (if any).
+</ResponseField>
+
+<ResponseField name="isAdminFeeBorneByCustomer" type="boolean" required>
+  Whether the admin fee is borne by the customer.
+</ResponseField>
+
+<ResponseField name="isChannelFeeBorneByCustomer" type="boolean" required>
+  Whether the channel fee is borne by the customer.
+</ResponseField>
+
+### customer Structure (Array Of Object)
+
+<ResponseField name="id" type="string <uuid>" required>
+  Unique customer ID.
+</ResponseField>
+
+<ResponseField name="name" type="string" required>
+  Customer's name.
+</ResponseField>
+
+<ResponseField name="email" type="string" required>
+  Customer's email address.
+</ResponseField>
+
+<ResponseField name="mobile" type="string" required>
+  Customer's mobile phone number.
+</ResponseField>
+
+### paymentLink Structure (Array Of Object)
+
+<ResponseField name="id" type="string <uuid>" required>
+  ID payment link.
+</ResponseField>
+
+<ResponseField name="name" type="string" required>
+  Payment link name.
+</ResponseField>
