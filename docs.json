@@ -31,7 +31,6 @@
               "features/producttag",
               "features/checkoutsetting",
               "features/analytics",
-              "features/track",
               "features/order",
               "features/storefront",
               "features/broadcast",
