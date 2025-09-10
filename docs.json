@@ -191,6 +191,16 @@
               "api-reference/endpointsaas/activate",
               "api-reference/endpointsaas/deactivate"
             ]
+          },          
+          {
+            "group": "Usage Based Membership ",
+            "pages": [
+              "api-reference/endpointusagebasedmembership/customerbalance",
+              "api-reference/endpointusagebasedmembership/paginatecustomercredithistory",
+              "api-reference/endpointusagebasedmembership/spendcustomercredit",
+              "api-reference/endpointusagebasedmembership/addcustomercredit",
+              "api-reference/endpointusagebasedmembership/registnewmembershipcustomer"
+            ]
           }
         ]
       }
