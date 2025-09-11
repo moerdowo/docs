@@ -3,3 +3,92 @@ title: "Get Customer Balance"
 openapi: "GET /endpointusagebasedmembership/"
 description: "This is endpoint is used to get a customer credit balance."
 ---
+
+<RequestExample>
+
+```bash Request Example
+curl --location 'api.mayar.club/credit/v1/credit/customer/balance?productId=810328a4-6eeb-4680-8f05-8d578da46c40&membershipTierId=261acae0-d6ae-4d8c-adf5-6fb8c2361514&memberId=PQVS4KGY' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--data ''
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "message": "success",
+    "customerBalance": 50990,
+    "customerBalanceMembership": 0,
+    "customerBalanceAddon": 50990
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+api.mayar.club/credit/v1/credit/customer/balance?productId={productId}&membershipTierId={membershipTierId}&memberId={memberId}
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v1/webhook/history?page=1&pageSize=10
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Query Parameters
+
+<ParamField query="productId" path="productId" type="string" required>
+  The unique identifier of the product associated with the credit balance.
+</ParamField>
+
+<ParamField query="membershipTierId" path="membershipTierId" type="string" required>
+  The unique identifier of the membership tier associated with the credit balance.
+</ParamField>
+
+<ParamField query="memberId" path="memberId" type="string">
+  The unique identifier of the member whose credit balance is being queried.
+</ParamField>
+
+<ParamField query="customerId" path="customerId" type="string">
+  The unique identifier of the customer whose credit balance is being queried balance.
+</ParamField>
+
+## Response
+
+Successful Response
+
+<ResponseField name="statusCode" type="integer" required>
+  Status code form API.
+</ResponseField>
+
+<ResponseField name="messages" type="string" required>
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="customerBalance" type="float" required>
+  Number of total credit balance.
+</ResponseField>
+
+<ResponseField name="customerBalanceMembership" type="float" required>
+  Number of total credit balance with `MEMBERSHIP` type.
+</ResponseField>
+
+<ResponseField name="customerBalanceAddon" type="float" required>
+  Number of total credit balance with `ADD_ON` type.
+</ResponseField>
