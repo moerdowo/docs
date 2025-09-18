@@ -75,7 +75,6 @@
           {
           "group": "Integration",
           "pages": [
-            "integration/authentication",
             "integration/webhook",
             "integration/whatsapp"
           ]
