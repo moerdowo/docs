@@ -105,101 +105,101 @@
           {
             "group": "Product",
             "pages": [
-              "api-reference/endpointproduct/productpage",
-              "api-reference/endpointproduct/productpagewithfilter",
-              "api-reference/endpointproduct/search",
-              "api-reference/endpointproduct/detail",
-              "api-reference/endpointproduct/close",
-              "api-reference/endpointproduct/reopen"
+              "api-reference/product/productpage",
+              "api-reference/product/productpagewithfilter",
+              "api-reference/product/search",
+              "api-reference/product/detail",
+              "api-reference/product/close",
+              "api-reference/product/reopen"
             ]
           },
           {
             "group": "Invoice",
             "pages": [
-              "api-reference/endpointinvoice/create",
-              "api-reference/endpointinvoice/edit",
-              "api-reference/endpointinvoice/index",
-              "api-reference/endpointinvoice/filter",
-              "api-reference/endpointinvoice/detail",
-              "api-reference/endpointinvoice/close",
-              "api-reference/endpointinvoice/reopen"
+              "api-reference/invoice/create",
+              "api-reference/invoice/edit",
+              "api-reference/invoice/index",
+              "api-reference/invoice/filter",
+              "api-reference/invoice/detail",
+              "api-reference/invoice/close",
+              "api-reference/invoice/reopen"
             ]
           },
           {
             "group": "Request Payment",
             "pages": [
-              "api-reference/endpointreqpayment/create",
-              "api-reference/endpointreqpayment/edit",
-              "api-reference/endpointreqpayment/index",
-              "api-reference/endpointreqpayment/filter",
-              "api-reference/endpointreqpayment/detail",
-              "api-reference/endpointreqpayment/close",
-              "api-reference/endpointreqpayment/reopen"
+              "api-reference/reqpayment/create",
+              "api-reference/reqpayment/edit",
+              "api-reference/reqpayment/index",
+              "api-reference/reqpayment/filter",
+              "api-reference/reqpayment/detail",
+              "api-reference/reqpayment/close",
+              "api-reference/reqpayment/reopen"
             ]
           },
           {
             "group": "Installment",
             "pages": [
-              "api-reference/endpointinstallment/create",
-              "api-reference/endpointinstallment/detail"
+              "api-reference/installment/create",
+              "api-reference/installment/detail"
             ]
           },
           {
             "group": "Discount & Coupon",
             "pages": [
-              "api-reference/endpointdiscount/create",
-              "api-reference/endpointdiscount/detail"
+              "api-reference/discount/create",
+              "api-reference/discount/detail"
             ]
           },
           {
             "group": "Customer",
             "pages": [
-              "api-reference/endpointcustomer/getdetail",
-              "api-reference/endpointcustomer/create",
-              "api-reference/endpointcustomer/update",
-              "api-reference/endpointcustomer/createmagiclink"
+              "api-reference/customer/getdetail",
+              "api-reference/customer/create",
+              "api-reference/customer/update",
+              "api-reference/customer/createmagiclink"
             ]
           },
 {
             "group": "Transaction",
             "pages": [
-              "api-reference/endpointtransaction/accountbalance",
-              "api-reference/endpointtransaction/paidtransaction",
-              "api-reference/endpointtransaction/unpaidtransaction",
-              "api-reference/endpointtransaction/createdynamicqrcode"
+              "api-reference/transaction/accountbalance",
+              "api-reference/transaction/paidtransaction",
+              "api-reference/transaction/unpaidtransaction",
+              "api-reference/transaction/createdynamicqrcode"
             ]
           },
           {
             "group": "Webhook",
             "pages": [
-              "api-reference/endpointwebhook/history",
-              "api-reference/endpointwebhook/registerurlhook",
-              "api-reference/endpointwebhook/testurlhook",
-              "api-reference/endpointwebhook/retryhistory"
+              "api-reference/webhook/history",
+              "api-reference/webhook/registerurlhook",
+              "api-reference/webhook/testurlhook",
+              "api-reference/webhook/retryhistory"
             ]
           },
           {
             "group": "Software License Code",
             "pages": [
-              "api-reference/endpointlicensecode/verifylicense"
+              "api-reference/licensecode/verifylicense"
             ]
           },
           {
             "group": "Saas Membership License",
             "pages": [
-              "api-reference/endpointsaas/verify",
-              "api-reference/endpointsaas/activate",
-              "api-reference/endpointsaas/deactivate"
+              "api-reference/saas/verify",
+              "api-reference/saas/activate",
+              "api-reference/saas/deactivate"
             ]
           },          
           {
             "group": "Usage Based Membership ",
             "pages": [
-              "api-reference/endpointusagebasedmembership/customerbalance",
-              "api-reference/endpointusagebasedmembership/paginatecustomercredithistory",
-              "api-reference/endpointusagebasedmembership/spendcustomercredit",
-              "api-reference/endpointusagebasedmembership/addcustomercredit",
-              "api-reference/endpointusagebasedmembership/registnewmembershipcustomer"
+              "api-reference/usagebasedmembership/customerbalance",
+              "api-reference/usagebasedmembership/paginatecustomercredithistory",
+              "api-reference/usagebasedmembership/spendcustomercredit",
+              "api-reference/usagebasedmembership/addcustomercredit",
+              "api-reference/usagebasedmembership/registnewmembershipcustomer"
             ]
           }
         ]
