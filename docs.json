@@ -185,7 +185,7 @@
             ]
           },
           {
-            "group": "Saas Membership License",
+            "group": "Membership (SaaS)",
             "pages": [
               "api-reference/saas/verify",
               "api-reference/saas/activate",
@@ -193,7 +193,7 @@
             ]
           },          
           {
-            "group": "Usage Based Membership ",
+            "group": "Membership (Credit)",
             "pages": [
               "api-reference/usagebasedmembership/customerbalance",
               "api-reference/usagebasedmembership/paginatecustomercredithistory",
