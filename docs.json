@@ -76,7 +76,8 @@
           "group": "Integration",
           "pages": [
             "integration/webhook",
-            "integration/whatsapp"
+            "integration/whatsapp",
+            "integration/MCP"
           ]
           },
           {
