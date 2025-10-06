@@ -77,6 +77,8 @@
           "pages": [
             "integration/webhook",
             "integration/whatsapp",
+            "integration/PluginStore",
+            "integration/TelegramNotification",
             "integration/MCP"
           ]
           },
