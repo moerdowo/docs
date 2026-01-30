@@ -1,5 +1,92 @@
 ---
-title: "POST Spend Customer Credit"
+title: "Spend Customer Credit"
 openapi: "POST /endpointcreditbasedproduct/"
 description: "This endpoint is used to spend a specified amount of credit from a member’s account on particular membership tier on membership credit product."
 ---
+
+<RequestExample>
+
+```bash Request Example
+curl --request POST 'https://api.mayar.id/credit/v1/credit/customer/spend' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--data '{
+    "memberId" : "KKGOL1MV", // optionally mandatory
+    "productId": "40f26fbe-f4d8-4693-975f-e6d105d291e6",
+    "membershipTierId": "9bbbfa01-1bf8-4e4d-8470-cdf7066b6ea2",
+    "amount": 10
+}'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "message": "Successfully spent 10. MEMBERSHIP: 10, ADD_ON: 0"
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/credit/v1/credit/customer/spend
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/credit/v1/credit/customer/spend
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Request Body
+
+<ParamField query="memberId" path="memberId" type="string">
+  The unique identifier of the customer whose credit will be spent.
+</ParamField>
+
+<ParamField query="customerId" path="customerId" type="string">
+  The unique identifier of the member whose credit will be spent.
+</ParamField>
+
+<ParamField query="productId" path="productId" type="string" required>
+  The unique identifier of the product associated with the credit.
+</ParamField>
+
+<ParamField query="membershipTierId" path="membershipTierId" type="string" required>
+  The unique identifier of the membership tier associated with the credit.
+</ParamField>
+
+<ParamField query="amount" path="amount" type="integer" required>
+  The amount of credit to deduct (positive integer).
+</ParamField>
+
+<Note>
+  At least **one of** `customerId` **or** `memberId` must be provided.
+</Note>
+
+## Response
+
+Successful Response
+
+<ResponseField name="statusCode" type="integer" required>
+  Status code form API.
+</ResponseField>
+
+<ResponseField name="messages" type="string" required>
+  Status message that describes the status code.
+</ResponseField>

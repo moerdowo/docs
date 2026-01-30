@@ -1,5 +1,209 @@
 ---
-title: "POST Regist New Customer"
+title: "Regist New Customer"
 openapi: "POST /endpointcreditbasedproduct/"
 description: "This endpoint is used to register new customers into the membership credit product."
 ---
+
+<RequestExample>
+
+```bash Request Example
+curl --request POST 'https://api.mayar.id/credit/v1/credit/membership/customer/regist' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--data-raw '{
+    "productId": "40f26fbe-f4d8-4693-975f-e6d105d291e6",
+    "membershipTierId": "9bbbfa01-1bf8-4e4d-8470-cdf7066b6ea2",
+    "membershipMonthlyPeriod": 1, // mandatory must 1, 3, 6, 12
+    "trialCredit": 100, //optional
+    "customerInfo": {
+        "name" : "memberTambahan",
+        "email" : "tambahan@gg.com",
+        "mobile" : "08777777799"
+    }
+}'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{{
+    "statusCode": 200,
+    "message": "success",
+    "data": {
+      "membershipTiers": [
+         {
+            "id": "80287709-e3c2-4a94-97d7-25b992e55a7b",
+            "specificPaymentLinkUrl": "https://john.myr.id/m/test-produk-membership-credit-3?immutable=eyJuYW1lIjoiam9obiBkb2UiLCJlbWFpbCI6ImpvaG5kb2U4QGdtYWlsLmNvbSIsIm1vYmlsZSI6IjA4Nzc3Nzc3Nzc3IiwibWVtYmVyc2hpcFRpZXJJZCI6IjgwMjg3NzA5LWUzYzItNGE5NC05N2Q3LTI1Yjk5MmU1NWE3YiJ9.de717d93cc2cc9e8106c475afd95c2e9b2149d1c08cc68c79d56f06f2ef028bb"
+         },
+         {
+            "id": "c72daf21-ce56-4b40-a94f-e603e27a1201",
+            "specificPaymentLinkUrl": "https://john.myr.id/m/test-produk-membership-credit-3?immutable=eyJuYW1lIjoiam9obiBkb2UiLCJlbWFpbCI6ImpvaG5kb2U4QGdtYWlsLmNvbSIsIm1vYmlsZSI6IjA4Nzc3Nzc3Nzc3IiwibWVtYmVyc2hpcFRpZXJJZCI6ImM3MmRhZjIxLWNlNTYtNGI0MC1hOTRmLWU2MDNlMjdhMTIwMSJ9.d93439d8b01faba321a90cca82454b74423a675e541440e82d4fc186f38254bd"
+         },
+         {
+            "id": "d8a7891e-0f92-4c90-8c2c-4f188c141899",
+            "specificPaymentLinkUrl": "https://john.myr.id/m/test-produk-membership-credit-3?immutable=eyJuYW1lIjoiam9obiBkb2UiLCJlbWFpbCI6ImpvaG5kb2U4QGdtYWlsLmNvbSIsIm1vYmlsZSI6IjA4Nzc3Nzc3Nzc3IiwibWVtYmVyc2hpcFRpZXJJZCI6ImQ4YTc4OTFlLTBmOTItNGM5MC04YzJjLTRmMTg4YzE0MTg5OSJ9.f7b9ce6552d0a90d011e2d911ba7bb94f181c8b28e19cba818f2d3afe6ec0206"
+         }
+      ],
+      "membershipCustomer": {
+        "id": "8ebd8b04-9cf6-49f5-b565-77bb9f2c7fa7",
+        "userId": "8afa8430-9ccd-4d33-9c1b-e0999a319994",
+        "customerId": "cfb11a4e-6f8d-47e1-a61e-c64201a69edc",
+        "paymentLinkId": "7080759a-c40e-486e-bdc5-2217b69668fc",
+        "createdAt": 1763019244919,
+        "nextPayment": 1765611244717,
+        "isLifetimePeriod": null,
+        "memberId": "3SCDI9ZQ",
+        "paymentLink": {
+            "id": "7080759a-c40e-486e-bdc5-2217b69668fc",
+            "name": "test produk Membership credit 3",
+            "description": "<p class=&#x27;preserveHtml&#x27; class=&#x27;preserveHtml&#x27; class=&#x27;preserveHtml&#x27; class=&#x27;preserveHtml&#x27; class=&#x27;preserveHtml&#x27; class=&#x27;preserveHtml&#x27; class=&#x27;preserveHtml&#x27; class=&#x27;preserveHtml&#x27; class=&#x27;preserveHtml&#x27;>Vivamus lacinia lacus vel neque egestas, vitae volutpat purus dapibus. Nullam nec ultricies erat. Etiam ac urna metus. Sed cursus libero id ullamcorper interdum. Donec non urna et erat vehicula porttitor. Vivamus a sagittis dolor. Nulla facilisi. Cras euismod orci at felis cursus, vel vulputate sapien suscipit.</p>\n<p class=&#x27;preserveHtml&#x27; class=&#x27;preserveHtml&#x27; class=&#x27;preserveHtml&#x27; class=&#x27;preserveHtml&#x27; class=&#x27;preserveHtml&#x27; class=&#x27;preserveHtml&#x27; class=&#x27;preserveHtml&#x27; class=&#x27;preserveHtml&#x27; class=&#x27;preserveHtml&#x27;></p>\n"
+        }
+      },
+      "paymentLinkUrl": "https://john.myr.id/m/test-produk-membership-credit-3"
+    }
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/credit/v1/credit/membership/customer/regist
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/credit/v1/credit/membership/customer/regist
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Request Body
+
+<ParamField query="productId" path="productId" type="string" required>
+  The unique identifier of the product associated with the credit.
+</ParamField>
+
+<ParamField query="membershipTierId" path="membershipTierId" type="string" required>
+  The unique identifier of the membership tier to assign to the customer.
+</ParamField>
+
+<ParamField query="membershipMonthlyPeriod" path="membershipMonthlyPeriod" type="integer" required>
+  The membership period in months. Must be one of `1`, `3`, `6`, or `12`.
+</ParamField>
+
+<ParamField query="trialCredit" path="trialCredit" type="integer">
+  The trial credit amount to grant upon registration.
+</ParamField>
+
+<ParamField query="customerInfo" path="customerInfo" type="array of object" required>
+  Object containing customer details.
+</ParamField>
+
+### customerInfo Structure (Array Of Object)
+
+<ParamField query="name" path="name" type="string" required>
+  Full name of the customer.
+</ParamField>
+
+<ParamField query="email" path="email" type="string" required>
+  Email address of the customer.
+</ParamField>
+
+<ParamField query="mobile" path="mobile" type="string" required>
+  Mobile phone number of the customer.
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer" required>
+  Indicates the HTTP status of the request (e.g. `200` for success).
+</ResponseField>
+
+<ResponseField name="message" type="string" required>
+  A descriptive message about the outcome of the request.
+</ResponseField>
+
+<ResponseField name="membershipTiers" type="object" required>
+  Contains a list of membership tiers, each with a unique ID and its own payment link URL.
+</ResponseField>
+
+<ResponseField name="membershipTiers.id" type="string" required>
+  Unique identifier of the membership tier.
+</ResponseField>
+
+<ResponseField name="membershipTiers.specificPaymentLinkUrl" type="string" required>
+  A unique, immutable payment link URL generated specifically for the user and tier combination.
+</ResponseField>
+
+<ResponseField name="membershipCustomer" type="object" required>
+  Contains details of the newly registered or updated membership customer.
+</ResponseField>
+
+<ResponseField name="membershipCustomer.id" type="string" required>
+  Unique identifier of the membership customer record.
+</ResponseField>
+
+<ResponseField name="membershipCustomer.userId" type="string" required>
+  Unique identifier of the user associated with this membership.
+</ResponseField>
+
+<ResponseField name="membershipCustomer.customerId" type="string" required>
+  Unique identifier of the related customer record.
+</ResponseField>
+
+<ResponseField name="membershipCustomer.paymentLinkId" type="string" required>
+  Unique identifier of the payment link associated with this membership.
+</ResponseField>
+
+<ResponseField name="membershipCustomer.createdAt" type="number" required>
+  Timestamp (in milliseconds) indicating when the membership was created.
+</ResponseField>
+
+<ResponseField name="membershipCustomer.nextPayment" type="number" required>
+  Timestamp (in milliseconds) of the next scheduled payment.
+</ResponseField>
+
+<ResponseField name="membershipCustomer.isLifetimePeriod" type="boolean | null" required>
+  Indicates whether the membership has a lifetime period; `null` if not set.
+</ResponseField>
+
+<ResponseField name="membershipCustomer.memberId" type="number" required>
+  Unique code representing the membership identifier for the customer.
+</ResponseField>
+
+<ResponseField name="paymentLink" type="object" required>
+  Details of the payment link.
+</ResponseField>
+
+<ResponseField name="paymentLink.id" type="string" required>
+  Unique identifier of the payment link.
+</ResponseField>
+
+<ResponseField name="paymentLink.name" type="string" required>
+  Name of the payment link or product.
+</ResponseField>
+
+<ResponseField name="paymentLink.description" type="string" required>
+  Description of the payment link or product in HTML format.
+</ResponseField>
+
+<ResponseField name="paymentLinkUrl" type="string" required>
+  The general payment link URL for the membership product.
+</ResponseField>

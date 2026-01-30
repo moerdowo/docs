@@ -1,5 +1,132 @@
 ---
-title: "POST Generate Immutable Checkout Link"
+title: "Generate Immutable Checkout Link"
 openapi: "POST /endpointcreditbasedproduct/"
 description: "This endpoint is used to generate immutable checkout link for membership credit product."
 ---
+
+<RequestExample>
+
+```bash Request Example
+curl --location 'https://api.mayar.id/credit/v1/credit/generate/immutable/checkout' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--data-raw '{
+    "productId": "0e787345-9aaf-4b72-aa00-1174be6b52b1",
+    "creditAmount": 1000, //optional
+    "customerInfo": {
+        "name" : "memberTambahan",
+        "email" : "tambahan@gg.com",
+        "mobile" : "08777777799"
+    }
+}'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "message": "success",
+    "data": {
+      "membershipTiers": [
+        {
+            "id": "6d85f2fa-1012-4cc4-b6fb-21f23cf96f3c",
+            "specificPaymentLinkUrl": "https://donasisekutscom.myr.id/m/membership-creditan?immutable=eyJuYW1lIjoiam9obiBkb2UiLCJlbWFpbCI6ImpvaG5kb2U1QGdtYWlsLmNvbSIsIm1vYmlsZSI6IjA4Nzc3Nzc3Nzc3IiwibWVtYmVyc2hpcFRpZXJJZCI6IjZkODVmMmZhLTEwMTItNGNjNC1iNmZiLTIxZjIzY2Y5NmYzYyJ9.65b2b4e9734b8a5f2ec309faee56eb2de1a4b1ad143004a2915d3b3a3ffde289"
+        },
+        {
+            "id": "ea77b959-cdc1-4247-bd96-e3cc481ea64e",
+            "specificPaymentLinkUrl": "https://donasisekutscom.myr.id/m/membership-creditan?immutable=eyJuYW1lIjoiam9obiBkb2UiLCJlbWFpbCI6ImpvaG5kb2U1QGdtYWlsLmNvbSIsIm1vYmlsZSI6IjA4Nzc3Nzc3Nzc3IiwibWVtYmVyc2hpcFRpZXJJZCI6ImVhNzdiOTU5LWNkYzEtNDI0Ny1iZDk2LWUzY2M0ODFlYTY0ZSJ9.a8e51137c3beaac9934b38c47bfbfc6fd857c2ed9f724b4e3e5c557732dccbb6"
+        }
+      ],
+      "paymentLinkUrl": "https://donasisekutscom.myr.id/m/membership-creditan"
+    }
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/credit/v1/credit/generate/immutable/checkout
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/credit/v1/credit/generate/immutable/checkout
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Request Body
+
+<RequestField name="productId" type="string" required>
+  The unique identifier of the product associated.
+</RequestField>
+
+<RequestField name="creditAmount" type="number">
+  The credit amount for the checkout. Only applicable for credit usage products.
+</RequestField>
+
+<RequestField name="customerInfo" type="object" required>
+  Object containing customer details.
+</RequestField>
+
+<RequestField name="customerInfo.name" type="string" required>
+  Full name of the customer.
+</RequestField>
+
+<RequestField name="customerInfo.email" type="string" required>
+  Email address of the customer.
+</RequestField>
+
+<RequestField name="customerInfo.mobile" type="string" required>
+  Mobile phone number of the customer.
+</RequestField>
+
+<Note>
+  At least **one of** `customerId` **or** `memberId` must be provided.
+</Note>
+
+## Response
+
+Successful Response
+
+<ResponseField name="statusCode" type="integer" required>
+  Indicates the HTTP status of the request (e.g. `200` for success).
+</ResponseField>
+
+<ResponseField name="message" type="string" required>
+  A descriptive message about the outcome of the request.
+</ResponseField>
+
+<ResponseField name="membershipTiers" type="array">
+  Contains a list of membership tiers, each with its own generated immutable checkout link.
+</ResponseField>
+
+<ResponseField name="membershipTiers.id" type="string" required>
+  Unique identifier of the membership tier.
+</ResponseField>
+
+<ResponseField name="membershipTiers.specificPaymentLinkUrl" type="string" required>
+  A unique, immutable payment link URL generated specifically for the user and tier combination.
+</ResponseField>
+
+<ResponseField name="membershipTiers.creditUsageImmutableCheckoutUrl" type="string">
+  Returned only for credit usage products. A unique immutable checkout URL containing user identity fields and `creditAmount`.
+</ResponseField>
+
+<ResponseField name="paymentLinkUrl" type="string" required>
+  The general (mutable) payment link URL.
+</ResponseField>
