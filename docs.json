@@ -204,6 +204,17 @@
               "api-reference/usagebasedmembership/addcustomercredit",
               "api-reference/usagebasedmembership/registnewmembershipcustomer"
             ]
+          },
+          {
+            "group": "Credit Based Product",
+            "pages": [
+              "api-reference/creditbasedproduct/customerbalance",
+              "api-reference/creditbasedproduct/paginatecustomercredithistory",
+              "api-reference/creditbasedproduct/spendcustomercredit",
+              "api-reference/creditbasedproduct/addcustomercredit",
+              "api-reference/creditbasedproduct/registernewcustomer",
+              "api-reference/creditbasedproduct/generateimmutablecheckoutlink"
+            ]
           }
         ]
       }
