@@ -66,25 +66,25 @@ https://api.mayar.club/hl/v1/coupon/validate
 </ResponseField>
 
 ## Request Body
-<RequestField name="paymentLinkId" type="string" required>
+<ParamField path="paymentLinkId" type="string" required>
   Unique identifier of the payment link.
-</RequestField>
+</ParamField>
 
-<RequestField name="tickets" type="array" required>
+<ParamField path="tickets" type="array">
   List of selected tickets for the checkout. Leave empty if not applicable.
-</RequestField>
+</ParamField>
 
-<RequestField name="couponCode" type="string" required>
+<ParamField path="couponCode" type="string" required>
   Coupon code applied to the checkout. Leave empty if not used.
-</RequestField>
+</ParamField>
 
-<RequestField name="finalAmount" type="integer" required>
+<ParamField path="finalAmount" type="integer" required>
   Final amount to be paid after discounts or adjustments.
-</RequestField>
+</ParamField>
 
-<RequestField name="customerEmail" type="string" required>
+<ParamField path="customerEmail" type="string">
   Email address of the customer performing the checkout.
-</RequestField>
+</ParamField>
 
 ## Response
 

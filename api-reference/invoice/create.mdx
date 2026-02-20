@@ -76,57 +76,57 @@ https://api.mayar.club/hl/v1/invoice/create
 
 ## Request Body
 
-<RequestField name="name" type="string" required>
+<ParamField path="name" type="string" required>
   Full name of the customer.
-</RequestField>
+</ParamField>
 
-<RequestField name="email" type="string" required>
+<ParamField path="email" type="string" required>
   Email address of the customer.
-</RequestField>
+</ParamField>
 
-<RequestField name="mobile" type="string" required>
+<ParamField path="mobile" type="string" required>
   Mobile phone number of the customer.
-</RequestField>
+</ParamField>
 
-<RequestField name="redirectUrl" type="string" required>
+<ParamField path="redirectUrl" type="string" required>
   URL where the customer will be redirected after completing the payment.
-</RequestField>
+</ParamField>
 
-<RequestField name="description" type="string" required>
+<ParamField path="description" type="string" required>
   Description or notes related to the invoice.
-</RequestField>
+</ParamField>
 
-<RequestField name="expiredAt" type="string" required>
+<ParamField path="expiredAt" type="string" required>
   Invoice expiration time in ISO 8601 format (UTC).
-</RequestField>
+</ParamField>
 
-<RequestField name="items" type="array" required>
+<ParamField path="items" type="array" required>
   List of invoice items.
-</RequestField>
+</ParamField>
 
-<RequestField name="items[].quantity" type="number" required>
+<ParamField path="items[].quantity" type="number" required>
   Quantity of the item.
-</RequestField>
+</ParamField>
 
-<RequestField name="items[].rate" type="number" required>
+<ParamField path="items[].rate" type="number" required>
   Price per item.
-</RequestField>
+</ParamField>
 
-<RequestField name="items[].description" type="string" required>
+<ParamField path="items[].description" type="string" required>
   Description of the item.
-</RequestField>
+</ParamField>
 
-<RequestField name="extraData" type="object" required>
+<ParamField path="extraData" type="object" required>
   Additional custom data attached to the invoice.
-</RequestField>
+</ParamField>
 
-<RequestField name="extraData.noCustomer" type="string" required>
+<ParamField path="extraData.noCustomer" type="string" required>
   Custom customer reference number.
-</RequestField>
+</ParamField>
 
-<RequestField name="extraData.idProd" type="string" required>
+<ParamField path="extraData.idProd" type="string" required>
   Custom product identifier associated with the invoice.
-</RequestField>
+</ParamField>
 
 ## Response
 
