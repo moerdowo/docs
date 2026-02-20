@@ -7,7 +7,7 @@ description: "Endpoint used to search for products by product name"
 <RequestExample>
 
 ```bash Request Example
-curl --request GET 'https://api.mayar.id/hl/v1/product?search=Testing' \
+curl --request GET 'https://api.mayar.id/hl/v1/product?search=test 06' \
 --header 'Authorization: Bearer Bearer Paste-Your-API-Key-Here'
 ```
 
@@ -25,24 +25,28 @@ curl --request GET 'https://api.mayar.id/hl/v1/product?search=Testing' \
     "page": 1,
     "data": [
         {
-            "id": "45637d0b-cdcd-4637-a605-572ed0b92e5b",
+            "id": "f8cc9c9c-f4be-4fe4-9bcc-aa2db3987054",
             "amount": 0,
             "category": null,
-            "createdAt": 1709544354622,
-            "description": "<p>fjhfhgdfgxfsxdfrxdxd</p>\n",
-            "link": "testing-12654",
-            "type": "ebook",
+            "createdAt": 1699355892630,
+            "description": "<p>djbdjbdjbdjbjbvd</p>\n",
+            "link": "test-06",
+            "type": "saas",
+            "subType": null,
             "status": "active",
-            "name": "Testing",
+            "name": "test 06",
             "limit": null,
-            "redirectUrl": null,
+            "redirectUrl": "https://mayar-testing-25412.mayar.link/app/test-06",
             "installmentId": null,
             "event": null,
             "order": null,
             "coverImageId": null,
             "multipleImageId": null,
             "coverImage": null,
-            "multipleImage": null
+            "multipleImage": null,
+            "transactions": [],
+            "linkUrl": "https://andiak.myr.id/app/test-06",
+            "linkPayment": "https://andiak.myr.id/pl/test-06"
         }
     ],
     "total": 1
@@ -56,12 +60,12 @@ Endpoint:
 <CodeGroup>
 
 ```Sandbox Production
-https://api.mayar.id/hl/v1/product?search=Testing
+https://api.mayar.id/hl/v1/product?search=test 06
 ```
 
 
 ```Sandbox Sandbox
-https://api.mayar.club/hl/v1/product?search=Testing
+https://api.mayar.club/hl/v1/product?search=test 06
 ```
 
 </CodeGroup>
@@ -120,74 +124,90 @@ Successful Response
 
 ### data Structure (Array Of Object)
 
-<ResponseField name="id" type="string<uuid>" required>
-  Unique product ID.
+<ResponseField name="id" type="string" required>
+  Unique identifier of the product.
 </ResponseField>
 
-<ResponseField name="amount" type="integer | null" required>
-  Product price or nominal value.
+<ResponseField name="amount" type="integer" required>
+  Product price amount.
 </ResponseField>
 
-<ResponseField name="category" type="string | null" required>
-  Product category, can be null if there is no category.
+<ResponseField name="category" type="string | null">
+  Product category if available.
 </ResponseField>
 
-<ResponseField name="createdAt" type="number | timestamp" required>
-  Product creation time in epoch milliseconds format.
+<ResponseField name="createdAt" type="number" required>
+  Timestamp in milliseconds indicating when the product was created.
 </ResponseField>
 
-<ResponseField name="description" type="string" required>
-  Product description.
+<ResponseField name="description" type="string">
+  Product description in HTML format.
 </ResponseField>
 
 <ResponseField name="link" type="string" required>
-  Product slug/short URL.
+  Unique slug or identifier used in the product URL.
 </ResponseField>
 
 <ResponseField name="type" type="string" required>
-  Product type.
+  Product type (e.g., `saas`, `event`, `membership`, `ebook`, etc.).
+</ResponseField>
+
+<ResponseField name="subType" type="string | null">
+  Product subtype if applicable.
 </ResponseField>
 
 <ResponseField name="status" type="string" required>
-  Product status.
+  Current product status (e.g., `active`, `inactive`).
 </ResponseField>
 
 <ResponseField name="name" type="string" required>
   Product name.
 </ResponseField>
 
-<ResponseField name="limit" type="number | null" required>
-  Certain amount limit, can be null.
+<ResponseField name="limit" type="integer | null">
+  Purchase or access limit if configured.
 </ResponseField>
 
-<ResponseField name="redirectUrl" type="string | null" required>
-  Redirect destination URL, can be null.
+<ResponseField name="redirectUrl" type="string | null">
+  URL where the customer will be redirected after checkout.
 </ResponseField>
 
-<ResponseField name="installmentId" type="string | null" required>
-  Installment ID if the product supports installments, can be null.
+<ResponseField name="installmentId" type="string | null">
+  Installment identifier if the product supports installment payments.
 </ResponseField>
 
-<ResponseField name="event" type="object | null" required>
-  Related event data, can be null.
+<ResponseField name="event" type="object | null">
+  Event details if the product type is `event`.
 </ResponseField>
 
-<ResponseField name="order" type="object | null" required>
-  Related order data, can be null.
+<ResponseField name="order" type="object | null">
+  Order configuration if applicable.
 </ResponseField>
 
-<ResponseField name="coverImageId" type="string | null" required>
-  ID cover image, can be null.
+<ResponseField name="coverImageId" type="string | null">
+  Identifier of the cover image.
 </ResponseField>
 
-<ResponseField name="multipleImageId" type="string | null" required>
-  ID for multiple image group, can be null..
+<ResponseField name="multipleImageId" type="array | null">
+  List of additional image identifiers.
 </ResponseField>
 
-<ResponseField name="coverImage" type="object | null" required>
-  Cover image data, can be null, can be null..
+<ResponseField name="coverImage" type="object | null">
+  Cover image object containing image details.
 </ResponseField>
 
-<ResponseField name="multimpleImage" type="array | null">
-  List of additional images for the product, can be null.
+<ResponseField name="multipleImage" type="array | null">
+  List of additional image objects.
+</ResponseField>
+
+<ResponseField name="transactions" type="array">
+  List of related transactions (empty if none).
+</ResponseField>
+
+<ResponseField name="linkUrl" type="string" required>
+  Public product page URL.
+</ResponseField>
+
+<ResponseField name="linkPayment" type="string" required>
+  Public payment link URL.
 </ResponseField>

@@ -10,19 +10,22 @@ description: "Endpoint used to create invoices"
 curl --request POST 'https://api.mayar.id/hl/v1/invoice/create' \
 --header 'Authorization: Bearer Paste-Your-API-Key-Here' \
 --data-raw '{
-        "name": "Azumii",
-        "email": "azumiikecee@gmail.com",
-        "mobile": "08996136751",
-        "redirectUrl": "https://web.mayar.id",
-        "description": "testing invoice",
-        "expiredAt": "2025-12-01T09:41:09.401Z",
+        "name": "andre jago",
+        "email": "alikusnadide@gmail.com",
+        "mobile": "085797522261",
+        "redirectUrl": "https://kelaskami.com/nexst23",
+        "description": "testing dulu pak",
+        "expiredAt": "2026-04-19T16:43:23.000Z",
         "items":[{
-            "quantity": 2,
-            "rate": 55000,
-            "description": "testing invoice"
-        }]
-	}
-'
+            "quantity": 3,
+            "rate": 11000,
+            "description": "1e 1 sayam jago"
+        }],
+        "extraData": {
+            "noCustomer": "827hiueqy271hj",
+            "idProd": "contoh aja"
+        }
+    }
 ```
 
 </RequestExample>
@@ -34,10 +37,14 @@ curl --request POST 'https://api.mayar.id/hl/v1/invoice/create' \
     "statusCode": 200,
     "messages": "success",
     "data": {
-        "id": "f774034d-d9cc-43a0-97d8-a2520c127f03",
-        "transactionId": "23fa41c5-c6ed-45d4-8302-5fac4a165dfa",
-        "link": "https://andiak.myr.id/invoices/ibzfrf4880",
-        "expiredAt": 1764582069401
+        "id": "df65d192-8396-4f9a-b4e5-8244648c07c5",
+        "transactionId": "ca87fd13-8742-4d48-af33-7de1a417bc34",
+        "link": "https://korban-motivator.mayar.shop/invoices/ycfyxbj2h3",
+        "expiredAt": 1776617003000,
+        "extraData": {
+            "noCustomer": "827hiueqy271hj",
+            "idProd": "contoh aja"
+        }
     }
 }
 ```
@@ -69,41 +76,57 @@ https://api.mayar.club/hl/v1/invoice/create
 
 ## Request Body
 
-<ParamField path="name" type="string" required>
-  Customer Name
-</ParamField>
+<RequestField name="name" type="string" required>
+  Full name of the customer.
+</RequestField>
 
-<ParamField path="email" type="string" required>
-  Customer email used to send proof of payment, or payment reminders
-</ParamField>
+<RequestField name="email" type="string" required>
+  Email address of the customer.
+</RequestField>
 
-<ParamField path="mobile" type="string" required>
-  Customer telephone number
-</ParamField>
+<RequestField name="mobile" type="string" required>
+  Mobile phone number of the customer.
+</RequestField>
 
-<ParamField path="redirectURL" type="string" required>
-  The destination URL where the customer will be redirected after a successful or completed transaction.
-</ParamField>
+<RequestField name="redirectUrl" type="string" required>
+  URL where the customer will be redirected after completing the payment.
+</RequestField>
 
-<ParamField path="description" type="string" required>
-  General description of the transaction or order.
-</ParamField>
+<RequestField name="description" type="string" required>
+  Description or notes related to the invoice.
+</RequestField>
 
-<ParamField path="expiredAt" type="string (format ISO 8601 date-time)" required>
-  The transaction expiration date and time. This means that after this time, the payment link or order is no longer valid.
-</ParamField>
+<RequestField name="expiredAt" type="string" required>
+  Invoice expiration time in ISO 8601 format (UTC).
+</RequestField>
 
-<ParamField path="items" type="array">
-  List of items (products/services) purchased.
-</ParamField>
+<RequestField name="items" type="array" required>
+  List of invoice items.
+</RequestField>
 
-<ParamField path="quantity" type="integer">
-  Number of items ordered.
-</ParamField>
+<RequestField name="items[].quantity" type="number" required>
+  Quantity of the item.
+</RequestField>
 
-<ParamField path="rate" type="integer">
-  Price per unit of goods.
-</ParamField>
+<RequestField name="items[].rate" type="number" required>
+  Price per item.
+</RequestField>
+
+<RequestField name="items[].description" type="string" required>
+  Description of the item.
+</RequestField>
+
+<RequestField name="extraData" type="object" required>
+  Additional custom data attached to the invoice.
+</RequestField>
+
+<RequestField name="extraData.noCustomer" type="string" required>
+  Custom customer reference number.
+</RequestField>
+
+<RequestField name="extraData.idProd" type="string" required>
+  Custom product identifier associated with the invoice.
+</RequestField>
 
 ## Response
 
@@ -125,18 +148,30 @@ Successful Response
 
 ### data Structure (Array Of Object)
 
-<ResponseField name="id" type="string<uuid>" required>
-  Unique invoice ID.
+<ResponseField name="data.id" type="string" required>
+  Unique identifier of the invoice record.
 </ResponseField>
 
-<ResponseField name="transactionId" type="string<uuid>" required>
-  Unique transaction ID associated with this invoice.
+<ResponseField name="data.transactionId" type="string" required>
+  Unique identifier of the associated transaction.
 </ResponseField>
 
-<ResponseField name="link" type="string" required>
-  The URL that users/clients can access to open invoices.
+<ResponseField name="data.link" type="string" required>
+  Invoice URL that can be accessed by the customer.
 </ResponseField>
 
-<ResponseField name="expiredAt" type="number" required>
-  Invoice expiration time in epoch timestamp (ms) format.
+<ResponseField name="data.expiredAt" type="number" required>
+  Timestamp (in milliseconds) indicating when the invoice will expire.
+</ResponseField>
+
+<ResponseField name="data.extraData" type="object" required>
+  Additional custom data attached to the invoice.
+</ResponseField>
+
+<ResponseField name="data.extraData.noCustomer" type="string" required>
+  Custom customer reference number.
+</ResponseField>
+
+<ResponseField name="data.extraData.idProd" type="string" required>
+  Custom product identifier associated with the invoice.
 </ResponseField>

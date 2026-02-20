@@ -1,0 +1,139 @@
+---
+title: "Validate Coupon"
+openapi: "POST /endpointdiscount/validate"
+description: "Endpoint used to validate whether a coupon code has been used or not"
+---
+
+<RequestExample>
+
+```bash Request Example
+curl --request GET 'https://api.mayar.id/hl/v1/coupon/validate' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--data '{
+  "paymentLinkId": "4d26ea37-d093-4b92-8f5f-0faec64d65b0",
+  "tickets": [],
+  "couponCode": "NFRBFUK",
+  "finalAmount": 0,
+  "customerEmail": ""
+}'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "Success",
+    "data": {
+        "valid": true,
+        "coupon": {
+            "id": "08d233e9-91bc-4d9b-afc2-1dbbe38a1186",
+            "code": "143KYCN",
+            "discountType": "percentage",
+            "discountValue": 10,
+            "minimumPurchase": null,
+            "eligibleCustomerType": "all"
+        }
+    }
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v1/coupon/validate
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v1/coupon/validate
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Request Body
+<RequestField name="paymentLinkId" type="string" required>
+  Unique identifier of the payment link.
+</RequestField>
+
+<RequestField name="tickets" type="array" required>
+  List of selected tickets for the checkout. Leave empty if not applicable.
+</RequestField>
+
+<RequestField name="couponCode" type="string" required>
+  Coupon code applied to the checkout. Leave empty if not used.
+</RequestField>
+
+<RequestField name="finalAmount" type="integer" required>
+  Final amount to be paid after discounts or adjustments.
+</RequestField>
+
+<RequestField name="customerEmail" type="string" required>
+  Email address of the customer performing the checkout.
+</RequestField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ParamField path="statusCode" type="integer" required>
+  Status code form API.
+</ParamField>
+
+<ParamField path="messages" type="string" required>
+  Status message that describes the status code.
+</ParamField>
+
+<ParamField path="data" type="array of object">
+  Main response data.
+</ParamField>
+
+### data Structure (Array Of Object)
+
+<ResponseField name="valid" type="boolean" required>
+  Indicates whether the coupon is valid or not.
+</ResponseField>
+
+<ResponseField name="coupon" type="object" required>
+  Object containing coupon details.
+</ResponseField>
+
+<ResponseField name="coupon.id" type="string" required>
+  Unique identifier of the coupon.
+</ResponseField>
+
+<ResponseField name="coupon.code" type="string" required>
+  Coupon code applied to the checkout.
+</ResponseField>
+
+<ResponseField name="coupon.discountType" type="string" required>
+  Type of discount applied (e.g., `percentage`, `fixed`).
+</ResponseField>
+
+<ResponseField name="coupon.discountValue" type="number" required>
+  Discount value based on the discount type.
+</ResponseField>
+
+<ResponseField name="coupon.minimumPurchase" type="number | null" required>
+  Minimum purchase amount required to use the coupon. Returns `null` if not set.
+</ResponseField>
+
+<ResponseField name="coupon.eligibleCustomerType" type="string" required>
+  Type of customers eligible to use the coupon (e.g., `all`, `new`, `existing`).
+</ResponseField>
