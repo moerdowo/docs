@@ -325,27 +325,27 @@ Successful Response
 
 ### Main Structure (Root)
 
-<ResponseField name="statusCode" type="integer" required>
+<ResponseField name="statusCode" type="integer" >
   Status code form API.
 </ResponseField>
 
-<ResponseField name="messages" type="string" required>
+<ResponseField name="messages" type="string" >
   Status message that describes the status code.
 </ResponseField>
 
-<ResponseField name="hasMore" type="boolean" required>
+<ResponseField name="hasMore" type="boolean" >
   Information on whether there is additional data to be retrieved (true/false).
 </ResponseField>
 
-<ResponseField name="pageCount" type="integer" required>
+<ResponseField name="pageCount" type="integer" >
   Total number of data pages.
 </ResponseField>
 
-<ResponseField name="pageSize" type="integer" required>
+<ResponseField name="pageSize" type="integer" >
   Number of items per page.
 </ResponseField>
 
-<ResponseField name="page" type="integer" required>
+<ResponseField name="page" type="integer" >
   The page currently displayed.
 </ResponseField>
 
@@ -355,47 +355,47 @@ Successful Response
 
 ### data Structure (Array Of Object)
 
-<ResponseField name="id" type="string<uuid>" required>
+<ResponseField name="id" type="string<uuid>" >
   Unique invoice ID.
 </ResponseField>
 
-<ResponseField name="amount" type="integer" required>
+<ResponseField name="amount" type="integer" >
   Invoice price or nominal value.
 </ResponseField>
 
-<ResponseField name="category" type="string | null" required>
+<ResponseField name="category" type="string | null" >
   Product category, can be null if there is no category.
 </ResponseField>
 
-<ResponseField name="createdAt" type="number | timestamp" required>
+<ResponseField name="createdAt" type="number | timestamp" >
   Product creation time in epoch milliseconds format.
 </ResponseField>
 
-<ResponseField name="description" type="string" required>
+<ResponseField name="description" type="string" >
   Product description.
 </ResponseField>
 
-<ResponseField name="link" type="string" required>
+<ResponseField name="link" type="string" >
   Product slug/short URL.
 </ResponseField>
 
-<ResponseField name="type" type="string" required>
+<ResponseField name="type" type="string" >
   Product type.
 </ResponseField>
 
-<ResponseField name="status" type="string" required>
+<ResponseField name="status" type="string" >
   Product status.
 </ResponseField>
 
-<ResponseField name="name" type="string" required>
+<ResponseField name="name" type="string" >
   Product name.
 </ResponseField>
 
-<ResponseField name="redirectUrl" type="string | null" required>
+<ResponseField name="redirectUrl" type="string | null" >
   Redirect destination URL, can be null.
 </ResponseField>
 
-<ResponseField name="customerId" type="string<uuid>" required>
+<ResponseField name="customerId" type="string<uuid>" >
   The customer ID associated with this invoice.
 </ResponseField>
 
@@ -409,7 +409,7 @@ Successful Response
 
 ### transactions Structure (Array Of Object)
 
-<ResponseField name="id" type="string <uuid>" required>
+<ResponseField name="id" type="string <uuid>" >
   Unique transaction ID.
 </ResponseField>
 
@@ -419,18 +419,18 @@ Successful Response
 
 ### customer Structure (Array Of Object)
 
-<ResponseField name="id" type="string <uuid>" required>
+<ResponseField name="id" type="string <uuid>" >
   Unique customer ID.
 </ResponseField>
 
-<ResponseField name="email" type="string" required>
+<ResponseField name="email" type="string" >
   Customer's email address.
 </ResponseField>
 
-<ResponseField name="mobile" type="string" required>
+<ResponseField name="mobile" type="string" >
   Customer's mobile phone number.
 </ResponseField>
 
-<ResponseField name="name" type="string" required>
+<ResponseField name="name" type="string" >
   Customer's name.
 </ResponseField>

@@ -154,11 +154,11 @@ Successful Response
 
 ### Main Structure (Root)
 
-<ResponseField name="statusCode" type="integer" required>
+<ResponseField name="statusCode" type="integer" >
   Status code form API.
 </ResponseField>
 
-<ResponseField name="messages" type="string" required>
+<ResponseField name="messages" type="string" >
   Status message that describes the status code.
 </ResponseField>
 
@@ -168,43 +168,43 @@ Successful Response
 
 ### data Structure (Array Of Object)
 
-<ParamField path="id" type="string<uuid>" required>
+<ParamField path="id" type="string<uuid>" >
   Discount ID.
 </ParamField>
 
-<ParamField path="createdAt" type="integer" required>
+<ParamField path="createdAt" type="integer" >
   Creation time (timestamp in ms).
 </ParamField>
 
-<ParamField path="expiredAt" type="integer" required>
+<ParamField path="expiredAt" type="integer" >
   Expiration time (timestamp in ms).
 </ParamField>
 
-<ParamField path="discountType" type="string" required>
+<ParamField path="discountType" type="string" >
   Discount type.
 </ParamField>
 
-<ParamField path="discountProductType" type="string" required>
+<ParamField path="discountProductType" type="string" >
   Discount product scope.
 </ParamField>
 
-<ParamField path="eligibleCustomerType" type="string" required>
+<ParamField path="eligibleCustomerType" type="string" >
   Eligible customer scope.
 </ParamField>
 
-<ParamField path="name" type="string" required>
+<ParamField path="name" type="string" >
   Discount name.
 </ParamField>
 
-<ParamField path="minimumPurchase" type="integer" required>
-  Minimum purchase amount required to apply discount.
+<ParamField path="minimumPurchase" type="integer" >
+  Minimum purchase amount  to apply discount.
 </ParamField>
 
-<ParamField path="isLifeTime" type="boolean | null" required>
+<ParamField path="isLifeTime" type="boolean | null" >
   Indicates if discount is lifetime (`true`/`false`) or `null`.
 </ParamField>
 
-<ParamField path="totalCoupons" type="integer" required>
+<ParamField path="totalCoupons" type="integer" >
   Total number of coupons available.
 </ParamField>
 

@@ -28,19 +28,8 @@ curl --location 'https://api.mayar.id/credit/v1/credit/generate/immutable/checko
 {
     "statusCode": 200,
     "message": "success",
-    "data": {
-      "membershipTiers": [
-        {
-            "id": "6d85f2fa-1012-4cc4-b6fb-21f23cf96f3c",
-            "specificPaymentLinkUrl": "https://donasisekutscom.myr.id/m/membership-creditan?immutable=eyJuYW1lIjoiam9obiBkb2UiLCJlbWFpbCI6ImpvaG5kb2U1QGdtYWlsLmNvbSIsIm1vYmlsZSI6IjA4Nzc3Nzc3Nzc3IiwibWVtYmVyc2hpcFRpZXJJZCI6IjZkODVmMmZhLTEwMTItNGNjNC1iNmZiLTIxZjIzY2Y5NmYzYyJ9.65b2b4e9734b8a5f2ec309faee56eb2de1a4b1ad143004a2915d3b3a3ffde289"
-        },
-        {
-            "id": "ea77b959-cdc1-4247-bd96-e3cc481ea64e",
-            "specificPaymentLinkUrl": "https://donasisekutscom.myr.id/m/membership-creditan?immutable=eyJuYW1lIjoiam9obiBkb2UiLCJlbWFpbCI6ImpvaG5kb2U1QGdtYWlsLmNvbSIsIm1vYmlsZSI6IjA4Nzc3Nzc3Nzc3IiwibWVtYmVyc2hpcFRpZXJJZCI6ImVhNzdiOTU5LWNkYzEtNDI0Ny1iZDk2LWUzY2M0ODFlYTY0ZSJ9.a8e51137c3beaac9934b38c47bfbfc6fd857c2ed9f724b4e3e5c557732dccbb6"
-        }
-      ],
-      "paymentLinkUrl": "https://donasisekutscom.myr.id/m/membership-creditan"
-    }
+    "creditUsageImmutableCheckoutUrl": "https://donasisekutscom.myr.id/pl/test-product-credit?immutable=eyJuYW1lIjoiam9obiBkb2UiLCJlbWFpbCI6ImpvaG5kb2U1QGdtYWlsLmNvbSIsIm1vYmlsZSI6IjA4Nzc3Nzc3Nzc3IiwiY3JlZGl0QW1vdW50IjoyMDAwMH0=.03de9bf29c5861d950d13364c2c23d62675cd2f03cd27a5b7c682f2c43d25b4e",
+    "paymentLinkUrl": "https://donasisekutscom.myr.id/pl/test-product-credit"
 }
 ```
 
@@ -95,38 +84,22 @@ https://api.mayar.club/credit/v1/credit/generate/immutable/checkout
   Mobile phone number of the customer.
 </RequestField>
 
-<Note>
-  At least **one of** `customerId` **or** `memberId` must be provided.
-</Note>
-
 ## Response
 
 Successful Response
 
-<ResponseField name="statusCode" type="integer" required>
+<ResponseField name="statusCode" type="integer" >
   Indicates the HTTP status of the request (e.g. `200` for success).
 </ResponseField>
 
-<ResponseField name="message" type="string" required>
+<ResponseField name="message" type="string" >
   A descriptive message about the outcome of the request.
 </ResponseField>
 
-<ResponseField name="membershipTiers" type="array">
-  Contains a list of membership tiers, each with its own generated immutable checkout link.
+<ResponseField name="creditUsageImmutableCheckoutUrl" type="string">
+  A unique immutable checkout URL containing user identity fields and creditAmount.
 </ResponseField>
 
-<ResponseField name="membershipTiers.id" type="string" required>
-  Unique identifier of the membership tier.
-</ResponseField>
-
-<ResponseField name="membershipTiers.specificPaymentLinkUrl" type="string" required>
-  A unique, immutable payment link URL generated specifically for the user and tier combination.
-</ResponseField>
-
-<ResponseField name="membershipTiers.creditUsageImmutableCheckoutUrl" type="string">
-  Returned only for credit usage products. A unique immutable checkout URL containing user identity fields and `creditAmount`.
-</ResponseField>
-
-<ResponseField name="paymentLinkUrl" type="string" required>
+<ResponseField name="paymentLinkUrl" type="string" >
   The general (mutable) payment link URL.
 </ResponseField>

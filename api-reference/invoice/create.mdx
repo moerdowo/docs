@@ -134,11 +134,11 @@ Successful Response
 
 ### Main Structure (Root)
 
-<ResponseField name="statusCode" type="integer" required>
+<ResponseField name="statusCode" type="integer" >
   Status code form API.
 </ResponseField>
 
-<ResponseField name="messages" type="string" required>
+<ResponseField name="messages" type="string" >
   Status message that describes the status code.
 </ResponseField>
 
@@ -148,30 +148,30 @@ Successful Response
 
 ### data Structure (Array Of Object)
 
-<ResponseField name="data.id" type="string" required>
+<ResponseField name="data.id" type="string" >
   Unique identifier of the invoice record.
 </ResponseField>
 
-<ResponseField name="data.transactionId" type="string" required>
+<ResponseField name="data.transactionId" type="string" >
   Unique identifier of the associated transaction.
 </ResponseField>
 
-<ResponseField name="data.link" type="string" required>
+<ResponseField name="data.link" type="string" >
   Invoice URL that can be accessed by the customer.
 </ResponseField>
 
-<ResponseField name="data.expiredAt" type="number" required>
+<ResponseField name="data.expiredAt" type="number" >
   Timestamp (in milliseconds) indicating when the invoice will expire.
 </ResponseField>
 
-<ResponseField name="data.extraData" type="object" required>
+<ResponseField name="data.extraData" type="object" >
   Additional custom data attached to the invoice.
 </ResponseField>
 
-<ResponseField name="data.extraData.noCustomer" type="string" required>
+<ResponseField name="data.extraData.noCustomer" type="string" >
   Custom customer reference number.
 </ResponseField>
 
-<ResponseField name="data.extraData.idProd" type="string" required>
+<ResponseField name="data.extraData.idProd" type="string" >
   Custom product identifier associated with the invoice.
 </ResponseField>

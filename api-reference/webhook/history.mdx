@@ -219,27 +219,27 @@ Successful Response
 
 ### Main Structure (Root)
 
-<ResponseField name="statusCode" type="integer" required>
+<ResponseField name="statusCode" type="integer" >
   Status code form API.
 </ResponseField>
 
-<ResponseField name="messages" type="string" required>
+<ResponseField name="messages" type="string" >
   Status message that describes the status code.
 </ResponseField>
 
-<ResponseField name="hasMore" type="boolean" required>
+<ResponseField name="hasMore" type="boolean" >
   Information on whether there is additional data to be retrieved (true/false).
 </ResponseField>
 
-<ResponseField name="pageCount" type="integer" required>
+<ResponseField name="pageCount" type="integer" >
   Total number of data pages.
 </ResponseField>
 
-<ResponseField name="pageSize" type="integer" required>
+<ResponseField name="pageSize" type="integer" >
   Number of items per page.
 </ResponseField>
 
-<ResponseField name="page" type="integer" required>
+<ResponseField name="page" type="integer" >
   The page currently displayed.
 </ResponseField>
 
@@ -249,54 +249,54 @@ Successful Response
 
 ### data Structure (Array Of Object)
 
-<ParamField path="id" type="string<uuid>" required>
+<ParamField path="id" type="string<uuid>" >
   Webhook delivery record ID.
 </ParamField>
 
-<ParamField path="createdAt" type="integer (timestamp)" required>
+<ParamField path="createdAt" type="integer (timestamp)" >
   Creation time of the webhook delivery log.
 </ParamField>
 
-<ParamField path="nextDelivery" type="string | null" required>
+<ParamField path="nextDelivery" type="string | null" >
   Timestamp of the next delivery attempt (if any).
 </ParamField>
 
-<ParamField path="paymentLinkId" type="string<uuid>" required>
+<ParamField path="paymentLinkId" type="string<uuid>" >
   Associated payment link ID.
 </ParamField>
 
-<ParamField path="payload" type="string (JSON string)" required>
+<ParamField path="payload" type="string (JSON string)" >
   Original webhook payload sent (contains event + transaction data).
 </ParamField>
 
-<ParamField path="status" type="string" required>
+<ParamField path="status" type="string" >
   Delivery status (example: `"SUCCESS"`).
 </ParamField>
 
-<ParamField path="type" type="string" required>
+<ParamField path="type" type="string" >
   Webhook event type (example: `"payment.received"`, `"payment.reminder"`).
 </ParamField>
 
-<ParamField path="updatedAt" type="integer (timestamp)" required>
+<ParamField path="updatedAt" type="integer (timestamp)" >
   Last update timestamp.
 </ParamField>
 
-<ParamField path="userId" type="string" required>
+<ParamField path="userId" type="string" >
   User ID who owns this webhook.
 </ParamField>
 
-<ParamField path="paymentLinkTransactionId" type="string<uuid>" required>
+<ParamField path="paymentLinkTransactionId" type="string<uuid>" >
   Associated transaction ID.
 </ParamField>
 
-<ParamField path="urlDestination" type="string (URL)" required>
+<ParamField path="urlDestination" type="string (URL)" >
   Destination endpoint where the webhook is delivered.
 </ParamField>
 
-<ParamField path="responsePayload" type="string | null" required>
+<ParamField path="responsePayload" type="string | null" >
   Response returned from the destination endpoint.
 </ParamField>
 
-<ParamField path="source" type="string" required>
+<ParamField path="source" type="string" >
   Indicates whether the webhook was sent automatically or manually (example: `"AUTOMATIC"`).
 </ParamField>

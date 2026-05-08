@@ -81,11 +81,11 @@ Successful Response
 
 ### Main Structure (Root)
 
-<ResponseField name="statusCode" type="integer" required>
+<ResponseField name="statusCode" type="integer" >
   Status code form API.
 </ResponseField>
 
-<ParamField path="isLicenseActive" type="boolean" required>
+<ParamField path="isLicenseActive" type="boolean" >
   Shows whether the license is currently active (`true` or `false`).
 </ParamField>
 
@@ -95,50 +95,50 @@ Successful Response
 
 ### licenseCode Structure (Array Of Object)
 
-<ParamField path="licenseCode" type="string" required>
+<ParamField path="licenseCode" type="string" >
   The license code value.
 </ParamField>
 
-<ParamField path="status" type="string" required>
+<ParamField path="status" type="string" >
   License status (example: `"ACTIVE"`).
 </ParamField>
 
-<ParamField path="expiredAt" type="string (ISO 8601 datetime)" required>
+<ParamField path="expiredAt" type="string (ISO 8601 datetime)" >
   License expiration date.
 </ParamField>
 
-<ParamField path="transactionId" type="string<uuid>" required>
+<ParamField path="transactionId" type="string<uuid>" >
   Related transaction ID.
 </ParamField>
 
-<ParamField path="productId" type="string<uuid>" required>
+<ParamField path="productId" type="string<uuid>" >
   ID of the associated product.
 </ParamField>
 
-<ParamField path="customerId" type="string<uuid>" required>
+<ParamField path="customerId" type="string<uuid>" >
   Customer ID linked to the license.
 </ParamField>
 
-<ParamField path="customerName" type="string" required>
+<ParamField path="customerName" type="string" >
   Customer’s full name.
 </ParamField>
 
-<ParamField path="customerEmail" type="string" required>
+<ParamField path="customerEmail" type="string" >
   Customer’s email address.
 </ParamField>
 
-<ParamField path="activationLimit" type="string" required>
+<ParamField path="activationLimit" type="string" >
   Maximum number of allowed activations (example: `"Tidak terbatas"` → means “Unlimited”).
 </ParamField>
 
-<ParamField path="useCount" type="number" required>
+<ParamField path="useCount" type="number" >
   Number of times the license has been used.
 </ParamField>
 
-<ParamField path="createdAt" type="string (ISO 8601 datetime)" required>
+<ParamField path="createdAt" type="string (ISO 8601 datetime)" >
   License creation timestamp.
 </ParamField>
 
-<ParamField path="updatedAt" type="string (ISO 8601 datetime)" required>
+<ParamField path="updatedAt" type="string (ISO 8601 datetime)" >
   Last updated timestamp.
 </ParamField>

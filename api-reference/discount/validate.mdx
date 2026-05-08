@@ -92,11 +92,11 @@ Successful Response
 
 ### Main Structure (Root)
 
-<ParamField path="statusCode" type="integer" required>
+<ParamField path="statusCode" type="integer" >
   Status code form API.
 </ParamField>
 
-<ParamField path="messages" type="string" required>
+<ParamField path="messages" type="string" >
   Status message that describes the status code.
 </ParamField>
 
@@ -106,34 +106,34 @@ Successful Response
 
 ### data Structure (Array Of Object)
 
-<ResponseField name="valid" type="boolean" required>
+<ResponseField name="valid" type="boolean" >
   Indicates whether the coupon is valid or not.
 </ResponseField>
 
-<ResponseField name="coupon" type="object" required>
+<ResponseField name="coupon" type="object" >
   Object containing coupon details.
 </ResponseField>
 
-<ResponseField name="coupon.id" type="string" required>
+<ResponseField name="coupon.id" type="string" >
   Unique identifier of the coupon.
 </ResponseField>
 
-<ResponseField name="coupon.code" type="string" required>
+<ResponseField name="coupon.code" type="string" >
   Coupon code applied to the checkout.
 </ResponseField>
 
-<ResponseField name="coupon.discountType" type="string" required>
+<ResponseField name="coupon.discountType" type="string" >
   Type of discount applied (e.g., `percentage`, `fixed`).
 </ResponseField>
 
-<ResponseField name="coupon.discountValue" type="number" required>
+<ResponseField name="coupon.discountValue" type="number" >
   Discount value based on the discount type.
 </ResponseField>
 
-<ResponseField name="coupon.minimumPurchase" type="number | null" required>
+<ResponseField name="coupon.minimumPurchase" type="number | null" >
   Minimum purchase amount required to use the coupon. Returns `null` if not set.
 </ResponseField>
 
-<ResponseField name="coupon.eligibleCustomerType" type="string" required>
+<ResponseField name="coupon.eligibleCustomerType" type="string" >
   Type of customers eligible to use the coupon (e.g., `all`, `new`, `existing`).
 </ResponseField>

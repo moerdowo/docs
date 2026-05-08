@@ -77,22 +77,22 @@ https://api.mayar.club/credit/v1/credit/customer/balance?productId={productId}&m
 
 Successful Response
 
-<ResponseField name="statusCode" type="integer" required>
+<ResponseField name="statusCode" type="integer" >
   Status code form API.
 </ResponseField>
 
-<ResponseField name="messages" type="string" required>
+<ResponseField name="messages" type="string" >
   Status message that describes the status code.
 </ResponseField>
 
-<ResponseField name="customerBalance" type="float" required>
+<ResponseField name="customerBalance" type="float" >
   Number of total credit balance.
 </ResponseField>
 
-<ResponseField name="customerBalanceMembership" type="float" required>
+<ResponseField name="customerBalanceMembership" type="float" >
   Number of total credit balance with `MEMBERSHIP` type.
 </ResponseField>
 
-<ResponseField name="customerBalanceAddon" type="float" required>
+<ResponseField name="customerBalanceAddon" type="float" >
   Number of total credit balance with `ADD_ON` type.
 </ResponseField>

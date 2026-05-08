@@ -190,31 +190,31 @@ Successful Response
 
 ### Main Structure (Root)
 
-<ResponseField name="statusCode" type="integer" required>
+<ResponseField name="statusCode" type="integer" >
   Status code form API.
 </ResponseField>
 
-<ResponseField name="messages" type="string" required>
+<ResponseField name="messages" type="string" >
   Status message that describes the status code.
 </ResponseField>
 
-<ResponseField name="hasMore" type="boolean" required>
+<ResponseField name="hasMore" type="boolean" >
   Information on whether there is additional data to be retrieved (true/false).
 </ResponseField>
 
-<ResponseField name="pageCount" type="integer" required>
+<ResponseField name="pageCount" type="integer" >
   Total number of data pages.
 </ResponseField>
 
-<ResponseField name="pageSize" type="integer" required>
+<ResponseField name="pageSize" type="integer" >
   Number of items per page.
 </ResponseField>
 
-<ResponseField name="page" type="integer" required>
+<ResponseField name="page" type="integer" >
   The page currently displayed.
 </ResponseField>
 
-<ResponseField name="totalCustomer" type="integer" required>
+<ResponseField name="totalCustomer" type="integer" >
   Total number of customers.
 </ResponseField>
 
@@ -224,34 +224,34 @@ Successful Response
 
 ### data Structure (Array Of Object)
 
-<ResponseField name="id" type="string<uuid>" required>
+<ResponseField name="id" type="string<uuid>" >
   Unique customer ID.
 </ResponseField>
 
-<ResponseField name="createdAt" type="integer | timestamp - Unix epoch in milliseconds" required>
+<ResponseField name="createdAt" type="integer | timestamp - Unix epoch in milliseconds" >
   The time the data was created.
 </ResponseField>
 
-<ResponseField name="email" type="string" required>
+<ResponseField name="email" type="string" >
   Customer's email address.
 </ResponseField>
 
-<ResponseField name="mobile" type="string" required>
+<ResponseField name="mobile" type="string" >
   Customer's phone number.
 </ResponseField>
 
-<ResponseField name="name" type="string" required>
+<ResponseField name="name" type="string" >
   Customer's name.
 </ResponseField>
 
-<ResponseField name="status" type="string" required>
+<ResponseField name="status" type="string" >
   Customer status, e.g., "active", "inactive".
 </ResponseField>
 
-<ResponseField name="updateAt" type="integer | timestamp - Unix epoch in milliseconds" required>
+<ResponseField name="updateAt" type="integer | timestamp - Unix epoch in milliseconds" >
   The last time the data was updated.
 </ResponseField>
 
-<ResponseField name="userId" type="string<uuid>" required>
+<ResponseField name="userId" type="string<uuid>" >
   The user ID of the owner of this data/customer.
 </ResponseField>

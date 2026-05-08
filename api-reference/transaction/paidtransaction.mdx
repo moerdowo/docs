@@ -543,27 +543,27 @@ Successful Response
 
 ### Main Structure (Root)
 
-<ResponseField name="statusCode" type="integer" required>
+<ResponseField name="statusCode" type="integer" >
   Status code form API.
 </ResponseField>
 
-<ResponseField name="messages" type="string" required>
+<ResponseField name="messages" type="string" >
   Status message that describes the status code.
 </ResponseField>
 
-<ResponseField name="hasMore" type="boolean" required>
+<ResponseField name="hasMore" type="boolean" >
   Information on whether there is additional data to be retrieved (true/false).
 </ResponseField>
 
-<ResponseField name="pageCount" type="integer" required>
+<ResponseField name="pageCount" type="integer" >
   Total number of data pages.
 </ResponseField>
 
-<ResponseField name="pageSize" type="integer" required>
+<ResponseField name="pageSize" type="integer" >
   Number of items per page.
 </ResponseField>
 
-<ResponseField name="page" type="integer" required>
+<ResponseField name="page" type="integer" >
   The page currently displayed.
 </ResponseField>
 
@@ -573,59 +573,59 @@ Successful Response
 
 ### data Structure (Array Of Object)
 
-<ResponseField name="id" type="string<uuid>" required>
+<ResponseField name="id" type="string<uuid>" >
   Unique ID for the balance transaction history.
 </ResponseField>
 
-<ResponseField name="credit" type="integer" required>
+<ResponseField name="credit" type="integer" >
   The amount of credit received from the transaction (here 0).
 </ResponseField>
 
-<ResponseField name="status" type="string" required>
+<ResponseField name="status" type="string" >
   The status of the balance transaction (settled = completed/successful).
 </ResponseField>
 
-<ResponseField name="balanceHistoryType" type="string" required>
+<ResponseField name="balanceHistoryType" type="string" >
   The type of transaction.
 </ResponseField>
 
-<ResponseField name="paymentMethod" type="string" required>
+<ResponseField name="paymentMethod" type="string" >
   The payment method.
 </ResponseField>
 
-<ResponseField name="customerId" type="string<uuid>" required>
+<ResponseField name="customerId" type="string<uuid>" >
   The unique ID of the customer who made the transaction.
 </ResponseField>
 
-<ResponseField name="createdAt" type="number (timestamp)" required>
+<ResponseField name="createdAt" type="number (timestamp)" >
   The transaction creation time in epoch format (ms).
 </ResponseField>
 
-<ResponseField name="paymentLinkTransactionId" type="string<uuid>" required>
+<ResponseField name="paymentLinkTransactionId" type="string<uuid>" >
   The transaction ID associated with the payment link.
 </ResponseField>
 
-<ResponseField name="fee" type="array of object" required>
+<ResponseField name="fee" type="array of object" >
   Additional fee, here empty
 </ResponseField>
 
-<ResponseField name="paymentLinkId" type="string<uuid>" required>
+<ResponseField name="paymentLinkId" type="string<uuid>" >
   The ID of the payment link used.
 </ResponseField>
 
-<ResponseField name="subscriptionId" type="string | null" required>
+<ResponseField name="subscriptionId" type="string | null" >
   The subscription ID (if the transaction is a subscription)
 </ResponseField>
 
-<ResponseField name="xenditTransactionId" type="string" required>
+<ResponseField name="xenditTransactionId" type="string" >
   The Xendit transaction ID (if using the Xendit gateway)
 </ResponseField>
 
-<ResponseField name="subscription" type="string" required>
+<ResponseField name="subscription" type="string" >
   Subscription details (if any).
 </ResponseField>
 
-<ResponseField name="xenditTransaction" type="string" required>
+<ResponseField name="xenditTransaction" type="string" >
   Xendit transaction details (if any)
 </ResponseField>
 
@@ -647,46 +647,46 @@ Successful Response
 
 ### paymentLinkTransaction Structure (Array Of Object)
 
-<ResponseField name="id" type="string <uuid>" required>
+<ResponseField name="id" type="string <uuid>" >
   Payment link transaction ID.
 </ResponseField>
 
-<ResponseField name="urlParamTrackingData" type="string" required>
+<ResponseField name="urlParamTrackingData" type="string" >
   Tracking URL data (if any).
 </ResponseField>
 
-<ResponseField name="isAdminFeeBorneByCustomer" type="boolean" required>
+<ResponseField name="isAdminFeeBorneByCustomer" type="boolean" >
   Whether the admin fee is borne by the customer.
 </ResponseField>
 
-<ResponseField name="isChannelFeeBorneByCustomer" type="boolean" required>
+<ResponseField name="isChannelFeeBorneByCustomer" type="boolean" >
   Whether the channel fee is borne by the customer.
 </ResponseField>
 
 ### customer Structure (Array Of Object)
 
-<ResponseField name="id" type="string <uuid>" required>
+<ResponseField name="id" type="string <uuid>" >
   Unique customer ID.
 </ResponseField>
 
-<ResponseField name="name" type="string" required>
+<ResponseField name="name" type="string" >
   Customer's name.
 </ResponseField>
 
-<ResponseField name="email" type="string" required>
+<ResponseField name="email" type="string" >
   Customer's email address.
 </ResponseField>
 
-<ResponseField name="mobile" type="string" required>
+<ResponseField name="mobile" type="string" >
   Customer's mobile phone number.
 </ResponseField>
 
 ### paymentLink Structure (Array Of Object)
 
-<ResponseField name="id" type="string <uuid>" required>
+<ResponseField name="id" type="string <uuid>" >
   ID payment link.
 </ResponseField>
 
-<ResponseField name="name" type="string" required>
+<ResponseField name="name" type="string" >
   Payment link name.
 </ResponseField>

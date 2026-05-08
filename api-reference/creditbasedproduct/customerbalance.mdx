@@ -7,7 +7,7 @@ description: "This is endpoint is used to get a customer credit balance."
 <RequestExample>
 
 ```bash Request Example
-curl --request GET 'https://api.mayar.id/credit/v1/credit/customer/balance?productId=810328a4-6eeb-4680-8f05-8d578da46c40&membershipTierId=261acae0-d6ae-4d8c-adf5-6fb8c2361514&memberId=PQVS4KGY' \
+curl --request GET 'https://api.mayar.id/credit/v1/credit/customer/balance?customerId=9de4b4b4-525c-4ee0-ac9c-b29c3e10fe55&productId=2b649982-411e-42e0-9b9c-0a17f9a55d44' \
 --header 'Authorization: Bearer Paste-Your-API-Key-Here' \
 --data ''
 ```
@@ -20,24 +20,9 @@ curl --request GET 'https://api.mayar.id/credit/v1/credit/customer/balance?produ
 {
     "statusCode": 200,
     "message": "success",
-    "data": {
-      "customerBalance": 50990,
-      "customerBalanceMembership": 0,
-      "customerBalanceAddon": 50990,
-      "customerEmail": "johndoe@gmail.com",
-      "customerName": "john doe",
-      "customerMobile": "08777777777",
-      "customerId": "8ffb340d-07a8-44fd-9fac-12a3a10d28fe",
-      "status": "active",
-      "nextPayment": "2025-11-20T09:10:57.994Z",
-      "expiredAt": "2025-11-20T09:10:57.994Z",
-      "memberId": "PUYSW40N",
-      "membershipTierId": "137f0fa9-8aa5-4fec-947e-6ef223590861",
-      "membershipTier": {
-          "id": "137f0fa9-8aa5-4fec-947e-6ef223590861",
-          "name": "paket 3"
-      }
-    }
+    "customerBalance": 30001,
+    "customerMainBalance": 29801,
+    "customerBalanceAddon": 500
 }
 ```
 
@@ -48,12 +33,12 @@ Endpoint:
 <CodeGroup>
 
 ```Production Production
-https://api.mayar.id/credit/v1/credit/customer/balance?productId={productId}&membershipTierId={membershipTierId}&memberId={memberId}
+https://api.mayar.id/credit/v1/credit/customer/balance?customerId={customerID}
 ```
 
 
 ```Sandbox Sandbox
-https://api.mayar.club/credit/v1/credit/customer/balance?productId={productId}&membershipTierId={membershipTierId}&memberId={memberId}
+https://api.mayar.club/credit/v1/credit/customer/balance?customerId{customerID}
 ```
 
 </CodeGroup>
@@ -72,90 +57,30 @@ https://api.mayar.club/credit/v1/credit/customer/balance?productId={productId}&m
   The unique identifier of the product associated with the credit balance.
 </ParamField>
 
-<ParamField query="membershipTierId" path="membershipTierId" type="string" required>
-  The unique identifier of the membership tier associated with the credit balance.
-</ParamField>
-
-<ParamField query="memberId" path="memberId" type="string">
-  The unique identifier of the member whose credit balance is being queried.
-</ParamField>
-
 <ParamField query="customerId" path="customerId" type="string">
   The unique identifier of the customer whose credit balance is being queried balance.
 </ParamField>
-
-<Note>
-  At least **one of** `customerId` **or** `memberId` must be provided.
-</Note>
 
 ## Response
 
 Successful Response
 
-<ResponseField name="statusCode" type="integer" required>
+<ResponseField name="statusCode" type="integer">
   Indicates the status of the activation process.
 </ResponseField>
 
-<ResponseField name="message" type="string" required>
+<ResponseField name="message" type="string">
   Additional messages related to the activation process.
 </ResponseField>
 
-<ResponseField name="customerBalance" type="float" required>
+<ResponseField name="customerBalance" type="float">
   Number of total credit balance.
 </ResponseField>
 
-<ResponseField name="customerBalanceMembership" type="float" required>
-  Number of total credit balance with `MEMBERSHIP` type.
+<ResponseField name="customerBalanceMain" type="float">
+  Number of total credit balance with `MAIN` type.
 </ResponseField>
 
-<ResponseField name="customerBalanceAddon" type="float" required>
+<ResponseField name="customerBalanceAddon" type="float" >
   Number of total credit balance with `ADD_ON` type.
-</ResponseField>
-
-<ResponseField name="customerEmail" type="string" required>
-  Email address of the customer.
-</ResponseField>
-
-<ResponseField name="customerName" type="string" required>
-  Full name of the customer.
-</ResponseField>
-
-<ResponseField name="customerMobile" type="string" required>
-  Mobile phone number of the customer.
-</ResponseField>
-
-<ResponseField name="customerId" type="string" required>
-  Unique identifier of the customer (UUID).
-</ResponseField>
-
-<ResponseField name="status" type="string" required>
-  Current status of the customer (e.g. `active`).
-</ResponseField>
-
-<ResponseField name="nextPayment" type="string" required>
-  ISO 8601 timestamp (UTC) of the customer's next payment.
-</ResponseField>
-
-<ResponseField name="expiredAt" type="string" required>
-  ISO 8601 timestamp (UTC) of the customer's membership expiration.
-</ResponseField>
-
-<ResponseField name="memberId" type="string" required>
-  Membership code associated with the customer.
-</ResponseField>
-
-<ResponseField name="membershipTierId" type="string" required>
-  ID of the customer's membership tier.
-</ResponseField>
-
-<ResponseField name="membershipTier" type="object" required>
-  Details of the customer’s membership tier.
-</ResponseField>
-
-<ResponseField name="membershipTier.id" type="string" required>
-  ID of the membership tier.
-</ResponseField>
-
-<ResponseField name="membershipTier.name" type="string" required>
-  Name of the membership tier.
 </ResponseField>
