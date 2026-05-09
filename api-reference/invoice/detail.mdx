@@ -86,11 +86,11 @@ Successful Response
 
 ### Main Structure (Root)
 
-<ResponseField name="statusCode" type="integer" required>
+<ResponseField name="statusCode" type="integer" >
   Status code form API.
 </ResponseField>
 
-<ResponseField name="messages" type="string" required>
+<ResponseField name="messages" type="string" >
   Status message that describes the status code.
 </ResponseField>
 
@@ -100,27 +100,27 @@ Successful Response
 
 ### data Structure (Array Of Object)
 
-<ResponseField name="id" type="string<uuid>" required>
+<ResponseField name="id" type="string<uuid>" >
   Unique invoice ID.
 </ResponseField>
 
-<ResponseField name="amount" type="integer" required>
+<ResponseField name="amount" type="integer" >
   Invoice price or nominal value.
 </ResponseField>
 
-<ResponseField name="status" type="string" required>
+<ResponseField name="status" type="string" >
   Product status.
 </ResponseField>
 
-<ResponseField name="link" type="string" required>
+<ResponseField name="link" type="string" >
   Product slug/short URL.
 </ResponseField>
 
-<ResponseField name="type" type="string" required>
+<ResponseField name="type" type="string" >
   Product type.
 </ResponseField>
 
-<ResponseField name="expiredAt" type="integer" required>
+<ResponseField name="expiredAt" type="integer" >
   Invoice expiration time in timestamp form (epoch millis).
 </ResponseField>
 
@@ -128,7 +128,7 @@ Successful Response
   List of invoice related transactions.
 </ResponseField>
 
-<ResponseField name="customerId" type="string<uuid>" required>
+<ResponseField name="customerId" type="string<uuid>" >
   Unique customer ID.
 </ResponseField>
 
@@ -136,38 +136,38 @@ Successful Response
   Details of the customer who paid the invoice.
 </ResponseField>
 
-<ResponseField name="transactionId" type="string<uuid>" required>
+<ResponseField name="transactionId" type="string<uuid>" >
   The primary transaction ID for this invoice.
 </ResponseField>
 
-<ResponseField name="paymentUrl" type="string" required>
+<ResponseField name="paymentUrl" type="string" >
   URL for invoice payment page.
 </ResponseField>
 
-<ResponseField name="paymentLinkId" type="string<uuid>" required>
+<ResponseField name="paymentLinkId" type="string<uuid>" >
   Unique ID of payment link (usually the same as invoice ID).
 </ResponseField>
 
 ### transactions Structure (Array Of Object)
 
-<ResponseField name="id" type="string <uuid>" required>
+<ResponseField name="id" type="string <uuid>" >
   Unique transaction ID.
 </ResponseField>
 
 ### customer Structure (Array Of Object)
 
-<ResponseField name="id" type="string <uuid>" required>
+<ResponseField name="id" type="string <uuid>" >
   Unique customer ID.
 </ResponseField>
 
-<ResponseField name="email" type="string" required>
+<ResponseField name="email" type="string" >
   Customer's email address.
 </ResponseField>
 
-<ResponseField name="mobile" type="string" required>
+<ResponseField name="mobile" type="string" >
   Customer's mobile phone number.
 </ResponseField>
 
-<ResponseField name="name" type="string" required>
+<ResponseField name="name" type="string" >
   Customer's name.
 </ResponseField>

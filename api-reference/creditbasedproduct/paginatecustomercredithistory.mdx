@@ -20,75 +20,49 @@ curl --request GET 'https://api.mayar.id/credit/v1/credit/customer/paginate-cred
 {
     "statusCode": 200,
     "message": "success",
-    "total": 10,
+    "total": 3,
     "page": 1,
-    "limit": 5,
-    "totalPages": 2,
+    "limit": 10,
+    "totalPages": 1,
     "data": [
         {
-            "id": "68a84724c8d5f89bdeae7346",
-            "createdAt": "2025-08-22T10:32:04.204Z",
-            "amount": -100000,
-            "productId": "40f26fbe-f4d8-4693-975f-e6d105d291e6",
+            "id": "6970b4bcdfcfcfbbd8d7b617",
+            "createdAt": "2026-01-21T11:13:00.044Z",
+            "credit": 0,
+            "debit": 50,
+            "productId": "10291a3d-c53f-426f-9987-f879b4b87c64",
             "status": "ACTIVE",
-            "membershipTierId": "9bbbfa01-1bf8-4e4d-8470-cdf7066b6ea2",
-            "customerId": "faa4ee60-cf45-4043-b964-303890713bb9",
-            "merchantId": "35776524-8ea9-46ac-b2dd-89efc496593f",
-            "walletType": "MEMBERSHIP",
-            "type": "EXPIRE_VOID",
-            "referenceId": "68a56306c8d5f89bdeae32fd"
-        },
-        {
-            "id": "68a84724c8d5f89bdeae7344",
-            "createdAt": "2025-08-22T10:32:03.972Z",
-            "amount": 0,
-            "productId": "40f26fbe-f4d8-4693-975f-e6d105d291e6",
-            "status": "ACTIVE",
-            "membershipTierId": "9bbbfa01-1bf8-4e4d-8470-cdf7066b6ea2",
-            "customerId": "faa4ee60-cf45-4043-b964-303890713bb9",
-            "merchantId": "35776524-8ea9-46ac-b2dd-89efc496593f",
-            "walletType": "MEMBERSHIP",
-            "type": "EXPIRE_VOID",
-            "referenceId": "68a562b2c8d5f89bdeae32fa"
-        },
-        {
-            "id": "68a6b896c8d5f89bdeae3d5c",
-            "createdAt": "2025-08-21T06:11:34.145Z",
-            "amount": 6000,
-            "productId": "40f26fbe-f4d8-4693-975f-e6d105d291e6",
-            "status": "ACTIVE",
-            "membershipTierId": "9bbbfa01-1bf8-4e4d-8470-cdf7066b6ea2",
-            "customerId": "faa4ee60-cf45-4043-b964-303890713bb9",
-            "merchantId": "35776524-8ea9-46ac-b2dd-89efc496593f",
-            "expiredAt": "2027-07-20T05:52:50.053Z",
-            "walletType": "ADD_ON",
-            "type": "TOPUP"
-        },
-        {
-            "id": "68a6b31bc8d5f89bdeae3d2c",
-            "createdAt": "2025-08-21T05:48:11.194Z",
-            "amount": 5000,
-            "productId": "40f26fbe-f4d8-4693-975f-e6d105d291e6",
-            "status": "ACTIVE",
-            "membershipTierId": "9bbbfa01-1bf8-4e4d-8470-cdf7066b6ea2",
-            "customerId": "faa4ee60-cf45-4043-b964-303890713bb9",
-            "merchantId": "35776524-8ea9-46ac-b2dd-89efc496593f",
-            "expiredAt": "2027-07-20T05:52:50.053Z",
-            "walletType": "ADD_ON",
-            "type": "TOPUP"
-        },
-        {
-            "id": "68a573d7c8d5f89bdeae3370",
-            "createdAt": "2025-08-20T07:05:59.723Z",
-            "amount": -100000,
-            "productId": "40f26fbe-f4d8-4693-975f-e6d105d291e6",
-            "status": "ACTIVE",
-            "membershipTierId": "9bbbfa01-1bf8-4e4d-8470-cdf7066b6ea2",
-            "customerId": "faa4ee60-cf45-4043-b964-303890713bb9",
-            "merchantId": "35776524-8ea9-46ac-b2dd-89efc496593f",
+            "customerId": "210e5193-7d66-4345-a5c7-07fe7552f2f7",
+            "merchantId": "8afa8430-9ccd-4d33-9c1b-e0999a319994",
             "expiredAt": null,
-            "walletType": "MEMBERSHIP",
+            "walletType": "ADD_ON",
             "type": "CREDIT_USAGE"
+        },
+        {
+            "id": "6970b49fdfcfcfbbd8d7b616",
+            "createdAt": "2026-01-21T11:12:31.325Z",
+            "credit": 200,
+            "debit": 0,
+            "productId": "10291a3d-c53f-426f-9987-f879b4b87c64",
+            "status": "ACTIVE",
+            "customerId": "210e5193-7d66-4345-a5c7-07fe7552f2f7",
+            "merchantId": "8afa8430-9ccd-4d33-9c1b-e0999a319994",
+            "expiredAt": null,
+            "walletType": "ADD_ON",
+            "type": "MERCHANT_TOPUP"
+        },
+        {
+            "id": "6970b416dfcfcfbbd8d7b612",
+            "createdAt": "2026-01-21T11:10:14.827Z",
+            "credit": 3000,
+            "debit": 0,
+            "productId": "10291a3d-c53f-426f-9987-f879b4b87c64",
+            "status": "ACTIVE",
+            "customerId": "210e5193-7d66-4345-a5c7-07fe7552f2f7",
+            "merchantId": "8afa8430-9ccd-4d33-9c1b-e0999a319994",
+            "expiredAt": null,
+            "walletType": "ADD_ON",
+            "type": "TRIAL_TOPUP"
         }
     ]
 }
@@ -101,12 +75,12 @@ Endpoint:
 <CodeGroup>
 
 ```Production Production
-https://api.mayar.id/credit/v1/credit/customer/paginate-credit-history/{memberId}?productId={productId}&membershipTierId={membershipTierId}&page=1&limit=5
+https://api.mayar.id/credit/v1/credit/customer/paginate-credit-history/?productId={productId}
 ```
 
 
 ```Sandbox Sandbox
-https://api.mayar.club/credit/v1/credit/customer/paginate-credit-history/{memberId}?productId={productId}&membershipTierId={membershipTierId}&page=1&limit=5
+https://api.mayar.club/credit/v1/credit/customer/paginate-credit-history/?productId={productId}
 ```
 
 </CodeGroup>
@@ -121,23 +95,11 @@ https://api.mayar.club/credit/v1/credit/customer/paginate-credit-history/{member
 
 ## Path Parameters
 
-<ParamField query="memberId" path="memberId" type="string">
-  The unique identifier of the member whose credit balance is being queried.
-</ParamField>
-
 <ParamField query="customerId" path="customerId" type="string">
   The unique identifier of the customer whose credit balance is being queried balance.
 </ParamField>
 
-<Note>
-  either `memberId` or `customerId` must be used to get the desired customer credit history.
-</Note>
-
 ## Query Parameters
-
-<ParamField query="productId" path="productId" type="string" required>
-  The unique identifier of the product associated with the credit balance.
-</ParamField>
 
 <ParamField query="page" path="page" default="1" type="integer">
   The page number for pagination.
@@ -163,10 +125,6 @@ https://api.mayar.club/credit/v1/credit/customer/paginate-credit-history/{member
   The end date filter for the query range.
 </ParamField>
 
-<ParamField query="membershipTierId" path="membershipTierId" type="string">
-  The unique identifier of the membership tier associated with the credit history.
-</ParamField>
-
 <ParamField query="walletType" path="walletType" type="string">
   The type of wallet to filter credit history (e.g., `"MEMBERSHIP"`, `"ADD_ON"`).
 </ParamField>
@@ -181,27 +139,27 @@ Successful Response
 
 ### Main Structure (Root)
 
-<ResponseField name="statusCode" type="integer" required>
+<ResponseField name="statusCode" type="integer" >
   Status code form API.
 </ResponseField>
 
-<ResponseField name="messages" type="string" required>
+<ResponseField name="messages" type="string" >
   Status message that describes the status code.
 </ResponseField>
 
-<ResponseField name="total" type="string" required>
+<ResponseField name="total" type="string" >
   Indicates the total data.
 </ResponseField>
 
-<ResponseField name="page" type="string" required>
+<ResponseField name="page" type="string" >
   Indicates the current page.
 </ResponseField>
 
-<ResponseField name="limit" type="string" required>
+<ResponseField name="limit" type="string" >
   Indicates the current limit (page size).
 </ResponseField>
 
-<ResponseField name="totalPages" type="string" required>
+<ResponseField name="totalPages" type="string" >
   Indicates the total page.
 </ResponseField>
 

@@ -172,11 +172,11 @@ Successful Response
 
 ### Main Structure (Root Object)
 
-<ParamField path="statusCode" type="integer" required>
+<ParamField path="statusCode" type="integer" >
   Status code form API.
 </ParamField>
 
-<ParamField path="messages" type="string" required>
+<ParamField path="messages" type="string" >
   Status message that describes the status code.
 </ParamField>
 
@@ -186,31 +186,31 @@ Successful Response
 
 ### data Structure (Array Of Object)
 
-<ParamField path="id" type="string<uuid>" required>
+<ParamField path="id" type="string<uuid>" >
   Main id.
 </ParamField>
 
-<ParamField path="createdAt" type="integer" required>
+<ParamField path="createdAt" type="integer" >
   Creation time (timestamp in ms).
 </ParamField>
 
-<ParamField path="dueDate" type="integer" required>
+<ParamField path="dueDate" type="integer" >
   Due date value (example: `11`).
 </ParamField>
 
-<ParamField path="interest" type="integer" required>
+<ParamField path="interest" type="integer" >
   Interest value.
 </ParamField>
 
-<ParamField path="interestType" type="string" required>
+<ParamField path="interestType" type="string" >
   Type of interest (example: `"FLAT"`).
 </ParamField>
 
-<ParamField path="period" type="string" required>
+<ParamField path="period" type="string" >
   Installment period (example: `"MONTHLY"`).
 </ParamField>
 
-<ParamField path="tenure" type="number" required>
+<ParamField path="tenure" type="number" >
   Installment duration (in months).
 </ParamField>
 
@@ -220,47 +220,47 @@ Successful Response
 
 ### invoices Structure (Array Of Object)
 
-<ParamField path="id" type="string<uuid>" required>
+<ParamField path="id" type="string<uuid>" >
   Id of the installment created
 </ParamField>
 
-<ParamField path="amount" type="integer" required>
+<ParamField path="amount" type="integer" >
   Invoice amount.
 </ParamField>
 
-<ParamField path="updatedAt" type="integer" required>
+<ParamField path="updatedAt" type="integer" >
   Last updated time (timestamp in ms).
 </ParamField>
 
-<ParamField path="category" type="string | null" required>
+<ParamField path="category" type="string | null" >
   Invoice category.
 </ParamField>
 
-<ParamField path="status" type="string" required>
+<ParamField path="status" type="string" >
   Payment status (example: `"unpaid"`).
 </ParamField>
 
-<ParamField path="index" type="integer" required>
+<ParamField path="index" type="integer" >
   Invoice order number.
 </ParamField>
 
-<ParamField path="link" type="string" required>
+<ParamField path="link" type="string" >
   Unique invoice link.
 </ParamField>
 
-<ParamField path="description" type="string" required>
+<ParamField path="description" type="string" >
   Invoice description.
 </ParamField>
 
-<ParamField path="interestAmount" type="integer" required>
+<ParamField path="interestAmount" type="integer" >
   Interest amount for the invoice.
 </ParamField>
 
-<ParamField path="remainingAmount" type="integer" required>
+<ParamField path="remainingAmount" type="integer" >
   Remaining balance.
 </ParamField>
 
-<ParamField path="ustomerId" type="string" required>
+<ParamField path="ustomerId" type="string" >
   Customer ID.
 </ParamField>
 
@@ -270,18 +270,18 @@ Successful Response
 
 ### customer Structure (Array Of Object)
 
-<ParamField path="id" type="string<uuid>" required>
+<ParamField path="id" type="string<uuid>" >
   Customer ID.
 </ParamField>
 
-<ParamField path="email" type="string" required>
+<ParamField path="email" type="string" >
   Customer email address.
 </ParamField>
 
-<ParamField path="mobile" type="string" required>
+<ParamField path="mobile" type="string" >
   Customer phone number.
 </ParamField>
 
-<ParamField path="name" type="string" required>
+<ParamField path="name" type="string" >
   Customer name.
 </ParamField>

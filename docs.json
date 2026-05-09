@@ -159,6 +159,7 @@
             "group": "Customer",
             "pages": [
               "api-reference/customer/getdetail",
+              "api-reference/customer/searchcustomerbyemail",
               "api-reference/customer/create",
               "api-reference/customer/update",
               "api-reference/customer/createmagiclink"
@@ -170,6 +171,7 @@
               "api-reference/transaction/accountbalance",
               "api-reference/transaction/paidtransaction",
               "api-reference/transaction/unpaidtransaction",
+              "api-reference/transaction/dailytransaction",
               "api-reference/transaction/createdynamicqrcode"
             ]
           },
@@ -215,6 +217,14 @@
               "api-reference/creditbasedproduct/addcustomercredit",
               "api-reference/creditbasedproduct/registernewcustomer",
               "api-reference/creditbasedproduct/generateimmutablecheckoutlink"
+            ]
+          },
+          {
+            "group": "Reviews",
+            "pages": [
+              "api-reference/reviews/createreviews",
+              "api-reference/reviews/editreviews",
+              "api-reference/reviews/getallreviews"
             ]
           }
         ]

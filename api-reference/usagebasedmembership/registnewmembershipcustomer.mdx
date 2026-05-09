@@ -113,11 +113,11 @@ Successful Response
 
 ### Main Structure (Root)
 
-<ResponseField name="statusCode" type="integer" required>
+<ResponseField name="statusCode" type="integer" >
   Status code form API.
 </ResponseField>
 
-<ResponseField name="messages" type="string" required>
+<ResponseField name="messages" type="string" >
   Status message that describes the status code.
 </ResponseField>
 
@@ -127,23 +127,23 @@ Successful Response
 
 ### membershipCustomer Structure (Array Of Object)
 
-<ParamField path="id" type="string<uuid>" required>
+<ParamField path="id" type="string<uuid>" >
   Unique identifier of the membership customer record.
 </ParamField>
 
-<ParamField query="userId" path="userId" type="string" required>
+<ParamField query="userId" path="userId" type="string" >
   Unique identifier of the user associated with this membership.
 </ParamField>
 
-<ParamField query="paymentLinkId" path="paymentLinkId" type="string" required>
+<ParamField query="paymentLinkId" path="paymentLinkId" type="string" >
   Unique identifier of the payment link associated with this membership.
 </ParamField>
 
-<ParamField query="createdAt" path="createdAt" type="integer" required>
+<ParamField query="createdAt" path="createdAt" type="integer" >
   Timestamp (in milliseconds) indicating when the membership was created.
 </ParamField>
 
-<ParamField query="nextPayment" path="nextPayment" type="integer" required>
+<ParamField query="nextPayment" path="nextPayment" type="integer" >
   Timestamp (in milliseconds) of the next scheduled payment.
 </ParamField>
 
@@ -157,14 +157,14 @@ Successful Response
 
 ### paymentLink Structure (Array Of Object)
 
-<ParamField query="id" path="id" type="string" required>
+<ParamField query="id" path="id" type="string" >
   Unique identifier of the payment link.
 </ParamField>
 
-<ParamField query="name" path="name" type="string" required>
+<ParamField query="name" path="name" type="string" >
   Name of the payment link or product.
 </ParamField>
 
-<ParamField query="description" path="description" type="string" required>
+<ParamField query="description" path="description" type="string" >
   Description of the payment link or product in HTML format.
 </ParamField>

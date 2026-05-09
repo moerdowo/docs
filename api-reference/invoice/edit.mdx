@@ -64,7 +64,7 @@ https://api.mayar.club/hl/v1/invoice/edit
 
 ## Request Body
 
-<ParamField path="id" type="string">
+<ParamField path="id" type="string" required>
   A unique identifier obtained when creating an invoice. If accessed through the dashboard, it can be found at the URL on the invoice details page.
 
   Example:
@@ -114,11 +114,11 @@ Successful Response
 
 ### Main Structure (Root)
 
-<ResponseField name="statusCode" type="integer" required>
+<ResponseField name="statusCode" type="integer" >
   Status code form API.
 </ResponseField>
 
-<ResponseField name="messages" type="string" required>
+<ResponseField name="messages" type="string" >
   Status message that describes the status code.
 </ResponseField>
 
@@ -128,10 +128,10 @@ Successful Response
 
 ### data Structure (Array Of Object)
 
-<ResponseField name="id" type="string<uuid>" required>
+<ResponseField name="id" type="string<uuid>" >
   Unique invoice ID.
 </ResponseField>
 
-<ResponseField name="link" type="string" required>
+<ResponseField name="link" type="string" >
   The URL that users/clients can access to open invoices.
 </ResponseField>

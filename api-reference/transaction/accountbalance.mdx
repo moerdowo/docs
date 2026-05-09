@@ -58,11 +58,11 @@ Successful Response
 
 ### Main Structure (Root)
 
-<ResponseField name="statusCode" type="integer" required>
+<ResponseField name="statusCode" type="integer" >
   Status code form API.
 </ResponseField>
 
-<ResponseField name="messages" type="string" required>
+<ResponseField name="messages" type="string" >
   Status message that describes the status code.
 </ResponseField>
 
@@ -72,14 +72,14 @@ Successful Response
 
 ### data Structure (Array Of Object)
 
-<ResponseField name="balanceActive" type="integer" required>
+<ResponseField name="balanceActive" type="integer" >
   Active balance that can be used/withdrawn immediately.
 </ResponseField>
 
-<ResponseField name="balancePending" type="integer" required>
+<ResponseField name="balancePending" type="integer" >
   Pending balance (cannot be withdraw).
 </ResponseField>
 
-<ResponseField name="balance" type="integer" required>
+<ResponseField name="balance" type="integer" >
   Total overall balance (Active balance \+ Pending balance).
 </ResponseField>

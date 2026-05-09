@@ -394,27 +394,27 @@ Successful Response
 
 ### Main Structure (Root)
 
-<ResponseField name="statusCode" type="integer" required>
+<ResponseField name="statusCode" type="integer" >
   Status code form API.
 </ResponseField>
 
-<ResponseField name="messages" type="string" required>
+<ResponseField name="messages" type="string" >
   Status message that describes the status code.
 </ResponseField>
 
-<ResponseField name="hasMore" type="boolean" required>
+<ResponseField name="hasMore" type="boolean" >
   Information on whether there is additional data to be retrieved (true/false).
 </ResponseField>
 
-<ResponseField name="pageCount" type="integer" required>
+<ResponseField name="pageCount" type="integer" >
   Total number of data pages.
 </ResponseField>
 
-<ResponseField name="pageSize" type="integer" required>
+<ResponseField name="pageSize" type="integer" >
   Number of items per page.
 </ResponseField>
 
-<ResponseField name="page" type="integer" required>
+<ResponseField name="page" type="integer" >
   The page currently displayed.
 </ResponseField>
 
@@ -424,35 +424,35 @@ Successful Response
 
 ### data Structure (Array Of Object)
 
-<ResponseField name="id" type="string<uuid>" required>
+<ResponseField name="id" type="string<uuid>" >
   Unique ID for the balance transaction history.
 </ResponseField>
 
-<ResponseField name="createdAt" type="number (timestamp)" required>
+<ResponseField name="createdAt" type="number (timestamp)" >
   The transaction creation time in epoch format (ms).
 </ResponseField>
 
-<ResponseField name="type" type="string" required>
+<ResponseField name="type" type="string" >
   The type of transaction.
 </ResponseField>
 
-<ResponseField name="amount" type="integer" required>
+<ResponseField name="amount" type="integer" >
   Payment amount
 </ResponseField>
 
-<ResponseField name="status" type="string" required>
+<ResponseField name="status" type="string" >
   Request status (active = still valid).
 </ResponseField>
 
-<ResponseField name="urlParamTrackingData" type="string | null" required>
+<ResponseField name="urlParamTrackingData" type="string | null" >
   Data tracking via additional URL parameters (if any).
 </ResponseField>
 
-<ResponseField name="paymentLinkId" type="string<uuid>" required>
+<ResponseField name="paymentLinkId" type="string<uuid>" >
   The ID of the payment link used.
 </ResponseField>
 
-<ResponseField name="customerId" type="string<uuid>" required>
+<ResponseField name="customerId" type="string<uuid>" >
   The unique ID of the customer who made the transaction.
 </ResponseField>
 
@@ -468,74 +468,74 @@ Successful Response
   Payment link information used for transactions.
 </ResponseField>
 
-<ResponseField name="paymentUrl" type="string" required>
+<ResponseField name="paymentUrl" type="string" >
   Unique URL to pay for this request.
 </ResponseField>
 
 ### customer Structure (Array Of Object)
 
-<ResponseField name="id" type="string <uuid>" required>
+<ResponseField name="id" type="string <uuid>" >
   Unique customer ID.
 </ResponseField>
 
-<ResponseField name="email" type="string" required>
+<ResponseField name="email" type="string" >
   Customer's email address.
 </ResponseField>
 
-<ResponseField name="name" type="string" required>
+<ResponseField name="name" type="string" >
   Customer's name.
 </ResponseField>
 
-<ResponseField name="mobile" type="string" required>
+<ResponseField name="mobile" type="string" >
   Customer's mobile phone number.
 </ResponseField>
 
 ### paymentLink Structure (Array Of Object)
 
-<ResponseField name="id" type="string <uuid>" required>
+<ResponseField name="id" type="string <uuid>" >
   ID payment link.
 </ResponseField>
 
-<ResponseField name="category" type="string | null" required>
+<ResponseField name="category" type="string | null" >
   Product category, can be null if there is no category.
 </ResponseField>
 
-<ResponseField name="createdAt" type="number | timestamp" required>
+<ResponseField name="createdAt" type="number | timestamp" >
   Product creation time in epoch milliseconds format.
 </ResponseField>
 
-<ResponseField name="description" type="string" required>
+<ResponseField name="description" type="string" >
   Product description.
 </ResponseField>
 
-<ResponseField name="link" type="string" required>
+<ResponseField name="link" type="string" >
   Product slug/short URL.
 </ResponseField>
 
-<ResponseField name="name" type="string" required>
+<ResponseField name="name" type="string" >
   Product name.
 </ResponseField>
 
-<ResponseField name="redirectUrl" type="string" required>
+<ResponseField name="redirectUrl" type="string" >
   Redirect destination URL.
 </ResponseField>
 
-<ResponseField name="userId" type="string<uuid>" required>
+<ResponseField name="userId" type="string<uuid>" >
   User ID of the payment link owner.
 </ResponseField>
 
-<ResponseField name="coverImageId" type="string | null" required>
+<ResponseField name="coverImageId" type="string | null" >
   ID cover image, can be null.
 </ResponseField>
 
-<ResponseField name="multipleImageId" type="string | null" required>
+<ResponseField name="multipleImageId" type="string | null" >
   ID for multiple image group.
 </ResponseField>
 
-<ResponseField name="coverImage" type="object | null" required>
+<ResponseField name="coverImage" type="object | null" >
   Cover image data, can be null.
 </ResponseField>
 
-<ResponseField name="multimpleImage" type="object | null" required>
+<ResponseField name="multimpleImage" type="object | null" >
   List of additional images for the product.
 </ResponseField>

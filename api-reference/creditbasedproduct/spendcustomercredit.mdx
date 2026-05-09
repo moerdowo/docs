@@ -10,9 +10,8 @@ description: "This endpoint is used to spend a specified amount of credit from a
 curl --request POST 'https://api.mayar.id/credit/v1/credit/customer/spend' \
 --header 'Authorization: Bearer Paste-Your-API-Key-Here' \
 --data '{
-    "memberId" : "KKGOL1MV", // optionally mandatory
+    "customerId": "9de4b4b4-525c-4ee0-ac9c-b29c3e10fe55",
     "productId": "40f26fbe-f4d8-4693-975f-e6d105d291e6",
-    "membershipTierId": "9bbbfa01-1bf8-4e4d-8470-cdf7066b6ea2",
     "amount": 10
 }'
 ```
@@ -24,7 +23,7 @@ curl --request POST 'https://api.mayar.id/credit/v1/credit/customer/spend' \
 ```json Response Example 200
 {
     "statusCode": 200,
-    "message": "Successfully spent 10. MEMBERSHIP: 10, ADD_ON: 0"
+    "message": "Successfully spent 10. MAIN: 10, ADD_ON: 0"
 }
 ```
 
@@ -55,10 +54,6 @@ https://api.mayar.club/credit/v1/credit/customer/spend
 
 ## Request Body
 
-<ParamField query="memberId" path="memberId" type="string">
-  The unique identifier of the customer whose credit will be spent.
-</ParamField>
-
 <ParamField query="customerId" path="customerId" type="string">
   The unique identifier of the member whose credit will be spent.
 </ParamField>
@@ -67,26 +62,18 @@ https://api.mayar.club/credit/v1/credit/customer/spend
   The unique identifier of the product associated with the credit.
 </ParamField>
 
-<ParamField query="membershipTierId" path="membershipTierId" type="string" required>
-  The unique identifier of the membership tier associated with the credit.
-</ParamField>
-
 <ParamField query="amount" path="amount" type="integer" required>
   The amount of credit to deduct (positive integer).
 </ParamField>
-
-<Note>
-  At least **one of** `customerId` **or** `memberId` must be provided.
-</Note>
 
 ## Response
 
 Successful Response
 
-<ResponseField name="statusCode" type="integer" required>
+<ResponseField name="statusCode" type="integer" >
   Status code form API.
 </ResponseField>
 
-<ResponseField name="messages" type="string" required>
+<ResponseField name="messages" type="string" >
   Status message that describes the status code.
 </ResponseField>
