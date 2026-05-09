@@ -222,8 +222,6 @@
           {
             "group": "Reviews",
             "pages": [
-              "api-reference/reviews/createreviews",
-              "api-reference/reviews/editreviews",
               "api-reference/reviews/getallreviews"
             ]
           }
