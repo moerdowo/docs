@@ -1,0 +1,59 @@
+---
+title: "Create Webinar"
+openapi: "POST /endpointwebinar/create"
+description: "Endpoint to create webinar product"
+---
+
+<RequestExample>
+
+```bash Request Example
+curl --request POST 'https://api.mayar.id/hl/v1/product/webinar/create'\
+--header 'Authorization: Bearer Paste-Your-API-Key-Here'\
+--data-raw '{
+        "name": "Webinar Belajar Crypto Untuk Pemula",
+        "description": "Belajar dulu",
+        "amount": 100000,
+        "crossoutPrice": 199000,
+        "eventUrl": "https://zoom.us/j/123456",
+        "notes": "early-bird sd ds ds",
+        "terms": "Tidak ada refund setelah pembelian",
+        "redirectUrl": "https://example.com/webinar-thanks",
+        "paymentType": "paid",
+        "startAt": "2026-06-01T09:00:00.000Z",
+        "eventStartAt": "2026-06-10T09:00:00.000Z",
+        "eventEndAt": "2026-06-10T12:00:00.000Z",
+        "expiredAt": "2026-06-15T12:00:00.000Z",
+        "limit": 100
+    }
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode":200,
+    "messages":"success",
+    "data":
+         {
+            "id":"3f4fc3fd-10dc-4a97-b54c-7632881858cb",
+            "link":"https://testingmayar.myr.id/webinar/Webinar-Marketing-2026"
+        }
+}
+```
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v1/product/webinar/create
+```
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v1/product/webinar/create
+```
+
+</CodeGroup>

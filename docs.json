@@ -117,6 +117,34 @@
             ]
           },
           {
+            "group": "Generic Link Product",
+            "pages": [
+              "api-reference/genericlink/create",
+              "api-reference/genericlink/edit"
+            ]
+          },
+          {
+            "group": "Digital Product",
+            "pages": [
+              "api-reference/digitalproduct/create",
+              "api-reference/digitalproduct/edit"
+            ]
+          },
+          {
+            "group": "Webinar Product",
+            "pages": [
+              "api-reference/webinar/create",
+              "api-reference/webinar/edit"
+            ]
+          },
+          {
+            "group": "Event Product",
+            "pages": [
+              "api-reference/event/create",
+              "api-reference/event/edit"
+            ]
+          },
+          {
             "group": "Invoice",
             "pages": [
               "api-reference/invoice/create",
