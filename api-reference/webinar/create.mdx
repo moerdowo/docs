@@ -24,7 +24,7 @@ curl --request POST 'https://api.mayar.id/hl/v1/product/webinar/create'\
         "eventEndAt": "2026-06-10T12:00:00.000Z",
         "expiredAt": "2026-06-15T12:00:00.000Z",
         "limit": 100
-    }
+    }'
 ```
 
 </RequestExample>
@@ -38,7 +38,7 @@ curl --request POST 'https://api.mayar.id/hl/v1/product/webinar/create'\
     "data":
          {
             "id":"3f4fc3fd-10dc-4a97-b54c-7632881858cb",
-            "link":"https://testingmayar.myr.id/webinar/Webinar-Marketing-2026"
+            "link":"https://testingmayar.myr.id/pl/Webinar-Belajar-Crypto-Untuk-Pemula"
         }
 }
 ```
@@ -57,3 +57,97 @@ https://api.mayar.club/hl/v1/product/webinar/create
 ```
 
 </CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+    Example:
+
+    `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Request Body
+
+<ParamField path="name" type="string" required>
+  Webinar product name.
+</ParamField>
+
+<ParamField path="description" type="string" required>
+  Webinar product description.
+</ParamField>
+
+<ParamField path="amount" type="integer" required>
+  Webinar price amount.
+</ParamField>
+
+<ParamField path="crossoutPrice" type="integer" required>
+  Crossed-out price displayed as the original price.
+</ParamField>
+
+<ParamField path="eventUrl" type="string" required>
+  Webinar URL, such as Zoom or meeting link.
+</ParamField>
+
+<ParamField path="notes" type="string">
+  Additional notes for the webinar.
+</ParamField>
+
+<ParamField path="terms" type="string">
+  Terms and conditions for the webinar purchase.
+</ParamField>
+
+<ParamField path="redirectUrl" type="string">
+  URL where the customer will be redirected after completing payment.
+</ParamField>
+
+<ParamField path="paymentType" type="string" required>
+  Payment type for the webinar.
+</ParamField>
+
+<ParamField path="startAt" type="string | datetime" required>
+  Sales start date in ISO 8601 format.
+</ParamField>
+
+<ParamField path="eventStartAt" type="string | datetime" required>
+  Webinar start date in ISO 8601 format.
+</ParamField>
+
+<ParamField path="eventEndAt" type="string | datetime" required>
+  Webinar end date in ISO 8601 format.
+</ParamField>
+
+<ParamField path="expiredAt" type="string | datetime" required>
+  Webinar product expiration date in ISO 8601 format.
+</ParamField>
+
+<ParamField path="limit" type="number">
+  Maximum participant or purchase limit.
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer">
+  Status code from API.
+</ResponseField>
+
+<ResponseField name="messages" type="string">
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  The created webinar product data.
+</ResponseField>
+
+### data Structure (Array of Object)
+
+<ResponseField name="data.id" type="string">
+  Unique identifier of the webinar product.
+</ResponseField>
+
+<ResponseField name="data.link" type="string">
+  Public URL of the created webinar product.
+</ResponseField>

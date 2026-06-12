@@ -1,5 +1,117 @@
 ---
-title: "Create Generic Link"
+title: "Edit Generic Link"
 openapi: "POST /endpointgenericlink/create"
 description: "Endpoint used to create generic link product"
 ---
+
+<RequestExample>
+
+```bash Request Example
+curl --request POST 'https://api.mayar.id/hl/v1/product/paymentlink/edit'
+--data-raw'{
+        "id": "21d84338-b46d-42d7-9b49-d402520407a5",
+        "name": "Jasa Buat Website Kece Editan",
+        "description": "Deskripsinya diubah",
+        "amount": 150000,
+        "redirectUrl": "https://example.com/thank-you",
+        "notes": "catatan opsional",
+        "expiredAt": "2026-06-15T12:00:00.000Z"
+    }'
+
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "data": {
+        "id": "21d84338-b46d-42d7-9b49-d402520407a5",
+        "link": "https://testingmayar.myr.id/pl/Jasa-Buat-Website-Kece"
+    }
+}
+```
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v1/product/paymentlink/edit
+```
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v1/product/paymentlink/edit
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+    Example:
+
+    `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Request Body
+
+<ParamField path="id" type="string" required>
+  Unique identifier of the generic payment link product.
+</ParamField>
+
+<ParamField path="name" type="string" required>
+  Generic payment link product name.
+</ParamField>
+
+<ParamField path="description" type="string" required>
+  Generic payment link product description.
+</ParamField>
+
+<ParamField path="amount" type="integer" required>
+  Product price amount.
+</ParamField>
+
+<ParamField path="redirectUrl" type="string">
+  URL where the customer will be redirected after completing payment.
+</ParamField>
+
+<ParamField path="notes" type="string">
+  Additional notes for the payment link.
+</ParamField>
+
+<ParamField path="expiredAt" type="string | datetime">
+  Payment link expiration date in ISO 8601 format.
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer">
+  Status code from API.
+</ResponseField>
+
+<ResponseField name="messages" type="string">
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  The updated generic payment link product data.
+</ResponseField>
+
+### data Structure (Array of Object)
+
+<ResponseField name="data.id" type="string">
+  Unique identifier of the generic payment link product.
+</ResponseField>
+
+<ResponseField name="data.link" type="string">
+  Public payment link URL of the updated product.
+</ResponseField>
