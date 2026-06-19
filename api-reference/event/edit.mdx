@@ -1,0 +1,158 @@
+---
+title: "Edit Event"
+openapi: "POST /endpointevent/edit"
+description: "Endpoint used to edit event product"
+---
+
+<RequestExample>
+
+```bash Request Example
+curl --request POST 'https://api.mayar.id/hl/v1/product/event/create'\
+--header 'Authorization: Bearer Paste-Your-API-Key-Here'\
+--data-raw '{
+        "id": "7f992557-8791-41b5-a1c8-c5641c3e72b5",
+        "name": "Bootcamp Coding Fullstack Asix Editan",
+        "description": "Workshop fullstack development 2 hari",
+        "amount": 250000,
+        "crossoutPrice": 500000,
+        "eventUrl": "https://meet.google.com/abc-defg-hij",
+        "notes": "offline-jakarta",
+        "terms": "Tiket tidak dapat di-refund",
+        "redirectUrl": "https://example.com/event-thanks",
+        "paymentType": "paid",
+        "startAt": "2026-07-01T08:00:00.000Z",
+        "eventStartAt": "2026-07-15T08:00:00.000Z",
+        "eventEndAt": "2026-07-16T17:00:00.000Z",
+        "expiredAt": "2026-07-10T17:00:00.000Z",
+        "limit": 50
+    }'
+
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "data": {
+        "id": "7f992557-8791-41b5-a1c8-c5641c3e72b5",
+        "link": "https://testingmayar.myr.id/event/Bootcamp-Coding-Fullstack-Asix"
+    }
+}
+```
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production 
+https://api.mayar.id/hl/v1/product/event/edit
+```
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v1/product/event/edit
+```
+
+</CodeGroup>
+
+## Authorization 
+
+<ResponseField name="Authorization" type="string" required>
+    Example:
+
+    `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Request Body
+
+<ParamField path="id" type="string" required>
+  Unique identifier of the event product.
+</ParamField>
+
+<ParamField path="name" type="string" required>
+  Event product name.
+</ParamField>
+
+<ParamField path="description" type="string" required>
+  Event product description.
+</ParamField>
+
+<ParamField path="amount" type="integer" required>
+  Event ticket or product price amount.
+</ParamField>
+
+<ParamField path="crossoutPrice" type="integer">
+  Crossed-out price displayed as the original price.
+</ParamField>
+
+<ParamField path="eventUrl" type="string">
+  Event URL, such as an online meeting link.
+</ParamField>
+
+<ParamField path="notes" type="string">
+  Additional notes for the event.
+</ParamField>
+
+<ParamField path="terms" type="string">
+  Terms and conditions for the event purchase.
+</ParamField>
+
+<ParamField path="redirectUrl" type="string">
+  URL where the customer will be redirected after completing payment.
+</ParamField>
+
+<ParamField path="paymentType" type="string" required>
+  Payment type for the event.
+</ParamField>
+
+<ParamField path="startAt" type="string | datetime" required>
+  Sales start date in ISO 8601 format.
+</ParamField>
+
+<ParamField path="eventStartAt" type="string | datetime" required>
+  Event start date in ISO 8601 format.
+</ParamField>
+
+<ParamField path="eventEndAt" type="string | datetime" required>
+  Event end date in ISO 8601 format.
+</ParamField>
+
+<ParamField path="expiredAt" type="string | datetime" required>
+  Event product expiration date in ISO 8601 format.
+</ParamField>
+
+<ParamField path="limit" type="number">
+  Maximum participant or purchase limit.
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer">
+  Status code from API.
+</ResponseField>
+
+<ResponseField name="messages" type="string">
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  The updated event product data.
+</ResponseField>
+
+### data Structure (Array of Object)
+
+<ResponseField name="data.id" type="string">
+  Unique identifier of the event product.
+</ResponseField>
+
+<ResponseField name="data.link" type="string">
+  Public URL of the updated event product.
+</ResponseField>

@@ -1,0 +1,134 @@
+---
+title: "Edit Digital Product"
+openapi: "POST /endpointdigitalproduct/edit"
+description: "Endpoint used to edit digital product"
+---
+
+<RequestExample>
+
+```bash Request Example
+curl --request POST 'https://api.mayar.id/hl/v1/product/digital-product/edit'\
+--header 'Authorization: Bearer Paste Your-API-Key-Here'\
+--data-raw '{
+        "id": "6894b1b2-f303-423b-a6b6-93e230e1d393",
+        "name": "E-Book Panduan Bisnis Untuk Pemula Editan",
+        "description": "Panduan lengkap memulai bisnis online",
+        "amount": 75000,
+        "crossoutPrice": 150000,
+        "redirectUrl": "https://example.com/ebook-download",
+        "notes": "diskon-50",
+        "expiredAt": "2026-06-15T12:00:00.000Z",
+        "limit": 200,
+        "tax": 7500
+    }'
+
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "data": {
+        "id": "6894b1b2-f303-423b-a6b6-93e230e1d393",
+        "link": "https://testingmayar.myr.id/catalog/E-Book-Panduan-Bisnis-Buat-Pemula"
+    }
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v1/product/digital-product/edit
+```
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v1/product/digital-product/edit
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+    Example:
+
+    `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Request Body
+
+<ParamField path="id" type="string" required>
+  Unique identifier of the digital product.
+</ParamField>
+
+<ParamField path="name" type="string" required>
+  Digital product name.
+</ParamField>
+
+<ParamField path="description" type="string" required>
+  Digital product description.
+</ParamField>
+
+<ParamField path="amount" type="integer" required>
+  Digital product price amount.
+</ParamField>
+
+<ParamField path="crossoutPrice" type="integer">
+  Crossed-out price displayed as the original price.
+</ParamField>
+
+<ParamField path="redirectUrl" type="string" required>
+  URL where the customer will be redirected after completing payment.
+</ParamField>
+
+<ParamField path="notes" type="string">
+  Additional notes for the digital product.
+</ParamField>
+
+<ParamField path="expiredAt" type="string | datetime">
+  Product expiration date in ISO 8601 format.
+</ParamField>
+
+<ParamField path="limit" type="integer">
+  Maximum purchase limit.
+</ParamField>
+
+<ParamField path="tax" type="integer">
+  Tax amount applied to the product.
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer">
+  Status code from API.
+</ResponseField>
+
+<ResponseField name="messages" type="string">
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  The updated digital product data.
+</ResponseField>
+
+### data Structure (Array of Object)
+
+<ResponseField name="data.id" type="string">
+  Unique identifier of the digital product.
+</ResponseField>
+
+<ResponseField name="data.link" type="string">
+  Public URL of the updated digital product.
+</ResponseField>
