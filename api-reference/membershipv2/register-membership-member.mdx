@@ -1,0 +1,85 @@
+---
+title: "Register Membership Member"
+openapi: "POST /endpointmembershipv2/register-membership-member"
+description: "Endpoint to register a new membership member."
+---
+
+{/* STUB — Membership V2. Section skeleton only; content filled in a later phase (plan phase 5). */}
+
+<RequestExample>
+
+```bash Request Example
+curl --request POST 'https://api.mayar.id/hl/v2/membership-members' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--data-raw '{}'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 201
+{
+    "statusCode": 201,
+    "message": "success",
+    "data": {
+        "membershipCustomer": {}
+    }
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/membership-members
+```
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/membership-members
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Request Body
+
+{/* TODO: document productId, membershipTierId, customerInfo { name, email, mobile }, membershipMonthlyPeriod */}
+
+<ParamField body="productId" type="string" required>
+  The unique identifier of the product.
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root Object)
+
+{/* TODO: document data.membershipCustomer fields */}
+
+<ResponseField name="statusCode" type="integer">
+  Status code from the API.
+</ResponseField>
+
+<ResponseField name="message" type="string">
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  The created membership member.
+</ResponseField>
+
+<ResponseField name="data.membershipCustomer" type="object">
+  Details of the registered membership customer.
+</ResponseField>

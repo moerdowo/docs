@@ -1,0 +1,93 @@
+---
+title: "Create Membership Invoice"
+openapi: "POST /endpointmembershipv2/create-membership-invoice"
+description: "Endpoint to create an invoice for a membership member."
+---
+
+{/* STUB — Membership V2. Section skeleton only; content filled in a later phase (plan phase 3). */}
+
+<RequestExample>
+
+```bash Request Example
+curl --request POST 'https://api.mayar.id/hl/v2/membership-members/MEMBER-ID/invoice' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--data-raw '{}'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "message": "success",
+    "data": {
+        "membershipBillUrl": ""
+    }
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/membership-members/(memberId)/invoice
+```
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/membership-members/(memberId)/invoice
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Path Parameters
+
+{/* TODO: document memberId */}
+
+<ParamField path="memberId" type="string" required>
+  The unique identifier of the membership member.
+</ParamField>
+
+## Request Body
+
+{/* TODO: document productId (accepted from body OR query); note term-based idempotency */}
+
+<ParamField body="productId" type="string" required>
+  The unique identifier of the product.
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root Object)
+
+{/* TODO: document data invoice fields and membershipBillUrl */}
+
+<ResponseField name="statusCode" type="integer">
+  Status code from the API.
+</ResponseField>
+
+<ResponseField name="message" type="string">
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  The created invoice.
+</ResponseField>
+
+<ResponseField name="data.membershipBillUrl" type="string">
+  The membership bill URL the customer can use to pay.
+</ResponseField>

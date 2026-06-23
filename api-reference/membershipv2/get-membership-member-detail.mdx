@@ -1,0 +1,86 @@
+---
+title: "Get Membership Member Detail"
+openapi: "GET /endpointmembershipv2/get-membership-member-detail"
+description: "Endpoint to get a single membership member's detail."
+---
+
+{/* STUB — Membership V2. Section skeleton only; content filled in a later phase (plan phase 5). */}
+
+<RequestExample>
+
+```bash Request Example
+curl --request GET 'https://api.mayar.id/hl/v2/membership-members/MEMBER-ID?productId=YOUR-PRODUCT-ID' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "data": {}
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/membership-members/(memberId)
+```
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/membership-members/(memberId)
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Path Parameters
+
+{/* TODO: document memberId */}
+
+<ParamField path="memberId" type="string" required>
+  The unique identifier of the membership member.
+</ParamField>
+
+## Query Parameters
+
+{/* TODO: document productId (required) */}
+
+<ParamField query="productId" type="string" required>
+  The unique identifier of the product.
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root Object)
+
+{/* TODO: document the member object fields */}
+
+<ResponseField name="statusCode" type="integer">
+  Status code from the API.
+</ResponseField>
+
+<ResponseField name="messages" type="string">
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  The membership member detail.
+</ResponseField>

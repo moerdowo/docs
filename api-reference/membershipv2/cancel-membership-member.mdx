@@ -1,0 +1,93 @@
+---
+title: "Cancel Membership Member"
+openapi: "POST /endpointmembershipv2/cancel-membership-member"
+description: "Endpoint to cancel a membership member (sets status to stopped)."
+---
+
+{/* STUB — Membership V2. Section skeleton only; content filled in a later phase (plan phase 5). */}
+
+<RequestExample>
+
+```bash Request Example
+curl --request POST 'https://api.mayar.id/hl/v2/membership-members/MEMBER-ID/cancel' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--data-raw '{}'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "message": "success",
+    "data": {
+        "membershipCustomer": {}
+    }
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/membership-members/(memberId)/cancel
+```
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/membership-members/(memberId)/cancel
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Path Parameters
+
+{/* TODO: document memberId */}
+
+<ParamField path="memberId" type="string" required>
+  The unique identifier of the membership member.
+</ParamField>
+
+## Request Body
+
+{/* TODO: document productId (accepted from body OR query) */}
+
+<ParamField body="productId" type="string" required>
+  The unique identifier of the product.
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root Object)
+
+{/* TODO: document data.membershipCustomer fields */}
+
+<ResponseField name="statusCode" type="integer">
+  Status code from the API.
+</ResponseField>
+
+<ResponseField name="message" type="string">
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  The cancelled membership member.
+</ResponseField>
+
+<ResponseField name="data.membershipCustomer" type="object">
+  Details of the cancelled membership customer.
+</ResponseField>

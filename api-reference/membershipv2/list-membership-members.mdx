@@ -1,0 +1,89 @@
+---
+title: "List Membership Members"
+openapi: "GET /endpointmembershipv2/list-membership-members"
+description: "Endpoint to list membership members for a product (cursor-paginated)."
+---
+
+{/* STUB — Membership V2. Section skeleton only; content filled in a later phase (plan phase 4). */}
+
+<RequestExample>
+
+```bash Request Example
+curl --request GET 'https://api.mayar.id/hl/v2/membership-members?productId=YOUR-PRODUCT-ID' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "data": [],
+    "pagination": {
+        "limit": 10,
+        "nextStartingAfter": null,
+        "prevStartingAfter": null,
+        "hasNextPage": false,
+        "hasPrevPage": false
+    }
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/membership-members
+```
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/membership-members
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Query Parameters
+
+{/* TODO: document productId (required), limit, cursor, direction, sortOrder, searchTerm, startDate, endDate, isChurnedMember */}
+
+<ParamField query="productId" type="string" required>
+  The unique identifier of the product.
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root Object)
+
+{/* TODO: document data[] member fields (dotted-key columns), pagination object, and totalMember when isChurnedMember=true */}
+
+<ResponseField name="statusCode" type="integer">
+  Status code from the API.
+</ResponseField>
+
+<ResponseField name="messages" type="string">
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="array of object">
+  The list of membership members.
+</ResponseField>
+
+<ResponseField name="pagination" type="object">
+  Cursor-based pagination metadata.
+</ResponseField>
