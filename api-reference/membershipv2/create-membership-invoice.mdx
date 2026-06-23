@@ -1,17 +1,23 @@
 ---
 title: "Create Membership Invoice"
 openapi: "POST /endpointmembershipv2/create-membership-invoice"
-description: "Endpoint to create an invoice for a membership member."
+description: "Endpoint to create (or reuse) an invoice for a membership member's current billing term."
 ---
-
-{/* STUB — Membership V2. Section skeleton only; content filled in a later phase (plan phase 3). */}
 
 <RequestExample>
 
-```bash Request Example
-curl --request POST 'https://api.mayar.id/hl/v2/membership-members/MEMBER-ID/invoice' \
+```bash Request Example (productId in body)
+curl --request POST 'https://api.mayar.id/hl/v2/membership-members/PUYSW40N/invoice' \
 --header 'Authorization: Bearer Paste-Your-API-Key-Here' \
---data-raw '{}'
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "productId": "f5103e7c-9e30-467b-bc32-a96fdcb65849"
+}'
+```
+
+```bash Request Example (productId in query)
+curl --request POST 'https://api.mayar.id/hl/v2/membership-members/PUYSW40N/invoice?productId=f5103e7c-9e30-467b-bc32-a96fdcb65849' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here'
 ```
 
 </RequestExample>
@@ -20,15 +26,34 @@ curl --request POST 'https://api.mayar.id/hl/v2/membership-members/MEMBER-ID/inv
 
 ```json Response Example 200
 {
-    "statusCode": 200,
     "message": "success",
+    "statusCode": 200,
     "data": {
-        "membershipBillUrl": ""
+        "id": "df65d192-8396-4f9a-b4e5-8244648c07c5",
+        "transactionId": "ca87fd13-8742-4d48-af33-7de1a417bc34",
+        "customerId": "9b3a1c7e-4d62-4f0a-8b21-2e9c5d7f3a10",
+        "membershipTierId": "137f0fa9-8aa5-4fec-947e-6ef223590861",
+        "amount": 150000,
+        "status": "created",
+        "expiredAt": "2026-07-20T09:10:57.994Z",
+        "createdAt": "2026-06-20T09:10:57.994Z",
+        "membershipBillUrl": "https://korban-motivator.mayar.shop/pl/ycfyxbj2h3"
     }
 }
 ```
 
 </ResponseExample>
+
+{/*
+  Notes for maintainers (confirmed from source — api-custom-paymenlink/feat-api-membership-v2):
+  - Response uses the SINGULAR `message` key (writes use `message`; reads use plural `messages`). Do NOT normalize.
+  - Success is built by sendSuccessResponse → { message, statusCode, data } where `data` is the invoice
+    object plus `membershipBillUrl` (the `reminderWellcomeId` field is stripped before returning).
+  - `membershipBillUrl` comes from formatMembershipBillUrl → `${baseURL}/pl/${link}`, i.e. the tenant's
+    *.mayar.shop shop subdomain (env-derived host), NOT api.mayar.id.
+  - Invoice fields beyond `membershipBillUrl` above are representative; confirm exact field list against a
+    live response if an exhaustive table is needed.
+*/}
 
 Endpoint:
 
@@ -46,6 +71,8 @@ https://api.mayar.club/hl/v2/membership-members/(memberId)/invoice
 
 ## Authorization
 
+This endpoint is guarded by `checkJwt` — send your API key as a Bearer token.
+
 <ResponseField name="Authorization" type="string" required>
   Example:
 
@@ -54,19 +81,42 @@ https://api.mayar.club/hl/v2/membership-members/(memberId)/invoice
 
 ## Path Parameters
 
-{/* TODO: document memberId */}
-
 <ParamField path="memberId" type="string" required>
-  The unique identifier of the membership member.
+  The unique identifier of the membership member to bill.
+
+  Example:
+
+  `PUYSW40N`
 </ParamField>
 
 ## Request Body
 
-{/* TODO: document productId (accepted from body OR query); note term-based idempotency */}
+`productId` may be supplied **in the request body OR as a query parameter** (see [Query Parameters](#query-parameters)). At least one location is required — if it is missing from both, the endpoint responds `400 "Required: productId, memberId"`.
 
 <ParamField body="productId" type="string" required>
-  The unique identifier of the product.
+  The unique identifier of the product the member belongs to. Accepted here in the JSON body, or alternatively as a query parameter.
+
+  Example:
+
+  `f5103e7c-9e30-467b-bc32-a96fdcb65849`
 </ParamField>
+
+## Query Parameters
+
+<ParamField query="productId" type="string">
+  Alternative location for `productId` when you prefer not to send a request body. Use either the body field or this query parameter — not both required.
+
+  Example:
+
+  `?productId=f5103e7c-9e30-467b-bc32-a96fdcb65849`
+</ParamField>
+
+## Idempotency (term-based)
+
+Invoices are **idempotent per billing term**. The endpoint keys on the member's current term
+(`membershipInvoice:<customerId>:<monthIndex>:<year>`): if an **unpaid** invoice already exists for the
+current period it is reused and returned instead of creating a duplicate. Calling this endpoint repeatedly
+within the same billing term therefore returns the same invoice (and the same `membershipBillUrl`).
 
 ## Response
 
@@ -74,20 +124,70 @@ Successful Response
 
 ### Main Structure (Root Object)
 
-{/* TODO: document data invoice fields and membershipBillUrl */}
-
-<ResponseField name="statusCode" type="integer">
-  Status code from the API.
+<ResponseField name="message" type="string">
+  Status message that describes the result. Note the **singular** `message` key (write endpoints use
+  `message`; read/list endpoints use the plural `messages`).
 </ResponseField>
 
-<ResponseField name="message" type="string">
-  Status message that describes the status code.
+<ResponseField name="statusCode" type="integer">
+  Status code from the API. `200` on success.
 </ResponseField>
 
 <ResponseField name="data" type="object">
-  The created invoice.
+  The created (or reused) membership invoice object for the current billing term.
+</ResponseField>
+
+<ResponseField name="data.id" type="string">
+  The unique identifier of the invoice.
+</ResponseField>
+
+<ResponseField name="data.transactionId" type="string">
+  The identifier of the underlying transaction associated with the invoice.
+</ResponseField>
+
+<ResponseField name="data.status" type="string">
+  Current status of the invoice (for example `created`).
+</ResponseField>
+
+<ResponseField name="data.amount" type="number">
+  The amount due for the billing term.
+</ResponseField>
+
+<ResponseField name="data.expiredAt" type="string">
+  Invoice expiration time in ISO 8601 format (UTC).
 </ResponseField>
 
 <ResponseField name="data.membershipBillUrl" type="string">
-  The membership bill URL the customer can use to pay.
+  The membership bill URL the customer can use to pay. Built from the tenant's shop subdomain in the
+  shape `https://<tenant>.mayar.shop/pl/<link>` (the host is environment-derived and self-domain aware) —
+  this is **not** an `api.mayar.id` URL.
 </ResponseField>
+
+## Errors
+
+All errors use the envelope `{ "statusCode": <code>, "message": "<reason>" }` (singular `message`).
+
+```json Error Example 400
+{
+    "statusCode": 400,
+    "message": "Required: productId, memberId"
+}
+```
+
+<ResponseField name="statusCode" type="integer">
+  The HTTP status code of the error.
+</ResponseField>
+
+<ResponseField name="message" type="string">
+  A human-readable description of the error.
+</ResponseField>
+
+Common errors:
+
+| Status | `message` | When |
+| --- | --- | --- |
+| `400` | `Required: productId, memberId` | `productId` missing from both body and query, or `memberId` missing from the path. |
+| `400` | `produk telah ditutup/dihapus.` | The product has been closed or deleted. |
+| `400` | `Membership member ini telah selesai (finished).` | The member's status is `finished`. |
+| `400` | `Tagihan membership tidak dapat dibuat saat ini.` | The invoice could not be created at this time. |
+| `404` | `Member dengan ID <id> tidak ditemukan.` | No membership member matches the given `memberId`. |
