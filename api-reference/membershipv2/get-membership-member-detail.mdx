@@ -4,12 +4,10 @@ openapi: "GET /endpointmembershipv2/get-membership-member-detail"
 description: "Endpoint to get a single membership member's detail."
 ---
 
-{/* STUB — Membership V2. Section skeleton only; content filled in a later phase (plan phase 5). */}
-
 <RequestExample>
 
 ```bash Request Example
-curl --request GET 'https://api.mayar.id/hl/v2/membership-members/MEMBER-ID?productId=YOUR-PRODUCT-ID' \
+curl --request GET 'https://api.mayar.id/hl/v2/membership-members/PUYSW40N?productId=f5103e7c-9e30-467b-bc32-a96fdcb65849' \
 --header 'Authorization: Bearer Paste-Your-API-Key-Here'
 ```
 
@@ -21,11 +19,72 @@ curl --request GET 'https://api.mayar.id/hl/v2/membership-members/MEMBER-ID?prod
 {
     "statusCode": 200,
     "messages": "success",
-    "data": {}
+    "data": {
+        "id": "9b3a1c7e-4d62-4f0a-8b21-2e9c5d7f3a10",
+        "userId": "8f7e6d5c-4b3a-2918-0716-5a4b3c2d1e0f",
+        "createdAt": "2026-06-20T09:10:57.994Z",
+        "customerId": "c1f2a3b4-5d6e-7f80-91a2-b3c4d5e6f708",
+        "expiredAt": null,
+        "isAlreadyUsedTrial": false,
+        "isInTrial": false,
+        "isLifetimePeriod": false,
+        "isTodayReminderSent": false,
+        "memberId": "PUYSW40N",
+        "membershipPackageId": null,
+        "membershipTierId": "137f0fa9-8aa5-4fec-947e-6ef223590861",
+        "monthlyPaymentPeriod": 1,
+        "nextPayment": "2026-07-20T09:10:57.994Z",
+        "nextPaymentEmailSent": false,
+        "paymentLinkId": "f5103e7c-9e30-467b-bc32-a96fdcb65849",
+        "paymentPeriod": 1,
+        "period": 1,
+        "status": "active",
+        "updatedAt": "2026-06-20T09:10:57.994Z",
+        "paymentLink": {
+            "name": "Membership Gold",
+            "status": "active",
+            "membershipInfo": {
+                "type": "monthly"
+            }
+        },
+        "customer": {
+            "email": "johndoe@gmail.com",
+            "name": "John Doe",
+            "mobile": "08123456789"
+        },
+        "membershipTier": {
+            "name": "Paket 2",
+            "status": "active"
+        }
+    }
 }
 ```
 
 </ResponseExample>
+
+{/*
+  Notes for maintainers (confirmed from source — api-custom-paymenlink/feat-api-membership-v2,
+  handler getMembershipMember in src/api/v2/membership.js, query GET_MEMBERSHIP_CUSTOMER_DETAIL in
+  src/gqls/membership-customer.js):
+  - This is a SINGLE-OBJECT response: `data` is one member object, NOT the paginated list envelope
+    (there is no `data: [...]` array and no `pagination` object).
+  - Response uses the PLURAL `messages` key (read endpoints use `messages`; write endpoints —
+    register/update/invoice/cancel — and ALL error responses use the singular `message`). Do NOT normalize.
+  - IMPORTANT: unlike the list pages, the detail object's associations are NESTED objects
+    (`customer`, `membershipTier`, `paymentLink`), NOT the flat literal dotted-key columns
+    (`customer.email`, `membershipTier.name`) used in the cursor list rows. The detail handler runs a
+    DIFFERENT query (GET_MEMBERSHIP_CUSTOMER_DETAIL) and `formatResponseData` only ISO-normalizes date
+    keys — it does not flatten nested objects. Keep these as nested objects here.
+  - The `user { paymeLink, isSelfDomain }` association IS selected by the shared detail query but is
+    DELETED before the response is returned (`delete membershipCustomer.user`) — it is not part of the
+    member-detail contract and must not be documented as a response field.
+  - `paymentLinkId` equals the `productId` you pass in the query (the member is resolved by
+    userId + paymentLinkId + memberId).
+  - The data object FIELD NAMES above are source-confirmed from the GraphQL selection set. The VALUES
+    are representative — confirm exact values/types of the scalar flags and period fields
+    (`monthlyPaymentPeriod`, `paymentPeriod`, `period`, the `is*`/`*Sent` booleans, `membershipPackageId`)
+    against a live response if exactness matters; no live full sample payload is present in this repo.
+*/}
 
 Endpoint:
 
@@ -43,6 +102,8 @@ https://api.mayar.club/hl/v2/membership-members/(memberId)
 
 ## Authorization
 
+This endpoint is guarded by `checkJwt` — send your API key as a Bearer token.
+
 <ResponseField name="Authorization" type="string" required>
   Example:
 
@@ -51,18 +112,20 @@ https://api.mayar.club/hl/v2/membership-members/(memberId)
 
 ## Path Parameters
 
-{/* TODO: document memberId */}
-
 <ParamField path="memberId" type="string" required>
-  The unique identifier of the membership member.
+  The public membership code of the member to fetch (for example `PUYSW40N`). This code is unique only
+  within a product, so it is resolved together with `productId`.
 </ParamField>
 
 ## Query Parameters
 
-{/* TODO: document productId (required) */}
-
 <ParamField query="productId" type="string" required>
-  The unique identifier of the product.
+  The unique identifier of the product the member belongs to. **Required** — if `productId` (or `memberId`)
+  is missing the endpoint responds `400 "Required: productId, memberId"`.
+
+  Example:
+
+  `f5103e7c-9e30-467b-bc32-a96fdcb65849`
 </ParamField>
 
 ## Response
@@ -71,16 +134,175 @@ Successful Response
 
 ### Main Structure (Root Object)
 
-{/* TODO: document the member object fields */}
-
 <ResponseField name="statusCode" type="integer">
-  Status code from the API.
+  Status code from the API. `200` on success.
 </ResponseField>
 
 <ResponseField name="messages" type="string">
-  Status message that describes the status code.
+  Status message that describes the status code. Note the **plural** `messages` key (read endpoints use
+  `messages`; write endpoints and all errors use the singular `message`).
 </ResponseField>
 
 <ResponseField name="data" type="object">
-  The membership member detail.
+  The membership member detail — a **single object** (not an array, and with no `pagination`). The `user`
+  association is stripped before the response is returned.
 </ResponseField>
+
+### Member Object (`data`)
+
+<ResponseField name="data.id" type="string">
+  The unique identifier of the membership member record.
+</ResponseField>
+
+<ResponseField name="data.userId" type="string">
+  The unique identifier of the owning user (merchant) the member belongs to.
+</ResponseField>
+
+<ResponseField name="data.createdAt" type="string">
+  ISO 8601 timestamp (UTC) of when the member was created.
+</ResponseField>
+
+<ResponseField name="data.customerId" type="string">
+  The unique identifier of the underlying customer.
+</ResponseField>
+
+<ResponseField name="data.expiredAt" type="string | null">
+  ISO 8601 timestamp (UTC) of when the membership expires, or `null` when it does not apply (for example a
+  lifetime period).
+</ResponseField>
+
+<ResponseField name="data.isAlreadyUsedTrial" type="boolean">
+  Whether the member has already consumed the tier's trial.
+</ResponseField>
+
+<ResponseField name="data.isInTrial" type="boolean">
+  Whether the member is currently within the trial period.
+</ResponseField>
+
+<ResponseField name="data.isLifetimePeriod" type="boolean">
+  Whether the membership is a lifetime (non-expiring) period.
+</ResponseField>
+
+<ResponseField name="data.isTodayReminderSent" type="boolean">
+  Whether today's payment reminder has already been sent to the member.
+</ResponseField>
+
+<ResponseField name="data.memberId" type="string">
+  The public membership code for the member (for example `PUYSW40N`) — the same value passed in the path.
+</ResponseField>
+
+<ResponseField name="data.membershipPackageId" type="string | null">
+  The unique identifier of the membership package, when one applies.
+</ResponseField>
+
+<ResponseField name="data.membershipTierId" type="string">
+  The unique identifier of the member's membership tier.
+</ResponseField>
+
+<ResponseField name="data.monthlyPaymentPeriod" type="integer">
+  The member's monthly payment period.
+</ResponseField>
+
+<ResponseField name="data.nextPayment" type="string">
+  ISO 8601 timestamp (UTC) of the member's next scheduled payment.
+</ResponseField>
+
+<ResponseField name="data.nextPaymentEmailSent" type="boolean">
+  Whether the next-payment email has already been sent.
+</ResponseField>
+
+<ResponseField name="data.paymentLinkId" type="string">
+  The unique identifier of the product (payment link) the member belongs to — equal to the `productId`
+  passed in the query.
+</ResponseField>
+
+<ResponseField name="data.paymentPeriod" type="integer">
+  The member's payment period.
+</ResponseField>
+
+<ResponseField name="data.period" type="integer">
+  The member's membership period.
+</ResponseField>
+
+<ResponseField name="data.status" type="string">
+  Current status of the member (for example `active`, `stopped`, `inactive`, `finished`).
+</ResponseField>
+
+<ResponseField name="data.updatedAt" type="string">
+  ISO 8601 timestamp (UTC) of when the member record was last updated.
+</ResponseField>
+
+<ResponseField name="data.paymentLink" type="object">
+  The associated product (payment link). A **nested object** (not flat dotted keys).
+</ResponseField>
+
+<ResponseField name="data.paymentLink.name" type="string">
+  The product (payment link) name.
+</ResponseField>
+
+<ResponseField name="data.paymentLink.status" type="string">
+  The product (payment link) status.
+</ResponseField>
+
+<ResponseField name="data.paymentLink.membershipInfo" type="object">
+  Membership configuration for the product.
+</ResponseField>
+
+<ResponseField name="data.paymentLink.membershipInfo.type" type="string">
+  The membership billing type for the product (for example `monthly`).
+</ResponseField>
+
+<ResponseField name="data.customer" type="object">
+  The underlying customer. A **nested object** — note this differs from the list endpoints, which expose
+  flat dotted-key columns such as `customer.email`.
+</ResponseField>
+
+<ResponseField name="data.customer.email" type="string">
+  The customer's email address.
+</ResponseField>
+
+<ResponseField name="data.customer.name" type="string">
+  The customer's full name.
+</ResponseField>
+
+<ResponseField name="data.customer.mobile" type="string">
+  The customer's mobile phone number.
+</ResponseField>
+
+<ResponseField name="data.membershipTier" type="object">
+  The member's tier. A **nested object** (not the flat `membershipTier.name` dotted key used by the list
+  endpoints).
+</ResponseField>
+
+<ResponseField name="data.membershipTier.name" type="string">
+  The display name of the member's tier (for example `Paket 2`).
+</ResponseField>
+
+<ResponseField name="data.membershipTier.status" type="string">
+  The status of the member's tier.
+</ResponseField>
+
+## Errors
+
+Error responses use the singular `message` key (note the contrast with the success envelope's plural
+`messages`), with the shape `{ "statusCode": <code>, "message": "<reason>" }`.
+
+```json Error Example 404
+{
+    "statusCode": 404,
+    "message": "Member dengan ID PUYSW40N tidak ditemukan."
+}
+```
+
+<ResponseField name="statusCode" type="integer">
+  The HTTP status code of the error.
+</ResponseField>
+
+<ResponseField name="message" type="string">
+  A human-readable description of the error (singular `message`).
+</ResponseField>
+
+| Status | `message` | When |
+|--------|-----------|------|
+| `400` | `Required: productId, memberId` | `productId` (query) or `memberId` (path) is missing. |
+| `404` | `Member dengan ID <memberId> tidak ditemukan.` | No member with that `memberId` exists for the given `productId`. |
