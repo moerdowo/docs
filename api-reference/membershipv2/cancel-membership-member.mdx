@@ -4,14 +4,20 @@ openapi: "POST /endpointmembershipv2/cancel-membership-member"
 description: "Endpoint to cancel a membership member (sets status to stopped)."
 ---
 
-{/* STUB — Membership V2. Section skeleton only; content filled in a later phase (plan phase 5). */}
-
 <RequestExample>
 
-```bash Request Example
-curl --request POST 'https://api.mayar.id/hl/v2/membership-members/MEMBER-ID/cancel' \
+```bash Request Example (productId in body)
+curl --request POST 'https://api.mayar.id/hl/v2/membership-members/PUYSW40N/cancel' \
 --header 'Authorization: Bearer Paste-Your-API-Key-Here' \
---data-raw '{}'
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "productId": "f5103e7c-9e30-467b-bc32-a96fdcb65849"
+}'
+```
+
+```bash Request Example (productId in query)
+curl --request POST 'https://api.mayar.id/hl/v2/membership-members/PUYSW40N/cancel?productId=f5103e7c-9e30-467b-bc32-a96fdcb65849' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here'
 ```
 
 </RequestExample>
@@ -20,15 +26,43 @@ curl --request POST 'https://api.mayar.id/hl/v2/membership-members/MEMBER-ID/can
 
 ```json Response Example 200
 {
-    "statusCode": 200,
     "message": "success",
+    "statusCode": 200,
     "data": {
-        "membershipCustomer": {}
+        "membershipCustomer": {
+            "id": "9b3a1c7e-4d62-4f0a-8b21-2e9c5d7f3a10",
+            "memberId": "PUYSW40N",
+            "userId": "8f7e6d5c-4b3a-2918-0716-5a4b3c2d1e0f",
+            "customerId": "c1f2a3b4-5d6e-7f80-91a2-b3c4d5e6f708",
+            "membershipTierId": "137f0fa9-8aa5-4fec-947e-6ef223590861",
+            "paymentLinkId": "f5103e7c-9e30-467b-bc32-a96fdcb65849",
+            "monthlyPaymentPeriod": 1,
+            "status": "stopped",
+            "nextPayment": "2026-07-20T09:10:57.994Z",
+            "expiredAt": null,
+            "createdAt": "2026-06-20T09:10:57.994Z",
+            "updatedAt": "2026-06-23T10:30:00.000Z"
+        }
     }
 }
 ```
 
 </ResponseExample>
+
+{/*
+  Notes for maintainers (confirmed from source — api-custom-paymenlink/feat-api-membership-v2,
+  handler cancelMembershipMember in src/api/v2/membership.js):
+  - Success is built by sendSuccessResponse → { message, statusCode, data } where data is
+    { membershipCustomer: {…} }. Note the key ORDER (message, then statusCode) matches the helper.
+  - Response uses the SINGULAR `message` key (writes use `message`; reads use plural `messages`). Do NOT normalize.
+  - `productId` is accepted from the request BODY or the QUERY string (like the invoice endpoint). Missing
+    from both responds 400 "Required: productId, memberId".
+  - The handler flips the member's status to "stopped" via editMembershipCustomer, but GUARDS against members
+    that are already inactive — if status is already `stopped` or `finished` it responds
+    400 "Membership member ini sudah tidak aktif (status: <status>)." (the <status> is interpolated).
+  - The `data.membershipCustomer` FIELD NAMES/VALUES above are representative — confirm the exact field list
+    against a live response if an exhaustive table is needed (no live full sample payload is present in this repo).
+*/}
 
 Endpoint:
 
@@ -46,6 +80,8 @@ https://api.mayar.club/hl/v2/membership-members/(memberId)/cancel
 
 ## Authorization
 
+This endpoint is guarded by `checkJwt` — send your API key as a Bearer token.
+
 <ResponseField name="Authorization" type="string" required>
   Example:
 
@@ -54,40 +90,82 @@ https://api.mayar.club/hl/v2/membership-members/(memberId)/cancel
 
 ## Path Parameters
 
-{/* TODO: document memberId */}
-
 <ParamField path="memberId" type="string" required>
-  The unique identifier of the membership member.
+  The public membership code of the member to cancel (for example `PUYSW40N`).
+
+  Example:
+
+  `PUYSW40N`
 </ParamField>
 
 ## Request Body
 
-{/* TODO: document productId (accepted from body OR query) */}
+`productId` may be supplied **in the request body OR as a query parameter** (see [Query Parameters](#query-parameters)). At least one location is required — if it is missing from both, the endpoint responds `400 "Required: productId, memberId"`.
 
 <ParamField body="productId" type="string" required>
-  The unique identifier of the product.
+  The unique identifier of the product the member belongs to. Accepted here in the JSON body, or alternatively as a query parameter.
+
+  Example:
+
+  `f5103e7c-9e30-467b-bc32-a96fdcb65849`
+</ParamField>
+
+## Query Parameters
+
+<ParamField query="productId" type="string">
+  Alternative location for `productId` when you prefer not to send a request body. Use either the body field or this query parameter.
+
+  Example:
+
+  `?productId=f5103e7c-9e30-467b-bc32-a96fdcb65849`
 </ParamField>
 
 ## Response
 
-Successful Response
+Successful Response — HTTP `200`
 
 ### Main Structure (Root Object)
 
-{/* TODO: document data.membershipCustomer fields */}
-
-<ResponseField name="statusCode" type="integer">
-  Status code from the API.
+<ResponseField name="message" type="string">
+  Status message that describes the result. Note the **singular** `message` key (write endpoints use
+  `message`; read/list endpoints use the plural `messages`).
 </ResponseField>
 
-<ResponseField name="message" type="string">
-  Status message that describes the status code.
+<ResponseField name="statusCode" type="integer">
+  Status code from the API. `200` on success.
 </ResponseField>
 
 <ResponseField name="data" type="object">
-  The cancelled membership member.
+  The cancellation result wrapper.
 </ResponseField>
 
 <ResponseField name="data.membershipCustomer" type="object">
-  Details of the cancelled membership customer.
+  The cancelled membership customer record. Its `status` is now `stopped`.
 </ResponseField>
+
+## Errors
+
+All errors use the envelope `{ "statusCode": <code>, "message": "<reason>" }` (singular `message`).
+
+```json Error Example 400
+{
+    "statusCode": 400,
+    "message": "Membership member ini sudah tidak aktif (status: stopped)."
+}
+```
+
+<ResponseField name="statusCode" type="integer">
+  The HTTP status code of the error.
+</ResponseField>
+
+<ResponseField name="message" type="string">
+  A human-readable description of the error.
+</ResponseField>
+
+Common errors:
+
+| Status | `message` | When |
+| --- | --- | --- |
+| `400` | `Required: productId, memberId` | `productId` missing from both body and query, or `memberId` missing from the path. |
+| `400` | `Membership member ini sudah tidak aktif (status: <status>).` | The member is already inactive — its status is already `stopped` or `finished` (the value is interpolated into the message). |
+| `404` | `Member dengan ID <memberId> tidak ditemukan.` | No membership member matches the given `memberId`. |
