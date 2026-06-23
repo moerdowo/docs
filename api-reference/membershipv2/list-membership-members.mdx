@@ -4,12 +4,15 @@ openapi: "GET /endpointmembershipv2/list-membership-members"
 description: "Endpoint to list membership members for a product (cursor-paginated)."
 ---
 
-{/* STUB — Membership V2. Section skeleton only; content filled in a later phase (plan phase 4). */}
-
 <RequestExample>
 
 ```bash Request Example
-curl --request GET 'https://api.mayar.id/hl/v2/membership-members?productId=YOUR-PRODUCT-ID' \
+curl --request GET 'https://api.mayar.id/hl/v2/membership-members?productId=f5103e7c-9e30-467b-bc32-a96fdcb65849&limit=10&sortOrder=DESC' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here'
+```
+
+```bash Request Example (search + churned filter)
+curl --request GET 'https://api.mayar.id/hl/v2/membership-members?productId=f5103e7c-9e30-467b-bc32-a96fdcb65849&searchTerm=PUYSW40N&isChurnedMember=true&startDate=2026-01-01&endDate=2026-06-30' \
 --header 'Authorization: Bearer Paste-Your-API-Key-Here'
 ```
 
@@ -21,18 +24,82 @@ curl --request GET 'https://api.mayar.id/hl/v2/membership-members?productId=YOUR
 {
     "statusCode": 200,
     "messages": "success",
-    "data": [],
+    "data": [
+        {
+            "id": "9b3a1c7e-4d62-4f0a-8b21-2e9c5d7f3a10",
+            "createdAt": "2026-06-20T09:10:57.994Z",
+            "customerId": "c1f2a3b4-5d6e-7f80-91a2-b3c4d5e6f708",
+            "membershipTierId": "137f0fa9-8aa5-4fec-947e-6ef223590861",
+            "nextPayment": "2026-07-20T09:10:57.994Z",
+            "status": "active",
+            "updatedAt": "2026-06-20T09:10:57.994Z",
+            "userId": "8f7e6d5c-4b3a-2918-0716-5a4b3c2d1e0f",
+            "memberId": "PUYSW40N",
+            "membershipTier.name": "Paket 2",
+            "membershipTier.gracePeriodInDays": 7,
+            "customer.name": "John Doe",
+            "customer.mobile": "08123456789",
+            "customer.email": "johndoe@gmail.com"
+        }
+    ],
     "pagination": {
         "limit": 10,
-        "nextStartingAfter": null,
+        "nextStartingAfter": "1718873457994",
         "prevStartingAfter": null,
-        "hasNextPage": false,
+        "hasNextPage": true,
+        "hasPrevPage": false
+    }
+}
+```
+
+```json Response Example 200 (isChurnedMember=true)
+{
+    "statusCode": 200,
+    "messages": "success",
+    "totalMember": 3,
+    "data": [
+        {
+            "id": "9b3a1c7e-4d62-4f0a-8b21-2e9c5d7f3a10",
+            "createdAt": "2026-06-20T09:10:57.994Z",
+            "customerId": "c1f2a3b4-5d6e-7f80-91a2-b3c4d5e6f708",
+            "membershipTierId": "137f0fa9-8aa5-4fec-947e-6ef223590861",
+            "nextPayment": "2026-07-20T09:10:57.994Z",
+            "status": "stopped",
+            "updatedAt": "2026-06-20T09:10:57.994Z",
+            "userId": "8f7e6d5c-4b3a-2918-0716-5a4b3c2d1e0f",
+            "memberId": "PUYSW40N",
+            "membershipTier.name": "Paket 2",
+            "membershipTier.gracePeriodInDays": 7,
+            "customer.name": "John Doe",
+            "customer.mobile": "08123456789",
+            "customer.email": "johndoe@gmail.com"
+        }
+    ],
+    "pagination": {
+        "limit": 10,
+        "nextStartingAfter": "1718873457994",
+        "prevStartingAfter": null,
+        "hasNextPage": true,
         "hasPrevPage": false
     }
 }
 ```
 
 </ResponseExample>
+
+{/*
+  Notes for maintainers (confirmed from source — api-custom-paymenlink/feat-api-membership-v2):
+  - Response uses the PLURAL `messages` key (read/list endpoints use `messages`; write endpoints use the
+    singular `message`). Do NOT normalize.
+  - Each member row uses LITERAL dotted-key columns — the keys are flat strings such as
+    "membershipTier.name" and "customer.email", NOT nested objects. They are selected as flat aliases in the
+    handler query; keep them as literal dotted string keys.
+  - `totalMember` is a TOP-LEVEL sibling of `data` that appears ONLY when `isChurnedMember` is truthy
+    (it is omitted entirely otherwise). `isChurnedMember=true` also filters rows to status `stopped`/`inactive`.
+  - Pagination is cursor-based on `createdAt`. The request param is `cursor` (a unix epoch-ms string); the
+    response echoes the boundary cursors under DIFFERENT key names — `nextStartingAfter` / `prevStartingAfter`.
+  - Field values above are representative — confirm exact values against a live response if needed.
+*/}
 
 Endpoint:
 
@@ -50,6 +117,8 @@ https://api.mayar.club/hl/v2/membership-members
 
 ## Authorization
 
+This endpoint is guarded by `checkJwt` — send your API key as a Bearer token.
+
 <ResponseField name="Authorization" type="string" required>
   Example:
 
@@ -58,10 +127,52 @@ https://api.mayar.club/hl/v2/membership-members
 
 ## Query Parameters
 
-{/* TODO: document productId (required), limit, cursor, direction, sortOrder, searchTerm, startDate, endDate, isChurnedMember */}
-
 <ParamField query="productId" type="string" required>
-  The unique identifier of the product.
+  The unique identifier of the product whose members you want to list. **Required** — if omitted the
+  endpoint responds `400 "Required: productId"`.
+
+  Example:
+
+  `f5103e7c-9e30-467b-bc32-a96fdcb65849`
+</ParamField>
+
+<ParamField query="limit" type="integer" default="10">
+  The maximum number of members to return per page. Defaults to `10` and is capped at `50` (a larger value
+  is clamped to `50`).
+</ParamField>
+
+<ParamField query="cursor" type="string">
+  The pagination cursor: a **unix epoch-ms string** (for example `"1718873457994"`) compared against each
+  member's `createdAt`. Pass the `nextStartingAfter` / `prevStartingAfter` value returned in the previous
+  response's `pagination` object to fetch the adjacent page. Note the request parameter is named `cursor`,
+  while the response returns the boundary cursors under `nextStartingAfter` / `prevStartingAfter`.
+</ParamField>
+
+<ParamField query="direction" type="string" default="next">
+  The pagination direction relative to `cursor`. One of `next` or `prev`. Defaults to `next`.
+</ParamField>
+
+<ParamField query="sortOrder" type="string" default="DESC">
+  Sort order by `createdAt`. One of `ASC` or `DESC`. Defaults to `DESC` (newest first).
+</ParamField>
+
+<ParamField query="searchTerm" type="string">
+  Free-text search filter. Case-insensitively matches against the member's `memberId`, `customer.name`, or
+  `customer.email`.
+</ParamField>
+
+<ParamField query="startDate" type="string">
+  Lower bound of the `createdAt` date range to filter members by (inclusive).
+</ParamField>
+
+<ParamField query="endDate" type="string">
+  Upper bound of the `createdAt` date range to filter members by (inclusive).
+</ParamField>
+
+<ParamField query="isChurnedMember" type="boolean">
+  When `true`, filters the result to churned members only — those whose `status` is `stopped` or `inactive` —
+  and adds a top-level `totalMember` sibling key to the response. When omitted (or not truthy), no churn
+  filter is applied and `totalMember` is **not** included.
 </ParamField>
 
 ## Response
@@ -70,20 +181,106 @@ Successful Response
 
 ### Main Structure (Root Object)
 
-{/* TODO: document data[] member fields (dotted-key columns), pagination object, and totalMember when isChurnedMember=true */}
-
 <ResponseField name="statusCode" type="integer">
-  Status code from the API.
+  Status code from the API. `200` on success.
 </ResponseField>
 
 <ResponseField name="messages" type="string">
-  Status message that describes the status code.
+  Status message that describes the status code. Note the **plural** `messages` key (read/list endpoints use
+  `messages`; write endpoints use the singular `message`).
+</ResponseField>
+
+<ResponseField name="totalMember" type="integer">
+  The total count of churned members. **Only present when `isChurnedMember=true`** — a top-level sibling of
+  `data`; omitted entirely otherwise.
 </ResponseField>
 
 <ResponseField name="data" type="array of object">
-  The list of membership members.
+  The list of membership members for the product, ordered by `createdAt` according to `sortOrder`. Each row
+  uses **literal dotted-key** columns (flat string keys such as `membershipTier.name`), not nested objects.
 </ResponseField>
+
+<ResponseField name="data[].id" type="string">
+  The unique identifier of the membership member record.
+</ResponseField>
+
+<ResponseField name="data[].createdAt" type="string">
+  ISO 8601 timestamp (UTC) of when the member was created. This is the field the `cursor` paginates against.
+</ResponseField>
+
+<ResponseField name="data[].customerId" type="string">
+  The unique identifier of the underlying customer.
+</ResponseField>
+
+<ResponseField name="data[].membershipTierId" type="string">
+  The unique identifier of the member's membership tier.
+</ResponseField>
+
+<ResponseField name="data[].nextPayment" type="string">
+  ISO 8601 timestamp (UTC) of the member's next scheduled payment.
+</ResponseField>
+
+<ResponseField name="data[].status" type="string">
+  Current status of the member (for example `active`, `stopped`, `inactive`, `finished`).
+</ResponseField>
+
+<ResponseField name="data[].updatedAt" type="string">
+  ISO 8601 timestamp (UTC) of when the member record was last updated.
+</ResponseField>
+
+<ResponseField name="data[].userId" type="string">
+  The unique identifier of the owning user (merchant) the member belongs to.
+</ResponseField>
+
+<ResponseField name="data[].memberId" type="string">
+  The public membership code for the member (for example `PUYSW40N`).
+</ResponseField>
+
+<ResponseField name="data[].membershipTier.name" type="string">
+  The display name of the member's tier. This is a **literal dotted string key** in each row, not a nested
+  `membershipTier` object.
+</ResponseField>
+
+<ResponseField name="data[].membershipTier.gracePeriodInDays" type="integer">
+  The grace period (in days) for the member's tier. A **literal dotted string key**.
+</ResponseField>
+
+<ResponseField name="data[].customer.name" type="string">
+  The customer's full name. A **literal dotted string key**.
+</ResponseField>
+
+<ResponseField name="data[].customer.mobile" type="string">
+  The customer's mobile phone number. A **literal dotted string key**.
+</ResponseField>
+
+<ResponseField name="data[].customer.email" type="string">
+  The customer's email address. A **literal dotted string key**.
+</ResponseField>
+
+### Pagination Object
 
 <ResponseField name="pagination" type="object">
   Cursor-based pagination metadata.
+</ResponseField>
+
+<ResponseField name="pagination.limit" type="integer">
+  The page size that was applied to this request (after defaulting to `10` / clamping to a maximum of `50`).
+</ResponseField>
+
+<ResponseField name="pagination.nextStartingAfter" type="string | null">
+  The cursor (unix epoch-ms string) to pass back as `cursor` with `direction=next` to fetch the next page.
+  `null` when there is no next page. Note this response key differs in name from the request param `cursor`.
+</ResponseField>
+
+<ResponseField name="pagination.prevStartingAfter" type="string | null">
+  The cursor (unix epoch-ms string) to pass back as `cursor` with `direction=prev` to fetch the previous
+  page. `null` when there is no previous page.
+</ResponseField>
+
+<ResponseField name="pagination.hasNextPage" type="boolean">
+  Whether a next page of results exists.
+</ResponseField>
+
+<ResponseField name="pagination.hasPrevPage" type="boolean">
+  Whether a previous page of results exists.
 </ResponseField>
