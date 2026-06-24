@@ -17,7 +17,7 @@ There are 2 options when creating an API Key, **Read Only** and **Read & Write**
 
 If you choose **Read Only**, then only API Endpoints with the Get Method can be used. If you choose **Read & Write**, then API Endpoints with both Get and Post Methods can be used.
 
-V2 endpoints are guarded by `checkJwt` — send your API key as a Bearer token in the `Authorization` header:
+V2 endpoints require authentication — send your API key as a Bearer token in the `Authorization` header:
 
 ```bash
 Authorization | Bearer Paste-Your-API-Key-Here
