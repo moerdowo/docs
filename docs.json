@@ -95,7 +95,7 @@
         ]
       },
       {
-        "tab": "API Reference",
+        "tab": "API V1 Reference",
         "groups": [
           {
             "group": "API documentation",
@@ -237,18 +237,6 @@
             ]
           },
           {
-            "group": "Membership V2",
-            "pages": [
-              "api-reference/membershipv2/list-membership-tiers",
-              "api-reference/membershipv2/list-membership-members",
-              "api-reference/membershipv2/get-membership-member-detail",
-              "api-reference/membershipv2/register-membership-member",
-              "api-reference/membershipv2/update-membership-member",
-              "api-reference/membershipv2/create-membership-invoice",
-              "api-reference/membershipv2/cancel-membership-member"
-            ]
-          },
-          {
             "group": "Credit Based Product",
             "pages": [
               "api-reference/creditbasedproduct/customerbalance",
@@ -263,6 +251,23 @@
             "group": "Reviews",
             "pages": [
               "api-reference/reviews/getallreviews"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API V2 Reference",
+        "groups": [
+          {
+            "group": "Membership",
+            "pages": [
+              "api-reference/membershipv2/list-membership-tiers",
+              "api-reference/membershipv2/list-membership-members",
+              "api-reference/membershipv2/get-membership-member-detail",
+              "api-reference/membershipv2/register-membership-member",
+              "api-reference/membershipv2/update-membership-member",
+              "api-reference/membershipv2/create-membership-invoice",
+              "api-reference/membershipv2/cancel-membership-member"
             ]
           }
         ]
