@@ -63,27 +63,23 @@ curl --request GET 'https://api.mayar.id/hl/v2/membership-members/PUYSW40N?produ
 </ResponseExample>
 
 {/*
-  Notes for maintainers (confirmed from source — api-custom-paymenlink/feat-api-membership-v2,
-  handler getMembershipMember in src/api/v2/membership.js, query GET_MEMBERSHIP_CUSTOMER_DETAIL in
-  src/gqls/membership-customer.js):
+  Notes for maintainers (confirmed against the V2 membership API):
   - This is a SINGLE-OBJECT response: `data` is one member object, NOT the paginated list envelope
     (there is no `data: [...]` array and no `pagination` object).
   - Response uses the PLURAL `messages` key (read endpoints use `messages`; write endpoints —
     register/update/invoice/cancel — and ALL error responses use the singular `message`). Do NOT normalize.
   - IMPORTANT: unlike the list pages, the detail object's associations are NESTED objects
     (`customer`, `membershipTier`, `paymentLink`), NOT the flat literal dotted-key columns
-    (`customer.email`, `membershipTier.name`) used in the cursor list rows. The detail handler runs a
-    DIFFERENT query (GET_MEMBERSHIP_CUSTOMER_DETAIL) and `formatResponseData` only ISO-normalizes date
+    (`customer.email`, `membershipTier.name`) used in the cursor list rows. The detail response only ISO-normalizes date
     keys — it does not flatten nested objects. Keep these as nested objects here.
-  - The `user { paymeLink, isSelfDomain }` association IS selected by the shared detail query but is
-    DELETED before the response is returned (`delete membershipCustomer.user`) — it is not part of the
+  - The `user` association is NOT part of the
     member-detail contract and must not be documented as a response field.
   - `paymentLinkId` equals the `productId` you pass in the query (the member is resolved by
     userId + paymentLinkId + memberId).
-  - The data object FIELD NAMES above are source-confirmed from the GraphQL selection set. The VALUES
+  - The data object FIELD NAMES above are confirmed against the V2 membership API. The VALUES
     are representative — confirm exact values/types of the scalar flags and period fields
     (`monthlyPaymentPeriod`, `paymentPeriod`, `period`, the `is*`/`*Sent` booleans, `membershipPackageId`)
-    against a live response if exactness matters; no live full sample payload is present in this repo.
+    against a live response if exactness matters.
 */}
 
 Endpoint:

@@ -45,12 +45,12 @@ curl --request POST 'https://api.mayar.id/hl/v2/membership-members/PUYSW40N/invo
 </ResponseExample>
 
 {/*
-  Notes for maintainers (confirmed from source — api-custom-paymenlink/feat-api-membership-v2):
+  Notes for maintainers (confirmed against the V2 membership API):
   - Response uses the SINGULAR `message` key (writes use `message`; reads use plural `messages`). Do NOT normalize.
-  - Success is built by sendSuccessResponse → { message, statusCode, data } where `data` is the invoice
+  - Success response is { message, statusCode, data } where `data` is the invoice
     object plus `membershipBillUrl` (the `reminderWellcomeId` field is stripped before returning).
-  - `membershipBillUrl` comes from formatMembershipBillUrl → `${baseURL}/pl/${link}`, i.e. the tenant's
-    *.mayar.shop shop subdomain (env-derived host), NOT api.mayar.id.
+  - `membershipBillUrl` has the shape `${baseURL}/pl/${link}`, i.e. the tenant's
+    *.mayar.shop shop subdomain, NOT api.mayar.id.
   - Invoice fields beyond `membershipBillUrl` above are representative; confirm exact field list against a
     live response if an exhaustive table is needed.
 */}

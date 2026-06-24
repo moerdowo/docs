@@ -50,17 +50,16 @@ curl --request PUT 'https://api.mayar.id/hl/v2/membership-members/PUYSW40N' \
 </ResponseExample>
 
 {/*
-  Notes for maintainers (confirmed from source — api-custom-paymenlink/feat-api-membership-v2,
-  handler updateMembershipMember in src/api/v2/membership.js):
-  - Success is HTTP 200 with the body built directly as
+  Notes for maintainers (confirmed against the V2 membership API):
+  - Success is HTTP 200 with the body
     { statusCode: 200, message: "success", data: { membershipCustomer: {…} } }.
   - Response uses the SINGULAR `message` key (writes use `message`; reads use plural `messages`). Do NOT normalize.
   - `productId` is the ONLY required body field; everything else is optional/partial. Missing productId
     responds 400 "Required: productId" (note: NOT "Required: productId, memberId" — memberId comes from the path).
-  - `nextPayment` and `expiredAt` are accepted as UTC ISO 8601 STRINGS (validated via toISO8601), NOT epoch-ms.
+  - `nextPayment` and `expiredAt` are accepted as UTC ISO 8601 STRINGS, NOT epoch-ms.
   - The `data.membershipCustomer` FIELD NAMES/VALUES above are representative — confirm the exact field list
-    against a live response if an exhaustive table is needed (no live full sample payload is present in this repo).
-  - Verbatim error strings below are confirmed from source; keep them exactly.
+    against a live response if an exhaustive table is needed.
+  - Verbatim error strings below are confirmed against the API; keep them exactly.
 */}
 
 Endpoint:

@@ -88,12 +88,11 @@ curl --request GET 'https://api.mayar.id/hl/v2/membership-members?productId=f510
 </ResponseExample>
 
 {/*
-  Notes for maintainers (confirmed from source — api-custom-paymenlink/feat-api-membership-v2):
+  Notes for maintainers (confirmed against the V2 membership API):
   - Response uses the PLURAL `messages` key (read/list endpoints use `messages`; write endpoints use the
     singular `message`). Do NOT normalize.
   - Each member row uses LITERAL dotted-key columns — the keys are flat strings such as
-    "membershipTier.name" and "customer.email", NOT nested objects. They are selected as flat aliases in the
-    handler query; keep them as literal dotted string keys.
+    "membershipTier.name" and "customer.email", NOT nested objects; keep them as literal dotted string keys.
   - `totalMember` is a TOP-LEVEL sibling of `data` that appears ONLY when `isChurnedMember` is truthy
     (it is omitted entirely otherwise). `isChurnedMember=true` also filters rows to status `stopped`/`inactive`.
   - Pagination is cursor-based on `createdAt`. The request param is `cursor` (a unix epoch-ms string); the

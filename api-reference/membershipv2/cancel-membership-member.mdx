@@ -50,18 +50,17 @@ curl --request POST 'https://api.mayar.id/hl/v2/membership-members/PUYSW40N/canc
 </ResponseExample>
 
 {/*
-  Notes for maintainers (confirmed from source — api-custom-paymenlink/feat-api-membership-v2,
-  handler cancelMembershipMember in src/api/v2/membership.js):
-  - Success is built by sendSuccessResponse → { message, statusCode, data } where data is
-    { membershipCustomer: {…} }. Note the key ORDER (message, then statusCode) matches the helper.
+  Notes for maintainers (confirmed against the V2 membership API):
+  - Success response is { message, statusCode, data } where data is
+    { membershipCustomer: {…} }. Note the key ORDER (message, then statusCode).
   - Response uses the SINGULAR `message` key (writes use `message`; reads use plural `messages`). Do NOT normalize.
   - `productId` is accepted from the request BODY or the QUERY string (like the invoice endpoint). Missing
     from both responds 400 "Required: productId, memberId".
-  - The handler flips the member's status to "stopped" via editMembershipCustomer, but GUARDS against members
+  - Cancelling flips the member's status to "stopped", but GUARDS against members
     that are already inactive — if status is already `stopped` or `finished` it responds
     400 "Membership member ini sudah tidak aktif (status: <status>)." (the <status> is interpolated).
   - The `data.membershipCustomer` FIELD NAMES/VALUES above are representative — confirm the exact field list
-    against a live response if an exhaustive table is needed (no live full sample payload is present in this repo).
+    against a live response if an exhaustive table is needed.
 */}
 
 Endpoint:

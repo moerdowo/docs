@@ -52,17 +52,15 @@ curl --request POST 'https://api.mayar.id/hl/v2/membership-members' \
 </ResponseExample>
 
 {/*
-  Notes for maintainers (confirmed from source — api-custom-paymenlink/feat-api-membership-v2,
-  handler handleRegistNewMembershipCustomer in src/api/v2/membership.js):
-  - Success is HTTP 201 (res.statusCode = 201) and the body is built directly with res.json as
-    { statusCode: 201, message: "success", data: { membershipCustomer: {…} } } — it does NOT use
-    sendSuccessResponse.
+  Notes for maintainers (confirmed against the V2 membership API):
+  - Success is HTTP 201 and the body is
+    { statusCode: 201, message: "success", data: { membershipCustomer: {…} } }.
   - Response uses the SINGULAR `message` key (writes — register/update/invoice/cancel — and all errors
     use `message`; the read/list endpoints use the plural `messages`). Do NOT normalize.
-  - The `data.membershipCustomer` FIELD NAMES/VALUES above are representative — the handler returns the
+  - The `data.membershipCustomer` FIELD NAMES/VALUES above are representative — the response returns the
     created membership-customer record; confirm the exact field list against a live response if an
-    exhaustive table is needed (no live full sample payload is present in this repo).
-  - Verbatim error strings below are confirmed from source; keep them exactly (Bahasa Indonesia included).
+    exhaustive table is needed.
+  - Verbatim error strings below are confirmed against the API; keep them exactly (Bahasa Indonesia included).
 */}
 
 Endpoint:
