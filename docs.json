@@ -259,6 +259,14 @@
         "tab": "API V2 Reference",
         "groups": [
           {
+            "group": "API documentation",
+            "pages": [
+              "api-reference/v2/introduction",
+              "api-reference/v2/statuscode",
+              "api-reference/v2/rate-limit"
+            ]
+          },
+          {
             "group": "Membership",
             "pages": [
               "api-reference/membershipv2/list-membership-tiers",

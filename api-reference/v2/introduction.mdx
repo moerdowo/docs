@@ -1,0 +1,108 @@
+---
+title: "Introduction"
+description: "Section for showcasing API V2 endpoints"
+---
+
+## Get Started
+
+The Mayar Headless API V2 builds on the same headless commerce approach as V1 — the user interface (Frontend) is separated from the product management and transaction processing systems (Backend). V2 introduces a refreshed response envelope and cursor-based pagination, starting with the Membership endpoints.
+
+By separating the front-end and back-end, headless commerce allows development teams to focus on the user experience without being hampered by the limitations of the underlying e-commerce platform. It also helps reduce the cost and time required to update and maintain an e-commerce site.
+
+## Authentication
+
+For starting using Mayar Headless API, you need account at https://mayar.id. If you have an account, you can create API KEY from https://web.mayar.id/api-keys.
+
+There are 2 options when creating an API Key, **Read Only** and **Read & Write**.
+
+If you choose **Read Only**, then only API Endpoints with the Get Method can be used. If you choose **Read & Write**, then API Endpoints with both Get and Post Methods can be used.
+
+V2 endpoints are guarded by `checkJwt` — send your API key as a Bearer token in the `Authorization` header:
+
+```bash
+Authorization | Bearer Paste-Your-API-Key-Here
+```
+
+![Generate API Key](/images/apikeynew.png)
+
+<Warning>
+  For your account security, don't share your API KEY\!
+</Warning>
+
+<Note>
+  Please note that any changes to your domain or subdomain require you to create a new API KEY, so the link in the response you receive will also be updated.
+</Note>
+
+## Sandbox Environment
+
+For testing purposes, you can use the webpage https://web.mayar.club/. You can log in or register first, then generate an API key from https://web.mayar.club/api-keys. (The same method as obtaining an API key on the production page).
+
+## Base URL
+
+The API Base URL is the main part of the address (URL) used to access an API endpoint. V2 endpoints live under the `/hl/v2` path. Mayar has two API Base URL's based on the page.
+
+<CodeGroup>
+
+```bash Production
+https://api.mayar.id/hl/v2
+```
+
+
+```bash Sandbox
+https://api.mayar.club/hl/v2
+```
+
+</CodeGroup>
+
+<Note>
+  Make sure you use a base URL based on the appropriate web page (Production or Sandbox)
+</Note>
+
+## Response Envelope
+
+V2 responses wrap their payload in a consistent envelope. Note that **read/list** endpoints return the status text under the **plural** `messages` key, while **write** endpoints (create/update/cancel) return it under the **singular** `message` key.
+
+<CodeGroup>
+
+```json Read / List (plural messages)
+{
+  "statusCode": 200,
+  "messages": "success",
+  "data": [],
+  "pagination": { }
+}
+```
+
+```json Write (singular message)
+{
+  "statusCode": 201,
+  "message": "success",
+  "data": { }
+}
+```
+
+</CodeGroup>
+
+## Pagination
+
+List endpoints use **cursor-based** pagination ordered by `createdAt`. The request parameter is named `cursor` (a unix epoch-ms string), while the response returns the boundary cursors under `nextStartingAfter` / `prevStartingAfter` inside the `pagination` object. Pass `direction=next` or `direction=prev` together with the cursor to walk through pages.
+
+<ResponseField name="pagination.limit" type="integer">
+  The page size applied to the request (defaults to `10`, capped at `50`).
+</ResponseField>
+
+<ResponseField name="pagination.nextStartingAfter" type="string | null">
+  Cursor to pass back as `cursor` with `direction=next` for the next page. `null` when there is no next page.
+</ResponseField>
+
+<ResponseField name="pagination.prevStartingAfter" type="string | null">
+  Cursor to pass back as `cursor` with `direction=prev` for the previous page. `null` when there is no previous page.
+</ResponseField>
+
+<ResponseField name="pagination.hasNextPage" type="boolean">
+  Whether a next page of results exists.
+</ResponseField>
+
+<ResponseField name="pagination.hasPrevPage" type="boolean">
+  Whether a previous page of results exists.
+</ResponseField>

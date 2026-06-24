@@ -1,0 +1,29 @@
+---
+title: "Status Code"
+description: "Status Code From API V2 Endpoint Request Results."
+---
+
+The status code on an API endpoint is a 3-digit numeric code returned by the server each time a client (such as a browser, application, or other backend) sends a request to the API. Every request in our API has a response, and each response has a status code. This code indicates whether the request was successful, failed, or encountered another issue.
+
+In V2, the status code is also echoed in the response body under the `statusCode` field, alongside `message` (write endpoints) or `messages` (read/list endpoints).
+
+| **Status Code**                                            | **Explanation**                                                           |
+| :--------------------------------------------------------: | :-----------------------------------------------------------------------: |
+| 200                                                        | Your request Success (read / list endpoints)                              |
+| 201                                                        | Resource created successfully (write endpoints such as register / invoice) |
+| 400                                                        | Bad request, your request is incomplete or you need to add required data  |
+| 401                                                        | You don't have Authorization for access API                               |
+| 404                                                        | Endpoint or resource doesn't exist.                                       |
+| [429](https://mayar.mintlify.app/api-reference/rate-limit) | [Your limit reached](https://mayar.mintlify.app/api-reference/rate-limit) |
+| 500                                                        | Error                                                                     |
+
+## Error Envelope
+
+All errors use the envelope `{ "statusCode": <code>, "message": "<reason>" }` (singular `message`). The `message` carries a human-readable reason — for example:
+
+```json Error Example 400
+{
+    "statusCode": 400,
+    "message": "Required: productId"
+}
+```
