@@ -1,0 +1,2345 @@
+feature_id: api-v2-reference-docs-mqyl9hub
+description: api-v2-reference-docs
+work_type: LARGE
+created_at: '2026-06-29T02:22:43.374Z'
+updated_at: '2026-06-29T04:30:37.987Z'
+status: running
+current_phase: 16
+active_phases:
+  - 1
+  - 2
+  - 3
+  - 4
+  - 5
+  - 6
+  - 7
+  - 8
+  - 9
+  - 10
+  - 11
+  - 12
+  - 13
+  - 14
+  - 15
+  - 16
+  - 17
+phases:
+  '1':
+    name: setup
+    status: completed
+    started_at: null
+    completed_at: '2026-06-29T02:22:43.379Z'
+    agent_id: null
+    output:
+      source: approve
+    output_files: []
+  '2':
+    name: triage
+    status: completed
+    started_at: null
+    completed_at: '2026-06-29T02:22:43.381Z'
+    agent_id: null
+    output:
+      source: approve
+    output_files: []
+  '3':
+    name: codebase-discovery
+    status: completed
+    started_at: null
+    completed_at: '2026-06-29T02:22:43.382Z'
+    agent_id: null
+    output:
+      source: approve
+    output_files: []
+  '4':
+    name: skill-discovery
+    status: completed
+    started_at: null
+    completed_at: '2026-06-29T02:22:43.383Z'
+    agent_id: null
+    output:
+      source: approve
+    output_files: []
+  '5':
+    name: complexity
+    status: completed
+    started_at: null
+    completed_at: '2026-06-29T02:22:43.384Z'
+    agent_id: null
+    output:
+      source: approve
+    output_files: []
+  '6':
+    name: brainstorming
+    status: completed
+    started_at: null
+    completed_at: '2026-06-29T02:22:43.385Z'
+    agent_id: null
+    output:
+      source: approve
+    output_files: []
+  '7':
+    name: architecting
+    status: completed
+    started_at: null
+    completed_at: '2026-06-29T02:22:43.385Z'
+    agent_id: null
+    output:
+      source: approve
+    output_files: []
+  '8':
+    name: implementation
+    status: completed
+    started_at: '2026-06-29T02:23:00.719Z'
+    completed_at: '2026-06-29T04:13:39.025Z'
+    agent_id: null
+    output:
+      source: work-loop
+    output_files: []
+  '9':
+    name: simplification
+    status: completed
+    started_at: '2026-06-29T04:13:39.038Z'
+    completed_at: '2026-06-29T04:14:03.599Z'
+    agent_id: null
+    output: null
+    output_files: []
+  '10':
+    name: design-verification
+    status: completed
+    started_at: '2026-06-29T04:14:03.600Z'
+    completed_at: '2026-06-29T04:15:28.484Z'
+    agent_id: null
+    output: null
+    output_files: []
+  '11':
+    name: domain-compliance
+    status: completed
+    started_at: '2026-06-29T04:15:28.485Z'
+    completed_at: '2026-06-29T04:21:33.952Z'
+    agent_id: null
+    output: null
+    output_files: []
+  '12':
+    name: code-quality
+    status: completed
+    started_at: '2026-06-29T04:21:33.953Z'
+    completed_at: '2026-06-29T04:25:25.361Z'
+    agent_id: null
+    output: null
+    output_files:
+      - path: api-reference-v2/bundling/detail.mdx
+        type: code
+        size: 8145
+        created_at: '2026-06-29T04:23:46.343Z'
+      - path: api-reference-v2/customer/getdetail.mdx
+        type: code
+        size: 4460
+        created_at: '2026-06-29T04:23:42.095Z'
+      - path: api-reference-v2/discount/detail.mdx
+        type: code
+        size: 5625
+        created_at: '2026-06-29T04:23:48.151Z'
+      - path: api-reference-v2/installment/detail.mdx
+        type: code
+        size: 6276
+        created_at: '2026-06-29T04:23:47.267Z'
+      - path: api-reference-v2/invoice/create.mdx
+        type: code
+        size: 5316
+        created_at: '2026-06-29T04:19:04.849Z'
+      - path: api-reference-v2/invoice/detail.mdx
+        type: code
+        size: 4900
+        created_at: '2026-06-29T04:19:04.849Z'
+      - path: api-reference-v2/invoice/edit.mdx
+        type: code
+        size: 4465
+        created_at: '2026-06-29T04:19:04.849Z'
+      - path: api-reference-v2/invoice/filter.mdx
+        type: code
+        size: 6797
+        created_at: '2026-06-29T04:19:04.849Z'
+      - path: api-reference-v2/invoice/index.mdx
+        type: code
+        size: 6472
+        created_at: '2026-06-29T04:19:04.849Z'
+      - path: api-reference-v2/product/productpage.mdx
+        type: code
+        size: 6239
+        created_at: '2026-06-29T04:23:43.147Z'
+      - path: api-reference-v2/transaction/paidtransaction.mdx
+        type: code
+        size: 10185
+        created_at: '2026-06-29T04:23:43.975Z'
+      - path: api-reference-v2/transaction/unpaidtransaction.mdx
+        type: code
+        size: 8708
+        created_at: '2026-06-29T04:23:45.395Z'
+      - path: .claude/SKILL.md
+        type: code
+        size: 11515
+        created_at: '2026-06-23T08:58:21.789Z'
+      - path: .claude/agents/developer.md
+        type: code
+        size: 3060
+        created_at: '2026-06-23T08:58:21.789Z'
+      - path: .claude/agents/lead.md
+        type: code
+        size: 2504
+        created_at: '2026-06-23T08:58:21.789Z'
+      - path: .claude/agents/reviewer.md
+        type: code
+        size: 4588
+        created_at: '2026-06-23T08:58:21.789Z'
+      - path: .claude/agents/test-lead.md
+        type: code
+        size: 2895
+        created_at: '2026-06-23T08:58:21.789Z'
+      - path: .claude/agents/tester.md
+        type: code
+        size: 3308
+        created_at: '2026-06-23T08:58:21.789Z'
+      - path: .claude/settings.json
+        type: code
+        size: 3376
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: .claude/skills/core/auth/SKILL.md
+        type: code
+        size: 2902
+        created_at: '2026-06-23T08:58:21.789Z'
+      - path: .claude/skills/core/brainstorm-feature-options/SKILL.md
+        type: code
+        size: 3043
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .claude/skills/core/breadboarding-workflow/SKILL.md
+        type: code
+        size: 1556
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .claude/skills/core/dispatching-parallel-agents/SKILL.md
+        type: code
+        size: 2850
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .claude/skills/core/documenting-release/SKILL.md
+        type: code
+        size: 1990
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .claude/skills/core/gateway-api/SKILL.md
+        type: code
+        size: 1222
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .claude/skills/core/gateway-backend/SKILL.md
+        type: code
+        size: 2068
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .claude/skills/core/gateway-database/SKILL.md
+        type: code
+        size: 1321
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .claude/skills/core/gateway-deploy/SKILL.md
+        type: code
+        size: 2143
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .claude/skills/core/gateway-frontend/SKILL.md
+        type: code
+        size: 1892
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .claude/skills/core/gateway-testing/SKILL.md
+        type: code
+        size: 1450
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .claude/skills/core/iterating-to-completion/SKILL.md
+        type: code
+        size: 2688
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .claude/skills/core/migration/SKILL.md
+        type: code
+        size: 2453
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .claude/skills/core/orchestrating-feature/SKILL.md
+        type: code
+        size: 4302
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .claude/skills/core/persisting-agent-outputs/SKILL.md
+        type: code
+        size: 2964
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .claude/skills/core/persisting-progress-across-sessions/SKILL.md
+        type: code
+        size: 3451
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .claude/skills/core/prd/SKILL.md
+        type: code
+        size: 2954
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .claude/skills/core/reviewing-architecture/SKILL.md
+        type: code
+        size: 1695
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .claude/skills/core/reviewing-product-strategy/SKILL.md
+        type: code
+        size: 1874
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .claude/skills/core/scaffold-api/SKILL.md
+        type: code
+        size: 2886
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .claude/skills/core/scaffold-deploy/SKILL.md
+        type: code
+        size: 2555
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .claude/skills/core/shaping-requirements/SKILL.md
+        type: code
+        size: 1918
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .claude/skills/core/testing/SKILL.md
+        type: code
+        size: 2406
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .claude/skills/library/api/input-validation/SKILL.md
+        type: code
+        size: 3364
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .claude/skills/library/backend/assessing-code-health/SKILL.md
+        type: code
+        size: 1630
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .claude/skills/library/backend/debugging-systematically/SKILL.md
+        type: code
+        size: 3032
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .claude/skills/library/backend/developing-with-tdd/SKILL.md
+        type: code
+        size: 2622
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .claude/skills/library/backend/error-handling-patterns/SKILL.md
+        type: code
+        size: 3763
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .claude/skills/library/backend/hardening-resilience/SKILL.md
+        type: code
+        size: 1725
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .claude/skills/library/database/safe-migrations/SKILL.md
+        type: code
+        size: 2833
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .claude/skills/library/deploy/aws-deployment/SKILL.md
+        type: code
+        size: 2726
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .claude/skills/library/deploy/cloudflare-deployment/SKILL.md
+        type: code
+        size: 2722
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .claude/skills/library/deploy/coolify-deployment/SKILL.md
+        type: code
+        size: 2706
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .claude/skills/library/deploy/docker-registry-deployment/SKILL.md
+        type: code
+        size: 3178
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .claude/skills/library/deploy/fly-deployment/SKILL.md
+        type: code
+        size: 2755
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .claude/skills/library/deploy/gcp-deployment/SKILL.md
+        type: code
+        size: 2622
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .claude/skills/library/deploy/kubernetes-deployment/SKILL.md
+        type: code
+        size: 2841
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .claude/skills/library/deploy/netlify-deployment/SKILL.md
+        type: code
+        size: 2429
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .claude/skills/library/deploy/railway-deployment/SKILL.md
+        type: code
+        size: 2482
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .claude/skills/library/deploy/ssh-vps-deployment/SKILL.md
+        type: code
+        size: 3493
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .claude/skills/library/deploy/vercel-deployment/SKILL.md
+        type: code
+        size: 2290
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .claude/skills/library/frontend/auditing-interface-quality/SKILL.md
+        type: code
+        size: 1791
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .claude/skills/library/frontend/debugging-react-hooks/SKILL.md
+        type: code
+        size: 2985
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .claude/skills/library/frontend/implementing-frontend-design/SKILL.md
+        type: code
+        size: 6001
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .claude/skills/library/frontend/optimizing-react-performance/SKILL.md
+        type: code
+        size: 3568
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .claude/skills/library/frontend/reviewing-frontend-aesthetics/SKILL.md
+        type: code
+        size: 6714
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .claude/skills/library/security/auditing-security/SKILL.md
+        type: code
+        size: 1987
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .claude/skills/library/security/rate-limiting/SKILL.md
+        type: code
+        size: 3465
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .claude/skills/library/testing/fixing-flaky-tests/SKILL.md
+        type: code
+        size: 3167
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .claude/skills/library/testing/unit-testing-patterns/SKILL.md
+        type: code
+        size: 3435
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .claude/skills/library/vcs/gh/SKILL.md
+        type: code
+        size: 5285
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .claude/skills/library/vcs/glab/SKILL.md
+        type: code
+        size: 14114
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .codex/skills/core/auth/SKILL.md
+        type: code
+        size: 2902
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .codex/skills/core/brainstorm-feature-options/SKILL.md
+        type: code
+        size: 3043
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .codex/skills/core/breadboarding-workflow/SKILL.md
+        type: code
+        size: 1556
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .codex/skills/core/dispatching-parallel-agents/SKILL.md
+        type: code
+        size: 2850
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .codex/skills/core/documenting-release/SKILL.md
+        type: code
+        size: 1990
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .codex/skills/core/gateway-api/SKILL.md
+        type: code
+        size: 1222
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .codex/skills/core/gateway-backend/SKILL.md
+        type: code
+        size: 2068
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .codex/skills/core/gateway-database/SKILL.md
+        type: code
+        size: 1321
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .codex/skills/core/gateway-deploy/SKILL.md
+        type: code
+        size: 2143
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .codex/skills/core/gateway-frontend/SKILL.md
+        type: code
+        size: 1892
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .codex/skills/core/gateway-testing/SKILL.md
+        type: code
+        size: 1450
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .codex/skills/core/iterating-to-completion/SKILL.md
+        type: code
+        size: 2688
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .codex/skills/core/migration/SKILL.md
+        type: code
+        size: 2453
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .codex/skills/core/orchestrating-feature/SKILL.md
+        type: code
+        size: 4302
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .codex/skills/core/persisting-agent-outputs/SKILL.md
+        type: code
+        size: 2964
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .codex/skills/core/persisting-progress-across-sessions/SKILL.md
+        type: code
+        size: 3451
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .codex/skills/core/prd/SKILL.md
+        type: code
+        size: 2954
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .codex/skills/core/reviewing-architecture/SKILL.md
+        type: code
+        size: 1695
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .codex/skills/core/reviewing-product-strategy/SKILL.md
+        type: code
+        size: 1874
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .codex/skills/core/scaffold-api/SKILL.md
+        type: code
+        size: 2886
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .codex/skills/core/scaffold-deploy/SKILL.md
+        type: code
+        size: 2555
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .codex/skills/core/shaping-requirements/SKILL.md
+        type: code
+        size: 1918
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .codex/skills/core/testing/SKILL.md
+        type: code
+        size: 2406
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .codex/skills/library/api/input-validation/SKILL.md
+        type: code
+        size: 3364
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .codex/skills/library/backend/assessing-code-health/SKILL.md
+        type: code
+        size: 1630
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .codex/skills/library/backend/debugging-systematically/SKILL.md
+        type: code
+        size: 3032
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .codex/skills/library/backend/developing-with-tdd/SKILL.md
+        type: code
+        size: 2622
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .codex/skills/library/backend/error-handling-patterns/SKILL.md
+        type: code
+        size: 3763
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .codex/skills/library/backend/hardening-resilience/SKILL.md
+        type: code
+        size: 1725
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .codex/skills/library/database/safe-migrations/SKILL.md
+        type: code
+        size: 2833
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .codex/skills/library/deploy/aws-deployment/SKILL.md
+        type: code
+        size: 2726
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .codex/skills/library/deploy/cloudflare-deployment/SKILL.md
+        type: code
+        size: 2722
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .codex/skills/library/deploy/coolify-deployment/SKILL.md
+        type: code
+        size: 2706
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .codex/skills/library/deploy/docker-registry-deployment/SKILL.md
+        type: code
+        size: 3178
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .codex/skills/library/deploy/fly-deployment/SKILL.md
+        type: code
+        size: 2755
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .codex/skills/library/deploy/gcp-deployment/SKILL.md
+        type: code
+        size: 2622
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .codex/skills/library/deploy/kubernetes-deployment/SKILL.md
+        type: code
+        size: 2841
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .codex/skills/library/deploy/netlify-deployment/SKILL.md
+        type: code
+        size: 2429
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .codex/skills/library/deploy/railway-deployment/SKILL.md
+        type: code
+        size: 2482
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .codex/skills/library/deploy/ssh-vps-deployment/SKILL.md
+        type: code
+        size: 3493
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .codex/skills/library/deploy/vercel-deployment/SKILL.md
+        type: code
+        size: 2290
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .codex/skills/library/frontend/auditing-interface-quality/SKILL.md
+        type: code
+        size: 1791
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .codex/skills/library/frontend/debugging-react-hooks/SKILL.md
+        type: code
+        size: 2985
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .codex/skills/library/frontend/implementing-frontend-design/SKILL.md
+        type: code
+        size: 6001
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .codex/skills/library/frontend/optimizing-react-performance/SKILL.md
+        type: code
+        size: 3568
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .codex/skills/library/frontend/reviewing-frontend-aesthetics/SKILL.md
+        type: code
+        size: 6714
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .codex/skills/library/security/auditing-security/SKILL.md
+        type: code
+        size: 1987
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .codex/skills/library/security/rate-limiting/SKILL.md
+        type: code
+        size: 3465
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .codex/skills/library/testing/fixing-flaky-tests/SKILL.md
+        type: code
+        size: 3167
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .codex/skills/library/testing/unit-testing-patterns/SKILL.md
+        type: code
+        size: 3435
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .codex/skills/library/vcs/gh/SKILL.md
+        type: code
+        size: 5285
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .codex/skills/library/vcs/glab/SKILL.md
+        type: code
+        size: 14114
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: .jonggrang/.ephemeral/feedback-loop-state.json
+        type: code
+        size: 986
+        created_at: '2026-06-29T04:23:48.191Z'
+      - path: .jonggrang/.output/features/api-v2-reference-docs-mqyl9hub/MANIFEST.yaml
+        type: code
+        size: 22081
+        created_at: '2026-06-29T04:25:25.047Z'
+      - path: .jonggrang/.output/features/api-v2-reference-docs-mqyl9hub/plan.md
+        type: code
+        size: 8377
+        created_at: '2026-06-29T02:27:03.179Z'
+      - path: .jonggrang/.output/features/membership-v2-api-docs-mqqhflyx/MANIFEST.yaml
+        type: code
+        size: 3003
+        created_at: '2026-06-23T10:47:08.833Z'
+      - path: .jonggrang/.output/features/membership-v2-api-docs-mqqhflyx/plan.md
+        type: code
+        size: 17371
+        created_at: '2026-06-29T02:27:03.179Z'
+      - path: .jonggrang/jonggrang-tasks.json
+        type: code
+        size: 41275
+        created_at: '2026-06-29T04:13:25.284Z'
+      - path: .jonggrang/jonggrang.json
+        type: code
+        size: 1000
+        created_at: '2026-06-23T08:58:21.789Z'
+      - path: .jonggrang/lib/backend-args.js
+        type: code
+        size: 2090
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: .jonggrang/lib/compaction.js
+        type: code
+        size: 8786
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: .jonggrang/lib/feedback.js
+        type: code
+        size: 8824
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: .jonggrang/lib/gateway.js
+        type: code
+        size: 8229
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: .jonggrang/lib/hooks.js
+        type: code
+        size: 15489
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: .jonggrang/lib/issue-providers.js
+        type: code
+        size: 9282
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: .jonggrang/lib/jonggrang.js
+        type: code
+        size: 91771
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: .jonggrang/lib/locks.js
+        type: code
+        size: 4222
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: .jonggrang/lib/orchestration.js
+        type: code
+        size: 27456
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: .jonggrang/lib/roles.js
+        type: code
+        size: 7525
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: .jonggrang/lib/sandbox-git.js
+        type: code
+        size: 6215
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: .jonggrang/lib/sandbox.js
+        type: code
+        size: 20273
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: .jonggrang/lib/settings.js
+        type: code
+        size: 3047
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: .jonggrang/lib/tui.js
+        type: code
+        size: 6638
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: .jonggrang/lib/web-runners.js
+        type: code
+        size: 3340
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: .jonggrang/lib/web-state.js
+        type: code
+        size: 12206
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: .jonggrang/progress.txt
+        type: code
+        size: 119904
+        created_at: '2026-06-29T04:24:27.067Z'
+      - path: .jonggrang/skills/core/auth/SKILL.md
+        type: code
+        size: 2902
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .jonggrang/skills/core/brainstorm-feature-options/SKILL.md
+        type: code
+        size: 3043
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .jonggrang/skills/core/breadboarding-workflow/SKILL.md
+        type: code
+        size: 1556
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .jonggrang/skills/core/dispatching-parallel-agents/SKILL.md
+        type: code
+        size: 2850
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .jonggrang/skills/core/documenting-release/SKILL.md
+        type: code
+        size: 1990
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .jonggrang/skills/core/gateway-api/SKILL.md
+        type: code
+        size: 1222
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .jonggrang/skills/core/gateway-backend/SKILL.md
+        type: code
+        size: 2068
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .jonggrang/skills/core/gateway-database/SKILL.md
+        type: code
+        size: 1321
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .jonggrang/skills/core/gateway-deploy/SKILL.md
+        type: code
+        size: 2143
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .jonggrang/skills/core/gateway-frontend/SKILL.md
+        type: code
+        size: 1892
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .jonggrang/skills/core/gateway-testing/SKILL.md
+        type: code
+        size: 1450
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .jonggrang/skills/core/iterating-to-completion/SKILL.md
+        type: code
+        size: 2688
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .jonggrang/skills/core/migration/SKILL.md
+        type: code
+        size: 2453
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .jonggrang/skills/core/orchestrating-feature/SKILL.md
+        type: code
+        size: 4302
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .jonggrang/skills/core/persisting-agent-outputs/SKILL.md
+        type: code
+        size: 2964
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .jonggrang/skills/core/persisting-progress-across-sessions/SKILL.md
+        type: code
+        size: 3451
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .jonggrang/skills/core/prd/SKILL.md
+        type: code
+        size: 2954
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .jonggrang/skills/core/reviewing-architecture/SKILL.md
+        type: code
+        size: 1695
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .jonggrang/skills/core/reviewing-product-strategy/SKILL.md
+        type: code
+        size: 1874
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .jonggrang/skills/core/scaffold-api/SKILL.md
+        type: code
+        size: 2886
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .jonggrang/skills/core/scaffold-deploy/SKILL.md
+        type: code
+        size: 2555
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .jonggrang/skills/core/shaping-requirements/SKILL.md
+        type: code
+        size: 1918
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .jonggrang/skills/core/testing/SKILL.md
+        type: code
+        size: 2406
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .jonggrang/skills/library/api/input-validation/SKILL.md
+        type: code
+        size: 3364
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .jonggrang/skills/library/backend/assessing-code-health/SKILL.md
+        type: code
+        size: 1630
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .jonggrang/skills/library/backend/debugging-systematically/SKILL.md
+        type: code
+        size: 3032
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .jonggrang/skills/library/backend/developing-with-tdd/SKILL.md
+        type: code
+        size: 2622
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .jonggrang/skills/library/backend/error-handling-patterns/SKILL.md
+        type: code
+        size: 3763
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .jonggrang/skills/library/backend/hardening-resilience/SKILL.md
+        type: code
+        size: 1725
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .jonggrang/skills/library/database/safe-migrations/SKILL.md
+        type: code
+        size: 2833
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .jonggrang/skills/library/deploy/aws-deployment/SKILL.md
+        type: code
+        size: 2726
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .jonggrang/skills/library/deploy/cloudflare-deployment/SKILL.md
+        type: code
+        size: 2722
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .jonggrang/skills/library/deploy/coolify-deployment/SKILL.md
+        type: code
+        size: 2706
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .jonggrang/skills/library/deploy/docker-registry-deployment/SKILL.md
+        type: code
+        size: 3178
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .jonggrang/skills/library/deploy/fly-deployment/SKILL.md
+        type: code
+        size: 2755
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .jonggrang/skills/library/deploy/gcp-deployment/SKILL.md
+        type: code
+        size: 2622
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .jonggrang/skills/library/deploy/kubernetes-deployment/SKILL.md
+        type: code
+        size: 2841
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .jonggrang/skills/library/deploy/netlify-deployment/SKILL.md
+        type: code
+        size: 2429
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .jonggrang/skills/library/deploy/railway-deployment/SKILL.md
+        type: code
+        size: 2482
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .jonggrang/skills/library/deploy/ssh-vps-deployment/SKILL.md
+        type: code
+        size: 3493
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .jonggrang/skills/library/deploy/vercel-deployment/SKILL.md
+        type: code
+        size: 2290
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .jonggrang/skills/library/frontend/auditing-interface-quality/SKILL.md
+        type: code
+        size: 1791
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .jonggrang/skills/library/frontend/debugging-react-hooks/SKILL.md
+        type: code
+        size: 2985
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .jonggrang/skills/library/frontend/implementing-frontend-design/SKILL.md
+        type: code
+        size: 6001
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .jonggrang/skills/library/frontend/optimizing-react-performance/SKILL.md
+        type: code
+        size: 3568
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .jonggrang/skills/library/frontend/reviewing-frontend-aesthetics/SKILL.md
+        type: code
+        size: 6714
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .jonggrang/skills/library/security/auditing-security/SKILL.md
+        type: code
+        size: 1987
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .jonggrang/skills/library/security/rate-limiting/SKILL.md
+        type: code
+        size: 3465
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .jonggrang/skills/library/testing/fixing-flaky-tests/SKILL.md
+        type: code
+        size: 3167
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .jonggrang/skills/library/testing/unit-testing-patterns/SKILL.md
+        type: code
+        size: 3435
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .jonggrang/skills/library/vcs/gh/SKILL.md
+        type: code
+        size: 5285
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .jonggrang/skills/library/vcs/glab/SKILL.md
+        type: code
+        size: 14114
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .opencode/SKILL.md
+        type: code
+        size: 11515
+        created_at: '2026-06-23T08:58:21.789Z'
+      - path: .opencode/agents/developer.md
+        type: code
+        size: 3060
+        created_at: '2026-06-23T08:58:21.789Z'
+      - path: .opencode/agents/lead.md
+        type: code
+        size: 2504
+        created_at: '2026-06-23T08:58:21.789Z'
+      - path: .opencode/agents/reviewer.md
+        type: code
+        size: 4588
+        created_at: '2026-06-23T08:58:21.789Z'
+      - path: .opencode/agents/test-lead.md
+        type: code
+        size: 2895
+        created_at: '2026-06-23T08:58:21.789Z'
+      - path: .opencode/agents/tester.md
+        type: code
+        size: 3308
+        created_at: '2026-06-23T08:58:21.789Z'
+      - path: .opencode/opencode.json
+        type: code
+        size: 101
+        created_at: '2026-06-23T08:58:21.789Z'
+      - path: .opencode/plugins/jonggrang.js
+        type: code
+        size: 554
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: .opencode/skills/core/auth/SKILL.md
+        type: code
+        size: 2902
+        created_at: '2026-06-23T08:58:21.789Z'
+      - path: .opencode/skills/core/brainstorm-feature-options/SKILL.md
+        type: code
+        size: 3043
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .opencode/skills/core/breadboarding-workflow/SKILL.md
+        type: code
+        size: 1556
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .opencode/skills/core/dispatching-parallel-agents/SKILL.md
+        type: code
+        size: 2850
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .opencode/skills/core/documenting-release/SKILL.md
+        type: code
+        size: 1990
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .opencode/skills/core/gateway-api/SKILL.md
+        type: code
+        size: 1222
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .opencode/skills/core/gateway-backend/SKILL.md
+        type: code
+        size: 2068
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .opencode/skills/core/gateway-database/SKILL.md
+        type: code
+        size: 1321
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .opencode/skills/core/gateway-deploy/SKILL.md
+        type: code
+        size: 2143
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .opencode/skills/core/gateway-frontend/SKILL.md
+        type: code
+        size: 1892
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .opencode/skills/core/gateway-testing/SKILL.md
+        type: code
+        size: 1450
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .opencode/skills/core/iterating-to-completion/SKILL.md
+        type: code
+        size: 2688
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .opencode/skills/core/migration/SKILL.md
+        type: code
+        size: 2453
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .opencode/skills/core/orchestrating-feature/SKILL.md
+        type: code
+        size: 4302
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .opencode/skills/core/persisting-agent-outputs/SKILL.md
+        type: code
+        size: 2964
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .opencode/skills/core/persisting-progress-across-sessions/SKILL.md
+        type: code
+        size: 3451
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .opencode/skills/core/prd/SKILL.md
+        type: code
+        size: 2954
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .opencode/skills/core/reviewing-architecture/SKILL.md
+        type: code
+        size: 1695
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .opencode/skills/core/reviewing-product-strategy/SKILL.md
+        type: code
+        size: 1874
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .opencode/skills/core/scaffold-api/SKILL.md
+        type: code
+        size: 2886
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .opencode/skills/core/scaffold-deploy/SKILL.md
+        type: code
+        size: 2555
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .opencode/skills/core/shaping-requirements/SKILL.md
+        type: code
+        size: 1918
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .opencode/skills/core/testing/SKILL.md
+        type: code
+        size: 2406
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .opencode/skills/library/api/input-validation/SKILL.md
+        type: code
+        size: 3364
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .opencode/skills/library/backend/assessing-code-health/SKILL.md
+        type: code
+        size: 1630
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .opencode/skills/library/backend/debugging-systematically/SKILL.md
+        type: code
+        size: 3032
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .opencode/skills/library/backend/developing-with-tdd/SKILL.md
+        type: code
+        size: 2622
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .opencode/skills/library/backend/error-handling-patterns/SKILL.md
+        type: code
+        size: 3763
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .opencode/skills/library/backend/hardening-resilience/SKILL.md
+        type: code
+        size: 1725
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .opencode/skills/library/database/safe-migrations/SKILL.md
+        type: code
+        size: 2833
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .opencode/skills/library/deploy/aws-deployment/SKILL.md
+        type: code
+        size: 2726
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .opencode/skills/library/deploy/cloudflare-deployment/SKILL.md
+        type: code
+        size: 2722
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .opencode/skills/library/deploy/coolify-deployment/SKILL.md
+        type: code
+        size: 2706
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .opencode/skills/library/deploy/docker-registry-deployment/SKILL.md
+        type: code
+        size: 3178
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .opencode/skills/library/deploy/fly-deployment/SKILL.md
+        type: code
+        size: 2755
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .opencode/skills/library/deploy/gcp-deployment/SKILL.md
+        type: code
+        size: 2622
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .opencode/skills/library/deploy/kubernetes-deployment/SKILL.md
+        type: code
+        size: 2841
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .opencode/skills/library/deploy/netlify-deployment/SKILL.md
+        type: code
+        size: 2429
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .opencode/skills/library/deploy/railway-deployment/SKILL.md
+        type: code
+        size: 2482
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .opencode/skills/library/deploy/ssh-vps-deployment/SKILL.md
+        type: code
+        size: 3493
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .opencode/skills/library/deploy/vercel-deployment/SKILL.md
+        type: code
+        size: 2290
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .opencode/skills/library/frontend/auditing-interface-quality/SKILL.md
+        type: code
+        size: 1791
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .opencode/skills/library/frontend/debugging-react-hooks/SKILL.md
+        type: code
+        size: 2985
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .opencode/skills/library/frontend/implementing-frontend-design/SKILL.md
+        type: code
+        size: 6001
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .opencode/skills/library/frontend/optimizing-react-performance/SKILL.md
+        type: code
+        size: 3568
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .opencode/skills/library/frontend/reviewing-frontend-aesthetics/SKILL.md
+        type: code
+        size: 6714
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .opencode/skills/library/security/auditing-security/SKILL.md
+        type: code
+        size: 1987
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .opencode/skills/library/security/rate-limiting/SKILL.md
+        type: code
+        size: 3465
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .opencode/skills/library/testing/fixing-flaky-tests/SKILL.md
+        type: code
+        size: 3167
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .opencode/skills/library/testing/unit-testing-patterns/SKILL.md
+        type: code
+        size: 3435
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .opencode/skills/library/vcs/gh/SKILL.md
+        type: code
+        size: 5285
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .opencode/skills/library/vcs/glab/SKILL.md
+        type: code
+        size: 14114
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: AGENTS.md
+        type: code
+        size: 8158
+        created_at: '2026-06-23T08:58:21.789Z'
+      - path: CLAUDE.md
+        type: code
+        size: 1987
+        created_at: '2026-06-23T08:58:21.789Z'
+      - path: hooks/claude/agent-first.sh
+        type: code
+        size: 2526
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: hooks/claude/block-secret-commands.sh
+        type: code
+        size: 4166
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: hooks/claude/block-sensitive-files.sh
+        type: code
+        size: 2398
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: hooks/claude/compaction-gate.sh
+        type: code
+        size: 2772
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: hooks/claude/feedback-loop.sh
+        type: code
+        size: 2462
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: hooks/claude/output-enforcement.sh
+        type: code
+        size: 2542
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: hooks/claude/quality-gate.sh
+        type: code
+        size: 2231
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: hooks/claude/sanitize-output.sh
+        type: code
+        size: 2069
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: hooks/claude/secret-final-check.sh
+        type: code
+        size: 1567
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: hooks/claude/session-init.sh
+        type: code
+        size: 2863
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: hooks/claude/settings.json
+        type: code
+        size: 2731
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: hooks/claude/task-role-claim.sh
+        type: code
+        size: 1825
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: hooks/claude/task-skill-enforcement.sh
+        type: code
+        size: 1117
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: hooks/claude/track-modifications.sh
+        type: code
+        size: 2095
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: hooks/opencode/plugin.js
+        type: code
+        size: 18278
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: hooks/pi/jonggrang-extension.ts
+        type: code
+        size: 18234
+        created_at: '2026-06-23T08:58:21.817Z'
+  '13':
+    name: test-planning
+    status: completed
+    started_at: '2026-06-29T04:25:25.365Z'
+    completed_at: '2026-06-29T04:27:32.914Z'
+    agent_id: null
+    output: null
+    output_files: []
+  '14':
+    name: testing
+    status: completed
+    started_at: '2026-06-29T04:27:32.930Z'
+    completed_at: '2026-06-29T04:29:25.820Z'
+    agent_id: null
+    output: null
+    output_files:
+      - path: .claude/SKILL.md
+        type: code
+        size: 11515
+        created_at: '2026-06-23T08:58:21.789Z'
+      - path: .claude/agents/developer.md
+        type: code
+        size: 3060
+        created_at: '2026-06-23T08:58:21.789Z'
+      - path: .claude/agents/lead.md
+        type: code
+        size: 2504
+        created_at: '2026-06-23T08:58:21.789Z'
+      - path: .claude/agents/reviewer.md
+        type: code
+        size: 4588
+        created_at: '2026-06-23T08:58:21.789Z'
+      - path: .claude/agents/test-lead.md
+        type: code
+        size: 2895
+        created_at: '2026-06-23T08:58:21.789Z'
+      - path: .claude/agents/tester.md
+        type: code
+        size: 3308
+        created_at: '2026-06-23T08:58:21.789Z'
+      - path: .claude/settings.json
+        type: code
+        size: 3376
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: .claude/skills/core/auth/SKILL.md
+        type: code
+        size: 2902
+        created_at: '2026-06-23T08:58:21.789Z'
+      - path: .claude/skills/core/brainstorm-feature-options/SKILL.md
+        type: code
+        size: 3043
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .claude/skills/core/breadboarding-workflow/SKILL.md
+        type: code
+        size: 1556
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .claude/skills/core/dispatching-parallel-agents/SKILL.md
+        type: code
+        size: 2850
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .claude/skills/core/documenting-release/SKILL.md
+        type: code
+        size: 1990
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .claude/skills/core/gateway-api/SKILL.md
+        type: code
+        size: 1222
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .claude/skills/core/gateway-backend/SKILL.md
+        type: code
+        size: 2068
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .claude/skills/core/gateway-database/SKILL.md
+        type: code
+        size: 1321
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .claude/skills/core/gateway-deploy/SKILL.md
+        type: code
+        size: 2143
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .claude/skills/core/gateway-frontend/SKILL.md
+        type: code
+        size: 1892
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .claude/skills/core/gateway-testing/SKILL.md
+        type: code
+        size: 1450
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .claude/skills/core/iterating-to-completion/SKILL.md
+        type: code
+        size: 2688
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .claude/skills/core/migration/SKILL.md
+        type: code
+        size: 2453
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .claude/skills/core/orchestrating-feature/SKILL.md
+        type: code
+        size: 4302
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .claude/skills/core/persisting-agent-outputs/SKILL.md
+        type: code
+        size: 2964
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .claude/skills/core/persisting-progress-across-sessions/SKILL.md
+        type: code
+        size: 3451
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .claude/skills/core/prd/SKILL.md
+        type: code
+        size: 2954
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .claude/skills/core/reviewing-architecture/SKILL.md
+        type: code
+        size: 1695
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .claude/skills/core/reviewing-product-strategy/SKILL.md
+        type: code
+        size: 1874
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .claude/skills/core/scaffold-api/SKILL.md
+        type: code
+        size: 2886
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .claude/skills/core/scaffold-deploy/SKILL.md
+        type: code
+        size: 2555
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .claude/skills/core/shaping-requirements/SKILL.md
+        type: code
+        size: 1918
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .claude/skills/core/testing/SKILL.md
+        type: code
+        size: 2406
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .claude/skills/library/api/input-validation/SKILL.md
+        type: code
+        size: 3364
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .claude/skills/library/backend/assessing-code-health/SKILL.md
+        type: code
+        size: 1630
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .claude/skills/library/backend/debugging-systematically/SKILL.md
+        type: code
+        size: 3032
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .claude/skills/library/backend/developing-with-tdd/SKILL.md
+        type: code
+        size: 2622
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .claude/skills/library/backend/error-handling-patterns/SKILL.md
+        type: code
+        size: 3763
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .claude/skills/library/backend/hardening-resilience/SKILL.md
+        type: code
+        size: 1725
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .claude/skills/library/database/safe-migrations/SKILL.md
+        type: code
+        size: 2833
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .claude/skills/library/deploy/aws-deployment/SKILL.md
+        type: code
+        size: 2726
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .claude/skills/library/deploy/cloudflare-deployment/SKILL.md
+        type: code
+        size: 2722
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .claude/skills/library/deploy/coolify-deployment/SKILL.md
+        type: code
+        size: 2706
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .claude/skills/library/deploy/docker-registry-deployment/SKILL.md
+        type: code
+        size: 3178
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .claude/skills/library/deploy/fly-deployment/SKILL.md
+        type: code
+        size: 2755
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .claude/skills/library/deploy/gcp-deployment/SKILL.md
+        type: code
+        size: 2622
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .claude/skills/library/deploy/kubernetes-deployment/SKILL.md
+        type: code
+        size: 2841
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .claude/skills/library/deploy/netlify-deployment/SKILL.md
+        type: code
+        size: 2429
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .claude/skills/library/deploy/railway-deployment/SKILL.md
+        type: code
+        size: 2482
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .claude/skills/library/deploy/ssh-vps-deployment/SKILL.md
+        type: code
+        size: 3493
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .claude/skills/library/deploy/vercel-deployment/SKILL.md
+        type: code
+        size: 2290
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .claude/skills/library/frontend/auditing-interface-quality/SKILL.md
+        type: code
+        size: 1791
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .claude/skills/library/frontend/debugging-react-hooks/SKILL.md
+        type: code
+        size: 2985
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .claude/skills/library/frontend/implementing-frontend-design/SKILL.md
+        type: code
+        size: 6001
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .claude/skills/library/frontend/optimizing-react-performance/SKILL.md
+        type: code
+        size: 3568
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .claude/skills/library/frontend/reviewing-frontend-aesthetics/SKILL.md
+        type: code
+        size: 6714
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .claude/skills/library/security/auditing-security/SKILL.md
+        type: code
+        size: 1987
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .claude/skills/library/security/rate-limiting/SKILL.md
+        type: code
+        size: 3465
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .claude/skills/library/testing/fixing-flaky-tests/SKILL.md
+        type: code
+        size: 3167
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .claude/skills/library/testing/unit-testing-patterns/SKILL.md
+        type: code
+        size: 3435
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .claude/skills/library/vcs/gh/SKILL.md
+        type: code
+        size: 5285
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .claude/skills/library/vcs/glab/SKILL.md
+        type: code
+        size: 14114
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .codex/skills/core/auth/SKILL.md
+        type: code
+        size: 2902
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .codex/skills/core/brainstorm-feature-options/SKILL.md
+        type: code
+        size: 3043
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .codex/skills/core/breadboarding-workflow/SKILL.md
+        type: code
+        size: 1556
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .codex/skills/core/dispatching-parallel-agents/SKILL.md
+        type: code
+        size: 2850
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .codex/skills/core/documenting-release/SKILL.md
+        type: code
+        size: 1990
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .codex/skills/core/gateway-api/SKILL.md
+        type: code
+        size: 1222
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .codex/skills/core/gateway-backend/SKILL.md
+        type: code
+        size: 2068
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .codex/skills/core/gateway-database/SKILL.md
+        type: code
+        size: 1321
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .codex/skills/core/gateway-deploy/SKILL.md
+        type: code
+        size: 2143
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .codex/skills/core/gateway-frontend/SKILL.md
+        type: code
+        size: 1892
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .codex/skills/core/gateway-testing/SKILL.md
+        type: code
+        size: 1450
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .codex/skills/core/iterating-to-completion/SKILL.md
+        type: code
+        size: 2688
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .codex/skills/core/migration/SKILL.md
+        type: code
+        size: 2453
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .codex/skills/core/orchestrating-feature/SKILL.md
+        type: code
+        size: 4302
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .codex/skills/core/persisting-agent-outputs/SKILL.md
+        type: code
+        size: 2964
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .codex/skills/core/persisting-progress-across-sessions/SKILL.md
+        type: code
+        size: 3451
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .codex/skills/core/prd/SKILL.md
+        type: code
+        size: 2954
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .codex/skills/core/reviewing-architecture/SKILL.md
+        type: code
+        size: 1695
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .codex/skills/core/reviewing-product-strategy/SKILL.md
+        type: code
+        size: 1874
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .codex/skills/core/scaffold-api/SKILL.md
+        type: code
+        size: 2886
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .codex/skills/core/scaffold-deploy/SKILL.md
+        type: code
+        size: 2555
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .codex/skills/core/shaping-requirements/SKILL.md
+        type: code
+        size: 1918
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .codex/skills/core/testing/SKILL.md
+        type: code
+        size: 2406
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .codex/skills/library/api/input-validation/SKILL.md
+        type: code
+        size: 3364
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .codex/skills/library/backend/assessing-code-health/SKILL.md
+        type: code
+        size: 1630
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .codex/skills/library/backend/debugging-systematically/SKILL.md
+        type: code
+        size: 3032
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .codex/skills/library/backend/developing-with-tdd/SKILL.md
+        type: code
+        size: 2622
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .codex/skills/library/backend/error-handling-patterns/SKILL.md
+        type: code
+        size: 3763
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .codex/skills/library/backend/hardening-resilience/SKILL.md
+        type: code
+        size: 1725
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .codex/skills/library/database/safe-migrations/SKILL.md
+        type: code
+        size: 2833
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .codex/skills/library/deploy/aws-deployment/SKILL.md
+        type: code
+        size: 2726
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .codex/skills/library/deploy/cloudflare-deployment/SKILL.md
+        type: code
+        size: 2722
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .codex/skills/library/deploy/coolify-deployment/SKILL.md
+        type: code
+        size: 2706
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .codex/skills/library/deploy/docker-registry-deployment/SKILL.md
+        type: code
+        size: 3178
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .codex/skills/library/deploy/fly-deployment/SKILL.md
+        type: code
+        size: 2755
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .codex/skills/library/deploy/gcp-deployment/SKILL.md
+        type: code
+        size: 2622
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .codex/skills/library/deploy/kubernetes-deployment/SKILL.md
+        type: code
+        size: 2841
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .codex/skills/library/deploy/netlify-deployment/SKILL.md
+        type: code
+        size: 2429
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .codex/skills/library/deploy/railway-deployment/SKILL.md
+        type: code
+        size: 2482
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .codex/skills/library/deploy/ssh-vps-deployment/SKILL.md
+        type: code
+        size: 3493
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .codex/skills/library/deploy/vercel-deployment/SKILL.md
+        type: code
+        size: 2290
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .codex/skills/library/frontend/auditing-interface-quality/SKILL.md
+        type: code
+        size: 1791
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .codex/skills/library/frontend/debugging-react-hooks/SKILL.md
+        type: code
+        size: 2985
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .codex/skills/library/frontend/implementing-frontend-design/SKILL.md
+        type: code
+        size: 6001
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .codex/skills/library/frontend/optimizing-react-performance/SKILL.md
+        type: code
+        size: 3568
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .codex/skills/library/frontend/reviewing-frontend-aesthetics/SKILL.md
+        type: code
+        size: 6714
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .codex/skills/library/security/auditing-security/SKILL.md
+        type: code
+        size: 1987
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .codex/skills/library/security/rate-limiting/SKILL.md
+        type: code
+        size: 3465
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .codex/skills/library/testing/fixing-flaky-tests/SKILL.md
+        type: code
+        size: 3167
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .codex/skills/library/testing/unit-testing-patterns/SKILL.md
+        type: code
+        size: 3435
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .codex/skills/library/vcs/gh/SKILL.md
+        type: code
+        size: 5285
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .codex/skills/library/vcs/glab/SKILL.md
+        type: code
+        size: 14114
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: .jonggrang/.ephemeral/feedback-loop-state.json
+        type: code
+        size: 986
+        created_at: '2026-06-29T04:23:48.191Z'
+      - path: .jonggrang/.output/features/api-v2-reference-docs-mqyl9hub/MANIFEST.yaml
+        type: code
+        size: 61643
+        created_at: '2026-06-29T04:29:25.169Z'
+      - path: .jonggrang/.output/features/api-v2-reference-docs-mqyl9hub/plan.md
+        type: code
+        size: 8377
+        created_at: '2026-06-29T02:27:03.179Z'
+      - path: .jonggrang/.output/features/membership-v2-api-docs-mqqhflyx/MANIFEST.yaml
+        type: code
+        size: 3003
+        created_at: '2026-06-23T10:47:08.833Z'
+      - path: .jonggrang/.output/features/membership-v2-api-docs-mqqhflyx/plan.md
+        type: code
+        size: 17371
+        created_at: '2026-06-29T02:27:03.179Z'
+      - path: .jonggrang/jonggrang-tasks.json
+        type: code
+        size: 41275
+        created_at: '2026-06-29T04:13:25.284Z'
+      - path: .jonggrang/jonggrang.json
+        type: code
+        size: 1000
+        created_at: '2026-06-23T08:58:21.789Z'
+      - path: .jonggrang/lib/backend-args.js
+        type: code
+        size: 2090
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: .jonggrang/lib/compaction.js
+        type: code
+        size: 8786
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: .jonggrang/lib/feedback.js
+        type: code
+        size: 8824
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: .jonggrang/lib/gateway.js
+        type: code
+        size: 8229
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: .jonggrang/lib/hooks.js
+        type: code
+        size: 15489
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: .jonggrang/lib/issue-providers.js
+        type: code
+        size: 9282
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: .jonggrang/lib/jonggrang.js
+        type: code
+        size: 91771
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: .jonggrang/lib/locks.js
+        type: code
+        size: 4222
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: .jonggrang/lib/orchestration.js
+        type: code
+        size: 27456
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: .jonggrang/lib/roles.js
+        type: code
+        size: 7525
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: .jonggrang/lib/sandbox-git.js
+        type: code
+        size: 6215
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: .jonggrang/lib/sandbox.js
+        type: code
+        size: 20273
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: .jonggrang/lib/settings.js
+        type: code
+        size: 3047
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: .jonggrang/lib/tui.js
+        type: code
+        size: 6638
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: .jonggrang/lib/web-runners.js
+        type: code
+        size: 3340
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: .jonggrang/lib/web-state.js
+        type: code
+        size: 12206
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: .jonggrang/progress.txt
+        type: code
+        size: 122516
+        created_at: '2026-06-29T04:28:55.489Z'
+      - path: .jonggrang/skills/core/auth/SKILL.md
+        type: code
+        size: 2902
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .jonggrang/skills/core/brainstorm-feature-options/SKILL.md
+        type: code
+        size: 3043
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .jonggrang/skills/core/breadboarding-workflow/SKILL.md
+        type: code
+        size: 1556
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .jonggrang/skills/core/dispatching-parallel-agents/SKILL.md
+        type: code
+        size: 2850
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .jonggrang/skills/core/documenting-release/SKILL.md
+        type: code
+        size: 1990
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .jonggrang/skills/core/gateway-api/SKILL.md
+        type: code
+        size: 1222
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .jonggrang/skills/core/gateway-backend/SKILL.md
+        type: code
+        size: 2068
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .jonggrang/skills/core/gateway-database/SKILL.md
+        type: code
+        size: 1321
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .jonggrang/skills/core/gateway-deploy/SKILL.md
+        type: code
+        size: 2143
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .jonggrang/skills/core/gateway-frontend/SKILL.md
+        type: code
+        size: 1892
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .jonggrang/skills/core/gateway-testing/SKILL.md
+        type: code
+        size: 1450
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .jonggrang/skills/core/iterating-to-completion/SKILL.md
+        type: code
+        size: 2688
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .jonggrang/skills/core/migration/SKILL.md
+        type: code
+        size: 2453
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .jonggrang/skills/core/orchestrating-feature/SKILL.md
+        type: code
+        size: 4302
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .jonggrang/skills/core/persisting-agent-outputs/SKILL.md
+        type: code
+        size: 2964
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .jonggrang/skills/core/persisting-progress-across-sessions/SKILL.md
+        type: code
+        size: 3451
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .jonggrang/skills/core/prd/SKILL.md
+        type: code
+        size: 2954
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .jonggrang/skills/core/reviewing-architecture/SKILL.md
+        type: code
+        size: 1695
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .jonggrang/skills/core/reviewing-product-strategy/SKILL.md
+        type: code
+        size: 1874
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .jonggrang/skills/core/scaffold-api/SKILL.md
+        type: code
+        size: 2886
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .jonggrang/skills/core/scaffold-deploy/SKILL.md
+        type: code
+        size: 2555
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .jonggrang/skills/core/shaping-requirements/SKILL.md
+        type: code
+        size: 1918
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .jonggrang/skills/core/testing/SKILL.md
+        type: code
+        size: 2406
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .jonggrang/skills/library/api/input-validation/SKILL.md
+        type: code
+        size: 3364
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .jonggrang/skills/library/backend/assessing-code-health/SKILL.md
+        type: code
+        size: 1630
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .jonggrang/skills/library/backend/debugging-systematically/SKILL.md
+        type: code
+        size: 3032
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .jonggrang/skills/library/backend/developing-with-tdd/SKILL.md
+        type: code
+        size: 2622
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .jonggrang/skills/library/backend/error-handling-patterns/SKILL.md
+        type: code
+        size: 3763
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .jonggrang/skills/library/backend/hardening-resilience/SKILL.md
+        type: code
+        size: 1725
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .jonggrang/skills/library/database/safe-migrations/SKILL.md
+        type: code
+        size: 2833
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .jonggrang/skills/library/deploy/aws-deployment/SKILL.md
+        type: code
+        size: 2726
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .jonggrang/skills/library/deploy/cloudflare-deployment/SKILL.md
+        type: code
+        size: 2722
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .jonggrang/skills/library/deploy/coolify-deployment/SKILL.md
+        type: code
+        size: 2706
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .jonggrang/skills/library/deploy/docker-registry-deployment/SKILL.md
+        type: code
+        size: 3178
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .jonggrang/skills/library/deploy/fly-deployment/SKILL.md
+        type: code
+        size: 2755
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .jonggrang/skills/library/deploy/gcp-deployment/SKILL.md
+        type: code
+        size: 2622
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .jonggrang/skills/library/deploy/kubernetes-deployment/SKILL.md
+        type: code
+        size: 2841
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .jonggrang/skills/library/deploy/netlify-deployment/SKILL.md
+        type: code
+        size: 2429
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .jonggrang/skills/library/deploy/railway-deployment/SKILL.md
+        type: code
+        size: 2482
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .jonggrang/skills/library/deploy/ssh-vps-deployment/SKILL.md
+        type: code
+        size: 3493
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .jonggrang/skills/library/deploy/vercel-deployment/SKILL.md
+        type: code
+        size: 2290
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .jonggrang/skills/library/frontend/auditing-interface-quality/SKILL.md
+        type: code
+        size: 1791
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .jonggrang/skills/library/frontend/debugging-react-hooks/SKILL.md
+        type: code
+        size: 2985
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .jonggrang/skills/library/frontend/implementing-frontend-design/SKILL.md
+        type: code
+        size: 6001
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .jonggrang/skills/library/frontend/optimizing-react-performance/SKILL.md
+        type: code
+        size: 3568
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .jonggrang/skills/library/frontend/reviewing-frontend-aesthetics/SKILL.md
+        type: code
+        size: 6714
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .jonggrang/skills/library/security/auditing-security/SKILL.md
+        type: code
+        size: 1987
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .jonggrang/skills/library/security/rate-limiting/SKILL.md
+        type: code
+        size: 3465
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .jonggrang/skills/library/testing/fixing-flaky-tests/SKILL.md
+        type: code
+        size: 3167
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .jonggrang/skills/library/testing/unit-testing-patterns/SKILL.md
+        type: code
+        size: 3435
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .jonggrang/skills/library/vcs/gh/SKILL.md
+        type: code
+        size: 5285
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .jonggrang/skills/library/vcs/glab/SKILL.md
+        type: code
+        size: 14114
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .opencode/SKILL.md
+        type: code
+        size: 11515
+        created_at: '2026-06-23T08:58:21.789Z'
+      - path: .opencode/agents/developer.md
+        type: code
+        size: 3060
+        created_at: '2026-06-23T08:58:21.789Z'
+      - path: .opencode/agents/lead.md
+        type: code
+        size: 2504
+        created_at: '2026-06-23T08:58:21.789Z'
+      - path: .opencode/agents/reviewer.md
+        type: code
+        size: 4588
+        created_at: '2026-06-23T08:58:21.789Z'
+      - path: .opencode/agents/test-lead.md
+        type: code
+        size: 2895
+        created_at: '2026-06-23T08:58:21.789Z'
+      - path: .opencode/agents/tester.md
+        type: code
+        size: 3308
+        created_at: '2026-06-23T08:58:21.789Z'
+      - path: .opencode/opencode.json
+        type: code
+        size: 101
+        created_at: '2026-06-23T08:58:21.789Z'
+      - path: .opencode/plugins/jonggrang.js
+        type: code
+        size: 554
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: .opencode/skills/core/auth/SKILL.md
+        type: code
+        size: 2902
+        created_at: '2026-06-23T08:58:21.789Z'
+      - path: .opencode/skills/core/brainstorm-feature-options/SKILL.md
+        type: code
+        size: 3043
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .opencode/skills/core/breadboarding-workflow/SKILL.md
+        type: code
+        size: 1556
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .opencode/skills/core/dispatching-parallel-agents/SKILL.md
+        type: code
+        size: 2850
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .opencode/skills/core/documenting-release/SKILL.md
+        type: code
+        size: 1990
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .opencode/skills/core/gateway-api/SKILL.md
+        type: code
+        size: 1222
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .opencode/skills/core/gateway-backend/SKILL.md
+        type: code
+        size: 2068
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .opencode/skills/core/gateway-database/SKILL.md
+        type: code
+        size: 1321
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .opencode/skills/core/gateway-deploy/SKILL.md
+        type: code
+        size: 2143
+        created_at: '2026-06-23T08:58:21.793Z'
+      - path: .opencode/skills/core/gateway-frontend/SKILL.md
+        type: code
+        size: 1892
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .opencode/skills/core/gateway-testing/SKILL.md
+        type: code
+        size: 1450
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .opencode/skills/core/iterating-to-completion/SKILL.md
+        type: code
+        size: 2688
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .opencode/skills/core/migration/SKILL.md
+        type: code
+        size: 2453
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .opencode/skills/core/orchestrating-feature/SKILL.md
+        type: code
+        size: 4302
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .opencode/skills/core/persisting-agent-outputs/SKILL.md
+        type: code
+        size: 2964
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .opencode/skills/core/persisting-progress-across-sessions/SKILL.md
+        type: code
+        size: 3451
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .opencode/skills/core/prd/SKILL.md
+        type: code
+        size: 2954
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .opencode/skills/core/reviewing-architecture/SKILL.md
+        type: code
+        size: 1695
+        created_at: '2026-06-23T08:58:21.797Z'
+      - path: .opencode/skills/core/reviewing-product-strategy/SKILL.md
+        type: code
+        size: 1874
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .opencode/skills/core/scaffold-api/SKILL.md
+        type: code
+        size: 2886
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .opencode/skills/core/scaffold-deploy/SKILL.md
+        type: code
+        size: 2555
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .opencode/skills/core/shaping-requirements/SKILL.md
+        type: code
+        size: 1918
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .opencode/skills/core/testing/SKILL.md
+        type: code
+        size: 2406
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .opencode/skills/library/api/input-validation/SKILL.md
+        type: code
+        size: 3364
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .opencode/skills/library/backend/assessing-code-health/SKILL.md
+        type: code
+        size: 1630
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .opencode/skills/library/backend/debugging-systematically/SKILL.md
+        type: code
+        size: 3032
+        created_at: '2026-06-23T08:58:21.801Z'
+      - path: .opencode/skills/library/backend/developing-with-tdd/SKILL.md
+        type: code
+        size: 2622
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .opencode/skills/library/backend/error-handling-patterns/SKILL.md
+        type: code
+        size: 3763
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .opencode/skills/library/backend/hardening-resilience/SKILL.md
+        type: code
+        size: 1725
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .opencode/skills/library/database/safe-migrations/SKILL.md
+        type: code
+        size: 2833
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .opencode/skills/library/deploy/aws-deployment/SKILL.md
+        type: code
+        size: 2726
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .opencode/skills/library/deploy/cloudflare-deployment/SKILL.md
+        type: code
+        size: 2722
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .opencode/skills/library/deploy/coolify-deployment/SKILL.md
+        type: code
+        size: 2706
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .opencode/skills/library/deploy/docker-registry-deployment/SKILL.md
+        type: code
+        size: 3178
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .opencode/skills/library/deploy/fly-deployment/SKILL.md
+        type: code
+        size: 2755
+        created_at: '2026-06-23T08:58:21.805Z'
+      - path: .opencode/skills/library/deploy/gcp-deployment/SKILL.md
+        type: code
+        size: 2622
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .opencode/skills/library/deploy/kubernetes-deployment/SKILL.md
+        type: code
+        size: 2841
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .opencode/skills/library/deploy/netlify-deployment/SKILL.md
+        type: code
+        size: 2429
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .opencode/skills/library/deploy/railway-deployment/SKILL.md
+        type: code
+        size: 2482
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .opencode/skills/library/deploy/ssh-vps-deployment/SKILL.md
+        type: code
+        size: 3493
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .opencode/skills/library/deploy/vercel-deployment/SKILL.md
+        type: code
+        size: 2290
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .opencode/skills/library/frontend/auditing-interface-quality/SKILL.md
+        type: code
+        size: 1791
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .opencode/skills/library/frontend/debugging-react-hooks/SKILL.md
+        type: code
+        size: 2985
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .opencode/skills/library/frontend/implementing-frontend-design/SKILL.md
+        type: code
+        size: 6001
+        created_at: '2026-06-23T08:58:21.809Z'
+      - path: .opencode/skills/library/frontend/optimizing-react-performance/SKILL.md
+        type: code
+        size: 3568
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .opencode/skills/library/frontend/reviewing-frontend-aesthetics/SKILL.md
+        type: code
+        size: 6714
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .opencode/skills/library/security/auditing-security/SKILL.md
+        type: code
+        size: 1987
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .opencode/skills/library/security/rate-limiting/SKILL.md
+        type: code
+        size: 3465
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .opencode/skills/library/testing/fixing-flaky-tests/SKILL.md
+        type: code
+        size: 3167
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .opencode/skills/library/testing/unit-testing-patterns/SKILL.md
+        type: code
+        size: 3435
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .opencode/skills/library/vcs/gh/SKILL.md
+        type: code
+        size: 5285
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: .opencode/skills/library/vcs/glab/SKILL.md
+        type: code
+        size: 14114
+        created_at: '2026-06-23T08:58:21.813Z'
+      - path: AGENTS.md
+        type: code
+        size: 8158
+        created_at: '2026-06-23T08:58:21.789Z'
+      - path: CLAUDE.md
+        type: code
+        size: 1987
+        created_at: '2026-06-23T08:58:21.789Z'
+      - path: hooks/claude/agent-first.sh
+        type: code
+        size: 2526
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: hooks/claude/block-secret-commands.sh
+        type: code
+        size: 4166
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: hooks/claude/block-sensitive-files.sh
+        type: code
+        size: 2398
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: hooks/claude/compaction-gate.sh
+        type: code
+        size: 2772
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: hooks/claude/feedback-loop.sh
+        type: code
+        size: 2462
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: hooks/claude/output-enforcement.sh
+        type: code
+        size: 2542
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: hooks/claude/quality-gate.sh
+        type: code
+        size: 2231
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: hooks/claude/sanitize-output.sh
+        type: code
+        size: 2069
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: hooks/claude/secret-final-check.sh
+        type: code
+        size: 1567
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: hooks/claude/session-init.sh
+        type: code
+        size: 2863
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: hooks/claude/settings.json
+        type: code
+        size: 2731
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: hooks/claude/task-role-claim.sh
+        type: code
+        size: 1825
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: hooks/claude/task-skill-enforcement.sh
+        type: code
+        size: 1117
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: hooks/claude/track-modifications.sh
+        type: code
+        size: 2095
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: hooks/opencode/plugin.js
+        type: code
+        size: 18278
+        created_at: '2026-06-23T08:58:21.817Z'
+      - path: hooks/pi/jonggrang-extension.ts
+        type: code
+        size: 18234
+        created_at: '2026-06-23T08:58:21.817Z'
+  '15':
+    name: coverage
+    status: completed
+    started_at: '2026-06-29T04:29:25.827Z'
+    completed_at: '2026-06-29T04:30:37.980Z'
+    agent_id: null
+    output: null
+    output_files: []
+  '16':
+    name: test-quality
+    status: running
+    started_at: '2026-06-29T04:30:37.987Z'
+    completed_at: null
+    agent_id: null
+    output: null
+    output_files: []
+  '17':
+    name: completion
+    status: pending
+    started_at: null
+    completed_at: null
+    agent_id: null
+    output: null
+    output_files: []
+agents: {}
+validation:
+  review_passed: false
+  tests_passed: false
+  coverage_met: false
+locks: []
+context_usage: null
