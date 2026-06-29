@@ -1,0 +1,88 @@
+---
+title: "Retry History"
+openapi: "POST /endpointwebhookv2/retryhistory"
+description: "Endpoint retry your webhook history data"
+---
+
+{/*
+  Notes for maintainers — V2 Webhook "Retry History" (POST /hl/v2/webhooks/retry).
+  Re-queues a previously logged webhook delivery for re-sending, identified by webhookHistoryId.
+  Success body is exactly {statusCode:200, messages:"success"} with NO data key. Source-confirmed;
+  not captured live (it triggers a real re-delivery). Envelope is PLURAL `messages` (writes and errors).
+*/}
+
+<RequestExample>
+
+```bash Request Example
+curl --request POST 'https://api.mayar.id/hl/v2/webhooks/retry' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--data '{
+    "webhookHistoryId": "a1b2c3d4-e5f6-4789-a012-3456789abcde"
+}'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+  "statusCode": 200,
+  "messages": "success"
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/webhooks/retry
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/webhooks/retry
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Request Body
+
+<ParamField path="webhookHistoryId" type="string" required>
+  Unique ID for the webhook delivery history log to retry.
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer" >
+  Status code form API.
+</ResponseField>
+
+<ResponseField name="messages" type="string" >
+  Status message that describes the status code.
+</ResponseField>
+
+## Errors
+
+<ResponseField name="400 — no registered URL hook" type="object">
+  Returned when no webhook URL is registered yet: `{ "statusCode": 400, "messages": "Url tidak ditemukan. Silahkan register url webhook anda terlebih dahulu." }`.
+</ResponseField>
+
+<ResponseField name="404 — Webhook history not found" type="object">
+  Returned when the supplied `webhookHistoryId` does not match any record: `{ "statusCode": 404, "messages": "Webhook history not found" }`.
+</ResponseField>

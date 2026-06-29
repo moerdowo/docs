@@ -1,0 +1,88 @@
+---
+title: "Test URL Hook"
+openapi: "POST /endpointwebhookv2/testurlhook"
+description: "Endpoint to testing your URL Hook for Webhook"
+---
+
+{/*
+  Notes for maintainers — V2 Webhook "Test URL Hook" (POST /hl/v2/webhooks/test).
+  Sends a test delivery to the supplied URL. Success body is exactly
+  {statusCode:200, messages:"success"} with NO data key. Source-confirmed; not captured live
+  (it triggers a real test delivery). Envelope is PLURAL `messages` (writes and errors).
+*/}
+
+<RequestExample>
+
+```bash Request Example
+curl --request POST 'https://api.mayar.id/hl/v2/webhooks/test' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--data '{
+    "urlHook": "https://webhook.example.com"
+}'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+  "statusCode": 200,
+  "messages": "success"
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/webhooks/test
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/webhooks/test
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Request Body
+
+<ParamField path="urlHook" type="string" required>
+  URL for webhook callback. Must be a valid URL.
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer" >
+  Status code form API.
+</ResponseField>
+
+<ResponseField name="messages" type="string" >
+  Status message that describes the status code.
+</ResponseField>
+
+## Errors
+
+<ResponseField name="400 — URL missing" type="object">
+  Returned when `urlHook` is missing: `{ "statusCode": 400, "messages": "Url tidak ditemukan. Silahkan masukkan url webhook anda." }`.
+</ResponseField>
+
+<ResponseField name="400 — URL invalid" type="object">
+  Returned when `urlHook` is not a valid URL: `{ "statusCode": 400, "messages": "Url tidak valid. Silahkan masukkan url webhook yang valid." }`.
+</ResponseField>

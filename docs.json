@@ -408,6 +408,16 @@
               "api-reference-v2/nameservice/create",
               "api-reference-v2/nameservice/update"
             ]
+          },
+          {
+            "group": "Webhook",
+            "pages": [
+              "api-reference-v2/webhook/history",
+              "api-reference-v2/webhook/newhistory",
+              "api-reference-v2/webhook/registerurlhook",
+              "api-reference-v2/webhook/testurlhook",
+              "api-reference-v2/webhook/retryhistory"
+            ]
           }
         ]
       }

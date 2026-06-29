@@ -1,0 +1,188 @@
+---
+title: "Get New History"
+openapi: "GET /endpointwebhookv2/newhistory"
+description: "Endpoint to get data from the new webhook history store"
+---
+
+{/*
+  Notes for maintainers — V2 Webhook "Get New History" (GET /hl/v2/webhooks/new-history).
+  This is a V2-only endpoint backed by the newer webhook-history store; it has NO V1 equivalent.
+  Response shape captured live from production (DUMMY_PROD_MERCHANT_API_KEY) and is REAL key-for-key.
+  All PII has been SCRUBBED to synthetic V1-style example values. Compared with /webhooks/history:
+    - `createdAt` and `nextDelivery` are ISO-8601 DATE STRINGS here (not millisecond integers).
+    - the record carries an extra `Webhooktype` key (often null) and omits the integer timestamps.
+  Envelope is PLURAL `messages` (read), cursor pagination via data[]/hasMore/nextStartingAfter.
+*/}
+
+<RequestExample>
+
+```bash Request Example
+curl --request GET 'https://api.mayar.id/hl/v2/webhooks/new-history?limit=10' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "data": [
+        {
+            "id": "e5f6a7b8-c9d0-4123-e456-789abcdef012",
+            "userId": "348e083d-315a-4e5c-96b1-5a2a98c48413",
+            "createdAt": "2026-06-27T17:00:36.126Z",
+            "updatedAt": null,
+            "nextDelivery": "2026-06-27T17:00:36.126Z",
+            "payload": "{\"event\":\"membership.memberExpired\",\"data\":{\"merchantId\":\"348e083d-315a-4e5c-96b1-5a2a98c48413\",\"merchantName\":\"Toko Mayar Demo\",\"status\":\"INACTIVE\",\"memberId\":\"MBR8X2QK\",\"customerId\":\"a1b2c3d4-e5f6-4789-a012-3456789abcde\",\"customerName\":\"Budi Santoso\",\"customerEmail\":\"budi.santoso@example.com\",\"customerMobile\":\"081234567890\"}}",
+            "paymentLinkId": null,
+            "paymentLinkTransactionId": null,
+            "responsePayload": null,
+            "source": "AUTOMATIC",
+            "status": "SUCCESS",
+            "type": "membership.memberExpired",
+            "Webhooktype": null,
+            "urlDestination": "https://webhook.example.com"
+        },
+        {
+            "id": "f6a7b8c9-d0e1-4234-f567-89abcdef0123",
+            "userId": "348e083d-315a-4e5c-96b1-5a2a98c48413",
+            "createdAt": "2026-06-19T10:00:20.185Z",
+            "updatedAt": null,
+            "nextDelivery": "2026-06-19T10:00:20.185Z",
+            "payload": "{\"event\":\"payment.reminder\",\"data\":{\"id\":\"c3d4e5f6-a7b8-4901-c234-56789abcdef0\",\"transactionId\":\"c3d4e5f6-a7b8-4901-c234-56789abcdef0\",\"status\":\"SUCCESS\",\"transactionStatus\":\"created\",\"createdAt\":\"2026-06-19T09:31:33.835Z\",\"updatedAt\":\"2026-06-19T09:35:26.588Z\",\"merchantId\":\"348e083d-315a-4e5c-96b1-5a2a98c48413\",\"merchantEmail\":\"merchant@example.com\",\"customerId\":\"a1b2c3d4-e5f6-4789-a012-3456789abcde\",\"customerName\":\"Budi Santoso\",\"customerEmail\":\"budi.santoso@example.com\",\"customerMobile\":\"081234567890\",\"amount\":10000,\"paymentLinkAmount\":10000,\"isAdminFeeBorneByCustomer\":null,\"isChannelFeeBorneByCustomer\":null,\"productId\":\"7c9d2e1f-3a4b-4c5d-8e6f-1a2b3c4d5e6f\",\"productName\":\"Permintaan Pembayaran\",\"productType\":\"payment_request\",\"pixelFbp\":null,\"pixelFbc\":null,\"qty\":1,\"couponUsed\":null,\"paymentMethod\":null,\"paymentUrl\":\"https://yourstore.myr.id/select-channel/c3d4e5f6-a7b8-4901-c234-56789abcdef0?webhook=true\"}}",
+            "paymentLinkId": "7c9d2e1f-3a4b-4c5d-8e6f-1a2b3c4d5e6f",
+            "paymentLinkTransactionId": "c3d4e5f6-a7b8-4901-c234-56789abcdef0",
+            "responsePayload": null,
+            "source": "AUTOMATIC",
+            "status": "SUCCESS",
+            "type": "payment.reminder",
+            "Webhooktype": null,
+            "urlDestination": "https://webhook.example.com"
+        }
+    ],
+    "hasMore": true,
+    "nextStartingAfter": "1781863218261"
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/webhooks/new-history?limit=10
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/webhooks/new-history?limit=10
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Query Parameters
+
+<ParamField query="limit" path="limit" default={10} type="integer">
+  Number of records to return per page. Default `10`, maximum `50`.
+</ParamField>
+
+<ParamField query="startingAfter" path="startingAfter" type="string">
+  Cursor for forward pagination. Pass the `nextStartingAfter` value from the previous response (a unix-millisecond timestamp string) to fetch the next page.
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer" >
+  Status code form API.
+</ResponseField>
+
+<ResponseField name="messages" type="string" >
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="array of object">
+  List of webhook delivery records.
+</ResponseField>
+
+<ResponseField name="hasMore" type="boolean" >
+  Information on whether there is additional data to be retrieved (true/false).
+</ResponseField>
+
+<ResponseField name="nextStartingAfter" type="string | null" >
+  Cursor for the next page (unix-millisecond timestamp string), or `null` when there is no further data. Pass it back as the `startingAfter` query parameter.
+</ResponseField>
+
+### data Structure (Array Of Object)
+
+<ParamField path="id" type="string<uuid>" >
+  Webhook delivery record ID.
+</ParamField>
+
+<ParamField path="userId" type="string" >
+  User ID who owns this webhook.
+</ParamField>
+
+<ParamField path="createdAt" type="string (ISO 8601)" >
+  Creation time of the webhook delivery log (ISO 8601 date string).
+</ParamField>
+
+<ParamField path="updatedAt" type="string | null" >
+  Last update timestamp (ISO 8601 date string), or `null`.
+</ParamField>
+
+<ParamField path="nextDelivery" type="string | null" >
+  Timestamp of the next delivery attempt (ISO 8601 date string), if any.
+</ParamField>
+
+<ParamField path="payload" type="string (JSON string)" >
+  Original webhook payload sent (contains event + transaction data). This is a JSON-encoded string; its inner structure varies by event `type`.
+</ParamField>
+
+<ParamField path="paymentLinkId" type="string<uuid> | null" >
+  Associated payment link ID (may be `null` for non-transaction events).
+</ParamField>
+
+<ParamField path="paymentLinkTransactionId" type="string<uuid> | null" >
+  Associated transaction ID (may be `null` for non-transaction events).
+</ParamField>
+
+<ParamField path="responsePayload" type="string | null" >
+  Response returned from the destination endpoint.
+</ParamField>
+
+<ParamField path="source" type="string" >
+  Indicates whether the webhook was sent automatically or manually (example: `"AUTOMATIC"`).
+</ParamField>
+
+<ParamField path="status" type="string" >
+  Delivery status (example: `"SUCCESS"`).
+</ParamField>
+
+<ParamField path="type" type="string" >
+  Webhook event type (example: `"membership.memberExpired"`, `"payment.reminder"`).
+</ParamField>
+
+<ParamField path="Webhooktype" type="string | null" >
+  Optional webhook classification, often `null`.
+</ParamField>
+
+<ParamField path="urlDestination" type="string (URL)" >
+  Destination endpoint where the webhook is delivered.
+</ParamField>
