@@ -371,6 +371,12 @@
               "api-reference-v2/qrcode/getstaticqrcode",
               "api-reference-v2/qrcode/paymentchannels"
             ]
+          },
+          {
+            "group": "Balances",
+            "pages": [
+              "api-reference-v2/balance/accountbalance"
+            ]
           }
         ]
       }
