@@ -1,0 +1,131 @@
+---
+title: "Check Coupon Usage"
+openapi: "POST /endpointdiscountv2/check"
+description: "Endpoint used to check how many times a coupon has been used and how much quota remains"
+---
+
+{/* Notes for maintainers: the 200 success example below is REPRESENTATIVE — it
+    requires a live coupon code to capture exact values. The envelope key
+    (`messages`), status codes, and error strings are source-confirmed and were
+    verified live against /hl/v2 (the 404 "Kode kupon tidak ditemukan." case).
+    All values are synthetic. */}
+
+<RequestExample>
+
+```bash Request Example
+curl --request POST 'https://api.mayar.id/hl/v2/coupons/check' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--data '{
+    "couponCode": "HARIBAIK"
+}'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "data": {
+        "couponCode": "HARIBAIK",
+        "isUsed": false,
+        "totalUsed": 12,
+        "limit": 100,
+        "remaining": 88
+    }
+}
+```
+
+```json Response Example 404
+{
+    "statusCode": 404,
+    "messages": "Kode kupon tidak ditemukan.",
+    "data": null
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/coupons/check
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/coupons/check
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Request Body
+
+<ParamField path="couponCode" type="string" required>
+  Coupon code to check (1–50 characters).
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer">
+  Status code from API.
+</ResponseField>
+
+<ResponseField name="messages" type="string">
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  Coupon usage details.
+</ResponseField>
+
+### data Structure (Object)
+
+<ResponseField name="couponCode" type="string">
+  The coupon code that was checked.
+</ResponseField>
+
+<ResponseField name="isUsed" type="boolean">
+  `true` when the coupon has reached its usage limit (`totalUsed >= limit` and
+  `limit > 0`), otherwise `false`.
+</ResponseField>
+
+<ResponseField name="totalUsed" type="integer">
+  Number of times the coupon has been used.
+</ResponseField>
+
+<ResponseField name="limit" type="integer">
+  Maximum usage limit for the coupon (`0` when no limit is set).
+</ResponseField>
+
+<ResponseField name="remaining" type="integer">
+  Remaining usage quota (`limit - totalUsed`, never below `0`).
+</ResponseField>
+
+## Errors
+
+<ResponseField name="400 Validation Error" type="object">
+  Returned with `messages: "Validation Error"` when the request body fails
+  validation (e.g. missing `couponCode`).
+</ResponseField>
+
+<ResponseField name="404 Kode kupon tidak ditemukan." type="object">
+  Returned with `messages: "Kode kupon tidak ditemukan."` when the coupon code
+  does not exist for the authenticated account.
+</ResponseField>

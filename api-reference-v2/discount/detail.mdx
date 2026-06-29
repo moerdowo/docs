@@ -1,0 +1,214 @@
+---
+title: "Get Coupon Detail"
+openapi: "GET /endpointdiscountv2/detail"
+description: "Endpoint used to view details and status of coupons that have been created"
+---
+
+{/* Notes for maintainers: this GET has no list endpoint to discover an existing
+    discount ID, and probing a non-existent ID returns a 500. To avoid creating a
+    live discount, the response example below is REPRESENTATIVE, mirroring the V2
+    discount source surface (the stored discount record plus its `coupons` items).
+    Field names are source-confirmed; confirm exact values against a live response.
+    All identifiers are synthetic. */}
+
+<RequestExample>
+
+```bash Request Example
+curl --request GET 'https://api.mayar.id/hl/v2/coupons/c9aa143a-53f9-44e7-a9c6-83229ad7199b' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--data ''
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "data": {
+        "id": "c9aa143a-53f9-44e7-a9c6-83229ad7199b",
+        "createdAt": 1755665561029,
+        "expiredAt": 1893488774933,
+        "productDiscount": [],
+        "discountType": "monetary",
+        "discountProductType": "all",
+        "eligibleCustomerType": "all",
+        "name": "Diskon Murmer",
+        "minimumPurchase": 500000,
+        "isLifeTime": null,
+        "totalCoupons": 100,
+        "value": 100000,
+        "coupons": [
+            {
+                "id": "532858fe-3722-4cf4-a8eb-f7c6765aba17",
+                "code": "haribaik",
+                "createdAt": 1755665561256,
+                "discountId": "c9aa143a-53f9-44e7-a9c6-83229ad7199b",
+                "endMonthTrial": null,
+                "expiredAt": 1893488774933,
+                "isActive": true,
+                "limit": 100,
+                "type": "reusable",
+                "updatedAt": 1755665561256,
+                "userId": "348e083d-315a-4e5c-96b1-5a2a98c48413"
+            }
+        ]
+    }
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/coupons/{uuId}
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/coupons/{uuId}
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Path Parameter
+
+<ParamField path="uuId" type="string" required>
+  A unique identifier obtained when creating a discount. If accessed through the
+  dashboard, it can be found in the URL on the discount details page.
+
+  Example:
+
+  `c9aa143a-53f9-44e7-a9c6-83229ad7199b`
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer">
+  Status code from API.
+</ResponseField>
+
+<ResponseField name="messages" type="string">
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  The discount details, including its coupons.
+</ResponseField>
+
+### data Structure (Object)
+
+<ResponseField name="id" type="string<uuid>">
+  Discount ID.
+</ResponseField>
+
+<ResponseField name="createdAt" type="integer">
+  Creation time (timestamp in ms).
+</ResponseField>
+
+<ResponseField name="expiredAt" type="integer | null">
+  Expiration time (timestamp in ms), or `null` when the discount does not expire.
+</ResponseField>
+
+<ResponseField name="productDiscount" type="array of object">
+  Product-specific discount rules (empty if not applied).
+</ResponseField>
+
+<ResponseField name="discountType" type="string">
+  Discount type.
+</ResponseField>
+
+<ResponseField name="discountProductType" type="string">
+  Discount product scope.
+</ResponseField>
+
+<ResponseField name="eligibleCustomerType" type="string">
+  Eligible customer scope.
+</ResponseField>
+
+<ResponseField name="name" type="string">
+  Discount name.
+</ResponseField>
+
+<ResponseField name="minimumPurchase" type="integer | null">
+  Minimum purchase amount required to apply the discount. `null` if not set.
+</ResponseField>
+
+<ResponseField name="isLifeTime" type="boolean | null">
+  Indicates if the discount is lifetime (`true`/`false`) or `null`.
+</ResponseField>
+
+<ResponseField name="totalCoupons" type="integer">
+  Total number of coupons available.
+</ResponseField>
+
+<ResponseField name="value" type="number">
+  Discount value.
+</ResponseField>
+
+<ResponseField name="coupons" type="array of object">
+  List of coupons associated with this discount.
+</ResponseField>
+
+### coupons Structure (Array Of Object)
+
+<ResponseField name="id" type="string<uuid>">
+  Coupon ID (UUID).
+</ResponseField>
+
+<ResponseField name="code" type="string">
+  Coupon code.
+</ResponseField>
+
+<ResponseField name="createdAt" type="integer">
+  Coupon creation time (timestamp in ms).
+</ResponseField>
+
+<ResponseField name="discountId" type="string<uuid>">
+  Related Discount ID.
+</ResponseField>
+
+<ResponseField name="endMonthTrial" type="string | null">
+  End of trial month (if applicable).
+</ResponseField>
+
+<ResponseField name="expiredAt" type="integer | null">
+  Coupon expiration time (timestamp in ms), or `null` when it does not expire.
+</ResponseField>
+
+<ResponseField name="isActive" type="boolean">
+  Whether the coupon is active (`true` or `false`).
+</ResponseField>
+
+<ResponseField name="limit" type="integer">
+  Maximum usage limit for the coupon.
+</ResponseField>
+
+<ResponseField name="type" type="string">
+  Coupon type.
+</ResponseField>
+
+<ResponseField name="updatedAt" type="integer">
+  Last updated time (timestamp in ms).
+</ResponseField>
+
+<ResponseField name="userId" type="string<uuid>">
+  ID of the account that owns the coupon.
+</ResponseField>
