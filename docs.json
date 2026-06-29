@@ -359,9 +359,7 @@
               "api-reference-v2/membership/register",
               "api-reference-v2/membership/update",
               "api-reference-v2/membership/createinvoice",
-              "api-reference-v2/membership/cancel",
-              "api-reference-v2/membership/tiersbyproduct",
-              "api-reference-v2/membership/membersbyproduct"
+              "api-reference-v2/membership/cancel"
             ]
           },
           {
