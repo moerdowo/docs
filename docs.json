@@ -321,6 +321,16 @@
               "api-reference-v2/invoice/create",
               "api-reference-v2/invoice/edit"
             ]
+          },
+          {
+            "group": "Payments",
+            "pages": [
+              "api-reference-v2/reqpayment/index",
+              "api-reference-v2/reqpayment/detail",
+              "api-reference-v2/reqpayment/create",
+              "api-reference-v2/reqpayment/edit",
+              "api-reference-v2/reqpayment/changestatus"
+            ]
           }
         ]
       }
