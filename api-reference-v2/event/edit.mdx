@@ -1,0 +1,174 @@
+---
+title: "Edit Event"
+openapi: "POST /endpointeventv2/edit"
+description: "Endpoint used to edit an event product"
+---
+
+{/* Notes for maintainers: this is a WRITE endpoint. The response shape below is
+REPRESENTATIVE — derived from the V1 page template and the V2 source surface,
+not captured from a live prod write. The product to edit is identified by the
+`id` field in the REQUEST BODY; the `{id}` URL segment is ignored. `messages` is
+PLURAL on this endpoint. */}
+
+<RequestExample>
+
+```bash Request Example
+curl --request POST 'https://api.mayar.id/hl/v2/products/event/7f992557-8791-41b5-a1c8-c5641c3e72b5/update' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--data-raw '{
+        "id": "7f992557-8791-41b5-a1c8-c5641c3e72b5",
+        "name": "Bootcamp Coding Fullstack Asix Batch 2",
+        "description": "Workshop fullstack development 2 hari",
+        "amount": 3500000,
+        "redirectUrl": "https://example.com/event-thanks",
+        "expiredAt": "2026-07-10T17:00:00.000Z",
+        "event": {
+            "eventAddress": "jl perjuangan no 32",
+            "isOnlineEvent": false,
+            "maxTicket": 5
+        }
+    }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "data": {
+        "id": "7f992557-8791-41b5-a1c8-c5641c3e72b5",
+        "link": "https://testingmayar.myr.id/event/Bootcamp-Coding-Fullstack-Asix"
+    }
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/products/event/{id}/update
+```
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/products/event/{id}/update
+```
+
+</CodeGroup>
+
+<Note>
+  The product to edit is identified by the `id` field in the request body, not by
+  the `{id}` segment in the URL path.
+</Note>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+    Example:
+
+    `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Request Body
+
+<ParamField path="id" type="string" required>
+  Unique identifier of the event product to edit. This is read from the request
+  body.
+</ParamField>
+
+<ParamField path="name" type="string">
+  Event product name.
+</ParamField>
+
+<ParamField path="description" type="string">
+  Event product description in text or HTML format.
+</ParamField>
+
+<ParamField path="amount" type="integer">
+  Event ticket or product price amount.
+</ParamField>
+
+<ParamField path="crossoutPrice" type="integer">
+  Crossed-out price displayed as the original price.
+</ParamField>
+
+<ParamField path="eventUrl" type="string">
+  Event URL, such as an online meeting link.
+</ParamField>
+
+<ParamField path="redirectUrl" type="string">
+  URL where the customer will be redirected after completing payment.
+</ParamField>
+
+<ParamField path="expiredAt" type="string | datetime">
+  Event product expiration date in ISO 8601 format.
+</ParamField>
+
+<ParamField path="event" type="object">
+  Additional event details.
+</ParamField>
+
+### event Structure (Object)
+
+<ParamField path="event.eventAddress" type="string">
+  Event location or address.
+</ParamField>
+
+<ParamField path="event.isOnlineEvent" type="boolean">
+  Indicates whether the event is conducted online.
+</ParamField>
+
+<ParamField path="event.maxTicket" type="number">
+  Maximum number of tickets that can be purchased per transaction.
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer">
+  Status code from API.
+</ResponseField>
+
+<ResponseField name="messages" type="string">
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  The updated event product data.
+</ResponseField>
+
+### data Structure (Object)
+
+<ResponseField name="data.id" type="string">
+  Unique identifier of the event product.
+</ResponseField>
+
+<ResponseField name="data.link" type="string">
+  Public URL of the updated event product.
+</ResponseField>
+
+### Errors
+
+<ResponseField name="200 OK (validation failed)" type="object">
+  When the request body fails validation, this endpoint still responds with HTTP
+  `200` but sets `messages` to `failed` and returns the validator errors in
+  `data`: `{ "statusCode": 200, "messages": "failed", "data": { ... } }`.
+</ResponseField>
+
+<ResponseField name="401 Unauthorized" type="object">
+  Returned when the product does not belong to the authenticated account:
+  `{ "statusCode": 401, "messages": "Unauthorized" }`.
+</ResponseField>
+
+<ResponseField name="404 Not Found" type="object">
+  Returned when the product does not exist:
+  `{ "statusCode": 404, "messages": "Product not found" }`.
+</ResponseField>

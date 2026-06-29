@@ -1,0 +1,99 @@
+---
+title: "Change Product Status"
+openapi: "POST /endpointproductv2/changestatus"
+description: "Endpoint used to change the product status"
+---
+
+<RequestExample>
+
+```bash Request Example
+curl --request POST 'https://api.mayar.id/hl/v2/products/a02a76e1-25b4-49dd-9d1f-e84dd34ecbb4/close' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response example if success
+{
+    "statusCode": 200,
+    "messages": "success"
+}
+```
+
+
+```json Response example if failed
+{
+    "statusCode": 200,
+    "messages": "failed"
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/products/{id}/{action}
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/products/{id}/{action}
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Path Parameters
+
+<ParamField path="id" type="string <uuid>" required>
+  Unique product ID.
+</ParamField>
+
+<ParamField path="action" type="string" required>
+  The status action to apply to the product. One of:
+
+  - `open`
+  - `close`
+  - `active`
+  - `closed`
+  - `unlisted`
+
+  An unsupported value returns `400` with a message of the form
+  `<action>. allowed: active, closed, unlisted`.
+</ParamField>
+
+## Response
+
+Successful Response
+
+<ResponseField name="statusCode" type="integer" >
+  Status code form API.
+</ResponseField>
+
+<ResponseField name="messages" type="string" >
+  Status message that describes the status code (`success` or `failed`).
+</ResponseField>
+
+### Errors
+
+<ResponseField name="400 Bad Request" type="object">
+  Returned when the action is not supported:
+  `{ "statusCode": 400, "messages": "<action>. allowed: active, closed, unlisted" }`.
+</ResponseField>
+
+<ResponseField name="404 Not Found" type="object">
+  Returned when the product does not exist:
+  `{ "statusCode": 404, "messages": "Product not found" }`.
+</ResponseField>

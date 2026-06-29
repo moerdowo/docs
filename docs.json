@@ -265,6 +265,52 @@
               "api-reference-v2/statuscode",
               "api-reference-v2/rate-limit"
             ]
+          },
+          {
+            "group": "Products & payment links",
+            "pages": [
+              {
+                "group": "Product",
+                "pages": [
+                  "api-reference-v2/product/productpage",
+                  "api-reference-v2/product/productpagewithfilter",
+                  "api-reference-v2/product/detail",
+                  "api-reference-v2/product/transactions",
+                  "api-reference-v2/product/changestatus"
+                ]
+              },
+              {
+                "group": "Generic Link / Payment Link",
+                "pages": [
+                  "api-reference-v2/genericlink/create",
+                  "api-reference-v2/genericlink/createpaymentlink",
+                  "api-reference-v2/genericlink/edit",
+                  "api-reference-v2/genericlink/editpaymentlink",
+                  "api-reference-v2/genericlink/sort"
+                ]
+              },
+              {
+                "group": "Digital Product",
+                "pages": [
+                  "api-reference-v2/digitalproduct/create",
+                  "api-reference-v2/digitalproduct/edit"
+                ]
+              },
+              {
+                "group": "Webinar Product",
+                "pages": [
+                  "api-reference-v2/webinar/create",
+                  "api-reference-v2/webinar/edit"
+                ]
+              },
+              {
+                "group": "Event Product",
+                "pages": [
+                  "api-reference-v2/event/create",
+                  "api-reference-v2/event/edit"
+                ]
+              }
+            ]
           }
         ]
       }
