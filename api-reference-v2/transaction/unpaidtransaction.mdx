@@ -1,0 +1,298 @@
+---
+title: "Get Unpaid Transaction"
+openapi: "GET /endpointtransactionv2/unpaidtransaction"
+description: "Endpoint for get unpaid data transactions"
+---
+
+<RequestExample>
+
+```bash Request Example
+curl --request GET 'https://api.mayar.id/hl/v2/transactions/unpaid?limit=10' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "data": [
+        {
+            "id": "e7ff4a1d-407f-4abc-8619-009cfc2b9f01",
+            "createdAt": 1768375011056,
+            "type": "payment_request",
+            "amount": 100000,
+            "status": "active",
+            "urlParamTrackingData": null,
+            "paymentLinkId": "2c3e36dc-918d-40c2-98a2-4be39cf10dbd",
+            "customerId": "c1a2b3c4-d5e6-4789-a012-3456789abcde",
+            "customeField": null,
+            "customer": {
+                "id": "c1a2b3c4-d5e6-4789-a012-3456789abcde",
+                "email": "andi.pratama@example.com",
+                "name": "Andi Pratama",
+                "mobile": "081200000001"
+            },
+            "paymentLink": {
+                "id": "2c3e36dc-918d-40c2-98a2-4be39cf10dbd",
+                "category": null,
+                "createdAt": 1768375010158,
+                "description": "Penagihan jasa konsultasi",
+                "link": "o17j5jtascy",
+                "name": "Penagihan",
+                "redirectUrl": null,
+                "userId": "a0000000-0000-4000-8000-000000000001",
+                "coverImageId": null,
+                "multipleImageId": null,
+                "coverImage": null,
+                "multipleImage": null
+            },
+            "paymentUrl": "https://yourstore.myr.id/select-channel/e7ff4a1d-407f-4abc-8619-009cfc2b9f01"
+        },
+        {
+            "id": "745a84b8-886a-436c-a833-3e3c88705a67",
+            "createdAt": 1768288611042,
+            "type": "invoice",
+            "amount": 80000,
+            "status": "active",
+            "urlParamTrackingData": null,
+            "paymentLinkId": "fc5ae4ad-a187-4ab8-ad2f-582033ed1178",
+            "customerId": "d2b3c4d5-e6f7-4890-b123-456789abcdef",
+            "customeField": null,
+            "customer": {
+                "id": "d2b3c4d5-e6f7-4890-b123-456789abcdef",
+                "email": "budi.santoso@example.com",
+                "name": "Budi Santoso",
+                "mobile": "081200000002"
+            },
+            "paymentLink": {
+                "id": "fc5ae4ad-a187-4ab8-ad2f-582033ed1178",
+                "category": null,
+                "createdAt": 1768288610362,
+                "description": "Tagihan layanan bulanan",
+                "link": "a0me074770a",
+                "name": "Tagihan Layanan",
+                "redirectUrl": null,
+                "userId": "a0000000-0000-4000-8000-000000000001",
+                "coverImageId": null,
+                "multipleImageId": null,
+                "coverImage": null,
+                "multipleImage": null
+            },
+            "paymentUrl": "https://yourstore.myr.id/select-channel/745a84b8-886a-436c-a833-3e3c88705a67"
+        }
+    ],
+    "hasMore": true,
+    "nextStartingAfter": "1768288611042"
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/transactions/unpaid?limit=10
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/transactions/unpaid?limit=10
+```
+
+</CodeGroup>
+
+## Authorizations
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Query Parameters
+
+<ParamField query="status" path="status" type="string">
+  Filter unpaid transactions by status. Accepts `active` (still valid) or
+  `expired`.
+</ParamField>
+
+<ParamField query="customerId" path="customerId" type="string">
+  Filter unpaid transactions by a specific customer ID.
+</ParamField>
+
+<ParamField query="paymentLinkId" path="paymentLinkId" type="string">
+  Filter unpaid transactions by a specific payment link ID.
+</ParamField>
+
+<ParamField query="startAt" path="startAt" type="string">
+  Start of the date range to filter by (Unix timestamp in milliseconds).
+</ParamField>
+
+<ParamField query="endAt" path="endAt" type="string">
+  End of the date range to filter by (Unix timestamp in milliseconds).
+</ParamField>
+
+<ParamField query="fields" path="fields" type="string">
+  Comma-separated list of fields to include in each item.
+</ParamField>
+
+<ParamField query="limit" path="limit" default="10" type="integer">
+  Number of items to return per page. Defaults to `10`, with a maximum of `50`.
+</ParamField>
+
+<ParamField query="startingAfter" path="startingAfter" type="string">
+  Cursor for forward pagination. Pass the `nextStartingAfter` value from the
+  previous response (a Unix timestamp in milliseconds, as a string) to fetch the
+  next page.
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer" >
+  Status code form API.
+</ResponseField>
+
+<ResponseField name="messages" type="string" >
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="array of object">
+  List of unpaid transactions displayed.
+</ResponseField>
+
+<ResponseField name="hasMore" type="boolean" >
+  Information on whether there is additional data to be retrieved (true/false).
+</ResponseField>
+
+<ResponseField name="nextStartingAfter" type="string | null">
+  Cursor to pass as `startingAfter` to fetch the next page. `null` when there is
+  no further data.
+</ResponseField>
+
+### data Structure (Array Of Object)
+
+<ResponseField name="id" type="string<uuid>" >
+  Unique ID for the transaction.
+</ResponseField>
+
+<ResponseField name="createdAt" type="number (timestamp)" >
+  The transaction creation time in epoch format (ms).
+</ResponseField>
+
+<ResponseField name="type" type="string" >
+  The type of transaction.
+</ResponseField>
+
+<ResponseField name="amount" type="integer" >
+  Payment amount.
+</ResponseField>
+
+<ResponseField name="status" type="string" >
+  Request status (active = still valid).
+</ResponseField>
+
+<ResponseField name="urlParamTrackingData" type="string | null" >
+  Data tracking via additional URL parameters (if any).
+</ResponseField>
+
+<ResponseField name="paymentLinkId" type="string<uuid>" >
+  The ID of the payment link used.
+</ResponseField>
+
+<ResponseField name="customerId" type="string<uuid>" >
+  The unique ID of the customer who made the transaction.
+</ResponseField>
+
+<ResponseField name="customeField" type="object | null">
+  Additional custom fields that can be filled in by the user (if any).
+</ResponseField>
+
+<ResponseField name="customer" type="object">
+  Customer data that makes transactions.
+</ResponseField>
+
+<ResponseField name="paymentLink" type="object">
+  Payment link information used for transactions.
+</ResponseField>
+
+<ResponseField name="paymentUrl" type="string" >
+  Unique URL to pay for this request.
+</ResponseField>
+
+### customer Structure (Object)
+
+<ResponseField name="id" type="string <uuid>" >
+  Unique customer ID.
+</ResponseField>
+
+<ResponseField name="email" type="string" >
+  Customer's email address.
+</ResponseField>
+
+<ResponseField name="name" type="string" >
+  Customer's name.
+</ResponseField>
+
+<ResponseField name="mobile" type="string" >
+  Customer's mobile phone number.
+</ResponseField>
+
+### paymentLink Structure (Object)
+
+<ResponseField name="id" type="string <uuid>" >
+  ID payment link.
+</ResponseField>
+
+<ResponseField name="category" type="string | null" >
+  Product category, can be null if there is no category.
+</ResponseField>
+
+<ResponseField name="createdAt" type="number | timestamp" >
+  Product creation time in epoch milliseconds format.
+</ResponseField>
+
+<ResponseField name="description" type="string" >
+  Product description.
+</ResponseField>
+
+<ResponseField name="link" type="string" >
+  Product slug/short URL.
+</ResponseField>
+
+<ResponseField name="name" type="string" >
+  Product name.
+</ResponseField>
+
+<ResponseField name="redirectUrl" type="string | null" >
+  Redirect destination URL, can be null.
+</ResponseField>
+
+<ResponseField name="userId" type="string<uuid>" >
+  User ID of the payment link owner.
+</ResponseField>
+
+<ResponseField name="coverImageId" type="string | null" >
+  ID cover image, can be null.
+</ResponseField>
+
+<ResponseField name="multipleImageId" type="string | null" >
+  ID for multiple image group.
+</ResponseField>
+
+<ResponseField name="coverImage" type="object | null" >
+  Cover image data, can be null.
+</ResponseField>
+
+<ResponseField name="multipleImage" type="object | null" >
+  List of additional images for the product.
+</ResponseField>

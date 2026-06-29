@@ -331,6 +331,14 @@
               "api-reference-v2/reqpayment/edit",
               "api-reference-v2/reqpayment/changestatus"
             ]
+          },
+          {
+            "group": "Transaction",
+            "pages": [
+              "api-reference-v2/transaction/paidtransaction",
+              "api-reference-v2/transaction/unpaidtransaction",
+              "api-reference-v2/transaction/dailytransaction"
+            ]
           }
         ]
       }

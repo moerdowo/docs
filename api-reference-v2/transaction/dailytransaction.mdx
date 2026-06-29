@@ -1,0 +1,84 @@
+---
+title: "Transaction Daily"
+openapi: "GET /endpointtransactionv2/daily"
+description: "Endpoint to retrieve daily transaction statistics"
+---
+
+<RequestExample>
+
+```bash Request Example
+curl --request GET 'https://api.mayar.id/hl/v2/transactions/daily' \
+ --header 'Authorization: Bearer Paste-Your-API-Key-Here'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "data": {
+        "date": "2026-05-08",
+        "tpvCount": 125000,
+        "trxCount": 10
+    }
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/transactions/daily
+```
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/transactions/daily
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+    Example:
+
+    `Authorization | Bearer Paste-Your-Api-Key-Here`
+</ResponseField>
+
+## Response
+
+Successful Response
+
+## Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer">
+  Status code returned by the API.
+</ResponseField>
+
+<ResponseField name="messages" type="string">
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  Daily transaction statistics object.
+</ResponseField>
+
+### data Structure (Object)
+
+<ResponseField name="data.date" type="string">
+  Date of the transaction summary in YYYY-MM-DD format.
+</ResponseField>
+
+<ResponseField name="data.tpvCount" type="number">
+  Total payment volume count for the specified date.
+</ResponseField>
+
+<ResponseField name="data.trxCount" type="number">
+  Total number of transactions for the specified date.
+</ResponseField>

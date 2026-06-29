@@ -1,0 +1,337 @@
+---
+title: "Get Paid Transactions"
+openapi: "GET /endpointtransactionv2/paidtransaction"
+description: "Endpoint to get paid data transactions"
+---
+
+<RequestExample>
+
+```bash Request Example
+curl --request GET 'https://api.mayar.id/hl/v2/transactions?limit=10' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "data": [
+        {
+            "id": "025b0f2a-dbc0-46aa-ae5b-326cc394c6c1",
+            "credit": 1059,
+            "status": "settled",
+            "balanceHistoryType": "digital_product",
+            "paymentMethod": "QRIS",
+            "customerId": "c1a2b3c4-d5e6-4789-a012-3456789abcde",
+            "createdAt": 1768375011056,
+            "paymentLinkTransactionId": "dc37faf8-4908-4994-a6d4-b18dbd68852b",
+            "fee": [
+                {
+                    "id": "360d4d94-29a9-4dcf-8307-16ddfa41b067",
+                    "balanceHistoryType": "xendit_fee",
+                    "debit": 6
+                },
+                {
+                    "id": "fd7e4fc3-d293-4553-83dc-6e086bde282b",
+                    "balanceHistoryType": "mayar_fee",
+                    "debit": 53
+                }
+            ],
+            "paymentLinkId": "6e9f587d-8a8a-4a4e-b745-28c71d94ed9d",
+            "subscriptionId": null,
+            "xenditTransactionId": "41ac4780-f19d-48b9-87b7-97aa129eb638",
+            "subscription": null,
+            "paymentLinkTransaction": {
+                "id": "dc37faf8-4908-4994-a6d4-b18dbd68852b",
+                "urlParamTrackingData": null,
+                "isAdminFeeBorneByCustomer": true,
+                "isChannelFeeBorneByCustomer": true
+            },
+            "customeField": null,
+            "customer": {
+                "id": "c1a2b3c4-d5e6-4789-a012-3456789abcde",
+                "name": "Andi Pratama",
+                "email": "andi.pratama@example.com",
+                "mobile": "081200000001"
+            },
+            "paymentLink": {
+                "id": "6e9f587d-8a8a-4a4e-b745-28c71d94ed9d",
+                "name": "Produk Digital - Ebook"
+            },
+            "xenditTransaction": {
+                "id": "41ac4780-f19d-48b9-87b7-97aa129eb638",
+                "paymentLinkTransactionId": "dc37faf8-4908-4994-a6d4-b18dbd68852b",
+                "paymentLinkTransaction": {
+                    "id": "dc37faf8-4908-4994-a6d4-b18dbd68852b",
+                    "couponUsage": null
+                }
+            }
+        },
+        {
+            "id": "91220b8b-ebdc-4154-b617-492dacc98662",
+            "credit": 0,
+            "status": "settled",
+            "balanceHistoryType": "saas",
+            "paymentMethod": "Gratis",
+            "customerId": "d2b3c4d5-e6f7-4890-b123-456789abcdef",
+            "createdAt": 1768288611042,
+            "paymentLinkTransactionId": "00617429-fc1c-44db-a0ba-e31d3f0edd70",
+            "fee": [],
+            "paymentLinkId": "a6be24df-1335-4682-902c-f0474c1826c0",
+            "subscriptionId": null,
+            "xenditTransactionId": null,
+            "subscription": null,
+            "paymentLinkTransaction": {
+                "id": "00617429-fc1c-44db-a0ba-e31d3f0edd70",
+                "urlParamTrackingData": null,
+                "isAdminFeeBorneByCustomer": null,
+                "isChannelFeeBorneByCustomer": null
+            },
+            "customeField": null,
+            "customer": {
+                "id": "d2b3c4d5-e6f7-4890-b123-456789abcdef",
+                "name": "Budi Santoso",
+                "email": "budi.santoso@example.com",
+                "mobile": "081200000002"
+            },
+            "paymentLink": {
+                "id": "a6be24df-1335-4682-902c-f0474c1826c0",
+                "name": "Langganan Aplikasi"
+            },
+            "xenditTransaction": null
+        }
+    ],
+    "hasMore": true,
+    "nextStartingAfter": "1768288611042"
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/transactions?limit=10
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/transactions?limit=10
+```
+
+</CodeGroup>
+
+## Authorizations
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Query Parameters
+
+<ParamField query="status" path="status" type="string">
+  Filter the list by transaction status (e.g. `settled`).
+</ParamField>
+
+<ParamField query="customerId" path="customerId" type="string">
+  Filter transactions by a specific customer ID.
+</ParamField>
+
+<ParamField query="type" path="type" type="string">
+  Filter by transaction type (e.g. `digital_product`, `event`, `membership`).
+</ParamField>
+
+<ParamField query="paymentLinkId" path="paymentLinkId" type="string">
+  Filter transactions by a specific payment link ID.
+</ParamField>
+
+<ParamField query="startAt" path="startAt" type="string">
+  Start of the date range to filter by (Unix timestamp in milliseconds).
+</ParamField>
+
+<ParamField query="endAt" path="endAt" type="string">
+  End of the date range to filter by (Unix timestamp in milliseconds).
+</ParamField>
+
+<ParamField query="fields" path="fields" type="string">
+  Comma-separated list of fields to include in each item.
+</ParamField>
+
+<ParamField query="limit" path="limit" default="10" type="integer">
+  Number of items to return per page. Defaults to `10`, with a maximum of `50`.
+</ParamField>
+
+<ParamField query="startingAfter" path="startingAfter" type="string">
+  Cursor for forward pagination. Pass the `nextStartingAfter` value from the
+  previous response (a Unix timestamp in milliseconds, as a string) to fetch the
+  next page.
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer" >
+  Status code form API.
+</ResponseField>
+
+<ResponseField name="messages" type="string" >
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="array of object">
+  List of transactions displayed.
+</ResponseField>
+
+<ResponseField name="hasMore" type="boolean" >
+  Information on whether there is additional data to be retrieved (true/false).
+</ResponseField>
+
+<ResponseField name="nextStartingAfter" type="string | null">
+  Cursor to pass as `startingAfter` to fetch the next page. `null` when there is
+  no further data.
+</ResponseField>
+
+### data Structure (Array Of Object)
+
+<ResponseField name="id" type="string<uuid>" >
+  Unique ID for the balance transaction history.
+</ResponseField>
+
+<ResponseField name="credit" type="integer" >
+  The amount of credit received from the transaction.
+</ResponseField>
+
+<ResponseField name="status" type="string" >
+  The status of the balance transaction (settled = completed/successful).
+</ResponseField>
+
+<ResponseField name="balanceHistoryType" type="string" >
+  The type of transaction.
+</ResponseField>
+
+<ResponseField name="paymentMethod" type="string" >
+  The payment method.
+</ResponseField>
+
+<ResponseField name="customerId" type="string<uuid>" >
+  The unique ID of the customer who made the transaction.
+</ResponseField>
+
+<ResponseField name="createdAt" type="number (timestamp)" >
+  The transaction creation time in epoch format (ms).
+</ResponseField>
+
+<ResponseField name="paymentLinkTransactionId" type="string<uuid>" >
+  The transaction ID associated with the payment link.
+</ResponseField>
+
+<ResponseField name="fee" type="array of object" >
+  Additional fees applied to the transaction (empty if none).
+</ResponseField>
+
+<ResponseField name="paymentLinkId" type="string<uuid>" >
+  The ID of the payment link used.
+</ResponseField>
+
+<ResponseField name="subscriptionId" type="string | null" >
+  The subscription ID (if the transaction is a subscription).
+</ResponseField>
+
+<ResponseField name="xenditTransactionId" type="string | null" >
+  The Xendit transaction ID (if using the Xendit gateway).
+</ResponseField>
+
+<ResponseField name="subscription" type="object | null" >
+  Subscription details (if any).
+</ResponseField>
+
+<ResponseField name="xenditTransaction" type="object | null" >
+  Xendit transaction details (if any).
+</ResponseField>
+
+<ResponseField name="paymentLinkTransaction" type="object">
+  Object that stores transaction details related to the payment link.
+</ResponseField>
+
+<ResponseField name="customeField" type="object | null">
+  Additional custom fields that can be filled in by the user (if any).
+</ResponseField>
+
+<ResponseField name="customer" type="object">
+  Customer data that makes transactions.
+</ResponseField>
+
+<ResponseField name="paymentLink" type="object">
+  Payment link information used for transactions.
+</ResponseField>
+
+### fee Structure (Array Of Object)
+
+<ResponseField name="id" type="string <uuid>" >
+  Unique ID for the fee entry.
+</ResponseField>
+
+<ResponseField name="balanceHistoryType" type="string" >
+  The type of fee (e.g. `xendit_fee`, `mayar_fee`).
+</ResponseField>
+
+<ResponseField name="debit" type="integer" >
+  The fee amount deducted.
+</ResponseField>
+
+### paymentLinkTransaction Structure (Object)
+
+<ResponseField name="id" type="string <uuid>" >
+  Payment link transaction ID.
+</ResponseField>
+
+<ResponseField name="urlParamTrackingData" type="string | null" >
+  Tracking URL data (if any).
+</ResponseField>
+
+<ResponseField name="isAdminFeeBorneByCustomer" type="boolean | null" >
+  Whether the admin fee is borne by the customer.
+</ResponseField>
+
+<ResponseField name="isChannelFeeBorneByCustomer" type="boolean | null" >
+  Whether the channel fee is borne by the customer.
+</ResponseField>
+
+### customer Structure (Object)
+
+<ResponseField name="id" type="string <uuid>" >
+  Unique customer ID.
+</ResponseField>
+
+<ResponseField name="name" type="string" >
+  Customer's name.
+</ResponseField>
+
+<ResponseField name="email" type="string" >
+  Customer's email address.
+</ResponseField>
+
+<ResponseField name="mobile" type="string" >
+  Customer's mobile phone number.
+</ResponseField>
+
+### paymentLink Structure (Object)
+
+<ResponseField name="id" type="string <uuid>" >
+  ID payment link.
+</ResponseField>
+
+<ResponseField name="name" type="string" >
+  Payment link name.
+</ResponseField>
