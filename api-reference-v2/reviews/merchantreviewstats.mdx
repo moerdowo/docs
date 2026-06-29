@@ -1,0 +1,118 @@
+---
+title: "Get Merchant Review Statistics"
+openapi: "GET /endpointreviewsv2/merchant-review-stats"
+description: "Endpoint to retrieve aggregated rating statistics across the whole merchant store"
+---
+
+{/*
+  Notes for maintainers — V2 Reviews "Get Merchant Review Statistics"
+  (GET /hl/v2/merchants/reviews/stats).
+  REPRESENTATIVE shape: this store-wide statistics endpoint is cache-backed and could not be safely
+  captured live, so the example below is derived from the V2 source surface plus synthetic values.
+  Confirm the exact numbers against a live response. Envelope key is PLURAL `messages` (read). It
+  takes no parameters and aggregates ACTIVE reviews across every product in the merchant store.
+  `data` is an object with `total`, `average`, and a `stats` array (one entry per rating, 5 down to
+  1). When the store has no active reviews, `data` is an empty object (`{}`).
+*/}
+
+<RequestExample>
+
+```bash Request Example
+curl --request GET 'https://api.mayar.id/hl/v2/merchants/reviews/stats' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "data": {
+        "total": 42,
+        "average": 4.7,
+        "stats": [
+            { "rating": 5, "percentage": 76, "totalRating": 32 },
+            { "rating": 4, "percentage": 17, "totalRating": 7 },
+            { "rating": 3, "percentage": 5, "totalRating": 2 },
+            { "rating": 2, "percentage": 2, "totalRating": 1 },
+            { "rating": 1, "percentage": 0, "totalRating": 0 }
+        ]
+    }
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/merchants/reviews/stats
+```
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/merchants/reviews/stats
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+    Example:
+
+    `Authorization | Bearer Paste-Your-Api-Key-Here`
+</ResponseField>
+
+<Note>
+  Statistics count only `ACTIVE` reviews across the entire store. When there are no active
+  reviews, `data` is returned as an empty object (`{}`).
+</Note>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer">
+  Status code returned by the API.
+</ResponseField>
+
+<ResponseField name="messages" type="string">
+  Status message that describes the API response.
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  Aggregated store-wide rating statistics. Empty object when there are no active reviews.
+</ResponseField>
+
+### data Structure (Object)
+
+<ResponseField name="total" type="number">
+  Total number of active reviews across the store.
+</ResponseField>
+
+<ResponseField name="average" type="number">
+  Average rating across all active reviews, rounded to one decimal place.
+</ResponseField>
+
+<ResponseField name="stats" type="array of object">
+  Per-rating breakdown, one entry for each rating from 5 down to 1.
+</ResponseField>
+
+<ResponseField name="stats.rating" type="number">
+  Rating value (1–5) this breakdown entry refers to.
+</ResponseField>
+
+<ResponseField name="stats.percentage" type="number">
+  Percentage of total reviews that gave this rating.
+</ResponseField>
+
+<ResponseField name="stats.totalRating" type="number">
+  Number of reviews that gave this rating.
+</ResponseField>

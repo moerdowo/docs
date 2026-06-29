@@ -418,6 +418,19 @@
               "api-reference-v2/webhook/testurlhook",
               "api-reference-v2/webhook/retryhistory"
             ]
+          },
+          {
+            "group": "Reviews",
+            "pages": [
+              "api-reference-v2/reviews/getallreviews",
+              "api-reference-v2/reviews/productreviews",
+              "api-reference-v2/reviews/productreviewcustomer",
+              "api-reference-v2/reviews/productreviewstats",
+              "api-reference-v2/reviews/merchantreviewstats",
+              "api-reference-v2/reviews/create",
+              "api-reference-v2/reviews/update",
+              "api-reference-v2/reviews/bulkstatusupdate"
+            ]
           }
         ]
       }

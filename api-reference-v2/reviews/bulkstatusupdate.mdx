@@ -1,0 +1,120 @@
+---
+title: "Bulk Update Review Status"
+openapi: "POST /endpointreviewsv2/reviews/bulk-status-update"
+description: "Endpoint to update the status of multiple reviews in a single request"
+---
+
+{/*
+  Notes for maintainers — REPRESENTATIVE write payload.
+  POST /hl/v2/reviews/bulk-status/update is a write endpoint; the example below is derived from the
+  V2 source surface plus synthetic V1-style values (no live capture, to avoid mutating merchant
+  data). Envelope key is PLURAL `messages` (writes AND errors). On success the response is exactly
+  {statusCode, messages} with NO `data` key. Validation failures return HTTP 200 with
+  `messages: "failed"` and `data` holding the validation detail. Every review referenced must belong
+  to the authenticated merchant.
+*/}
+
+<RequestExample>
+
+```bash Request Example
+curl --request POST 'https://api.mayar.id/hl/v2/reviews/bulk-status/update' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--data-raw '{
+    "input": [
+        {
+            "id": "11f4d767-4d88-41ff-8777-06564d906fe7",
+            "paymentLinkId": "e2b3f5d5-0c62-47ba-8a01-6c1c209e0f77",
+            "status": "ARCHIVED"
+        },
+        {
+            "id": "a1b2c3d4-e5f6-4789-a012-3456789abcde",
+            "paymentLinkId": "e2b3f5d5-0c62-47ba-8a01-6c1c209e0f77",
+            "status": "ACTIVE"
+        }
+    ]
+}'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success"
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/reviews/bulk-status/update
+```
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/reviews/bulk-status/update
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Request Body
+
+<ParamField body="input" type="array of object" required>
+  List of reviews to update. Between 1 and 50 entries.
+</ParamField>
+
+<ParamField body="input.id" type="string" required>
+  ID of the review to update. 3–100 characters.
+</ParamField>
+
+<ParamField body="input.status" type="string" required>
+  New status for the review. One of `ACTIVE`, `ARCHIVED`, or `INACTIVE`.
+</ParamField>
+
+<ParamField body="input.paymentLinkId" type="string">
+  ID of the payment link / product the review belongs to. 3–100 characters.
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer">
+  Status code returned by the API.
+</ResponseField>
+
+<ResponseField name="messages" type="string">
+  Status message that describes the status code. `"success"` on success, `"failed"` when the
+  request body fails validation. A successful response contains no `data` key.
+</ResponseField>
+
+## Errors
+
+<ResponseField name="200 Validation Failed" type="object">
+  Returned with `messages` set to `"failed"` and `data` holding the validation detail when the
+  request body is invalid.
+</ResponseField>
+
+<ResponseField name="400 Bad Request" type="object">
+  Returned with `messages` set to `"Review is not valid! Please check your payload."` when any
+  referenced review does not belong to the authenticated merchant.
+</ResponseField>
+
+<ResponseField name="500 Server Error" type="object">
+  Returned with `messages` set to the error description when the reviews cannot be updated.
+</ResponseField>
