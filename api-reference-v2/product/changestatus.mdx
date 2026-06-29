@@ -4,10 +4,20 @@ openapi: "POST /endpointproductv2/changestatus"
 description: "Endpoint used to change the product status"
 ---
 
+{/*
+  Notes for maintainers — REPRESENTATIVE write sample.
+  POST /hl/v2/products/{id}/{action} is a write (status toggle) endpoint; the example below uses a
+  synthetic V1-style product id (no live capture, to avoid mutating merchant data). Envelope key is
+  PLURAL `messages` (this endpoint, like every non-membership-write endpoint, uses `messages`). On
+  success the response is exactly {statusCode, messages} with NO `data` key; an unaccepted action or
+  missing product returns the documented 400/404. This is the SAME handler as
+  POST /hl/v2/payments/{id}/{action}. All values are synthetic.
+*/}
+
 <RequestExample>
 
 ```bash Request Example
-curl --request POST 'https://api.mayar.id/hl/v2/products/a02a76e1-25b4-49dd-9d1f-e84dd34ecbb4/close' \
+curl --request POST 'https://api.mayar.id/hl/v2/products/2529541f-dc98-4ca0-93bb-3c1d35a8dd07/close' \
 --header 'Authorization: Bearer Paste-Your-API-Key-Here'
 ```
 
