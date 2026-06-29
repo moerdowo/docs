@@ -1,0 +1,210 @@
+---
+title: "Get Membership Tiers by Product"
+openapi: "GET /endpointmembershipv2/tiersbyproduct"
+description: "Legacy endpoint to list the tiers of a membership product by product ID, including enrolled customers."
+---
+
+<RequestExample>
+
+```bash Request Example
+curl --request GET 'https://api.mayar.id/hl/v2/memberships/7c9d2e1f-4a5b-4c6d-8e9f-0a1b2c3d4e5f/tiers?limit=10' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "data": [
+        {
+            "id": "9b2d4f6a-8c1e-4a3b-bd5c-6e7f8a9b0c1d",
+            "name": "Paket 1",
+            "description": "<p>Access to all premium content and monthly live sessions.</p>\n",
+            "paymentAtStart": true,
+            "limit": null,
+            "finishMembershipAt": null,
+            "status": "ACTIVE",
+            "notes": "Access to all premium content and monthly live sessions.",
+            "gracePeriodInDays": 0,
+            "isTrialAvailable": true,
+            "upfrontFee": null,
+            "redirectUrl": "",
+            "membershipCustomer": [
+                {
+                    "id": "c4d5e6f7-a8b9-4c0d-8e1f-2a3b4c5d6e7f",
+                    "status": "inactive",
+                    "customerId": "a1b2c3d4-e5f6-4789-a012-3456789abcde",
+                    "customer": {
+                        "id": "a1b2c3d4-e5f6-4789-a012-3456789abcde",
+                        "name": "Budi Santoso",
+                        "email": "budi.santoso@example.com"
+                    }
+                }
+            ],
+            "membershipTierPeriod": [
+                {
+                    "id": "e5f6a7b8-c9d0-4e1f-a2b3-c4d5e6f7a8b9",
+                    "amount": null,
+                    "status": null,
+                    "monthPeriod": 12,
+                    "isLifetime": false
+                },
+                {
+                    "id": "f6a7b8c9-d0e1-4f2a-b3c4-d5e6f7a8b9c0",
+                    "amount": 10000,
+                    "status": "ACTIVE",
+                    "monthPeriod": 1,
+                    "isLifetime": false
+                },
+                {
+                    "id": "a7b8c9d0-e1f2-4a3b-c4d5-e6f7a8b9c0d1",
+                    "amount": null,
+                    "status": null,
+                    "monthPeriod": null,
+                    "isLifetime": true
+                }
+            ]
+        }
+    ],
+    "hasMore": false,
+    "nextStartingAfter": null
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/memberships/(productId)/tiers
+```
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/memberships/(productId)/tiers
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Path Parameters
+
+<ParamField path="productId" type="string" required>
+  The unique identifier of the membership product whose tiers you want to list.
+
+  Example:
+
+  `7c9d2e1f-4a5b-4c6d-8e9f-0a1b2c3d4e5f`
+</ParamField>
+
+## Query Parameters
+
+<ParamField query="limit" path="limit" default="10" type="integer">
+  Number of items to return per page. Defaults to `10`, with a maximum of `50`.
+</ParamField>
+
+<ParamField query="startingAfter" path="startingAfter" type="string">
+  Cursor for forward pagination. Pass the `nextStartingAfter` value from the
+  previous response (a Unix timestamp in milliseconds, as a string) to fetch the
+  next page.
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer" >
+  Status code form API.
+</ResponseField>
+
+<ResponseField name="messages" type="string" >
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="array of object">
+  List of membership tiers for the product, each including its enrolled customers
+  and configured billing periods.
+</ResponseField>
+
+<ResponseField name="hasMore" type="boolean" >
+  Information on whether there is additional data to be retrieved (true/false).
+</ResponseField>
+
+<ResponseField name="nextStartingAfter" type="string | null">
+  Cursor to pass as `startingAfter` to fetch the next page. `null` when there is
+  no further data.
+</ResponseField>
+
+### data Structure (Array Of Object)
+
+<ResponseField name="id" type="string<uuid>" >
+  Unique identifier of the membership tier.
+</ResponseField>
+
+<ResponseField name="name" type="string" >
+  Name of the membership tier.
+</ResponseField>
+
+<ResponseField name="description" type="string" >
+  HTML description of the tier.
+</ResponseField>
+
+<ResponseField name="paymentAtStart" type="boolean" >
+  Whether payment is collected at the start of the period.
+</ResponseField>
+
+<ResponseField name="limit" type="integer | null" >
+  Maximum number of members allowed on the tier, or `null` when unlimited.
+</ResponseField>
+
+<ResponseField name="finishMembershipAt" type="string | null" >
+  Date the membership finishes, or `null` when the tier has no fixed end.
+</ResponseField>
+
+<ResponseField name="status" type="string" >
+  Current status of the tier (for example `ACTIVE`).
+</ResponseField>
+
+<ResponseField name="notes" type="string | null" >
+  Free-text notes for the tier.
+</ResponseField>
+
+<ResponseField name="gracePeriodInDays" type="integer" >
+  Number of grace-period days after the next payment date.
+</ResponseField>
+
+<ResponseField name="isTrialAvailable" type="boolean" >
+  Whether a trial is available for the tier.
+</ResponseField>
+
+<ResponseField name="upfrontFee" type="number | null" >
+  Upfront fee for joining the tier, or `null` when none.
+</ResponseField>
+
+<ResponseField name="redirectUrl" type="string" >
+  Redirect URL configured for the tier.
+</ResponseField>
+
+<ResponseField name="membershipCustomer" type="array of object" >
+  The customers enrolled in the tier. Each item carries `id`, `status`,
+  `customerId`, and a nested `customer` object (`id`, `name`, `email`).
+</ResponseField>
+
+<ResponseField name="membershipTierPeriod" type="array of object" >
+  The billing periods configured for the tier. Each item carries `id`, `amount`,
+  `status`, `monthPeriod`, and `isLifetime`.
+</ResponseField>

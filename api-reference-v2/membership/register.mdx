@@ -1,0 +1,179 @@
+---
+title: "Register Membership Member"
+openapi: "POST /endpointmembershipv2/register"
+description: "Endpoint to register a new membership member."
+---
+
+{/*
+  Notes for maintainers (derived from the V2 membership source surface — this is a
+  WRITE endpoint, so the response below is REPRESENTATIVE to avoid mutating live data):
+  - Success is HTTP 201 with the body
+    { statusCode: 201, message: "success", data: { membershipCustomer: {…} } }.
+  - Response uses the SINGULAR `message` key (the four membership writes — create/update/
+    invoice/cancel — use `message`; the read/list endpoints use the plural `messages`). Do NOT normalize.
+  - The `data.membershipCustomer` FIELD NAMES/VALUES are representative — the response returns the
+    created membership-customer record; confirm the exact field list against a live response.
+  - Verbatim error strings below are confirmed against the inventory; keep them exactly.
+  - All values are synthetic.
+*/}
+
+<RequestExample>
+
+```bash Request Example
+curl --request POST 'https://api.mayar.id/hl/v2/memberships/members/create' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "productId": "7c9d2e1f-4a5b-4c6d-8e9f-0a1b2c3d4e5f",
+    "membershipTierId": "9b2d4f6a-8c1e-4a3b-bd5c-6e7f8a9b0c1d",
+    "customerInfo": {
+        "name": "Budi Santoso",
+        "email": "budi.santoso@example.com",
+        "mobile": "081234567890"
+    },
+    "membershipMonthlyPeriod": 1
+}'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 201
+{
+    "statusCode": 201,
+    "message": "success",
+    "data": {
+        "membershipCustomer": {
+            "id": "c4d5e6f7-a8b9-4c0d-8e1f-2a3b4c5d6e7f",
+            "memberId": "MBR8X2QK",
+            "userId": "348e083d-315a-4e5c-96b1-5a2a98c48413",
+            "customerId": "a1b2c3d4-e5f6-4789-a012-3456789abcde",
+            "membershipTierId": "9b2d4f6a-8c1e-4a3b-bd5c-6e7f8a9b0c1d",
+            "paymentLinkId": "7c9d2e1f-4a5b-4c6d-8e9f-0a1b2c3d4e5f",
+            "monthlyPaymentPeriod": 1,
+            "status": "active",
+            "nextPayment": "2026-07-20T09:10:57.994Z",
+            "expiredAt": null,
+            "createdAt": "2026-06-20T09:10:57.994Z",
+            "updatedAt": "2026-06-20T09:10:57.994Z"
+        }
+    }
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/memberships/members/create
+```
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/memberships/members/create
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Request Body
+
+<ParamField body="productId" type="string" required>
+  The unique identifier of the product (payment link) the new member is registered
+  against. The product must belong to the authenticated user.
+
+  Example:
+
+  `7c9d2e1f-4a5b-4c6d-8e9f-0a1b2c3d4e5f`
+</ParamField>
+
+<ParamField body="membershipTierId" type="string" required>
+  The unique identifier of the membership tier the member is enrolled in.
+
+  Example:
+
+  `9b2d4f6a-8c1e-4a3b-bd5c-6e7f8a9b0c1d`
+</ParamField>
+
+<ParamField body="customerInfo" type="object" required>
+  The customer's contact details.
+</ParamField>
+
+<ParamField body="customerInfo.name" type="string" required>
+  The customer's full name.
+</ParamField>
+
+<ParamField body="customerInfo.email" type="string" required>
+  The customer's email address. A customer may only be registered once per tier —
+  re-using an email that already exists on the same tier responds
+  `400 "Email sudah terdaftar pada tier ini."`.
+</ParamField>
+
+<ParamField body="customerInfo.mobile" type="string" required>
+  The customer's mobile phone number.
+</ParamField>
+
+<ParamField body="membershipMonthlyPeriod" type="integer" required>
+  The monthly billing period for the membership (for example `1`).
+</ParamField>
+
+## Response
+
+Successful Response — HTTP `201`
+
+### Main Structure (Root Object)
+
+<ResponseField name="statusCode" type="integer">
+  Status code from the API. `201` on successful registration.
+</ResponseField>
+
+<ResponseField name="message" type="string">
+  Status message that describes the status code. Note the **singular** `message` key
+  (write endpoints use `message`; read/list endpoints use the plural `messages`).
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  The registration result wrapper.
+</ResponseField>
+
+<ResponseField name="data.membershipCustomer" type="object">
+  The newly created membership customer record.
+</ResponseField>
+
+## Errors
+
+All errors use the envelope `{ "statusCode": <code>, "message": "<reason>" }` (singular `message`).
+
+```json Error Example 400
+{
+    "statusCode": 400,
+    "message": "Email sudah terdaftar pada tier ini."
+}
+```
+
+<ResponseField name="statusCode" type="integer">
+  The HTTP status code of the error.
+</ResponseField>
+
+<ResponseField name="message" type="string">
+  A human-readable description of the error.
+</ResponseField>
+
+Common errors:
+
+| Status | `message` | When |
+| --- | --- | --- |
+| `400` | `Validation Error` | The request body fails validation (missing or malformed fields). |
+| `400` | `You are not authorized to edit this product!` | The `productId` does not belong to the authenticated user. |
+| `400` | `Email sudah terdaftar pada tier ini.` | A customer with this email is already registered on the given tier. |
+| `400` | `Paket membership ini telah mencapai batas limit anggota yang ditentukan.` | The tier has reached its configured member limit. |

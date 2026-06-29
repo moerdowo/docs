@@ -1,0 +1,217 @@
+---
+title: "Get Membership Member Detail"
+openapi: "GET /endpointmembershipv2/memberdetail"
+description: "Endpoint to get the detail of a single membership member."
+---
+
+<RequestExample>
+
+```bash Request Example
+curl --request GET 'https://api.mayar.id/hl/v2/memberships/members/MBR8X2QK?productId=7c9d2e1f-4a5b-4c6d-8e9f-0a1b2c3d4e5f' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "data": {
+        "id": "c4d5e6f7-a8b9-4c0d-8e1f-2a3b4c5d6e7f",
+        "createdAt": "2026-01-15T15:29:59.659Z",
+        "customerId": "a1b2c3d4-e5f6-4789-a012-3456789abcde",
+        "expiredAt": "2026-02-15T15:29:59.430Z",
+        "isAlreadyUsedTrial": true,
+        "isInTrial": false,
+        "isLifetimePeriod": null,
+        "isTodayReminderSent": true,
+        "memberId": "MBR8X2QK",
+        "membershipTierId": "9b2d4f6a-8c1e-4a3b-bd5c-6e7f8a9b0c1d",
+        "monthlyPaymentPeriod": null,
+        "nextPayment": "2026-02-15T15:29:59.430Z",
+        "nextPaymentEmailSent": true,
+        "paymentLinkId": "7c9d2e1f-4a5b-4c6d-8e9f-0a1b2c3d4e5f",
+        "status": "inactive",
+        "updatedAt": "2026-02-15T17:30:03.531Z",
+        "paymentLink": {
+            "id": "7c9d2e1f-4a5b-4c6d-8e9f-0a1b2c3d4e5f",
+            "name": "Premium Membership",
+            "status": "active",
+            "membershipInfo": {
+                "id": "d3e4f5a6-b7c8-4d9e-0a1b-2c3d4e5f6a7b",
+                "type": "SAAS"
+            }
+        },
+        "customer": {
+            "id": "a1b2c3d4-e5f6-4789-a012-3456789abcde",
+            "email": "budi.santoso@example.com",
+            "name": "Budi Santoso",
+            "mobile": "081234567890"
+        },
+        "membershipTier": {
+            "id": "9b2d4f6a-8c1e-4a3b-bd5c-6e7f8a9b0c1d",
+            "name": "Paket 1",
+            "status": "ACTIVE"
+        }
+    }
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/memberships/members/(memberId)?productId=(productId)
+```
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/memberships/members/(memberId)?productId=(productId)
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Path Parameters
+
+<ParamField path="memberId" type="string" required>
+  The public membership code of the member to retrieve.
+
+  Example:
+
+  `MBR8X2QK`
+</ParamField>
+
+## Query Parameters
+
+<ParamField query="productId" path="productId" type="string" required>
+  The unique identifier of the membership product the member belongs to. If missing
+  or malformed the endpoint responds `400 "Invalid query parameters"`.
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer" >
+  Status code form API.
+</ResponseField>
+
+<ResponseField name="messages" type="string" >
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  The membership member record, including nested `paymentLink`, `customer`, and
+  `membershipTier` objects.
+</ResponseField>
+
+### data Structure (Object)
+
+<ResponseField name="id" type="string<uuid>" >
+  Unique identifier of the membership-customer record.
+</ResponseField>
+
+<ResponseField name="createdAt" type="string" >
+  ISO 8601 timestamp (UTC) of when the member was created.
+</ResponseField>
+
+<ResponseField name="customerId" type="string<uuid>" >
+  Unique identifier of the customer.
+</ResponseField>
+
+<ResponseField name="expiredAt" type="string | null" >
+  ISO 8601 timestamp (UTC) of when the membership expires.
+</ResponseField>
+
+<ResponseField name="isAlreadyUsedTrial" type="boolean" >
+  Whether the member has already used the trial.
+</ResponseField>
+
+<ResponseField name="isInTrial" type="boolean" >
+  Whether the member is currently in a trial period.
+</ResponseField>
+
+<ResponseField name="isLifetimePeriod" type="boolean | null" >
+  Whether the member is on a lifetime period.
+</ResponseField>
+
+<ResponseField name="isTodayReminderSent" type="boolean" >
+  Whether today's payment reminder has been sent.
+</ResponseField>
+
+<ResponseField name="memberId" type="string" >
+  Public membership code of the member.
+</ResponseField>
+
+<ResponseField name="membershipTierId" type="string<uuid>" >
+  Unique identifier of the member's tier.
+</ResponseField>
+
+<ResponseField name="monthlyPaymentPeriod" type="integer | null" >
+  The member's monthly payment period, or `null` when not set.
+</ResponseField>
+
+<ResponseField name="nextPayment" type="string" >
+  ISO 8601 timestamp (UTC) of the member's next scheduled payment.
+</ResponseField>
+
+<ResponseField name="nextPaymentEmailSent" type="boolean" >
+  Whether the next-payment email has been sent.
+</ResponseField>
+
+<ResponseField name="paymentLinkId" type="string<uuid>" >
+  Unique identifier of the product (payment link) the member belongs to.
+</ResponseField>
+
+<ResponseField name="status" type="string" >
+  Current status of the member (for example `active`, `inactive`).
+</ResponseField>
+
+<ResponseField name="updatedAt" type="string" >
+  ISO 8601 timestamp (UTC) of the last update.
+</ResponseField>
+
+<ResponseField name="paymentLink" type="object" >
+  The related product (payment link) summary: `id`, `name`, `status`, and a nested
+  `membershipInfo` object (`id`, `type`).
+</ResponseField>
+
+<ResponseField name="customer" type="object" >
+  The related customer summary: `id`, `email`, `name`, `mobile`.
+</ResponseField>
+
+<ResponseField name="membershipTier" type="object" >
+  The related tier summary: `id`, `name`, `status`.
+</ResponseField>
+
+## Errors
+
+<ResponseField name="400 Invalid path parameter" type="object">
+  Returned with `messages: "Invalid path parameter"` when `memberId` is missing or
+  malformed.
+</ResponseField>
+
+<ResponseField name="400 Invalid query parameters" type="object">
+  Returned with `messages: "Invalid query parameters"` when `productId` is missing
+  or the query parameters fail validation.
+</ResponseField>
+
+<ResponseField name="404 Member not found" type="object">
+  Returned with `messages: "Member dengan ID {memberId} tidak ditemukan."` when no
+  member matches the given `memberId`.
+</ResponseField>

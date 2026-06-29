@@ -349,6 +349,20 @@
               "api-reference-v2/customer/update",
               "api-reference-v2/customer/createmagiclink"
             ]
+          },
+          {
+            "group": "Membership",
+            "pages": [
+              "api-reference-v2/membership/tiers",
+              "api-reference-v2/membership/members",
+              "api-reference-v2/membership/memberdetail",
+              "api-reference-v2/membership/register",
+              "api-reference-v2/membership/update",
+              "api-reference-v2/membership/createinvoice",
+              "api-reference-v2/membership/cancel",
+              "api-reference-v2/membership/tiersbyproduct",
+              "api-reference-v2/membership/membersbyproduct"
+            ]
           }
         ]
       }

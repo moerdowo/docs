@@ -1,0 +1,144 @@
+---
+title: "Get Membership Member by Product"
+openapi: "GET /endpointmembershipv2/membersbyproduct"
+description: "Legacy endpoint to get a single membership member of a product by member ID."
+---
+
+<RequestExample>
+
+```bash Request Example
+curl --request GET 'https://api.mayar.id/hl/v2/memberships/7c9d2e1f-4a5b-4c6d-8e9f-0a1b2c3d4e5f/members?memberId=MBR8X2QK' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "data": {
+        "status": "inactive",
+        "memberId": "MBR8X2QK",
+        "membershipTierId": "9b2d4f6a-8c1e-4a3b-bd5c-6e7f8a9b0c1d",
+        "membershipTier": {
+            "id": "9b2d4f6a-8c1e-4a3b-bd5c-6e7f8a9b0c1d",
+            "name": "Paket 1"
+        },
+        "customerEmail": "budi.santoso@example.com",
+        "customerName": "Budi Santoso",
+        "customerMobile": "081234567890",
+        "nextPayment": "2026-02-15T15:29:59.430Z",
+        "expiredAt": "2026-02-15T15:29:59.430Z"
+    }
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/memberships/(productId)/members?memberId=(memberId)
+```
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/memberships/(productId)/members?memberId=(memberId)
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Path Parameters
+
+<ParamField path="productId" type="string" required>
+  The unique identifier of the membership product the member belongs to.
+
+  Example:
+
+  `7c9d2e1f-4a5b-4c6d-8e9f-0a1b2c3d4e5f`
+</ParamField>
+
+## Query Parameters
+
+<ParamField query="memberId" path="memberId" type="string" required>
+  The public membership code of the member to retrieve.
+
+  Example:
+
+  `MBR8X2QK`
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer" >
+  Status code form API.
+</ResponseField>
+
+<ResponseField name="messages" type="string" >
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  The membership member record.
+</ResponseField>
+
+### data Structure (Object)
+
+<ResponseField name="status" type="string" >
+  Current status of the member (for example `active`, `inactive`).
+</ResponseField>
+
+<ResponseField name="memberId" type="string" >
+  Public membership code of the member.
+</ResponseField>
+
+<ResponseField name="membershipTierId" type="string<uuid>" >
+  Unique identifier of the member's tier.
+</ResponseField>
+
+<ResponseField name="membershipTier" type="object" >
+  The related tier summary (`id`, `name`).
+</ResponseField>
+
+<ResponseField name="customerEmail" type="string" >
+  Email address of the customer.
+</ResponseField>
+
+<ResponseField name="customerName" type="string" >
+  Full name of the customer.
+</ResponseField>
+
+<ResponseField name="customerMobile" type="string" >
+  Mobile phone number of the customer.
+</ResponseField>
+
+<ResponseField name="nextPayment" type="string" >
+  ISO 8601 timestamp (UTC) of the member's next scheduled payment.
+</ResponseField>
+
+<ResponseField name="expiredAt" type="string" >
+  ISO 8601 timestamp (UTC) of when the membership expires.
+</ResponseField>
+
+## Errors
+
+<ResponseField name="404 Not Found" type="object">
+  Returned with `messages: "Not Found"` when no member matches the given `memberId`
+  for the product.
+</ResponseField>
