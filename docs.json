@@ -377,6 +377,14 @@
             "pages": [
               "api-reference-v2/balance/accountbalance"
             ]
+          },
+          {
+            "group": "Installment",
+            "pages": [
+              "api-reference-v2/installment/index",
+              "api-reference-v2/installment/detail",
+              "api-reference-v2/installment/create"
+            ]
           }
         ]
       }

@@ -1,0 +1,297 @@
+---
+title: "POST Create Installment"
+openapi: "POST /endpointinstallmentv2/create"
+description: "Endpoint used to create an installment"
+---
+
+{/* Notes for maintainers: this is a WRITE endpoint — to avoid mutating live
+    merchant data, the response example below is REPRESENTATIVE, derived from the
+    V2 installment source surface. Field names are source-confirmed; confirm exact
+    values against a live response. All values are synthetic. */}
+
+<RequestExample>
+
+```bash Request Example
+curl --request POST 'https://api.mayar.id/hl/v2/installments/create' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--data-raw '{
+    "email": "budi.santoso@example.com",
+    "mobile": "081234567890",
+    "name": "Budi Santoso",
+    "amount": 1500000,
+    "installment": {
+        "description": "Cicil Produk Kelas Online 3 Bulan",
+        "interest": 0,
+        "tenure": 3,
+        "dueDate": 11
+    }
+}
+'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "data": {
+        "id": "ba82c2dd-06c1-4b6c-bc59-a9c00801c842",
+        "amount": 1500000,
+        "interest": 0,
+        "interestType": "FLAT",
+        "period": "MONTHLY",
+        "tenure": 3,
+        "dueDate": 11,
+        "totalInterest": 0,
+        "totalAmount": 1500000,
+        "description": "Cicil Produk Kelas Online 3 Bulan",
+        "customer": {
+            "email": "budi.santoso@example.com",
+            "name": "Budi Santoso",
+            "mobile": "081234567890"
+        },
+        "status": "unpaid",
+        "invoices": [
+            {
+                "id": "9fe1b9c4-b5d5-4d45-bf1a-5c4849631725",
+                "index": 1,
+                "amount": 500000,
+                "interestAmount": 0,
+                "remainingAmount": 1000000,
+                "dueDate": "2026-07-11T00:00:00.000Z",
+                "status": "unpaid",
+                "link": "mkcn4u72ki"
+            },
+            {
+                "id": "977777d6-af25-464e-a8ca-e290b3007275",
+                "index": 2,
+                "amount": 500000,
+                "interestAmount": 0,
+                "remainingAmount": 500000,
+                "dueDate": "2026-08-11T00:00:00.000Z",
+                "status": "unpaid",
+                "link": "0ll429zxvsue"
+            },
+            {
+                "id": "1dde3426-f6a4-43d2-a1d9-2cd2fa05eb9a",
+                "index": 3,
+                "amount": 500000,
+                "interestAmount": 0,
+                "remainingAmount": 0,
+                "dueDate": "2026-09-11T00:00:00.000Z",
+                "status": "unpaid",
+                "link": "h8fiobqkek"
+            }
+        ],
+        "createdAt": "2026-06-19T17:20:09.521Z"
+    }
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/installments/create
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/installments/create
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Request Body
+
+<ParamField path="email" type="string" required>
+  Customer email used to send proof of payment, or payment reminders.
+</ParamField>
+
+<ParamField path="mobile" type="string" required>
+  Customer telephone number.
+</ParamField>
+
+<ParamField path="name" type="string" required>
+  Customer name.
+</ParamField>
+
+<ParamField path="amount" type="integer" required>
+  Nominal amount of payment.
+</ParamField>
+
+<ParamField path="installment" type="object" required>
+  Installment details.
+</ParamField>
+
+<ParamField path="description" type="string" required>
+  General description of the transaction or order.
+</ParamField>
+
+<ParamField path="interest" type="number | integer" required>
+  Installment interest (%).
+</ParamField>
+
+<ParamField path="tenure" type="number | integer" required>
+  Installment tenor period in months (minimum `3`, maximum `24`).
+</ParamField>
+
+<ParamField path="dueDate" type="number | integer" required>
+  Due date each month (minimum `1`, maximum `28`).
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer">
+  Status code form API.
+</ResponseField>
+
+<ResponseField name="messages" type="string">
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  The created installment data.
+</ResponseField>
+
+### data Structure (Object)
+
+<ResponseField name="id" type="string<uuid>">
+  Main installment ID.
+</ResponseField>
+
+<ResponseField name="amount" type="integer">
+  Total installment amount.
+</ResponseField>
+
+<ResponseField name="interest" type="integer">
+  Interest value.
+</ResponseField>
+
+<ResponseField name="interestType" type="string">
+  Type of interest (example: `"FLAT"`).
+</ResponseField>
+
+<ResponseField name="period" type="string">
+  Installment period (example: `"MONTHLY"`).
+</ResponseField>
+
+<ResponseField name="tenure" type="integer">
+  Installment duration (in months).
+</ResponseField>
+
+<ResponseField name="dueDate" type="integer">
+  Due date each month (example: `11`).
+</ResponseField>
+
+<ResponseField name="totalInterest" type="integer">
+  Total interest across all installments.
+</ResponseField>
+
+<ResponseField name="totalAmount" type="integer">
+  Total amount payable across all installments.
+</ResponseField>
+
+<ResponseField name="description" type="string">
+  Installment description.
+</ResponseField>
+
+<ResponseField name="customer" type="object">
+  Customer details.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Installment status (example: `"unpaid"`).
+</ResponseField>
+
+<ResponseField name="invoices" type="array of object">
+  List of installment invoices.
+</ResponseField>
+
+<ResponseField name="createdAt" type="string (ISO 8601)">
+  Creation time in ISO 8601 format.
+</ResponseField>
+
+### customer Structure (Object)
+
+<ResponseField name="email" type="string">
+  Customer email address.
+</ResponseField>
+
+<ResponseField name="name" type="string">
+  Customer name.
+</ResponseField>
+
+<ResponseField name="mobile" type="string">
+  Customer phone number.
+</ResponseField>
+
+### invoices Structure (Array Of Object)
+
+<ResponseField name="id" type="string<uuid>">
+  Invoice ID.
+</ResponseField>
+
+<ResponseField name="index" type="integer">
+  Invoice order number.
+</ResponseField>
+
+<ResponseField name="amount" type="integer">
+  Invoice amount.
+</ResponseField>
+
+<ResponseField name="interestAmount" type="integer">
+  Interest amount for the invoice.
+</ResponseField>
+
+<ResponseField name="remainingAmount" type="integer">
+  Remaining balance after this invoice.
+</ResponseField>
+
+<ResponseField name="dueDate" type="string (ISO 8601)">
+  Invoice due date in ISO 8601 format.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Payment status (example: `"unpaid"`).
+</ResponseField>
+
+<ResponseField name="link" type="string">
+  Unique invoice link.
+</ResponseField>
+
+## Errors
+
+<ResponseField name="400 Validation Error" type="object">
+  Returned with `messages: "Validation Error"` when the request body fails
+  validation (e.g. missing or malformed `email`, `mobile`, `name`, `amount`, or
+  `installment` fields).
+</ResponseField>
+
+<ResponseField name="409 already exist" type="object">
+  Returned with `messages: "already exist"` when the installment payment link
+  could not be created because it already exists.
+</ResponseField>
+
+<ResponseField name="500 Failed to create installment invoices" type="object">
+  Returned with `messages: "Failed to create installment invoices"` when the
+  installment invoices could not be generated.
+</ResponseField>

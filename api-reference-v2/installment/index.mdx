@@ -1,0 +1,194 @@
+---
+title: "Get Installments"
+openapi: "GET /endpointinstallmentv2/index"
+description: "Endpoint to get a list of installments"
+---
+
+{/* Notes for maintainers: the envelope below (statusCode, messages, data,
+    hasMore, nextStartingAfter) was confirmed against a live prod GET — for the
+    capture account the list was empty (data: []). The single populated item
+    shown here is REPRESENTATIVE, derived from the V2 source surface (the list
+    returns installment-type payment-link objects). All values are synthetic. */}
+
+<RequestExample>
+
+```bash Request Example
+curl --request GET 'https://api.mayar.id/hl/v2/installments?limit=10' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "data": [
+        {
+            "id": "ba82c2dd-06c1-4b6c-bc59-a9c00801c842",
+            "amount": 1500000,
+            "category": null,
+            "createdAt": 1768375011056,
+            "description": "Cicil Produk Kelas Online 3 Bulan",
+            "link": "mkcn4u72ki",
+            "type": "installment",
+            "status": "unpaid",
+            "name": "Budi Santoso",
+            "limit": null,
+            "redirectUrl": null,
+            "installmentId": "8f722421-e8fd-4d05-ae0c-5f4a224b7923",
+            "event": null,
+            "order": null,
+            "coverImage": null,
+            "multipleImage": [],
+            "transactions": []
+        }
+    ],
+    "hasMore": false,
+    "nextStartingAfter": null
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/installments?limit=10
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/installments?limit=10
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Query Parameters
+
+<ParamField query="status" path="status" type="string">
+  Filter the list by installment status (e.g. `unpaid`, `active`).
+</ParamField>
+
+<ParamField query="customerId" path="customerId" type="string">
+  Filter installments by a specific customer ID.
+</ParamField>
+
+<ParamField query="limit" path="limit" default="10" type="integer">
+  Number of items to return per page. Defaults to `10`, with a maximum of `50`.
+</ParamField>
+
+<ParamField query="startingAfter" path="startingAfter" type="string">
+  Cursor for forward pagination. Pass the `nextStartingAfter` value from the
+  previous response (a Unix timestamp in milliseconds, as a string) to fetch the
+  next page.
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer">
+  Status code form API.
+</ResponseField>
+
+<ResponseField name="messages" type="string">
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="array of object">
+  List of installments. Each item is an installment-type payment-link object.
+</ResponseField>
+
+<ResponseField name="hasMore" type="boolean">
+  Information on whether there is additional data to be retrieved (true/false).
+</ResponseField>
+
+<ResponseField name="nextStartingAfter" type="string | null">
+  Cursor to pass as `startingAfter` to fetch the next page. `null` when there is
+  no further data.
+</ResponseField>
+
+### data Structure (Array Of Object)
+
+<ResponseField name="id" type="string<uuid>">
+  Unique ID of the installment.
+</ResponseField>
+
+<ResponseField name="amount" type="integer">
+  Total installment amount.
+</ResponseField>
+
+<ResponseField name="category" type="string | null">
+  Item category (if any).
+</ResponseField>
+
+<ResponseField name="createdAt" type="number (timestamp)">
+  Creation time in epoch format (ms).
+</ResponseField>
+
+<ResponseField name="description" type="string">
+  Installment description.
+</ResponseField>
+
+<ResponseField name="link" type="string">
+  Unique link slug.
+</ResponseField>
+
+<ResponseField name="type" type="string">
+  Item type. Always `installment` for this list.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Installment status (example: `unpaid`).
+</ResponseField>
+
+<ResponseField name="name" type="string">
+  Name associated with the installment.
+</ResponseField>
+
+<ResponseField name="limit" type="integer | null">
+  Stock/quantity limit (if any).
+</ResponseField>
+
+<ResponseField name="redirectUrl" type="string | null">
+  Redirect URL after payment (if any).
+</ResponseField>
+
+<ResponseField name="installmentId" type="string<uuid>">
+  Associated installment record ID.
+</ResponseField>
+
+<ResponseField name="event" type="object | null">
+  Event details (not applicable to installments).
+</ResponseField>
+
+<ResponseField name="order" type="object | null">
+  Order/shipping details (if any).
+</ResponseField>
+
+<ResponseField name="coverImage" type="object | null">
+  Cover image details (if any).
+</ResponseField>
+
+<ResponseField name="multipleImage" type="array of object">
+  Additional images (if any).
+</ResponseField>
+
+<ResponseField name="transactions" type="array of object">
+  Related transactions (if any).
+</ResponseField>
