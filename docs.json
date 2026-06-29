@@ -339,6 +339,16 @@
               "api-reference-v2/transaction/unpaidtransaction",
               "api-reference-v2/transaction/dailytransaction"
             ]
+          },
+          {
+            "group": "Customer",
+            "pages": [
+              "api-reference-v2/customer/getdetail",
+              "api-reference-v2/customer/searchcustomerbyemail",
+              "api-reference-v2/customer/create",
+              "api-reference-v2/customer/update",
+              "api-reference-v2/customer/createmagiclink"
+            ]
           }
         ]
       }

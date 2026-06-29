@@ -1,0 +1,167 @@
+---
+title: "Get Customer"
+openapi: "GET /endpointcustomerv2/getdetail"
+description: "Endpoint where you can get your customer list"
+---
+
+<RequestExample>
+
+```bash Request Example
+curl --request GET 'https://api.mayar.id/hl/v2/customers?limit=10' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "data": [
+        {
+            "id": "a1b2c3d4-e5f6-4789-a012-3456789abcde",
+            "createdAt": 1761557824548,
+            "email": "budi.santoso@example.com",
+            "mobile": "081234567890",
+            "name": "Budi Santoso",
+            "status": "active",
+            "updatedAt": 1761557824548,
+            "userId": "348e083d-315a-4e5c-96b1-5a2a98c48413"
+        },
+        {
+            "id": "b2c3d4e5-f6a7-4890-b123-456789abcdef",
+            "createdAt": 1707302705027,
+            "email": "siti.aminah@example.com",
+            "mobile": "081298765432",
+            "name": "Siti Aminah",
+            "status": "active",
+            "updatedAt": 1707302705027,
+            "userId": "348e083d-315a-4e5c-96b1-5a2a98c48413"
+        },
+        {
+            "id": "c3d4e5f6-a7b8-4901-c234-56789abcdef0",
+            "createdAt": 1769830909621,
+            "email": "andi.pratama@example.com",
+            "mobile": "081200000001",
+            "name": "Andi Pratama",
+            "status": "active",
+            "updatedAt": 1769830909621,
+            "userId": "348e083d-315a-4e5c-96b1-5a2a98c48413"
+        }
+    ],
+    "hasMore": true,
+    "nextStartingAfter": "1769830909621"
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/customers?limit=10
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/customers?limit=10
+```
+
+</CodeGroup>
+
+### Authorizations
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Query Parameters
+
+<ParamField query="paymentLinkId" path="paymentLinkId" type="string">
+  Filter customers by a specific payment link ID.
+</ParamField>
+
+<ParamField query="startAt" path="startAt" type="string">
+  Start of the date range to filter by (Unix timestamp in milliseconds).
+</ParamField>
+
+<ParamField query="endAt" path="endAt" type="string">
+  End of the date range to filter by (Unix timestamp in milliseconds).
+</ParamField>
+
+<ParamField query="limit" path="limit" default="10" type="integer">
+  Number of items to return per page. Defaults to `10`, with a maximum of `50`.
+</ParamField>
+
+<ParamField query="startingAfter" path="startingAfter" type="string">
+  Cursor for forward pagination. Pass the `nextStartingAfter` value from the
+  previous response (a Unix timestamp in milliseconds, as a string) to fetch the
+  next page.
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer" >
+  Status code form API.
+</ResponseField>
+
+<ResponseField name="messages" type="string" >
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="array of object">
+  List of customers displayed.
+</ResponseField>
+
+<ResponseField name="hasMore" type="boolean" >
+  Information on whether there is additional data to be retrieved (true/false).
+</ResponseField>
+
+<ResponseField name="nextStartingAfter" type="string | null">
+  Cursor to pass as `startingAfter` to fetch the next page. `null` when there is
+  no further data.
+</ResponseField>
+
+### data Structure (Array Of Object)
+
+<ResponseField name="id" type="string<uuid>" >
+  Unique customer ID.
+</ResponseField>
+
+<ResponseField name="createdAt" type="integer | timestamp - Unix epoch in milliseconds" >
+  The time the data was created.
+</ResponseField>
+
+<ResponseField name="email" type="string" >
+  Customer's email address.
+</ResponseField>
+
+<ResponseField name="mobile" type="string" >
+  Customer's phone number.
+</ResponseField>
+
+<ResponseField name="name" type="string" >
+  Customer's name.
+</ResponseField>
+
+<ResponseField name="status" type="string" >
+  Customer status, e.g., "active", "inactive".
+</ResponseField>
+
+<ResponseField name="updatedAt" type="integer | timestamp - Unix epoch in milliseconds" >
+  The last time the data was updated.
+</ResponseField>
+
+<ResponseField name="userId" type="string<uuid>" >
+  The user ID of the owner of this data/customer.
+</ResponseField>

@@ -1,0 +1,104 @@
+---
+title: "Create Magic Link"
+openapi: "POST /endpointcustomerv2/createmagiclink"
+description: "Endpoint to create magic link and send to customer email for their login in our customer portal"
+---
+
+{/* Notes for maintainers: this is a WRITE endpoint (it sends a magic-link email)
+    — to avoid triggering live emails, the response example below is
+    REPRESENTATIVE, derived from the V2 source surface and the V1
+    customer/login/portal shape. The body schema (email) is source-confirmed;
+    confirm the exact success body against a live response. All values are
+    synthetic. */}
+
+<RequestExample>
+
+```bash Request Example
+curl --request POST 'https://api.mayar.id/hl/v2/customers/portal-login' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--data-raw '{
+    "email": "budi.santoso@example.com"
+}
+'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "data": {
+        "url": "Sudah kami kirim ke email anda"
+    }
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/customers/portal-login
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/customers/portal-login
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Request Body
+
+<ParamField path="email" type="string" required>
+  Customer email. The magic link is sent to this address.
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer" >
+  Status code form API.
+</ResponseField>
+
+<ResponseField name="messages" type="string" >
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  The magic-link request result.
+</ResponseField>
+
+### data Structure (Object)
+
+<ResponseField name="url" type="string" >
+  Information about the magic link request that was made.
+</ResponseField>
+
+## Errors
+
+<ResponseField name="400 Validation Error" type="object">
+  Returned with `messages: "Validation Error."` when the request body fails
+  validation (e.g. missing `email`).
+</ResponseField>
+
+<ResponseField name="404 Email Not Registered" type="object">
+  Returned with `messages: "Email tidak terdaftar"` when no customer matches the
+  email.
+</ResponseField>
