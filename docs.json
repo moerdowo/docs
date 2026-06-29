@@ -394,6 +394,13 @@
               "api-reference-v2/discount/validate",
               "api-reference-v2/discount/check"
             ]
+          },
+          {
+            "group": "Bundling",
+            "pages": [
+              "api-reference-v2/bundling/index",
+              "api-reference-v2/bundling/detail"
+            ]
           }
         ]
       }

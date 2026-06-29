@@ -1,0 +1,291 @@
+---
+title: "Get Bundling Detail"
+openapi: "GET /endpointbundlingv2/detail"
+description: "Endpoint used to view the details of a bundling product"
+---
+
+{/* Notes for maintainers: the response envelope and field names are
+    source-confirmed against a live prod GET. All identifiers, names, links,
+    descriptions, and the merchant account subtree have been replaced with
+    synthetic values; the product types (course, digital_product, etc.) are
+    public enum values kept verbatim. */}
+
+<RequestExample>
+
+```bash Request Example
+curl --request GET 'https://api.mayar.id/hl/v2/bundling/a1b2c3d4-e5f6-4789-a012-3456789abcde' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "data": {
+        "id": "a1b2c3d4-e5f6-4789-a012-3456789abcde",
+        "name": "Paket Belajar Lengkap",
+        "amount": 150000,
+        "description": "<p>Paket bundling kelas online dan produk digital.</p>\n",
+        "type": "bundling",
+        "status": "active",
+        "link": "paket-belajar-lengkap",
+        "updatedAt": 1782557015266,
+        "createdAt": 1773826841895,
+        "subType": null,
+        "tax": null,
+        "items": null,
+        "limit": null,
+        "expiredAt": null,
+        "redirectUrl": "",
+        "notes": "Catatan internal paket bundling.",
+        "terms": null,
+        "target": null,
+        "reason": null,
+        "receiver": null,
+        "usage": null,
+        "category": null,
+        "affiliateCommission": null,
+        "paymentType": null,
+        "qty": null,
+        "bundlingProductType": "payment_link",
+        "coverImageId": null,
+        "multipleImageId": null,
+        "customerId": null,
+        "userId": "348e083d-315a-4e5c-96b1-5a2a98c48413",
+        "event": null,
+        "coverImage": null,
+        "multipleImage": null,
+        "customer": null,
+        "user": {
+            "id": "348e083d-315a-4e5c-96b1-5a2a98c48413",
+            "accountId": "d4e5f6a7-b8c9-4012-d345-6789abcdef01",
+            "account": {
+                "id": "d4e5f6a7-b8c9-4012-d345-6789abcdef01",
+                "name": "Mayar Demo Account"
+            }
+        },
+        "products": [
+            {
+                "id": "6f8c19ff-2b6a-4c7e-9f1d-1a2b3c4d5e6f",
+                "status": "ENABLED",
+                "variantId": null,
+                "updatedAt": 1773826843750,
+                "paymentLinkId": "21d84338-7c2e-4a9b-8d3f-4e5f6a7b8c9d",
+                "paymentLink": {
+                    "id": "21d84338-7c2e-4a9b-8d3f-4e5f6a7b8c9d",
+                    "name": "Kelas Online Dasar",
+                    "type": "course",
+                    "amount": 0,
+                    "variant": null
+                }
+            },
+            {
+                "id": "b2c3d4e5-f6a7-4890-b123-456789abcdef",
+                "status": "ENABLED",
+                "variantId": null,
+                "updatedAt": 1773826843750,
+                "paymentLinkId": "348e083d-315a-4e5c-96b1-5a2a98c48413",
+                "paymentLink": {
+                    "id": "348e083d-315a-4e5c-96b1-5a2a98c48413",
+                    "name": "Produk Digital Premium",
+                    "type": "digital_product",
+                    "amount": 100000,
+                    "variant": null
+                }
+            }
+        ]
+    }
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/bundling/{uuId}
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/bundling/{uuId}
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Path Parameter
+
+<ParamField path="uuId" type="string" required>
+  A unique identifier of the bundling product. If accessed through the dashboard,
+  it can be found in the URL on the bundling details page.
+
+  Example:
+
+  `a1b2c3d4-e5f6-4789-a012-3456789abcde`
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer">
+  Status code form API.
+</ResponseField>
+
+<ResponseField name="messages" type="string">
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  The bundling detail object.
+</ResponseField>
+
+### data Structure (Object)
+
+<ResponseField name="id" type="string<uuid>">
+  Unique ID of the bundling product.
+</ResponseField>
+
+<ResponseField name="name" type="string">
+  Name of the bundling product.
+</ResponseField>
+
+<ResponseField name="amount" type="integer">
+  Price of the bundle.
+</ResponseField>
+
+<ResponseField name="description" type="string | null">
+  Bundle description (may contain HTML).
+</ResponseField>
+
+<ResponseField name="type" type="string">
+  Item type. Always `bundling`.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Bundle status (example: `active`, `closed`).
+</ResponseField>
+
+<ResponseField name="link" type="string">
+  Unique link slug.
+</ResponseField>
+
+<ResponseField name="updatedAt" type="number (timestamp)">
+  Last update time in epoch format (ms).
+</ResponseField>
+
+<ResponseField name="createdAt" type="number (timestamp)">
+  Creation time in epoch format (ms).
+</ResponseField>
+
+<ResponseField name="redirectUrl" type="string | null">
+  Redirect URL after payment (if any).
+</ResponseField>
+
+<ResponseField name="notes" type="string | null">
+  Internal notes (if any).
+</ResponseField>
+
+<ResponseField name="bundlingProductType" type="string">
+  Type of products that make up the bundle (example: `payment_link`).
+</ResponseField>
+
+<ResponseField name="coverImageId" type="string<uuid> | null">
+  Cover image ID (if any).
+</ResponseField>
+
+<ResponseField name="coverImage" type="object | null">
+  Cover image details (if any).
+</ResponseField>
+
+<ResponseField name="multipleImageId" type="array | null">
+  Additional image IDs (if any).
+</ResponseField>
+
+<ResponseField name="multipleImage" type="array | null">
+  Additional image details (if any).
+</ResponseField>
+
+<ResponseField name="userId" type="string<uuid>">
+  ID of the merchant account that owns the bundle.
+</ResponseField>
+
+<ResponseField name="user" type="object">
+  Summary of the owning merchant account.
+</ResponseField>
+
+<ResponseField name="products" type="array of object">
+  List of products included in the bundle.
+</ResponseField>
+
+<Note>
+  The detail object also returns a number of nullable product attributes shared
+  across all product types — `subType`, `tax`, `items`, `limit`, `expiredAt`,
+  `terms`, `target`, `reason`, `receiver`, `usage`, `category`,
+  `affiliateCommission`, `paymentType`, `qty`, `customerId`, `customer`, and
+  `event` — which are `null` for bundling products.
+</Note>
+
+### user Structure (Object)
+
+<ResponseField name="id" type="string<uuid>">
+  Merchant account ID.
+</ResponseField>
+
+<ResponseField name="accountId" type="string<uuid>">
+  Associated account ID.
+</ResponseField>
+
+<ResponseField name="account" type="object">
+  Account summary (`id`, `name`).
+</ResponseField>
+
+### products Structure (Array Of Object)
+
+<ResponseField name="id" type="string<uuid>">
+  ID of the bundle-product link record.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Status of the product within the bundle (example: `ENABLED`).
+</ResponseField>
+
+<ResponseField name="variantId" type="string<uuid> | null">
+  ID of the selected product variant (if any).
+</ResponseField>
+
+<ResponseField name="updatedAt" type="number (timestamp)">
+  Last update time of the bundle-product link in epoch format (ms).
+</ResponseField>
+
+<ResponseField name="paymentLinkId" type="string<uuid>">
+  ID of the underlying product/payment link.
+</ResponseField>
+
+<ResponseField name="paymentLink" type="object">
+  Summary of the underlying product/payment link (`id`, `name`, `type`,
+  `amount`, `variant`).
+</ResponseField>
+
+## Errors
+
+<ResponseField name="404 Not Found" type="object">
+  Returned with `messages: "Bundling not found"` when no bundling product matches
+  the supplied `uuId`.
+</ResponseField>
