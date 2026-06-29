@@ -363,6 +363,14 @@
               "api-reference-v2/membership/tiersbyproduct",
               "api-reference-v2/membership/membersbyproduct"
             ]
+          },
+          {
+            "group": "QR / Payment Channels",
+            "pages": [
+              "api-reference-v2/qrcode/createdynamicqrcode",
+              "api-reference-v2/qrcode/getstaticqrcode",
+              "api-reference-v2/qrcode/paymentchannels"
+            ]
           }
         ]
       }
