@@ -311,6 +311,16 @@
                 ]
               }
             ]
+          },
+          {
+            "group": "Invoice",
+            "pages": [
+              "api-reference-v2/invoice/index",
+              "api-reference-v2/invoice/filter",
+              "api-reference-v2/invoice/detail",
+              "api-reference-v2/invoice/create",
+              "api-reference-v2/invoice/edit"
+            ]
           }
         ]
       }

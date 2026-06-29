@@ -1,0 +1,176 @@
+---
+title: "Edit Invoice"
+openapi: "POST /endpointinvoicev2/edit"
+description: "Endpoint used to edit an invoice that has been created"
+---
+
+{/* Notes for maintainers: this is a WRITE endpoint. The response shape below is
+REPRESENTATIVE — derived from the V1 invoice template and the V2 source surface,
+not captured from a live prod write. IMPORTANT: the invoice to update is selected
+by the `id` field in the REQUEST BODY; the `{uuId}` URL segment is cosmetic and is
+ignored by the API. `messages` is PLURAL on this endpoint. */}
+
+<RequestExample>
+
+```bash Request Example
+curl --request POST 'https://api.mayar.id/hl/v2/invoices/6f8c19ff-5b97-4792-aa89-d2a12797b356/update' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--data-raw '{
+        "id": "6f8c19ff-5b97-4792-aa89-d2a12797b356",
+        "description": "Invoice yang sudah diedit",
+        "items": [
+            {
+                "quantity": 2,
+                "rate": 55000,
+                "description": "Paket layanan B"
+            }
+        ]
+    }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "data": {
+        "id": "6f8c19ff-5b97-4792-aa89-d2a12797b356",
+        "link": "https://testingmayar.myr.id/invoices/ibzfrf4880"
+    }
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/invoices/{uuId}/update
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/invoices/{uuId}/update
+```
+
+</CodeGroup>
+
+<Note>
+  The invoice to update is selected by the `id` field in the **request body**, not
+  by the `{uuId}` segment in the URL path. The path segment is cosmetic and is
+  ignored by the API — always send the target invoice `id` in the body.
+</Note>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Request Body
+
+<ParamField path="id" type="string<uuid>" required>
+  A unique identifier obtained when creating an invoice. This selects the invoice
+  to update (the `{uuId}` URL segment is ignored).
+
+  Example:
+
+  `6f8c19ff-5b97-4792-aa89-d2a12797b356`
+</ParamField>
+
+<ParamField path="items" type="array">
+  List of invoice items.
+</ParamField>
+
+<ParamField path="items[].quantity" type="number">
+  Quantity of the item.
+</ParamField>
+
+<ParamField path="items[].rate" type="number">
+  Price per item.
+</ParamField>
+
+<ParamField path="items[].description" type="string">
+  Description of the item.
+</ParamField>
+
+<ParamField path="description" type="string">
+  Description or notes related to the invoice.
+</ParamField>
+
+<ParamField path="expiredAt" type="string">
+  Invoice expiration time in ISO 8601 format (UTC).
+</ParamField>
+
+<ParamField path="notes" type="string">
+  Additional notes for the invoice.
+</ParamField>
+
+<ParamField path="tax" type="integer">
+  Tax amount applied to the invoice.
+</ParamField>
+
+<ParamField path="paymentMethod" type="string">
+  Restrict the invoice to a specific payment method.
+</ParamField>
+
+<ParamField path="cashtag" type="string">
+  Cashtag associated with the invoice.
+</ParamField>
+
+<ParamField path="extraData" type="object">
+  Additional custom data attached to the invoice.
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer" >
+  Status code form API.
+</ResponseField>
+
+<ResponseField name="messages" type="string" >
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  The updated invoice data.
+</ResponseField>
+
+### data Structure (Object)
+
+<ResponseField name="id" type="string<uuid>" >
+  Unique invoice ID.
+</ResponseField>
+
+<ResponseField name="link" type="string" >
+  The URL that customers can access to open the invoice.
+</ResponseField>
+
+### Errors
+
+<ResponseField name="401 Unauthorized" type="object">
+  Returned when the API key is missing or invalid:
+  `{ "statusCode": 401, "messages": "Unauthorized" }`.
+</ResponseField>
+
+<ResponseField name="404 Not Found" type="object">
+  Returned when no invoice matches the provided `id`:
+  `{ "statusCode": 404, "messages": "Invoice not found" }`.
+</ResponseField>
+
+<ResponseField name="409 Conflict" type="object">
+  Returned when the invoice has already been paid and can no longer be edited:
+  `{ "statusCode": 409, "messages": "Transaction already paid. Cannot edit invoice." }`.
+</ResponseField>
+</content>
