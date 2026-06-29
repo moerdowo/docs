@@ -401,6 +401,13 @@
               "api-reference-v2/bundling/index",
               "api-reference-v2/bundling/detail"
             ]
+          },
+          {
+            "group": "Name Services",
+            "pages": [
+              "api-reference-v2/nameservice/create",
+              "api-reference-v2/nameservice/update"
+            ]
           }
         ]
       }
