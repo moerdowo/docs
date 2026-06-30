@@ -1,0 +1,93 @@
+---
+title: "Register URL Hook"
+openapi: "POST /endpointwebhookv2/registerurlhook"
+description: "Endpoint to register your URL Hook for Webhook"
+---
+
+{/*
+  Notes for maintainers — V2 Webhook "Register URL Hook" (POST /hl/v2/webhooks/update).
+  V2 path is /webhooks/update (the V1 path was /webhook/register). Success body is exactly
+  {statusCode:200, messages:"success"} with NO data key. The success/error shapes are
+  source-confirmed; not captured live (writing would mutate the merchant's webhook config).
+  Envelope is PLURAL `messages` (writes and errors). `webhookConfig` is an optional object.
+*/}
+
+<RequestExample>
+
+```bash Request Example
+curl --request POST 'https://api.mayar.id/hl/v2/webhooks/update' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--data '{
+    "urlHook": "https://webhook.example.com"
+}'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+  "statusCode": 200,
+  "messages": "success"
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/webhooks/update
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/webhooks/update
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Request Body
+
+<ParamField path="urlHook" type="string" required>
+  URL for webhook callback. Must be a valid URL.
+</ParamField>
+
+<ParamField path="webhookConfig" type="object">
+  Optional webhook configuration object. When provided, it is stored alongside the URL hook.
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer" >
+  Status code form API.
+</ResponseField>
+
+<ResponseField name="messages" type="string" >
+  Status message that describes the status code.
+</ResponseField>
+
+## Errors
+
+<ResponseField name="400 — urlHook is required" type="object">
+  Returned when `urlHook` is missing: `{ "statusCode": 400, "messages": "urlHook is required" }`.
+</ResponseField>
+
+<ResponseField name="400 — urlHook is not a valid URL" type="object">
+  Returned when `urlHook` is not a valid URL: `{ "statusCode": 400, "messages": "urlHook is not a valid URL" }`.
+</ResponseField>

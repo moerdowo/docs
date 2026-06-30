@@ -1,0 +1,93 @@
+---
+title: "Introduction"
+description: "Section for showcasing API V2 endpoints"
+---
+
+## Get Started
+
+Headless API is an e-commerce development method where the user interface (Frontend) is separated from the product management and transaction processing systems (Backend). In headless commerce, the front-end can be built using various modern web technologies such as React or Vue.js, while the back-end performs tasks such as product storage, order processing, and integration with payment systems.
+
+By separating the front-end and back-end, headless commerce allows development teams to focus on the user experience without being hampered by the limitations of the underlying e-commerce platform. It also helps reduce the cost and time required to update and maintain an e-commerce site.
+
+This section documents the **V2** of the Mayar Headless API. V2 keeps the same authentication model as V1 but standardizes every response around a single envelope, described below.
+
+## Authentication
+
+For starting using Mayar Headless API, you need account at https://mayar.id. If you have an account, you can create API KEY from https://web.mayar.id/api-keys.
+
+There are 2 options when creating an API Key, **Read Only** and **Read & Write**.
+
+If you choose **Read Only**, then only API Endpoints with the Get Method can be used. If you choose **Read & Write**, then API Endpoints with both Get and Post Methods can be used.
+
+![Generate API Key](/images/apikeynew.png)
+
+Every request must include your API Key as a Bearer token in the `Authorization` header:
+
+<CodeGroup>
+
+```bash Authorization Header
+Authorization: Bearer Paste-Your-API-Key-Here
+```
+
+</CodeGroup>
+
+<Warning>
+  For your account security, don't share your API KEY\!
+</Warning>
+
+<Note>
+  Please note that any changes to your domain or subdomain require you to create a new API KEY, so the link in the response you receive will also be updated.
+</Note>
+
+## Sandbox Environment
+
+For testing purposes, you can use the webpage https://web.mayar.club/. You can log in or register first, then generate an API key from https://web.mayar.club/api-keys. (The same method as obtaining an API key on the production page).
+
+## Base URL
+
+The API Base URL is the main part of the address (URL) used to access an API endpoint. Mayar has two API Base URL's based on the page.
+
+<CodeGroup>
+
+```bash Production
+https://api.mayar.id/hl/v2
+```
+
+
+```bash Sandbox
+https://api.mayar.club/hl/v2
+```
+
+</CodeGroup>
+
+<Note>
+  Make sure you use a base URL based on the appropriate web page (Production or Sandbox)
+</Note>
+
+## Response Envelope
+
+Every V2 endpoint returns its result wrapped in a consistent envelope so clients can parse responses the same way across the whole API.
+
+<CodeGroup>
+
+```json Response Envelope
+{
+  "statusCode": 200,
+  "messages": "success",
+  "data": {}
+}
+```
+
+</CodeGroup>
+
+<ResponseField name="statusCode" type="integer">
+  The HTTP status code of the request result. See [Status Code](/api-reference-v2/statuscode).
+</ResponseField>
+
+<ResponseField name="messages" type="string">
+  A short outcome message for the request, for example `success` or `failed`. Some write endpoints return this field as `message` (singular) — refer to each endpoint page for its exact shape.
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  The payload of the response. Its shape depends on the endpoint. For list endpoints `data` is an array, and pagination is provided through cursor fields alongside it.
+</ResponseField>

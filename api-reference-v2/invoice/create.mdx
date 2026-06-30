@@ -1,0 +1,199 @@
+---
+title: "Create Invoice"
+openapi: "POST /endpointinvoicev2/create"
+description: "Endpoint used to create an invoice"
+---
+
+{/* Notes for maintainers: this is a WRITE endpoint. The response shape below is
+REPRESENTATIVE — derived from the V1 invoice template and the V2 source surface,
+not captured from a live prod write. The `data` object returns the created
+invoice's id, transactionId, public link, expiry, and any echoed extraData.
+`messages` is PLURAL on this endpoint (this group never uses singular `message`). */}
+
+<RequestExample>
+
+```bash Request Example
+curl --request POST 'https://api.mayar.id/hl/v2/invoices/create' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--data-raw '{
+        "name": "Budi Santoso",
+        "email": "budi.santoso@example.com",
+        "mobile": "081234567890",
+        "description": "Pelunasan pesanan",
+        "expiredAt": "2026-07-19T16:43:23.000Z",
+        "items": [
+            {
+                "quantity": 3,
+                "rate": 11000,
+                "description": "Paket layanan A"
+            }
+        ],
+        "extraData": {
+            "noCustomer": "827hiueqy271hj",
+            "idProd": "contoh aja"
+        }
+    }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "data": {
+        "id": "6f8c19ff-5b97-4792-aa89-d2a12797b356",
+        "transactionId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+        "link": "https://testingmayar.myr.id/invoices/ycfyxbj2h3",
+        "expiredAt": 1784479403000,
+        "extraData": {
+            "noCustomer": "827hiueqy271hj",
+            "idProd": "contoh aja"
+        }
+    }
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/invoices/create
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/invoices/create
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Request Body
+
+<ParamField path="name" type="string" required>
+  Full name of the customer.
+</ParamField>
+
+<ParamField path="email" type="string" required>
+  Email address of the customer.
+</ParamField>
+
+<ParamField path="mobile" type="string" required>
+  Mobile phone number of the customer.
+</ParamField>
+
+<ParamField path="items" type="array" required>
+  List of invoice items.
+</ParamField>
+
+<ParamField path="items[].quantity" type="number" required>
+  Quantity of the item.
+</ParamField>
+
+<ParamField path="items[].rate" type="number" required>
+  Price per item.
+</ParamField>
+
+<ParamField path="items[].description" type="string" required>
+  Description of the item.
+</ParamField>
+
+<ParamField path="description" type="string">
+  Description or notes related to the invoice.
+</ParamField>
+
+<ParamField path="expiredAt" type="string">
+  Invoice expiration time in ISO 8601 format (UTC).
+</ParamField>
+
+<ParamField path="tax" type="integer">
+  Tax amount applied to the invoice.
+</ParamField>
+
+<ParamField path="paymentMethod" type="string">
+  Restrict the invoice to a specific payment method.
+</ParamField>
+
+<ParamField path="cashtag" type="string">
+  Cashtag associated with the invoice.
+</ParamField>
+
+<ParamField path="extraData" type="object">
+  Additional custom data attached to the invoice.
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer" >
+  Status code form API.
+</ResponseField>
+
+<ResponseField name="messages" type="string" >
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  The created invoice data.
+</ResponseField>
+
+### data Structure (Object)
+
+<ResponseField name="data.id" type="string" >
+  Unique identifier of the invoice record.
+</ResponseField>
+
+<ResponseField name="data.transactionId" type="string" >
+  Unique identifier of the associated transaction.
+</ResponseField>
+
+<ResponseField name="data.link" type="string" >
+  Invoice URL that can be accessed by the customer.
+</ResponseField>
+
+<ResponseField name="data.expiredAt" type="number" >
+  Timestamp (in milliseconds) indicating when the invoice will expire.
+</ResponseField>
+
+<ResponseField name="data.extraData" type="object" >
+  Additional custom data attached to the invoice (echoed from the request).
+</ResponseField>
+
+### Errors
+
+<ResponseField name="400 Bad Request" type="object">
+  Returned when the request body fails validation:
+  `{ "statusCode": 400, "messages": "Validation Error" }` or
+  `{ "statusCode": 400, "messages": "extraData Validation Error" }`.
+</ResponseField>
+
+<ResponseField name="404 Not Found" type="object">
+  Returned when the customer could not be found or created:
+  `{ "statusCode": 404, "messages": "Customer not found and failed to create new customer" }`.
+</ResponseField>
+
+<ResponseField name="409 Conflict" type="object">
+  Returned when an invoice with the same identifier already exists:
+  `{ "statusCode": 409, "messages": "already exist" }`.
+</ResponseField>
+
+<ResponseField name="429 Too Many Requests" type="object">
+  Returned when a duplicate create request is detected:
+  `{ "statusCode": 429, "messages": "Duplicate request detected. Please wait 1 minute before trying again." }`.
+</ResponseField>

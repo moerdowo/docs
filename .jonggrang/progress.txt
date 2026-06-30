@@ -1,0 +1,1358 @@
+# Jonggrang Progress Log — Mayar docs
+# Created: 2026-06-23
+
+## task-001 — Re-confirm Membership V2 endpoints from source (Phase 1) — DONE 2026-06-23
+
+### Source of truth (located via glab)
+- Repo is the MONOREPO `mayarid/source` (GitLab project id 20099162), NOT a standalone
+  "api-custom-paymenlink" repo. `api-custom-paymenlink` is a SUBDIRECTORY in that monorepo,
+  and it is also the prefix of the branch name.
+- Branch: `api-custom-paymenlink/feat-api-membership-v2` (note the slash is part of the branch name).
+- MR: !3438 "API V2 for membership" — state: opened, target: master. CONFIRMED accessible via `glab api`.
+- Files verified (raw via Files API, URL-encoded path + ref):
+    api-custom-paymenlink/index.js                  (279 lines)
+    api-custom-paymenlink/src/api/v2/membership.js  (2275 lines)
+    api-custom-paymenlink/src/utils/utils.js        (479 lines)
+    api-custom-paymenlink/src/utils/url.js          (13 lines)
+  Cross-check: api-custom-paymenlink/src/api/v2/membership.routing.test.js (tc-140) asserts
+  all 7 routes by method+path+handler+checkJwt — matches index.js exactly.
+
+### (a) Route wiring — CONFIRMED, no drift (index.js lines 228–242, all guarded by checkJwt)
+  GET  /v2/membership-tiers                      -> getMembershipTierListCursor      (228)
+  GET  /v2/membership-members                    -> getMembershipMemberListCursor    (229)
+  GET  /v2/membership-members/:memberId          -> getMembershipMember              (230)
+  POST /v2/membership-members                    -> handleRegistNewMembershipCustomer(231)
+  PUT  /v2/membership-members/:memberId          -> updateMembershipMember           (232)
+  POST /v2/membership-members/:memberId/invoice  -> createMembershipInvoice          (236)
+  POST /v2/membership-members/:memberId/cancel   -> cancelMembershipMember           (242)
+- Deprecated singular aliases (/v2/membership-member, .../regist, .../update) and the old
+  /v2/membership-*/list routes confirmed REMOVED (index.js comments 224, 244–245). Do NOT document.
+- Unwired handlers getMembershipTiers / getMembershipMembers / getMembershipMemberStatus
+  exist in membership.js but are NOT route-wired — out of scope, confirmed.
+
+### (b) Handler param/response shapes — CONFIRMED
+- Constants: DEFAULT_LIMIT=10, MAX_LIMIT=50 (membership.js:68-69). ACCEPTED_PARAMETERS (44-67)
+  whitelists: limit, cursor, direction, sortOrder, productId, searchTerm, startDate, endDate,
+  isChurnedMember, memberId, membershipTierId, customerInfo (+ more). validateQueryParameters
+  rejects unknown keys -> 400.
+- #1 getMembershipTierListCursor (563): query productId REQUIRED (400 "Required: productId"),
+  limit (def 10, cap 50), cursor (unix epoch-ms string -> compared on createdAt), direction
+  next|prev (def next), sortOrder ASC|DESC (def DESC). Envelope:
+  { statusCode:200, messages:"success", data:[...], pagination:{limit, nextStartingAfter,
+  prevStartingAfter, hasNextPage, hasPrevPage} }. PLURAL `messages`.
+- #2 getMembershipMemberListCursor (695): same base params PLUS searchTerm, startDate, endDate,
+  isChurnedMember. Same envelope + top-level `totalMember` sibling key (ONLY when isChurnedMember
+  truthy; omitted when undefined). isChurnedMember=="true" filters status IN ('stopped','inactive').
+  Row columns are LITERAL dotted keys: id, createdAt, customerId, membershipTierId, nextPayment,
+  status, updatedAt, userId, memberId, membershipTier.name, membershipTier.gracePeriodInDays,
+  customer.name, customer.mobile, customer.email. PLURAL `messages`.
+- #3 getMembershipMember (1328): path memberId + query productId BOTH required
+  (400 "Required: productId, memberId"). Single-object response (NO pagination):
+  { statusCode:200, messages:"success", data:{...} }. `user` field deleted before return.
+  404 "Member dengan ID <id> tidak ditemukan." PLURAL `messages`.
+- #4 handleRegistNewMembershipCustomer (1640): JSON body { productId, membershipTierId,
+  customerInfo:{name,email,mobile}, membershipMonthlyPeriod }. Success HTTP 201 (res.statusCode=201),
+  body built directly: { statusCode:201, message:"success", data:{ membershipCustomer:{...} } }.
+  SINGULAR `message`.
+- #5 updateMembershipMember (1925): path memberId; body productId REQUIRED (400 "Required: productId");
+  optional body: membershipTierId, membershipMonthlyPeriod, status, nextPayment, expiredAt.
+  Success HTTP 200: { statusCode:200, message:"success", data:{ membershipCustomer:{...} } }.
+  SINGULAR `message`. 404 if member not found.
+- #6 createMembershipInvoice (1416): path memberId; productId from BODY or QUERY (400
+  "Required: productId, memberId"). Idempotent on term membershipInvoice:<custId>:<month0idx>:<year>
+  (reuses existing unpaid invoice for the period). Success via sendSuccessResponse:
+  { message:"success", statusCode:200, data:{ ...invoiceFields, membershipBillUrl } }.
+  SINGULAR `message`. membershipBillUrl from formatMembershipBillUrl. `reminderWellcomeId` deleted.
+- #7 cancelMembershipMember (1558): path memberId; productId from BODY or QUERY (400
+  "Required: productId, memberId"). Flips status -> "stopped" via editMembershipCustomer.
+  Success via sendSuccessResponse: { message:"success", statusCode:200,
+  data:{ membershipCustomer:{...} } }. SINGULAR `message`. 404 if not found.
+
+### (c) Response helpers (utils.js) — CONFIRMED
+- sendErrorResponse(res, statusCode, message) -> res.status(code).json({ statusCode, message }).
+  SINGULAR `message` for ALL errors.
+- sendSuccessResponse(res, data, message=null) -> message ? { message, ...data } : data.
+  i.e. it SPREADS the `data` arg at top level with `message` prepended. Invoice/cancel pass
+  { statusCode:200, data:{...} } as the data arg, yielding { message, statusCode, data }.
+  Register/update DO NOT use the helper — they build the identical { statusCode, message, data }
+  shape with res.json directly.
+
+### (d) formatMembershipBillUrl (url.js) — CONFIRMED with nuance
+- Returns `${baseURL(paymeLink, isSelfDomain)}/pl/${link}`.
+- baseURL: localhost override -> APP_PUBLIC_URL; isSelfDomain -> `https://${paymeLink}`;
+  else `https://${paymeLink}.${APP_PUBLIC_URL}`.
+- The `/pl/<link>` path is confirmed. The `.mayar.shop` host is NOT hardcoded — it comes from
+  env APP_PUBLIC_URL (mayar.shop in prod) and is self-domain aware. Doc shape
+  `<tenant>.mayar.shop/pl/<link>` is correct for prod; note the domain is env-derived.
+
+### message vs messages quirk — CONFIRMED, DO NOT NORMALIZE
+- PLURAL `messages`: #1 tiers list, #2 members list, #3 member detail (the 3 reads).
+- SINGULAR `message`: #4 register, #5 update, #6 invoice, #7 cancel, and ALL error responses.
+
+### DRIFT from plan (to apply when authoring pages)
+1. Repo shape: plan treats "api-custom-paymenlink" as a branch/repo; it is a SUBDIR of monorepo
+   mayarid/source and ALSO the branch-name prefix. Doc body is unaffected; recorded for traceability.
+2. #2 searchTerm: plan says "matches memberId". Source LIKE-matches (case-insensitive) on
+   customer.email OR customer.name OR memberId. Broaden the param doc accordingly.
+3. Exact error strings differ from plan paraphrases — use these VERBATIM:
+   - "You are not authorized to edit this product!" (register #4 & update #5; plan said "not authorized to product")
+   - "Paket membership ini telah mencapai batas limit anggota yang ditentukan." (plan said "tier limit reached")
+   - "Email sudah terdaftar pada tier ini." (matches plan)
+   - "Required: productId" (tiers #1, update #5) vs "Required: productId, memberId" (detail/invoice/cancel #3/#6/#7)
+   - 404 "Member dengan ID <id> tidak ditemukan."
+4. #6 invoice guards (plan didn't enumerate): 400 "produk telah ditutup/dihapus." (product
+   closed/deleted), 400 "Membership member ini telah selesai (finished)." (status finished only —
+   NOT a stopped guard), 400 "Tagihan membership tidak dapat dibuat saat ini." Invoice does NOT
+   guard 'stopped' (only the CANCEL handler guards both stopped/finished:
+   "Membership member ini sudah tidak aktif (status: <status>).").
+5. #5 update date fields: nextPayment & expiredAt are accepted as UTC ISO 8601 STRINGS
+   (e.g. "2026-08-29T10:40:00.000Z"), validated via toISO8601 — NOT epoch-ms. Invalid -> 400
+   ("... harus berupa UTC ISO 8601 string yang valid ..."). Extra update 400s:
+   "Membership tier tidak ditemukan.", "periode membership tidak ditemukan",
+   "expiredAt tidak boleh lebih awal dari nextPayment."
+- Endpoint table, param lists, response envelopes, and the message/messages quirk in plan.md
+  are otherwise ACCURATE — no table correction needed.
+
+### Notes for downstream tasks
+- Verification-only task: produces NO code/doc changes (only these progress notes). Per CLAUDE.md
+  rule, .jonggrang/ is never committed to the feature branch, so this task has nothing to commit.
+- Reconciliation of the 3 sample payloads (invoice / list tiers / list members): the envelope
+  shapes described in plan.md match the handler output exactly (read handlers use plural `messages`
+  + pagination; invoice uses singular `message` + membershipBillUrl). Mirror samples verbatim.
+
+## task-002 — Scaffold membershipv2 folder and 7 stub pages (done 2026-06-23)
+- Created api-reference/membershipv2/ with 7 kebab-case .mdx stubs (frontmatter + section skeleton only; content for later phases 3-5).
+- Mintlify page template (from membership/getmemberdetail.mdx + invoice/create.mdx): frontmatter `title`/`openapi`/`description`, then <RequestExample> curl, <ResponseExample> json, "Endpoint:" + <CodeGroup> (Production api.mayar.id / Sandbox api.mayar.club), ## Authorization (<ResponseField>), Path/Query/Body Params (<ParamField path=|query=|body=>), ## Response with <ResponseField>.
+- openapi: frontmatter is a COSMETIC placeholder string, pattern `<METHOD> /endpoint<folder>/<name>`. Used /endpointmembershipv2/<slug>. Do NOT touch the real openapi.json.
+- Message-key quirk to mirror later: reads (list tiers/members, member detail) use plural `messages`; writes (register/update/invoice/cancel) + errors use singular `message`. Stubs already reflect this.
+- Used `{/* ... */}` MDX comments for STUB notice + TODO markers per section.
+- No typecheck/test/lint tooling in this docs repo (test cmd is a placeholder echo). Validation = frontmatter present + valid; docs.json/openapi.json untouched (next task wires nav).
+
+## task-003 — Author create-membership-invoice page (Phase 3) — DONE 2026-06-23
+- Fully authored api-reference/membershipv2/create-membership-invoice.mdx (POST /hl/v2/membership-members/{memberId}/invoice).
+- Two RequestExample curls in one <RequestExample> (Mintlify tabs): productId in body and productId in query — documents both accepted locations explicitly.
+- ResponseExample mirrors confirmed shape: SINGULAR `message` first, then statusCode:200, then data invoice object. membershipBillUrl uses tenant shop subdomain `https://korban-motivator.mayar.shop/pl/<link>` (NOT api.mayar.id). Invoice fields beyond membershipBillUrl (id, transactionId, amount, status, expiredAt) are REPRESENTATIVE — no live full sample in repo (.jonggrang/.output has only plan.md + MANIFEST.yaml, no sample payload files). Flagged inline in an MDX comment for maintainers.
+- Added a "## Query Parameters" section (used <ParamField query=...>) alongside Request Body so the body-OR-query productId is documented in both spots; added an idempotency section (term key membershipInvoice:<customerId>:<monthIdx>:<year>, reuses unpaid invoice for the period).
+- Errors: documented the singular { statusCode, message } envelope + a verbatim error table (400 "Required: productId, memberId", 400 "produk telah ditutup/dihapus.", 400 "Membership member ini telah selesai (finished).", 400 "Tagihan membership tidak dapat dibuat saat ini.", 404 "Member dengan ID <id> tidak ditemukan."). Invoice does NOT guard 'stopped' (only finished) — kept that distinction.
+- Validation: no typecheck/test/lint in this docs repo. Sanity-checked: frontmatter valid, all component tags balanced (RequestExample/ResponseExample/CodeGroup 1:1, 3 ParamField, 12 ResponseField, 12 fences = 6 blocks), only the one target file staged. docs.json/openapi.json untouched.
+
+## task-004 — Author the two cursor-paginated list pages (Phase 4) — DONE 2026-06-23
+- Authored api-reference/membershipv2/list-membership-tiers.mdx (GET /hl/v2/membership-tiers) and
+  list-membership-members.mdx (GET /hl/v2/membership-members).
+- Both pages: full query param set documented as <ParamField query=...> with defaults — productId (required,
+  400 "Required: productId" if missing), limit (default 10, max/clamp 50), cursor (unix epoch-ms STRING,
+  compared on createdAt), direction (next|prev, def next), sortOrder (ASC|DESC, def DESC).
+- Members page adds searchTerm/startDate/endDate/isChurnedMember. searchTerm doc broadened per task-001 drift
+  note #2 (LIKE-matches memberId OR customer.name OR customer.email, case-insensitive) — NOT just memberId as
+  the task title paraphrased. isChurnedMember=true filters status stopped/inactive AND adds top-level
+  totalMember sibling (omitted otherwise) — documented totalMember as conditional + gave a 2nd ResponseExample
+  tab showing it.
+- KEY GOTCHA: member rows use LITERAL dotted-key columns — JSON keys are flat strings "membershipTier.name",
+  "membershipTier.gracePeriodInDays", "customer.name", "customer.mobile", "customer.email" (NOT nested
+  objects). Wrote them literally in the JSON example and as <ResponseField name="data[].customer.email"> with
+  an inline "literal dotted string key" note on each. Other row keys: id, createdAt, customerId,
+  membershipTierId, nextPayment, status, updatedAt, userId, memberId.
+- pagination object documented exactly: limit, nextStartingAfter, prevStartingAfter, hasNextPage, hasPrevPage.
+  Stressed the request param `cursor` vs response keys `nextStartingAfter`/`prevStartingAfter` naming mismatch
+  in both the cursor ParamField and the pagination ResponseFields.
+- Mirrored PLURAL `messages` (reads) with inline message/messages discrepancy note in each ResponseField + the
+  maintainer MDX comment block. Tier `data[]` field list (id/name/gracePeriodInDays/createdAt) is
+  representative — no live sample in repo (.output has only plan.md + MANIFEST.yaml) — flagged inline like the
+  invoice page (task-003 precedent).
+- Validation: no typecheck/test/lint in this docs repo. Sanity: tag balance 1:1 (RequestExample/ResponseExample/
+  CodeGroup), all json fenced blocks parse via python json.loads (tiers 1 block, members 2 blocks). Only the
+  two target files staged; docs.json/openapi.json untouched.
+
+## task-005 — Author member detail read page (#3) — DONE 2026-06-23
+- Authored api-reference/membershipv2/get-membership-member-detail.mdx (GET /hl/v2/membership-members/{memberId}).
+- Single-object response { statusCode:200, messages:"success", data:{...} } (NO list array, NO pagination). PLURAL `messages` mirrored + inline note.
+- KEY DRIFT from task assumption: the detail object does NOT use the list page's flat dotted-key columns. The
+  detail handler getMembershipMember runs a DIFFERENT query GET_MEMBERSHIP_CUSTOMER_DETAIL (src/gqls/membership-customer.js)
+  that selects NESTED association objects: customer { email,name,mobile }, membershipTier { name,status },
+  paymentLink { name,status,membershipInfo{type} }. formatResponseData (src/utils/formatter.js) ONLY ISO-normalizes
+  date keys (createdAt/updatedAt/nextPayment/expiredAt) — it does NOT flatten. So documented nested objects, not
+  dotted keys, and added an inline note contrasting with the list pages.
+- `user { paymeLink, isSelfDomain }` IS selected by the query but DELETED before return (delete membershipCustomer.user)
+  — documented as stripped, NOT as a response field.
+- Full data scalar field list is source-confirmed from the GraphQL selection set (names confirmed; values
+  representative): id, userId, createdAt, customerId, expiredAt, isAlreadyUsedTrial, isInTrial, isLifetimePeriod,
+  isTodayReminderSent, memberId, membershipPackageId, membershipTierId, monthlyPaymentPeriod, nextPayment,
+  nextPaymentEmailSent, paymentLinkId(==productId), paymentPeriod, period, status, updatedAt. Flagged values/types
+  as needing a live sample (no full sample payload in repo) per task's risk-flag instruction.
+- Errors: singular `message` envelope { statusCode, message }. 400 "Required: productId, memberId" (verbatim),
+  404 "Member dengan ID <memberId> tidak ditemukan." (verbatim from membership.js:1378).
+- Validation: tag balance 1:1 (RequestExample/ResponseExample/CodeGroup), 2 ParamField, 38 ResponseField paired,
+  both json blocks parse. Only the target file staged; docs.json/openapi.json untouched.
+
+## task-006 — Author register/update/cancel write pages (#4,#5,#7) (Phase 5 writes) — DONE 2026-06-23
+- Authored register-membership-member.mdx, update-membership-member.mdx, cancel-membership-member.mdx.
+- All three: SINGULAR `message` key + data.membershipCustomer wrapper (mirrored verbatim, inline note + maintainer comment).
+- #4 register: HTTP 201 (statusCode:201), body built directly (NOT sendSuccessResponse). Body fields
+  productId+membershipTierId+customerInfo{name,email,mobile}+membershipMonthlyPeriod all documented required.
+  Verbatim 400s: "You are not authorized to edit this product!", "Email sudah terdaftar pada tier ini.",
+  "Paket membership ini telah mencapai batas limit anggota yang ditentukan."
+- #5 update: HTTP 200, productId ONLY required body field -> 400 "Required: productId" (NOT ",memberId" —
+  memberId is from path). Optional: membershipTierId, membershipMonthlyPeriod, status, nextPayment, expiredAt.
+  nextPayment/expiredAt = UTC ISO 8601 STRINGS (not epoch-ms). Verbatim 400s: "Membership tier tidak ditemukan.",
+  "periode membership tidak ditemukan", "expiredAt tidak boleh lebih awal dari nextPayment."; 404
+  "Member dengan ID <memberId> tidak ditemukan." Invalid-date 400 left descriptive (progress note ellipsized the
+  exact verbatim string, so did not invent it — flagged as _(invalid date)_ row).
+- #7 cancel: HTTP 200 via sendSuccessResponse (key order message,statusCode,data). productId from BODY or QUERY
+  (two curl tabs + Query Parameters section, mirroring invoice page). Flips status->stopped, GUARDS already-inactive:
+  400 "Membership member ini sudah tidak aktif (status: <status>)." (status interpolated). 404 if not found.
+- membershipCustomer object fields are REPRESENTATIVE (no live full sample in repo) — flagged inline in each
+  maintainer comment, same precedent as invoice/detail pages.
+- Validation: tag balance 1:1 (RequestExample/ResponseExample/CodeGroup/ResponseField/ParamField all paired),
+  all json fenced blocks parse via json.loads, even fence counts. Only the 3 target files staged; docs.json/openapi.json untouched.
+
+## task-007 — Wire Membership V2 navigation into docs.json (Phase 6) — DONE 2026-06-23
+- Added "Membership V2" group to navigation.tabs[1] (API Reference tab) in docs.json, inserted
+  right after the "Membership (Credit)" (usagebasedmembership) group, before "Credit Based Product".
+- 7 pages in spec order: list-membership-tiers, list-membership-members, get-membership-member-detail,
+  register-membership-member, update-membership-member, create-membership-invoice, cancel-membership-member.
+- Indentation: group `{` at 10 spaces, "group"/"pages" at 12, page strings at 14 — matches surrounding groups.
+- Did NOT add orphaned V1 api-reference/membership/getmemberdetail or any removed/unwired routes.
+- Validation: python json.load parses (valid JSON); all 7 referenced .mdx files exist on disk. Only docs.json staged.
+
+## task-008 — Validate docs.json and flag inline verification items (Phase 7) — DONE 2026-06-23
+- VALIDATION-ONLY task: produces NO code/doc changes. docs.json was already wired in task-007 and is
+  unchanged here; .jonggrang/ is never committed to the feature branch, so this task has nothing to commit.
+- (1) docs.json well-formed: `python3 -m json.tool docs.json` exits 0 → VALID JSON.
+- (2) Nav resolution: extracted the "Membership V2" group from docs.json (walked nav tree) — exactly 7 page
+  paths, all under api-reference/membershipv2/, each maps to an existing .mdx on disk:
+  list-membership-tiers, list-membership-members, get-membership-member-detail, register-membership-member,
+  update-membership-member, create-membership-invoice, cancel-membership-member. No orphan files in the
+  folder (7 files on disk == 7 nav entries; 1:1, no extras, no missing).
+- (3) Inline human-verification flags PRESENT in all 7 pages (each has a "Notes for maintainers" MDX comment
+  flagging that the non-createdAt object field lists/values are REPRESENTATIVE and need a live response to
+  confirm exhaustively — no live full sample payload in repo). Confirmed per page:
+    * create-membership-invoice.mdx (L54): invoice fields beyond membershipBillUrl representative
+    * list-membership-tiers.mdx (L54): tier object field list representative
+    * list-membership-members.mdx (L101): member row field VALUES representative (KEYS are source-confirmed
+      literal dotted strings)
+    * get-membership-member-detail.mdx (L84-86): scalar flag/period field values/types representative
+    * register/update/cancel-membership-member.mdx (L62-64 / L61-62 / L63-64): data.membershipCustomer
+      field names/values representative
+  These correctly flag the live-sample gap rather than inventing exhaustive field tables — matches the
+  Phase-7 acceptance and the task-003 precedent.
+- No defects found; no out-of-scope bugs to report. Acceptance fully met.
+
+## Phase 12 — code-quality (maintainability review) — DONE 2026-06-23
+- REVIEW-ONLY phase: no code/doc changes produced. Reviewed all 7 membershipv2 .mdx pages + docs.json.
+- VERDICT: PASS. Docs are highly maintainable — uniform page skeleton, per-page maintainer-notes MDX
+  comments citing source handler/query, and the messages(read)/message(write) envelope convention
+  documented identically on every page (guards against a future "normalize" edit).
+- New pages use distinct per-page openapi refs (/endpointmembershipv2/<slug>) — better than the existing
+  usagebasedmembership siblings which reuse one bare ref. docs.json valid; nav 1:1 with the 7 files.
+- One NON-BLOCKING note: create-membership-invoice.mdx response example has customerId/membershipTierId/
+  createdAt that aren't in its ResponseField table — intentional per its "representative fields" note, and
+  the only page where the example carries keys absent from the table. Optional future tidy-up, not required.
+- 0 bugs found; no out-of-scope defects to report. Output: phase-12-code-quality.json.
+
+
+## Phase 13 — test-planning — DONE 2026-06-23
+- Docs-only feature: testing.framework=none, no runtime code, no package.json/Mintlify CLI present.
+  Unit/integration tests N/A. "Test plan" = documentation-validation suite.
+- Authored test-plan.md (10 deterministic checks T1-T10 + 2 human-verification items HV1/HV2) and a
+  reproducible test-validate.sh. Dry-ran the whole suite: SUITE PASS, exit 0, 10/10 green.
+- Checks cover: docs.json JSON validity, nav<->file 1:1 (no missing/orphan), frontmatter, JSX tag
+  balance, code-fence parity, message/messages key quirk per page, prod/sandbox host + hl/v2 prefix,
+  NEGATIVE grep for removed/deprecated/unwired routes, and embedded JSON example parse.
+- Phase 14 (testing) can just run: bash .jonggrang/.output/.../test-validate.sh (exit 0 == green).
+- 0 bugs. Output: phase-13-test-planning.json, test-plan.md, test-validate.sh.
+
+
+## Phase 14 — testing — DONE 2026-06-23
+- Ran the Phase 13 documentation-validation suite: bash .jonggrang/.output/.../test-validate.sh
+- RESULT: SUITE PASS, exit 0, 10/10 automated checks green (T1-T10), 0 failures.
+- Docs-only feature (testing.framework=none): no unit/integration tests applicable; the deterministic
+  shell/python checks ARE the test execution. python3 + jq present, suite reproducible from repo root.
+- HV1 (live-API field completeness) and HV2 (Mintlify visual render, no CLI/package.json) remain
+  non-gating human-verification items, unchanged from Phase 13.
+- 0 bugs. Output: phase-14-testing.json.
+
+
+## Phase 15 — coverage — DONE 2026-06-23
+- Docs-only feature: no line/branch code coverage applicable (testing.framework=none, no source/package.json).
+  Coverage modeled as documentation-validation coverage = in-scope pages exercised by the suite.
+- Page coverage: 7/7 = 100% (all membershipv2 .mdx pages resolved 1:1 from nav and exercised by T2-T10).
+  Threshold 100% page coverage MET. No uncovered/orphan pages.
+- Re-ran test-validate.sh: SUITE PASS, exit 0, 10/10 automated checks green.
+- HV1 (live-API field completeness) and HV2 (Mintlify visual render) remain non-gating human items.
+- 0 bugs. Output: phase-15-coverage.json.
+
+
+## Phase 16 — test-quality — DONE 2026-06-23
+- Audited docs-validation suite (T1-T10) for assertion correctness + value. No low-value/tautological
+  checks: every T-check asserts a specific falsifiable property; none pass regardless of content.
+- Proved teeth via mutation testing on a throwaway copy: unbalanced JSX tag -> T5 IMBALANCE;
+  corrupted json block -> T10 BAD JSON; injected /membership/tier -> T9 match; deleted nav file -> T2 MISSING.
+  All 4 regressions correctly caught.
+- Re-ran test-validate.sh: SUITE PASS, exit 0, 10/10 green.
+- Minor (non-defect) note: T7 read-class only asserts plural "messages" present, not singular absent. Acceptable.
+- HV1/HV2 remain non-gating human items. 0 bugs. Output: phase-16-test-quality.json.
+
+
+## Phase 17 — completion — DONE 2026-06-23
+- Final verification: tracked tree clean, 6 atomic commits ahead of main, 8 files / +1515 lines,
+  docs.json valid JSON, all 7 membershipv2 .mdx pages present. No stray/throwaway artifacts.
+- Re-ran test-validate.sh: SUITE PASS, exit 0, 10/10 automated checks green (T1-T10).
+- PR NOT created: branch has no upstream and origin=moerdowo/docs is an outward-facing repo;
+  user confirmation prompt was declined -> push/PR left to the user.
+  Ready-to-run: git push -u origin feat/membership-v2-api-docs && gh pr create --base main --fill
+- Untracked dirs (.claude/.jonggrang/.codex/.opencode/AGENTS.md/CLAUDE.md/hooks) are orchestration
+  scaffolding, intentionally NOT part of the feature commit set.
+- HV1/HV2 remain non-gating human items. 0 bugs. Output: phase-17-completion.json.
+
+
+## task-009 — Source & inventory the V2 endpoint surface from GitLab (Phase 1 recon) — DONE 2026-06-29
+
+### Source of truth (located via glab; mayarid/source = project id 20099162, default branch master)
+- MASTER route table: api-custom-paymenlink/api/v2/routes.js (read raw via Files API). ALL routes are
+  mounted under the public base prefix /hl/v2 and ALL are guarded by checkJwt.
+- Handler modules (all under api-custom-paymenlink/api/v2/): payme.js, customer.js, membership.js (LEGACY
+  2 reads), memberships.js (V2 membership, 7 handlers), name-service.js, installment.js, discount.js,
+  paymentlink.js, transactions.js, request-payment.js, invoices.js, bundling.js, webhook.js, review.js.
+  Response/auth helpers in utils.js; GraphQL ops in query.js (internal — never publish).
+- NOTE on sourcing: subagent fan-out was disrupted by a hook (returned no analysis); all 14 handler files
+  were read directly. Internal identifiers below are for traceability ONLY — they must NOT appear in any
+  published api-reference-v2/** page (leak-grep guard per plan Phase 6).
+
+### ENVELOPE-KEY QUIRK — MAJOR DRIFT from plan (most important finding)
+- The plan generalizes "message (singular, writes/errors) vs messages (plural, reads)". On the FULL master
+  surface this is WRONG. The TRUTH:
+  * EVERY endpoint OUTSIDE the V2 membership sub-resource uses PLURAL `messages` for reads, writes, AND
+    errors (helpers returnJSON / sendcursor all emit `messages`; handlers hand-build `messages`).
+  * ONLY the 7 V2 membership handlers in memberships.js keep the singular `message`: writes
+    (create/update/invoice/cancel) success bodies + ALL their 400/404/validation errors use SINGULAR
+    `message`; their 3 reads (tiers list, members list, member detail) use PLURAL `messages`.
+  * The 2 LEGACY membership reads (membership.js) use PLURAL `messages`.
+  => Per-page rule for authoring: default to `messages` (plural) EVERYWHERE; use singular `message` ONLY on
+     the 4 membership WRITE pages (create/update/invoice/cancel) — and even there the read siblings stay plural.
+- checkJwt auth failures (utils.js): 401 {statusCode:401, messages:"Unauthorized"} (no/!bad token);
+  404 {messages:"User in JWT not found"}; POST without write scope -> 403 {messages:"API KEY Scope not
+  allowed to write"}. ALL PLURAL `messages`.
+
+### OTHER DRIFT (apply when authoring)
+1. MEMBERSHIP PATHS CHANGED vs the superseded membership-only branch (api-reference/membershipv2/, task-001..08).
+   Master uses /memberships/... NOT /membership-... :
+     OLD (do NOT use)                          MASTER (authoritative)
+     /membership-tiers                         /memberships/tiers
+     /membership-members                       /memberships/members
+     /membership-members/:memberId             /memberships/members/:memberId
+     /membership-members (POST)                /memberships/members/create
+     /membership-members/:memberId (PUT)       /memberships/members/:memberId/update  (METHOD is POST, not PUT)
+     /membership-members/:memberId/invoice     /memberships/members/:memberId/invoice/create
+     /membership-members/:memberId/cancel      /memberships/members/:memberId/cancel
+   ALL V2 writes are POST (there is NO PUT anywhere in the surface). The membershipv2/ pages from the old
+   branch are SUPERSEDED (plan Out of Scope) — do not copy their paths.
+2. EDIT-BY-BODY-ID quirk: editInvoice, editPayment, editPaymentlink/editWebinar/editEvent/editDigitalProduct,
+   and editReview read the resource id from the REQUEST BODY (`body.id`), NOT from the `:uuId`/`:action` path
+   segment in the route. The path param is effectively ignored for these updates. Document `id` as a REQUIRED
+   BODY field on every update page (the URL :uuId is cosmetic for them).
+3. CURSOR PAGINATION shape differs from task-004 membership docs. Master list endpoints use buildCursorResponse
+   -> response carries top-level `data:[...]`, `hasMore` (bool), `nextStartingAfter` (unix-ms string or null).
+   Request params: `limit` (default 10, hard cap 50) and `startingAfter` (unix-ms string cursor on createdAt).
+   There is NO pagination{} object and NO prevStartingAfter / direction / sortOrder on the master surface
+   (those existed only on the old membership branch). Forward-only.
+4. PRODUCT UPDATE validation failure returns {statusCode:200, messages:"failed", data:<validatorErrors>} —
+   HTTP/statusCode stays 200 on validation error for the edit-product handlers (quirk; other handlers use 400
+   "Validation Error").
+5. SHARED handlers / duplicate routes: GET /products/:uuId and GET /payments/:uuId are the SAME handler
+   (identical product-detail response). POST /products/:uuId/:action and POST /payments/:uuId/:action are the
+   SAME (status toggle). POST /products/create and POST /products/payment-link/create are the SAME (generic_link).
+6. POST /payment-links/sort/:type is a POST that behaves like a READ (returns a cursor list of active products
+   of :type). Document accordingly (POST, but list response, plural messages).
+7. createMembershipInvoice / cancelMembershipMember / updateMembershipMember accept productId from BODY OR QUERY.
+
+### MCP routes — EXPLICITLY EXCLUDED (Out of Scope, confirmed)
+- The three app-level MCP routes /v2/customer-detail, /v2/unpaid-transactions, /v2/product-members are NOT
+  present in api/v2/routes.js (they are wired at the app level, outside this router) — so they are naturally
+  excluded; do NOT document them. They are DISTINCT from the in-scope, similarly-named REST routes
+  /customers/detail, /transactions/unpaid, and /memberships/members (those three ARE in scope).
+
+### FULL IN-SCOPE ENDPOINT INVENTORY (71 endpoints, 15 groups; "msgs"=plural messages, "msg"=singular message)
+Paths shown are the suffix under /hl/v2. Envelope is `messages` (plural) UNLESS marked [msg].
+
+— API documentation (group; NO endpoints) — doc pages only: introduction / statuscode / rate-limit
+  (base URL https://api.mayar.id/hl/v2 ; sandbox https://api.mayar.club/hl/v2). Authored in plan Phase 2.
+
+— Products & payment links (16) [all msgs] (handler module: paymentlink.js)
+  GET  /products                              query: search?, type?, stock?, limit, startingAfter -> cursor list
+  GET  /products/types/{type}                 path: type; query: search?, limit, startingAfter -> cursor list
+  GET  /products/{uuId}                       path: uuId -> single product obj; 404 "Not Found"
+  GET  /products/{uuId}/transactions          path: uuId; query: status?, customerId?, fields?, limit, startingAfter -> cursor list
+  POST /products/create                       body: name(req),amount,description?,redirectUrl?,coverImage?,expiredAt?,limit?,notes?,tax? (type=generic_link); 400 "Validation Error", 409 "already exist"
+  POST /products/payment-link/create          (SAME handler/body as /products/create)
+  POST /products/webinar/create               body: PAYMENTLINK fields (type=webinar)
+  POST /products/event/create                 body: PAYMENTLINK + event{maxTicket(def 50),...}, eventStartAt?, eventEndAt?, startAt?
+  POST /products/digital-product/create       body: PAYMENTLINK fields (type=digital_product)
+  POST /products/payment-link/{uuId}/update   body: id(req, BODY not path), name?, description?, expiredAt?, notes?,...; 404 "Product not found", 401 "Unauthorized"; validation->{messages:"failed"} HTTP200
+  POST /products/webinar/{uuId}/update        (body.id; type webinar)
+  POST /products/event/{uuId}/update          (body.id; type event)
+  POST /products/digital-product/{uuId}/update(body.id; type digital_product)
+  POST /products/{uuId}/{action}              path: uuId, action(open|close|active|closed|unlisted); 400 "<action>. allowed: active, closed, unlisted", 404 "Product not found"; success no data
+  POST /payment-links/{uuId}/update           (SAME handler as products/payment-link update; body.id)
+  POST /payment-links/sort/{type}             path: type; POST-but-returns cursor list of active products of type
+
+— Invoices (5) [all msgs] (invoices.js)
+  GET  /invoices                              query: status?, search?, limit, startingAfter -> cursor list
+  GET  /invoices/filter                       query: email(req, filter)+status?+search?+limit+startingAfter; 404 "Customer Not Found"
+  GET  /invoices/{uuId}                       path: uuId -> single invoice; 401 "Unauthorized", 404 "Not Found"
+  POST /invoices/create                       body: name,email,mobile,items[{description,quantity,rate}],tax?,expiredAt?,description?,paymentMethod?,extraData?,cashtag?; 400 "Validation Error"/"extraData Validation Error", 429 "Duplicate request detected. Please wait 1 minute before trying again.", 404 "Customer not found and failed to create new customer", 409 "already exist"
+  POST /invoices/{uuId}/update                body: id(req, BODY not path), items[],tax?,description?,expiredAt?,notes?,paymentMethod?,extraData?,cashtag?; 404 "Invoice not found", 401 "Unauthorized", 409 "Transaction already paid. Cannot edit invoice."
+
+— Payments (5) (handlers: request-payment.js + paymentlink.js) [all msgs]
+  GET  /payments                              query: status?, limit, startingAfter -> cursor list (type=payment_request)
+  GET  /payments/{uuId}                       path: uuId -> single product/payment obj (SAME as GET /products/{uuId})
+  POST /payments/create                       body: name,amount(req),email?,mobile?,description?,notes?,expiredAt?,paymentMethod?,extraData?,cashtag?; 400 "Validation Error", 429 dup, 409 "already exist"
+  POST /payments/{uuId}/{action}              (SAME as POST /products/{uuId}/{action})
+  POST /payments/{uuId}/update                body: id(req, BODY not path), amount,email?,mobile?,description?,notes?,expiredAt?,paymentMethod?,extraData?,cashtag?; 404 "Payment not found", 401 "Unauthorized", 409 "Transaction already paid. Cannot edit payment request."
+
+— Transactions (3) [all msgs] (transactions.js)
+  GET  /transactions                          query: status?, customerId?, type?, paymentLinkId?, startAt?, endAt?, fields?, limit, startingAfter -> cursor list
+  GET  /transactions/unpaid                   query: status?(active|expired), customerId?, paymentLinkId?, startAt?, endAt?, fields?, limit, startingAfter -> cursor list
+  GET  /transactions/daily                    no params -> data {date, tpvCount, trxCount} (single obj)
+
+— Customers (5) [all msgs] (customer.js)
+  GET  /customers                             query: paymentLinkId?, startAt?, endAt?, limit, startingAfter -> cursor list (redis-cached)
+  GET  /customers/detail                      query: email(req); 400 "Email query parameter is required", 404 "Customer not found"; single obj
+  POST /customers/create                      body: CUSTOMER schema (email,mobile,name,...); 400 "Validation Error"; echoes body+customerId
+  POST /customers/update                      body: UPDATE_CUSTOMER schema (fromEmail,toEmail,...); 400 "Validation Error", 404 "Email {fromEmail} tidak terdaftar sebagai customer"
+  POST /customers/portal-login                body: email(req, CHECK_EMAIL); 400 "Validation Error.", 404 "Email tidak terdaftar"; sends magic-link email, data{url}
+
+— Memberships (9) (membership.js legacy reads + memberships.js V2) — ENVELOPE MIXED, see note above
+  GET  /memberships/{uuId}/tiers              [msgs] LEGACY; path uuId(=productId); query limit, startingAfter -> cursor list
+  GET  /memberships/{uuId}/members            [msgs] LEGACY; path uuId(=productId); query memberId -> single member or 404 "Not Found"
+  GET  /memberships/tiers                     [msgs] V2; query productId(req), limit(def10/max50), startingAfter; 400 "Invalid query parameters"; data+hasMore+nextStartingAfter
+  GET  /memberships/members                   [msgs] V2; query productId(req), searchTerm?, startDate?, endDate?, isChurnedMember?, limit, startingAfter; +totalMember sibling when isChurnedMember; 400 "Invalid query parameters"
+  GET  /memberships/members/{memberId}        [msgs] V2; path memberId; query productId(req); 400 "Invalid path parameter"/"Invalid query parameters", 404 "Member dengan ID {memberId} tidak ditemukan."; single obj
+  POST /memberships/members/create            [MSG] V2; body productId,membershipTierId,customerInfo{name,email,mobile},membershipMonthlyPeriod; 400 "Validation Error"/"You are not authorized to edit this product!"/"Email sudah terdaftar pada tier ini."/"Paket membership ini telah mencapai batas limit anggota yang ditentukan."; success message:"success" data{membershipCustomer}
+  POST /memberships/members/{memberId}/update [MSG] V2; path memberId; body productId(req)+optional membershipTierId,membershipMonthlyPeriod,status,nextPayment(UTC ISO8601 str),expiredAt(UTC ISO8601 str); 400 "Invalid path parameter"/"Invalid request body"/"You are not authorized to edit this product!"; success message:"success"
+  POST /memberships/members/{memberId}/invoice/create [MSG] V2; path memberId; productId from body OR query; 400 "Invalid path parameter"/"Invalid request body"; idempotent per billing period; success message:"success" data{...,membershipBillUrl}
+  POST /memberships/members/{memberId}/cancel [MSG] V2; path memberId; productId from body OR query; flips status->stopped; 400 "Invalid path parameter"/"Invalid request body"/"Membership member ini sudah tidak aktif (status: {status}).", 404 "Member dengan ID {memberId} tidak ditemukan."; success message:"success"
+
+— QR / payment-channels (3) [all msgs] (payme.js + inline in routes.js)
+  POST /qr-codes/create                       body: amount; data{url, amount}
+  GET  /qr-codes/static                       no params; data{url} (redis-cached QRIS)
+  GET  /payment-channels                      no params; data = pay-channel config obj (config JSON-parsed); 500 {messages:error}
+
+— Balances (1) [msgs] (transactions.js)
+  GET  /balances                              no params; data{balanceActive, balancePending, balance}
+
+— Installments (3) [all msgs] (installment.js)
+  GET  /installments                          query: status?, customerId?, limit, startingAfter -> cursor list
+  GET  /installments/{uuId}                   path: uuId; 401 "Unauthorized"; data{id,amount,interest,...,invoices[]}
+  POST /installments/create                   body: email,mobile,name,amount,installment{description,tenure,interest,dueDate,...}; 400 "Validation Error", 409 "already exist", 500 "Failed to create installment invoices"
+
+— Coupons / Discount (4) [all msgs, via returnJSON] (discount.js)
+  POST /coupons/create                        body: name, expiredAt?, discount{discountType,value,minimumPurchase,eligibleCustomerType,totalCoupons,isLifeTime,...}, coupon{code?,type(reusable|onetime)}, products[]; 400 "Validation Error"/"Product Tidak Bisa Ditambahkan", 404 "Product Tidak Ditemukan", 409 "Coupon code already in use"
+  GET  /coupons/{uuId}                         path: uuId; data = discount obj + coupons[]
+  POST /coupons/validate                       body: couponCode,paymentLinkId?,amount?(def0),customerEmail?,membershipTierId?,tickets?,paymentLinkType?; many 400/404 verbatim strings (e.g. "Gagal! Kode diskon ini tidak ditemukan.", "Gagal! Kode diskon ini sudah tidak aktif.", "...telah kadaluarsa...", "...belum berlaku...", minimumPurchase msg); success data{valid, coupon{...}}
+  POST /coupons/check                          body: couponCode; 400 "Validation Error", 404 "Kode kupon tidak ditemukan."; data{couponCode,isUsed,totalUsed,limit,remaining}
+
+— Bundling (2) [all msgs] (bundling.js)
+  GET  /bundling                              query: limit, startingAfter -> cursor list (type=bundling; bundlingPaymentLinks renamed -> products)
+  GET  /bundling/{uuId}                       path: uuId; 404 "Bundling not found"; data = bundling obj (products[])
+
+— Name-services (2) [all msgs] (name-service.js)
+  POST /name-services/create                  body: name(req), payload, description?, website?, amount?, urlHook?, image?; success no data
+  POST /name-services/update                  body: id(req, BODY), name, description?, payload, credential?, urlHook?, amount?, website?, image?, event?; data = updated record
+
+— Webhooks (5) [all msgs] (webhook.js)
+  GET  /webhooks/history                      query: status?, type?, urlDestination?, startAt?, endAt?, limit, startingAfter -> cursor list
+  GET  /webhooks/new-history                  query: limit, startingAfter -> data[]+hasMore+nextStartingAfter (scylla-backed)
+  POST /webhooks/update                       body: urlHook(req), webhookConfig?; 400 "urlHook is required" / "urlHook is not a valid URL"; success no data
+  POST /webhooks/test                         body: urlHook(req); 400 "Url tidak ditemukan. Silahkan masukkan url webhook anda." / "Url tidak valid. Silahkan masukkan url webhook yang valid."; success no data
+  POST /webhooks/retry                        body: webhookHistoryId; 400 "Url tidak ditemukan. Silahkan register url webhook anda terlebih dahulu.", 404 "Webhook history not found"; success no data
+
+— Reviews (8) [all msgs] (review.js)
+  GET  /products/{paymentLinkId}/reviews          path: paymentLinkId; query rating?, prioritizeMessage?, limit, startingAfter -> data[]+hasMore+nextStartingAfter
+  GET  /products/{paymentLinkId}/reviews/stats     path: paymentLinkId; data{total,average,stats[]} or {} when none (redis-cached)
+  GET  /products/{paymentLinkId}/reviews/customer  path: paymentLinkId; query customerId(req); 400 "customerId query parameter is required"; data review|null
+  GET  /merchants/reviews/stats                    no params; data = merchant store stats (redis-cached)
+  GET  /reviews                                    query status?, paymentLinkId?, rating?, limit, startingAfter -> cursor list
+  POST /reviews/create                             body: paymentLinkId, customerEmail, rating, message?, contentReview?[]; validation->{messages:"failed"}, 404 "Produk tidak ditemukan", 403 "Anda belum pernah membeli produk ini", 409 "Anda sudah memberikan ulasan untuk produk ini, jika ingin mengedit ulasan, silahkan gunakan fitur edit ulasan", 500 "Gagal menambahkan ulasan"
+  POST /reviews/{uuId}/update                       body: id(req, BODY not path), paymentLinkId, customerEmail, rating?, message?, contentReview?, deleteContentReview?; 404 "Transaksi tidak ditemukan" / "Review tidak ditemukan"
+  POST /reviews/bulk-status/update                  body: input:[{id,paymentLinkId,status}]; validation->{messages:"failed"}, 400 "Review is not valid! Please check your payload."; success no data
+
+### Acceptance
+- Per-group table above covers all 71 in-scope V2 endpoints with method/path/params/envelope-key.
+- MCP routes explicitly excluded (not in router; distinct from in-scope look-alikes).
+- This is a recon/notes-only task: it writes ONLY .jonggrang/progress.txt (never committed to the feature
+  branch per CLAUDE.md) — nothing to commit. Internal identifiers live here for sourcing only; published
+  pages must expose only the public REST surface above.
+
+## task-010 (api-v2-reference-docs) — Structural scaffold
+- Renamed navigation.tabs[1].tab "API Reference" -> "API V1 Reference" in docs.json (label-only change, V1 groups/pages byte-identical — verified via git diff).
+- Appended tabs[2] "API V2 Reference" with one seeded group "API documentation" -> pages: api-reference-v2/{introduction,statuscode,rate-limit}.
+- Created api-reference-v2/ folder with .gitkeep placeholder (git won't track empty dirs); Phase 2 will author the three stub .mdx pages.
+- Validated with `python3 -m json.tool docs.json` (exit 0). docs.json indentation is inconsistent in places (e.g. groups around lines 75/196) — left untouched to keep diff minimal.
+
+## task-011 (api-v2-reference-docs) — V2 'API documentation' group pages
+- Authored api-reference-v2/{introduction,statuscode,rate-limit}.mdx, adapted from V1 equivalents.
+  Base URLs -> /hl/v2 (prod https://api.mayar.id/hl/v2, sandbox https://api.mayar.club/hl/v2).
+- The three GROUP pages (intro/statuscode/rate-limit) carry NO `openapi:` frontmatter — only the
+  per-endpoint pages do (e.g. product/search.mdx: `openapi: "GET /endpointproduct/search"`). Kept that
+  convention: group pages = title/description only.
+- introduction.mdx gains two V2-specific sections not in V1: an explicit Authorization (Bearer) CodeGroup
+  and a "Response Envelope" section documenting {statusCode, messages, data} with ResponseField blocks,
+  noting the message(singular)/messages(plural) write-vs-read quirk to expect on endpoint pages.
+- statuscode.mdx: switched the 429 row links from absolute https://mayar.mintlify.app/api-reference/...
+  to RELATIVE /api-reference-v2/rate-limit (correct internal Mintlify link + keeps V2 self-contained).
+- Removed api-reference-v2/.gitkeep (obsolete once real pages exist); staged its deletion in same commit.
+- docs.json tabs[2] "API documentation" group already pointed at these 3 paths (task-010) — NO docs.json
+  edit needed; nav<->file 1:1 verified. Note: task files[] lists docs.json but it was left untouched.
+- Validation: python3 -m json.tool docs.json OK; all 3 paths resolve; leak-grep over api-reference-v2/**
+  (@mayarid|routes.js|checkJwt|redis|scylla|graphql|process.env|handler...) CLEAN; JSX tags balanced
+  (CodeGroup 3/3, ResponseField 3/3, Note 2/2, Warning 1/1).
+- GOTCHA: a `git add a b c.gitkeep` with one non-existent pathspec aborts the WHOLE add (nothing staged).
+  Stage existing files separately from a `git rm`-staged deletion.
+
+## task-012 (api-v2-reference-docs) — V2 'Products & payment links' group — DONE 2026-06-29
+- Authored 16 .mdx pages (one per in-scope endpoint) under api-reference-v2/ in 5 product-family
+  subfolders mirroring V1: product/ (5), genericlink/ (5), digitalproduct/ (2), webinar/ (2), event/ (2).
+  Mapped exactly to the task-009 inventory's 16 "Products & payment links" endpoints.
+- product/: productpage (GET /products), productpagewithfilter (GET /products/types/{type}),
+  detail (GET /products/{uuId}), transactions (GET /products/{uuId}/transactions),
+  changestatus (POST /products/{uuId}/{action}).
+  genericlink/: create (POST /products/create), createpaymentlink (POST /products/payment-link/create,
+  SAME handler), edit (POST /products/payment-link/{uuId}/update), editpaymentlink
+  (POST /payment-links/{uuId}/update, SAME handler), sort (POST /payment-links/sort/{type}).
+  digitalproduct/webinar/event each create+edit.
+- ENVELOPE: this ENTIRE group is PLURAL `messages` (reads, writes, AND errors) per task-009 finding —
+  singular `message` is ONLY the 4 V2 membership writes (different group). Verified: 0 singular "message"
+  json keys across all 16 pages. Do NOT normalize/flip when authoring other non-membership groups.
+- CURSOR shape (V2 master, captured live from prod): list responses = top-level data[], hasMore(bool),
+  nextStartingAfter(unix-ms string | null). NO pageCount/page/pageSize/total/pagination{} (those were the
+  OLD membership branch). Query params: limit(def10,max50) + startingAfter. Documented accordingly — this
+  DIFFERS from the V1 page/pageSize template, so the response-example + pagination ResponseFields were
+  adapted (template COMPONENTS reused verbatim; the page/pageSize fields replaced with hasMore/nextStartingAfter).
+- Captured REAL prod shapes for the 4 safe GETs + the read-like POST /payment-links/sort/{type} using
+  DUMMY_PROD_MERCHANT_API_KEY (all on api.mayar.id/hl/v2). KEY shapes confirmed:
+  * product item key order (list): id,amount,category,createdAt,description,link,type,subType,status,name,
+    limit,redirectUrl,installmentId,variant,membershipTier,event,order,coverImageId,multipleImageId,
+    coverImage,multipleImage,variants,linkUrl,linkPayment.
+  * /payment-links/sort/{type} returns a REDUCED product shape (no subType/variant/membershipTier/variants/
+    linkUrl/linkPayment; HAS transactions[]) — documented that smaller field set, not the full list shape.
+  * GET /products/{uuId}/transactions item: id,createdAt,type,amount,status,urlParamTrackingData,
+    paymentLinkId,customerId,customeField(<-API TYPO, kept verbatim),customer{id,email,name,mobile},
+    paymentLink{...},productName,productType,productLink. Nested customer = PII; scrubbed.
+- PII/ID SCRUB: replaced ALL real captured ids/emails/phones/names/tenant with synthetic V1-published-style
+  values (testingmayar.myr.id tenant, Budi Santoso / budi.santoso@example.com / 081234567890, and UUIDs that
+  already appear in published V1 docs e.g. 6f8c19ff.../21d84338.../348e083d...). GOTCHA: easy to miss the
+  transaction `id` inside nested transactions[] in BOTH detail.mdx and transactions.mdx — initial pass left the
+  real captured txn id; caught by a captured-UUID grep. Always grep the FULL set of captured ids, not just
+  emails/names.
+- WRITES flagged representative via a {/* Notes for maintainers ... REPRESENTATIVE */} MDX comment (task-003
+  precedent). Documented the EDIT-BY-BODY-ID quirk on all 4 update pages (id is REQUIRED in BODY; the {uuId}
+  URL segment is cosmetic/ignored) and the product-update validation quirk (HTTP 200 + messages:"failed" +
+  data=validatorErrors, NOT a 400). changestatus documented action enum (open|close|active|closed|unlisted) +
+  400 "<action>. allowed: active, closed, unlisted" / 404 "Product not found".
+- openapi: frontmatter uses v2-suffixed cosmetic namespace `/endpoint<folder>v2/<slug>` (membership-v2
+  task-002 precedent), distinct from V1's `/endpoint<folder>/<slug>`. Group/intro pages still carry no openapi.
+- docs.json: appended ONE group "Products & payment links" to tabs[2] with 5 NESTED subgroups (Mintlify
+  supports group-objects inside a group's pages[]). 16 paths in inventory order. python3 -m json.tool OK;
+  nav<->file 1:1 (16==16, 0 missing, 0 orphan); leak-grep CLEAN; 17 json blocks parse; JSX tags balanced.
+
+## task-013 (api-v2-reference-docs) — V2 'Invoice' group — DONE 2026-06-29
+- Authored 5 .mdx pages under api-reference-v2/invoice/ (one per in-scope endpoint from task-009
+  inventory): index (GET /invoices), filter (GET /invoices/filter), detail (GET /invoices/{uuId}),
+  create (POST /invoices/create), edit (POST /invoices/{uuId}/update). All /hl/v2 (prod api.mayar.id,
+  sandbox api.mayar.club). Appended "Invoice" group to docs.json tabs[2] after "Products & payment links".
+- ENVELOPE: ENTIRE group is PLURAL `messages` (reads, writes, AND errors) per task-009 — singular
+  `message` is ONLY the 4 V2 membership writes. Verified 0 singular "message" json keys across all 5 pages.
+- Captured REAL prod shapes for the 3 GET reads via DUMMY_PROD_MERCHANT_API_KEY (key present in env, len 760):
+  * GET /invoices: cursor list — top-level data[], hasMore(bool), nextStartingAfter(unix-ms string|null).
+    Item: id,amount,category,createdAt,description,link,type("invoice"),status,name,redirectUrl,customerId,
+    transactions[]{id,status,extraData},customer{id,email,mobile,name}. NOTE: V2 list transactions add
+    `extraData` key (V1 only had id+status). `customer` is an OBJECT (V1 doc mislabeled it "array of object").
+  * GET /invoices/filter: SAME item shape as list; requires `email` query param; 404 "Customer Not Found".
+  * GET /invoices/{uuId}: data object adds `userId` (merchant id) not present in V1 detail; transactions[]
+    here are {id,extraData} only (NO status, unlike the list). Plus transactionId,paymentUrl,paymentLinkId.
+    401 "Unauthorized", 404 "Not Found".
+- Query params (list+filter): status?, search?, limit(def10/max50), startingAfter. filter adds email(req).
+- PII SCRUB: replaced all captured real ids/emails/phones/names/tenant with synthetic V1-published values —
+  tenant testingmayar.myr.id, customers Budi Santoso/budi.santoso@example.com/081234567890 and
+  Siti Aminah/siti.aminah@example.com, UUIDs already published in V1 docs (6f8c19ff.../21d84338.../
+  348e083d.../b2c3d4e5...) plus clearly-synthetic sequential-hex UUIDs (a1b2c3d4.../c3d4e5f6.../d4e5f6a7...).
+  Grep-verified NONE of the real captured ids/emails (01918da0/6a38cf26/eaf5cd15/mayartesting/andiak.myr.id/
+  8afa8430/d442dcbd/...) appear in the pages.
+- WRITES (create/edit) representative — derived from V1 template + task-009 source surface, flagged via
+  {/* Notes for maintainers ... REPRESENTATIVE */} MDX comment. Documented the EDIT-BY-BODY-ID quirk on edit:
+  `id` is REQUIRED in BODY, the {uuId} URL segment is cosmetic/ignored (task-012 precedent). Error tables use
+  verbatim strings from inventory (create: 400 "Validation Error"/"extraData Validation Error", 404 "Customer
+  not found and failed to create new customer", 409 "already exist", 429 "Duplicate request detected. Please
+  wait 1 minute before trying again."; edit: 401 "Unauthorized", 404 "Invoice not found", 409 "Transaction
+  already paid. Cannot edit invoice.").
+- openapi: frontmatter uses v2-suffixed cosmetic namespace `/endpointinvoicev2/<slug>` (task-012 precedent).
+- GOTCHA: leak-grep pattern includes the bare word "handler" — avoid it in PROSE (task-012's genericlink
+  pages used "handler" and it slipped through). Rephrased "ignored by the handler" -> "ignored by the API".
+- GOTCHA: "Invoice" group name exists in BOTH tabs[1] (V1) and tabs[2] (V2). A naive nav<->file check that
+  picks the FIRST group named "Invoice" validates the WRONG (V1) paths. Filter by tab=="API V2 Reference".
+- Validation: python3 -m json.tool docs.json OK; nav<->file 1:1 (5==5, correct order, 0 missing/orphan);
+  5 json blocks parse; JSX tags balanced; leak-grep CLEAN; PII CLEAN; all /hl/v2 (no /hl/v1). Only the 5
+  pages + docs.json staged.
+
+## task-014 (api-v2-reference-docs) — V2 'Payments' (Request Payment) group — DONE 2026-06-29
+- Authored 5 .mdx pages under api-reference-v2/reqpayment/ (one per in-scope endpoint from task-009
+  inventory): index (GET /payments), detail (GET /payments/{uuId}), create (POST /payments/create),
+  edit (POST /payments/{uuId}/update), changestatus (POST /payments/{uuId}/{action}). All /hl/v2 (prod
+  api.mayar.id, sandbox api.mayar.club). Appended "Payments" group to docs.json tabs[2] after "Invoice".
+- FOLDER NAME: task said "reqpayment/<endpoint> (or the inventory's group name)". Used reqpayment/ to
+  mirror the V1 folder api-reference/reqpayment/ (same resource). Nav group label is "Payments" (the
+  inventory group name); folder is reqpayment. openapi frontmatter namespace = /endpointreqpaymentv2/<slug>
+  (v2-suffix convention; V1 reqpayment used the odd /endpointqrpayment/ namespace — did NOT copy that typo).
+- ENVELOPE: ENTIRE group is PLURAL `messages` (reads, writes, AND errors) per task-009 — singular
+  `message` is ONLY the 4 V2 membership writes (different group). Verified 0 singular "message" json keys.
+- Captured REAL prod shapes for the 2 GET reads via DUMMY_PROD_MERCHANT_API_KEY (len 760, works on prod):
+  * GET /payments: cursor list — top-level data[], hasMore(bool), nextStartingAfter(unix-ms string|null).
+    Item keys (order): id,amount,category,createdAt,description,link,type("payment_request"),status,name,
+    limit,redirectUrl,installmentId,event,order,coverImageId,multipleImageId,transactions[],coverImage,
+    multipleImage. KEY POINT: list item is the SMALLER shape (NO subType/variant/membershipTier/variants/
+    linkUrl/linkPayment that the PRODUCTS list has) BUT it DOES carry transactions[]{id,extraData}.
+  * GET /payments/{uuId}: SAME shape as GET /products/{uuId} (shared handler) — adds subType,variant,
+    userId,membershipTier[],qty,linkUrl,linkPayment vs the list item. transactions[] present.
+- SHARED-HANDLER errors: POST /payments/{uuId}/{action} is the SAME handler as products changestatus, so
+  its 404 string is literally "Product not found" (not "Payment not found") — kept verbatim. But the
+  edit handler (POST /payments/{uuId}/update) uses payment-specific strings: 404 "Payment not found",
+  401 "Unauthorized", 409 "Transaction already paid. Cannot edit payment request."
+- EDIT-BY-BODY-ID quirk documented on edit.mdx (id REQUIRED in BODY; {uuId} URL segment cosmetic/ignored),
+  same <Note> + maintainer-comment precedent as task-012/013.
+- create body (faithful to inventory): name(req),amount(req),email?,mobile?,description?,notes?,expiredAt?,
+  paymentMethod?,cashtag?,extraData?. Inventory does NOT list redirectUrl for create — removed it from the
+  curl+ParamField even though V1 reqpayment/create had it (V1 was the legacy shape). Errors: 400 "Validation
+  Error", 409 "already exist", 429 "Duplicate request detected. Please wait 1 minute before trying again."
+- PII/ID SCRUB: real captured userId 8afa8430..., tenant andiak.myr.id, payment/txn ids, and the LINK
+  SLUGS hgwu2e8dvia/pcmz8l551dq all replaced with synthetic values (userId 348e083d... [published in V2
+  product detail], tenant testingmayar.myr.id, published-style UUIDs 6f8c19ff.../a1b2c3d4.../b2c3d4e5...,
+  synthetic slugs rqp9x2k7m3a/rqp4t8n1b6c). GOTCHA: link slugs are real-merchant identifiers too — scrub
+  them, not just emails/names/UUIDs. Grep-verified all real captured tokens absent.
+- GOTCHA (carried from prior tasks): the leak-grep includes bare "handler" — kept it out of prose.
+- GOTCHA: the git INDEX already had ALL orchestration scaffolding (.claude/.codex/.jonggrang/.opencode/
+  hooks/AGENTS.md/CLAUDE.md) pre-staged before this session. A plain `git commit` would have swept them in.
+  Committed with explicit pathspec: `git commit -m ... -- <6 files>` so ONLY the task files were committed
+  (6 files / +851). Do NOT `git add -A` / plain `git commit` in this repo state.
+- OUT-OF-SCOPE BUG found (NOT fixed): api-reference-v2/invoice/create.mdx and edit.mdx (task-013) each end
+  with a stray `</content>` tag (no matching open). Product/membership pages don't have it. Reported via
+  `jonggrang bug`. My reqpayment pages deliberately omit it.
+- Validation: python3 -m json.tool docs.json OK; nav<->file 1:1 for the V2 "Payments" group (5==5, correct
+  order, 0 missing/orphan); 6 json fences parse; JSX tags balanced; leak-grep CLEAN; PII CLEAN; all /hl/v2.
+
+## task-015 — Author V2 'Transactions' group (Phase 3 core) — DONE 2026-06-29
+
+### Scope (3 endpoints — Balances & QR are SEPARATE tasks)
+- Task title says "...account balance, dynamic QR if grouped here" but task-009 inventory + task list
+  split these out: Balances=task-019, QR/payment-channels=task-018. So Transaction group = ONLY the 3
+  /transactions reads from transactions.js. Did NOT pull in /balances or /qr-codes here.
+- Pages (folder api-reference-v2/transaction/, singular, matching V1):
+    paidtransaction.mdx   GET /transactions          (V1 "Get Paid Transactions" = the main list)
+    unpaidtransaction.mdx GET /transactions/unpaid
+    dailytransaction.mdx  GET /transactions/daily
+- All PLURAL `messages` (reads). Nav appended to docs.json tabs[2] after "Payments".
+
+### Real prod shapes captured via DUMMY_PROD_MERCHANT_API_KEY (key works on prod GETs)
+- V2 cursor envelope (differs from V1 page/pageSize/pageCount/total!):
+    {statusCode, messages:"success", data:[...], hasMore, nextStartingAfter}
+  Same buildCursorResponse shape as products/invoices/payments groups. limit default 10, max 50;
+  startingAfter = unix-ms string cursor.
+- GET /transactions item keys (confirmed): id,credit,status,balanceHistoryType,paymentMethod,customerId,
+  createdAt,paymentLinkTransactionId,fee[],paymentLinkId,subscriptionId,xenditTransactionId,subscription,
+  paymentLinkTransaction{},customeField,customer{},paymentLink{id,name},xenditTransaction (null OR nested).
+  Item field set IDENTICAL to V1 paidtransaction.
+- GET /transactions/unpaid item keys: id,createdAt,type,amount,status,urlParamTrackingData,paymentLinkId,
+  customerId,customeField,customer{id,email,name,mobile},paymentLink{id,category,createdAt,description,link,
+  name,redirectUrl,userId,coverImageId,multipleImageId,coverImage,multipleImage},paymentUrl. No `total`
+  field (V1 had it); replaced by hasMore/nextStartingAfter.
+  * paymentUrl path CHANGED v1->v2: `/plt/<id>` (V1) -> `/select-channel/<id>` (V2). Kept real v2 path,
+    scrubbed shop subdomain andiak.myr.id -> yourstore.myr.id.
+- GET /transactions/daily: {statusCode, messages:"success", data:{date,tpvCount,trxCount}}.
+  NOTE: V2 ADDS `messages:"success"` that V1 dailytransaction.mdx OMITTED. Documented the real V2 shape
+  (with messages). No query params.
+
+### PII scrub (real merchant data must NOT leak)
+- Scrubbed customer name/email/mobile/customerId, paymentLink name, merchant userId, shop subdomain to
+  synthetic values (Andi Pratama/andi.pratama@example.com/081200000001, userId a0000000-..., yourstore.myr.id).
+- Kept opaque transaction/paymentLink/fee/xendit UUIDs from prod (consistent w/ V1 precedent — these are
+  documented response-shape ids, not PII; leak-grep targets handler/var/internal names which are absent).
+
+### docs.json GOTCHA (important for remaining group tasks)
+- Do NOT round-trip docs.json through json.dump(indent=2) — it reformats the WHOLE file (V1/Guides have
+  irregular 2-vs-3-space indentation) producing a ~70-line diff touching byte-identical V1 sections.
+  Reverted and used a surgical Edit on the Payments block instead -> clean 8-line +insert. Validate with
+  `python3 -m json.tool docs.json`.
+
+### Commit hygiene
+- Worktree has a large pre-staged baseline (.claude/.jonggrang/.codex/... all `A` in index from session
+  start). Used `git commit -- <my 4 paths>` to commit ONLY task files without dragging in baseline/.jonggrang.
+
+## task-016 — Author V2 'Customers' group (Phase 3 core) — DONE 2026-06-29
+- Authored 5 .mdx under api-reference-v2/customer/ (one per in-scope endpoint from task-009 inventory),
+  reusing the V1 customer/ page names VERBATIM so the template maps 1:1:
+    getdetail.mdx            GET  /customers              (cursor list — V1 "Get Customer")
+    searchcustomerbyemail.mdx GET  /customers/detail       (single obj, query email req)
+    create.mdx               POST /customers/create
+    update.mdx               POST /customers/update        (fromEmail/toEmail)
+    createmagiclink.mdx      POST /customers/portal-login  (sends magic-link email)
+  All /hl/v2 (prod api.mayar.id, sandbox api.mayar.club). Appended "Customer" group to docs.json
+  tabs[2] after "Transaction". openapi namespace /endpointcustomerv2/<slug> (v2-suffix convention).
+- ENVELOPE: ENTIRE group is PLURAL `messages` (reads, writes, AND errors) per task-009 — verified 0
+  singular "message" json keys. (Singular `message` is ONLY the 4 V2 membership writes.)
+- Captured REAL prod shapes for the 2 GET reads via DUMMY_PROD_MERCHANT_API_KEY (len 760, works on prod):
+  * GET /customers: V2 cursor envelope {statusCode, messages:"success", data:[...], hasMore,
+    nextStartingAfter(unix-ms str|null)}. Item keys: id,createdAt,email,mobile,name,status,updatedAt,
+    userId. Same flat customer shape as V1 list BUT V2 drops the V1 page/pageSize/pageCount/totalCustomer
+    pagination — uses hasMore/nextStartingAfter (buildCursorResponse, consistent w/ all other V2 groups).
+    Query params: paymentLinkId?, startAt?, endAt?, limit(def10/max50), startingAfter (NO page/pageSize).
+  * GET /customers/detail: single obj — SAME shape as V1 searchcustomerbyemail incl the nested `user`
+    {id,name,urlHook,email,paymeLink,isSelfDomain,accountId,account{id,name,imageId,logo{id,fileType,url}}}.
+    This nested `user` is the MERCHANT's own profile (PII-DENSE: merchant name/email/webhook/paymeLink/
+    account name + logo image ids). SCRUB the whole user/account subtree, not just the top-level customer.
+- PII SCRUB (this group is the most PII-dense so far): replaced ALL captured real customer + MERCHANT data:
+    real customers (race4/race4@gg.com, albert/alberttambahan13@gmail.com, Office/mayartester05@gmail.com,
+    mobiles 08777777777/081320547899/6281320547866, ids 068acfd9/06ba06a9/08571113) ->
+    synthetic Budi Santoso/Siti Aminah/Andi Pratama @example.com + 0812... + published-style UUIDs.
+    real MERCHANT (userId 8afa8430..., name "Andika", email mayartesting05@gmail.com, paymeLink "andiak",
+    urlHook eoze6x1sc8k58q4.m.pipedream.net, accountId 6e54ac35..., account "Mayar Testingg", imageId
+    9732d06f...) -> merchant userId 348e083d... (published), "Toko Mayar Demo", merchant@example.com,
+    paymeLink "testingmayar", webhook.example.com, account "Mayar Demo Account" + published-style UUIDs.
+    Grep-verified NONE of the ~16 real captured tokens appear in the pages.
+- WRITES (create/update/portal-login) representative — derived from V1 shape + task-009 source surface,
+  flagged via {/* Notes for maintainers ... REPRESENTATIVE */} MDX comment. Body schemas source-confirmed:
+  create{name,email,mobile} echoes body+customerId; update{fromEmail,toEmail}; portal-login{email} data{url}.
+  Error tables use verbatim inventory strings (create 400 "Validation Error"; update 400 "Validation Error"
+  / 404 "Email {fromEmail} tidak terdaftar sebagai customer"; portal-login 400 "Validation Error." (note the
+  trailing period) / 404 "Email tidak terdaftar"; detail 400 "Email query parameter is required" / 404
+  "Customer not found").
+- GOTCHA (carried from task-013): leak-grep includes bare "handler" — my create.mdx maintainer comment first
+  said "the handler echoes the body"; grep flagged it. Rephrased to "the API echoes". Keep "handler" out of prose.
+- GOTCHA: `git commit -- <paths>` does NOT pick up UNTRACKED new files (only staged/tracked changes) —
+  it silently errored "pathspec did not match". Must `git add <specific files>` FIRST, then commit. (Prior
+  tasks' files were already tracked so a bare `git commit --` worked; new-folder tasks need the add step.)
+- Validation: python3 -m json.tool docs.json OK; nav<->file 1:1 for V2 "Customer" (5==5, correct order, 0
+  missing/orphan, filtered by tab=="API V2 Reference" to avoid V1 "Customer"-name collision); 5 json fences
+  parse; JSX tags balanced; leak-grep CLEAN; PII CLEAN; all /hl/v2; 0 singular message. Committed 6 files
+  (+704) with explicit pathspec — baseline/.jonggrang untouched.
+
+## task-017 — Author V2 'Memberships' group (Phase 3 core) — DONE 2026-06-29
+- Authored 9 .mdx under api-reference-v2/membership/ (one per in-scope endpoint from task-009 Memberships
+  group). SINGLE flat folder + nav group "Membership" — the task said "mirror V1 subfolders saas/
+  usagebasedmembership/membership AS THE INVENTORY DICTATES"; the V2 inventory has NO SaaS-license or
+  usage-based-credit endpoints (those are V1-only), only the unified /memberships/* surface, so one folder
+  matches the Invoice/Customer/Payments precedent. Order in docs.json tabs[2] after "Customer":
+    tiers.mdx           GET /memberships/tiers                       [msgs] V2 list tiers
+    members.mdx         GET /memberships/members                     [msgs] V2 list members
+    memberdetail.mdx    GET /memberships/members/{memberId}          [msgs] V2 detail
+    register.mdx        POST /memberships/members/create             [MSG] V2 write (HTTP 201)
+    update.mdx          POST /memberships/members/{memberId}/update  [MSG] V2 write (POST not PUT!)
+    createinvoice.mdx   POST /memberships/members/{memberId}/invoice/create [MSG] V2 write
+    cancel.mdx          POST /memberships/members/{memberId}/cancel  [MSG] V2 write
+    tiersbyproduct.mdx  GET /memberships/{uuId}/tiers                [msgs] LEGACY (membership.js)
+    membersbyproduct.mdx GET /memberships/{uuId}/members            [msgs] LEGACY
+- MASTER PATHS (task-009 drift): used /memberships/... NOT the superseded /membership-... ; writes are POST
+  (no PUT); create suffix is /create, invoice is /invoice/create. Did NOT copy the old branch's paths.
+- ENVELOPE: this is the ONLY group with MIXED keys. 5 reads (3 V2 + 2 legacy) = plural `messages`; 4 V2
+  writes = singular `message` (success + ALL their errors). Verified: each read page has `messages` and 0
+  `message`; each write page has `message` and 0 `messages`. The singular-message writes are the ONLY
+  singular-message pages in the entire V2 tab.
+- CAPTURED 5 real prod GET shapes via DUMMY_PROD_MERCHANT_API_KEY (len 760). Needed a membership-type
+  product first: GET /products/types/membership -> productId fa41da01... + tierId 480824bc... + memberId
+  JXI1JNYM. Then hit tiers/members/member-detail (need ?productId=) and the 2 legacy /{uuId}/tiers,
+  /{uuId}/members (legacy members needs ?memberId=, returns the V1-style customerEmail/Name/Mobile flat obj).
+  * V2 members LIST item uses LITERAL DOTTED-KEY columns: "membershipTier.name", "customer.email" etc.
+    (flat string keys, NOT nested) — same quirk task-004 noted. Kept verbatim in the json + ResponseField.
+  * member DETAIL returns nested paymentLink{membershipInfo{type:"SAAS"}}, customer{}, membershipTier{}.
+  * legacy /{uuId}/tiers returns cursor list w/ nested membershipCustomer[] + membershipTierPeriod[].
+- WRITES representative: reused the superseded membershipv2/ branch's membershipCustomer-wrapper + bill-URL
+  shapes (retrieved from git show 022bca1:...) BUT swapped to MASTER paths/methods AND task-009 MASTER error
+  strings (writes validate with "Invalid path parameter"/"Invalid request body", NOT the old branch's
+  "Required: productId, memberId"). create errors: "Validation Error"/"You are not authorized to edit this
+  product!"/"Email sudah terdaftar pada tier ini."/"Paket membership...batas limit...". cancel adds 400
+  "Membership member ini sudah tidak aktif (status: <status>)." + 404 "Member dengan ID <memberId> tidak
+  ditemukan." createinvoice keeps membershipBillUrl = https://<tenant>.mayar.shop/pl/<link> (NOT api.mayar.id).
+- PII SCRUB: real merchant userId 8afa8430..., customer andiak/mayartesting05@gmail.com/081320547877,
+  customerId 6a38cf26..., member record a840765b..., tierId 480824bc..., productId fa41da01..., memberId
+  JXI1JNYM, membershipInfo aba10333..., 5 tierPeriod ids, product link "test-v1"/name "test v1 ", image ids
+  -> synthetic (merchant userId 348e083d... [published], Budi Santoso/budi.santoso@example.com/081234567890,
+  customerId a1b2c3d4..., productId 7c9d2e1f..., tierId 9b2d4f6a..., memberId MBR8X2QK, bill slug mbr9x2k7m3a,
+  tenant testingmayar.mayar.shop). Trimmed the real lorem-ipsum tier description to a short clean string
+  (descriptions aren't PII but verbose). Grep-verified all ~20 real tokens ABSENT.
+- Validation: docs.json valid; nav<->file 1:1 (9==9, correct order, 0 missing/orphan, filtered tab=="API V2
+  Reference"); 13 json fences parse; JSX tags balanced; envelope keys correct per page; PII CLEAN; leak-grep
+  CLEAN (kept bare "handler" + internal module/handler/helper names out of all prose/comments). Committed 10
+  files (+1723) with explicit pathspec `git commit -- docs.json api-reference-v2/membership/` (index has the
+  pre-staged baseline; `git add` the new folder FIRST then commit -- as task-016 noted).
+
+## task-018 — Author V2 'QR / Payment Channels' group (Phase 4) — DONE 2026-06-29
+- Authored 3 .mdx under api-reference-v2/qrcode/ (one per in-scope endpoint from task-009 inventory's
+  "QR / payment-channels" group). New nav group "QR / Payment Channels" appended to docs.json tabs[2]
+  after "Membership". openapi namespace /endpointqrcodev2/<slug> (v2-suffix convention).
+    createdynamicqrcode.mdx  POST /qr-codes/create     (write, representative)
+    getstaticqrcode.mdx      GET  /qr-codes/static     (read; live capture 500'd, representative)
+    paymentchannels.mdx      GET  /payment-channels    (read; REAL prod shape captured)
+- FOLDER/NAMING: V1 had createdynamicqrcode.mdx + getstaticqrcode.mdx under api-reference/transaction/
+  (getstaticqrcode was a 4-line STUB; createdynamicqrcode was a full V1 page used as the template). No V1
+  payment-channels page exists at all. Put all 3 in ONE folder qrcode/ to keep the group together; reused
+  the V1 QR page names verbatim for the 2 QR pages. V2 paths differ from V1: V1 used /hl/v1/qrcode/create;
+  V2 uses /hl/v2/qr-codes/create, /qr-codes/static, /payment-channels.
+- ENVELOPE: ENTIRE group is PLURAL `messages` (reads, writes, AND errors) per task-009 — singular
+  `message` is ONLY the 4 V2 membership writes. Verified 0 singular `"message"` json keys across all 3 pages.
+- LIVE CAPTURE (DUMMY_PROD_MERCHANT_API_KEY len 760, works on prod GETs):
+  * GET /payment-channels: REAL shape captured. data object keys: id, userId, isAkulakuApproved,
+    isCreditCardApproved, isQRISStaticApproved, isAdminFeeBorneByCustomer, isChannelFeeBorneByCustomer,
+    isRateLimitActive, config[], createdAt, updatedAt. The 3 is*Approved flags can be null (not-yet-reviewed).
+    config[] item = {name, status(bool), img(relative asset path e.g. "/mandiri.png"), type, code(nullable)}.
+    type enum (7): qris, va, ewallet, card, retail, paylater, qris_static. Real account returned 21 channels;
+    documented a representative cross-section covering all 7 types (flagged in maintainer comment). config
+    img paths + channel names/codes are PUBLIC catalogue data, NOT PII — kept verbatim.
+  * GET /qr-codes/static: live returned 500 {statusCode:500, messages:"Invalid data"} for the sample merchant
+    (no static QRIS configured). Documented the 200 success shape data{url} as REPRESENTATIVE + a 2nd json
+    fence showing the real 500. Flagged in maintainer comment.
+- WRITE (POST /qr-codes/create) representative — derived from V1 createdynamicqrcode template + inventory
+  (body{amount}; data{url, amount}). Flagged via {/* Notes for maintainers ... REPRESENTATIVE */} comment.
+- PII SCRUB: payment-channels data.userId 8afa8430-9ccd-4d33-9c1b-e0999a319994 (real merchant) ->
+  348e083d-315a-4e5c-96b1-5a2a98c48413 (the published merchant userId reused across all V2 pages);
+  data.id 1fe40b33-... -> a1b2c3d4-e5f6-4789-a012-3456789abcde (published-style synthetic);
+  createdAt/updatedAt real epoch-ms -> clean 1700000000000/1714000000000. Grep-verified all 4 real tokens ABSENT.
+- GOTCHA (avoided the task-014 bug): the Write tool template I started from ended pages with a stray
+  </content> tag (no matching open — the same defect task-014 reported on invoice/create+edit). Caught it on
+  the first page and removed it; verified `grep -rn '</content>'` CLEAN across all 3 new pages.
+- GOTCHA (git): `git commit -- <paths> -m "msg"` FAILS — git parses everything after `--` as pathspecs, so
+  `-m`/the message become bogus pathspecs ("pathspec '-m' did not match"). Correct order:
+  `git commit -m "msg" -- <paths>`. (Prior tasks' notes showed `git commit -- <paths>` for an EXPLICIT add;
+  with a -m message the -m MUST precede the -- separator.) Committed 4 files (+409) cleanly; baseline/.jonggrang untouched.
+- Validation: python3 -m json.tool docs.json OK; nav<->file 1:1 for V2 "QR / Payment Channels" (3==3, correct
+  order, 0 missing/orphan, filtered tab=="API V2 Reference"); 4 json fences parse; JSX tags balanced; all
+  /hl/v2 (no /hl/v1); envelope plural messages, 0 singular message; leak-grep CLEAN; PII CLEAN.
+
+## task-019 — Author V2 'Balances' group (Phase 4) — DONE 2026-06-29
+- Authored 1 .mdx under api-reference-v2/balance/ — the ONLY in-scope Balances endpoint per task-009
+  inventory: accountbalance.mdx (GET /balances, no params). New nav group "Balances" appended to
+  docs.json tabs[2] AFTER "QR / Payment Channels" (last group). openapi namespace
+  /endpointbalancev2/accountbalance (v2-suffix convention). Reused the V1 page name accountbalance.mdx
+  (api-reference/transaction/accountbalance.mdx was the V1 template — V1 had it under transaction/, not
+  its own group; V2 gives Balances its own group per the inventory/task split).
+- ENVELOPE: PLURAL `messages` (read) per task-009. 0 singular "message" json keys.
+- V1->V2 path change: V1 used /hl/v1/balance (singular); V2 master uses /hl/v2/balances (PLURAL). Easy to
+  miss — the resource path pluralized between versions. Captured live from prod to confirm.
+- LIVE CAPTURE (DUMMY_PROD_MERCHANT_API_KEY len 760, works on prod GETs): GET /hl/v2/balances returned
+  {statusCode:200, messages:"success", data:{balanceActive:0, balancePending:0, balance:0}} — EXACTLY the
+  inventory shape. Sample account had zero balances => NO PII in the captured payload (all integer zeros);
+  nothing to scrub. Documented the real shape verbatim.
+- No write endpoints in this group (single GET) — no representative-flag maintainer comment needed.
+- Adapted the V1 page to the established V2 template conventions: ## Authorization (not ### like V1),
+  data typed "object" (V1 mislabeled it "array of object"), data.* dotted ResponseField names
+  (data.balanceActive etc.) matching dailytransaction.mdx precedent.
+- GOTCHA reminders applied: kept bare "handler" out of prose (leak-grep); no stray </content> tag;
+  `git add` the new folder FIRST then `git commit -m "msg" -- <paths>` (-m BEFORE the -- separator) so
+  only the 2 task files committed, baseline/.jonggrang untouched (2 files / +90).
+- Validation: python3 -m json.tool docs.json OK; nav<->file 1:1 for V2 "Balances" (1==1, filtered
+  tab=="API V2 Reference"); 1 json fence parses; JSX tags balanced (RequestExample/ResponseExample/
+  CodeGroup 1:1); all /hl/v2 (no /hl/v1); leak-grep CLEAN; PII CLEAN (none present).
+
+## task-020 — Author V2 'Installments' group (Phase 4) — DONE 2026-06-29
+
+### Scope: 3 V2 installment endpoints, source-confirmed from master
+- Handler source: api-custom-paymenlink/api/v2/installment.js (NOT under src/api/v2/ — the
+  v2 dir at src/api/v2 has only customer/membership/transaction/etc.; installment lives at
+  api/v2/installment.js). Routes wired in api-custom-paymenlink/api/v2/routes.js lines 85-87:
+    GET  /installments              -> allInstallment    (cursor list)
+    GET  /installments/:uuId        -> getInstallment    (401 "Unauthorized" if not owner)
+    POST /installments/create       -> createInstallment (400 "Validation Error", 409 "already exist",
+                                                            500 "Failed to create installment invoices")
+- ALL THREE use `messages` (plural) envelope. returnJSON (api/v2/utils.js:115) emits
+  {statusCode, messages, data}; allInstallment uses messages + buildCursorResponse spread
+  {data, hasMore, nextStartingAfter}. Inventory "[all msgs]" confirmed against source.
+
+### Capture notes
+- Live prod GET /installments?limit=5 (DUMMY_PROD_MERCHANT_API_KEY) returned
+  {statusCode:200, messages:"success", data:[], hasMore:false, nextStartingAfter:null}
+  — envelope confirmed live, but data was EMPTY for the capture account. So the list
+  item shown is REPRESENTATIVE (derived from GET_PAYMENT_LINK selection set in query.js:616:
+  id, amount, category, createdAt, description, link, type, status, name, limit, redirectUrl,
+  installmentId, event, order, coverImage, multipleImage, transactions). Detail+create are
+  also representative (write/empty-read). All three pages carry an {/* maintainer */} note.
+- V2 detail/create data shape differs from V1: V2 returns cleaned objects with
+  totalInterest/totalAmount + customer{} sub-object + invoices[] with ISO-string dueDate
+  (from expiredAt). V1 had paymentLink{}, userId, ms-timestamp fields. Did NOT copy V1
+  verbatim — used the actual v2 returnJSON payload shape. No userId/paymentLinkId leaked.
+
+### docs.json GOTCHA (important for remaining Phase 4 groups)
+- DO NOT rewrite docs.json with python json.dump(indent=2) to append a group — it reformats
+  the whole file (existing nav has irregular indentation: 3-space arrays, mis-indented
+  Integration group, "{" with no indent at V1 Transaction). That produced a 39+/31- diff
+  touching Guides + V1 nav. Instead use a surgical text Edit inserting the new group object
+  after the previous group's closing "}" — yields a clean +N/-0 diff. Validate with
+  `python3 -m json.tool docs.json`.
+- Appended Installment group to tabs[2] after Balances: pages index, detail, create.
+
+## task-021 — Author V2 'Discount & Coupon' group (Phase 4) — DONE 2026-06-29
+- Authored 4 .mdx under api-reference-v2/discount/ (one per in-scope endpoint from task-009 inventory),
+  nav order create, detail, validate, check. Group "Discount & Coupon" appended to docs.json tabs[2]
+  AFTER "Installment" (last group). openapi namespace /endpointdiscountv2/<slug> (v2-suffix convention).
+    create.mdx    POST /coupons/create     (write, representative)
+    detail.mdx    GET  /coupons/{uuId}      (read; could NOT capture live, representative — see below)
+    validate.mdx  POST /coupons/validate    (read-only gtFetch; success representative, errors live-verified)
+    check.mdx     POST /coupons/check       (read-only gtFetch; 404 live-verified, success representative)
+- PATHS: V2 master uses PLURAL "coupons" (/hl/v2/coupons/...). V1 used SINGULAR /hl/v1/coupon/... — easy to
+  miss the pluralization between versions (same pattern as balances v1->v2). check.mdx has NO V1 equivalent
+  (the 4th endpoint is V2-new; V1 discount/ only has create/validate/detail).
+- ENVELOPE: ENTIRE group PLURAL `messages` (reads, writes, AND errors) — all via returnJSON (api/v2/utils.js).
+  Verified live: messages plural on 400 "Validation Error", 404 "Kode kupon tidak ditemukan.". 0 singular
+  "message" json keys. (Singular `message` remains ONLY the 4 V2 membership writes.)
+- SOURCE: api-custom-paymenlink/api/v2/discount.js (531 lines, 4 handlers) + schema.js (COUPON, VALIDATE_COUPON,
+  CHECK_COUPON). Confirmed exact request schemas — KEY DRIFT from task-009 inventory:
+  * VALIDATE_COUPON: paymentLinkId is REQUIRED (schema empty:false, not optional as inventory said "?").
+    Verified live: missing paymentLinkId -> 400 required. Body uses `amount` (def 0), NOT V1's `finalAmount`.
+  * COUPON (create) eligibleCustomerType enum = ["all","new","old"] (schema). NOTE: the validateCoupon handler
+    branches on "existing" but the CREATE schema validates "old" — documented create's enum as all/new/old.
+    products array max 2 (each {id required}).
+  * CHECK_COUPON: only couponCode (1-50).
+- RESPONSE SHAPES (source-confirmed):
+  * create returns a FLAT discount summary (NOT the V1 create shape): id,name,discountType,value,minimumPurchase,
+    eligibleCustomerType,totalCoupons,discountProductType,expiredAt(ISO STRING|null),isLifeTime,status:"active",
+    coupons[],products[],createdAt(ISO STRING). createdAt/expiredAt are ISO strings here (new Date().toISOString()),
+    NOT ms timestamps. coupons[] for reusable = [{id,code,type,expiredAt}]; onetime = [{code,type,expiredAt}] (NO id,
+    up to 50). products[] = [{id}] only when discountProductType=="selected". percentage value capped at 99.
+  * detail (getDiscount) returns the raw stored discount record (ms-timestamp createdAt/expiredAt, like V1 detail)
+    with coupons[] = full coupon items {id,code,createdAt,discountId,endMonthTrial,expiredAt,isActive,limit,type,
+    updatedAt,userId}. So detail uses MS timestamps but create uses ISO strings — different key types per endpoint.
+  * validate success data{valid, coupon{id,code,discountType,discountValue,minimumPurchase,eligibleCustomerType}}.
+  * check success data{couponCode,isUsed,totalUsed,limit,remaining}. isUsed = totalUsed>=limit && limit>0.
+- CAPTURE: GET /coupons/{uuId} has NO list endpoint to discover an existing discount id, and probing a random
+  uuid returns 500 ({messages:"Cannot read properties of null (reading 'id')"} — getData null). Creating a coupon
+  would MUTATE prod, so I did NOT capture detail live; mirrored the V1 detail shape (same getData record) and
+  flagged REPRESENTATIVE in a maintainer comment. validate/check handlers are read-only (gtFetch only, no writes)
+  so I PROBED them live to confirm the envelope + error strings on /hl/v2 without side effects.
+- PII: no real merchant data captured (only probed error/validation responses + reused already-PUBLISHED V1 UUIDs
+  c9aa143a/532858fe/08d233e9/4d26ea37 and the published synthetic merchant userId 348e083d...). PII grep CLEAN.
+- VALIDATION: python3 -m json.tool docs.json OK; nav<->file 1:1 (4==4, correct order, 0 missing/orphan, filtered
+  tab=="API V2 Reference"); 5 json fences parse; JSX tags balanced; all /hl/v2 (no /hl/v1); 0 singular message;
+  leak-grep CLEAN (kept bare "handler"/module names out of prose); no stray </content>. Committed 5 files (+855)
+  with explicit pathspec (git add new folder first, then `git commit -m "msg" -- <paths>` — -m BEFORE --).
+
+## task-022 — Author V2 'Bundling' group (Phase 4) — DONE 2026-06-29
+- Authored 2 .mdx under api-reference-v2/bundling/ (one per in-scope endpoint from task-009
+  inventory). New nav group "Bundling" appended to docs.json tabs[2] AFTER "Discount & Coupon"
+  (last group). openapi namespace /endpointbundlingv2/<slug> (v2-suffix convention). No V1
+  bundling folder exists; used index.mdx (list) + detail.mdx (single), mirroring installment/.
+    index.mdx   GET /bundling          (cursor list; type=bundling)
+    detail.mdx  GET /bundling/{uuId}    (single obj; 404 "Bundling not found")
+- ENVELOPE: BOTH PLURAL `messages` (reads) per task-009. 0 singular "message" json keys.
+- BOTH GET shapes CAPTURED LIVE from prod (DUMMY_PROD_MERCHANT_API_KEY len 760, works on prod GETs):
+  * GET /bundling: V2 cursor envelope {statusCode, messages, data:[...], hasMore, nextStartingAfter}.
+    Item keys: id,name,amount,description(HTML),type("bundling"),status,link,updatedAt,createdAt,
+    bundlingProductType("payment_link"),coverImageId,coverImage,products[]. List products[] item =
+    {id,status("ENABLED"),paymentLinkId,paymentLink{id,name,type,amount}} — the SMALLER product shape.
+  * GET /bundling/{uuId}: data is a FULL product object — adds many nullable shared product attrs
+    (subType,tax,items,limit,expiredAt,redirectUrl,notes,terms,target,reason,receiver,usage,category,
+    affiliateCommission,paymentType,qty,multipleImageId,customerId,customer,event,multipleImage) PLUS
+    userId + nested user{id,accountId,account{id,name}} (the MERCHANT's own account — PII-DENSE, scrub
+    the whole subtree). detail products[] item is RICHER than list: adds variantId + updatedAt, and
+    paymentLink adds `variant`. Documented the nullable-attrs cluster in a single <Note> rather than a
+    ResponseField per null field. 404 "Bundling not found" (verbatim) when uuId has no match.
+- PII SCRUB: real merchant userId 8afa8430-9ccd-4d33-9c1b-e0999a319994 -> 348e083d-...-5a2a98c48413
+  (published merchant userId reused across V2 pages); accountId 6e54ac35... -> synthetic d4e5f6a7...;
+  account.name "Mayar Testingg" -> "Mayar Demo Account" (task-016 precedent); real bundle name
+  "test pengurutan" / link "test-pengurutan" / lorem+"dfdfdfdf" descriptions / 4 real product names
+  ("test UIUX ...") and ALL real bundle/product/paymentLink UUIDs -> synthetic published-style UUIDs +
+  Indonesian product names (Paket Belajar Lengkap, Kelas Online Dasar, Produk Digital Premium, ...).
+  Kept product `type` enum values verbatim (course/cohort_based/digital_product/generic_link/coaching —
+  PUBLIC catalogue values, NOT PII). Grep-verified all ~19 real captured tokens ABSENT.
+- No write endpoints in this group (2 GETs) — maintainer comments still flag the representative
+  product names/ids since real values were scrubbed.
+- GOTCHA reminders applied: kept bare "handler"/module names out of prose (leak-grep CLEAN incl.
+  bundling.js/returnJSON/buildCursor patterns); no stray </content>; `git add` the new folder FIRST,
+  then `git commit -m "msg" -- <paths>` (-m BEFORE the -- separator) so only the 3 task files committed
+  (3 files / +534), baseline/.jonggrang untouched.
+- Validation: python3 -m json.tool docs.json OK; nav<->file 1:1 for V2 "Bundling" (2==2, correct order,
+  0 missing/orphan, filtered tab=="API V2 Reference"); 2 json fences parse; JSX tags balanced; all
+  /hl/v2 (no /hl/v1); 0 singular message; leak-grep CLEAN; PII CLEAN.
+
+## task-023 — Author V2 'Name Services' group (Phase 4) — DONE 2026-06-29
+- Authored 2 .mdx under api-reference-v2/nameservice/ (one per in-scope endpoint from task-009
+  inventory's "Name-services" group). New nav group "Name Services" appended to docs.json tabs[2]
+  AFTER "Bundling" (last group). openapi namespace /endpointnameservicev2/<slug> (v2-suffix convention).
+    create.mdx  POST /name-services/create  (write; success NO data)
+    update.mdx  POST /name-services/update  (write; data = updated record)
+- SOURCE confirmed via glab (api-custom-paymenlink/api/v2/name-service.js, routes.js:81-82):
+  * newNameService: body name(req — slugified), payload, description?, website?, amount?, urlHook?,
+    image? (payload JSON.stringify'd before save). SUCCESS body is EXACTLY {statusCode:200,
+    messages:"success"} — NO `data` key. Error path: 500 {statusCode:500, messages:<error.message>}.
+  * editNameService: id read from BODY via Uuid.fromString(input.id) — the route /name-services/update
+    has NO :uuId path segment at all, so id MUST be in body (cleaner than the products/invoice edit-by-
+    body-id quirk where the path :uuId is cosmetic). Body: id(req), name, description?, payload,
+    credential?, urlHook?, amount?, website?, image?, event?. SUCCESS {statusCode:200, messages:"success",
+    data:<full stored record>}. payload/credential/event are stored as serialized JSON STRINGS (each
+    JSON.stringify'd before save) — documented data.payload/credential/event as `string` type, not object.
+    Error path: 500 {messages:<error.message>}.
+- ENVELOPE: BOTH PLURAL `messages` (writes AND errors) per task-009. 0 singular "message" json keys.
+  (Singular `message` remains ONLY the 4 V2 membership writes.)
+- WRITES representative — no live capture (would mutate prod scylla store). Flagged via {/* maintainer
+  ... REPRESENTATIVE */} comment on each page. update.mdx data fields source-confirmed from the stored
+  record assignments (id,userId,name,slug,description,website,amount,urlHook,image,payload,credential,event).
+- PII: no real data captured. Used only synthetic/published values — merchant userId 348e083d... (the
+  published one reused across V2 pages), published-style UUIDs a1b2c3d4.../b2c3d4e5..., tenant
+  testingmayar.myr.id, webhook.example.com. PII grep N/A (nothing captured); leak-grep CLEAN.
+- GOTCHA reminders applied: kept bare "handler"/module/function names (name-service.js, newNameService,
+  scylla, powerUpStore, slugify, req.userId) out of all prose/comments — leak-grep CLEAN; no stray
+  </content>; `git add` the 2 new files + docs.json, then `git commit -m "msg" -- <paths>` (-m BEFORE the
+  -- separator) so only the 3 task files committed (3 files / +340), baseline/.jonggrang untouched.
+- Validation: python3 -m json.tool docs.json OK; nav<->file 1:1 for V2 "Name Services" (2==2, correct
+  order, 0 missing/orphan, filtered tab=="API V2 Reference"); 2 json fences parse; JSX tags balanced
+  (ParamField 7/7+10/10, ResponseField 4/4+17/17, Note 1/1, RequestExample/ResponseExample/CodeGroup 1:1);
+  all /hl/v2 (no /hl/v1); 0 singular message; leak-grep CLEAN.
+
+## task-024 — Author V2 'Webhook' group (Phase 4) — DONE 2026-06-29
+- Authored 5 .mdx under api-reference-v2/webhook/ (one per in-scope endpoint from task-009 inventory).
+  New nav group "Webhook" appended to docs.json tabs[2] AFTER "Name Services" (last group). openapi
+  namespace /endpointwebhookv2/<slug> (v2-suffix convention). Reused V1 page names verbatim + added
+  newhistory.mdx (V2-new endpoint, no V1 equivalent):
+    history.mdx         GET  /webhooks/history       (cursor list; main delivery log)
+    newhistory.mdx      GET  /webhooks/new-history    (V2-NEW; newer store; ISO-string dates)
+    registerurlhook.mdx POST /webhooks/update         (V1 path was /webhook/register -> V2 /webhooks/update)
+    testurlhook.mdx     POST /webhooks/test
+    retryhistory.mdx    POST /webhooks/retry
+- ENVELOPE: ENTIRE group PLURAL `messages` (reads, writes, AND errors) per task-009 + source confirm —
+  every handler emits {statusCode, messages}. 0 singular "message" json keys. (Singular `message`
+  remains ONLY the 4 V2 membership writes.)
+- PATH DRIFT V1->V2: V1 used /hl/v1/webhook/{history,register,test,retry} (singular "webhook"); V2 master
+  uses PLURAL /hl/v2/webhooks/* AND renames register->update. Easy to miss both the pluralization and the
+  register->update rename. history query params also changed: V1 page/pageSize -> V2 limit/startingAfter.
+- BOTH GET shapes CAPTURED LIVE from prod (DUMMY_PROD_MERCHANT_API_KEY len 760, works on prod GETs):
+  * GET /webhooks/history: V2 cursor envelope {statusCode, messages, data:[...], hasMore,
+    nextStartingAfter(unix-ms STRING)}. NO page/pageSize/pageCount (V1 had them). Item keys: id,createdAt
+    (ms INT),nextDelivery(null),paymentLinkId,payload(JSON STRING),status,type,updatedAt(ms int),userId,
+    paymentLinkTransactionId,urlDestination,responsePayload(null),source. Query: limit,startingAfter,
+    status?,type?,urlDestination?,startAt?,endAt?.
+  * GET /webhooks/new-history: SAME envelope but DIFFERENT item shape — createdAt & nextDelivery are
+    ISO-8601 DATE STRINGS (not ms ints), record carries an extra `Webhooktype` key (note odd capital W,
+    usually null) and OMITS the integer timestamp variant. paymentLinkId/paymentLinkTransactionId nullable
+    (null for non-txn events like membership.memberExpired). Query: limit,startingAfter only.
+- GOTCHA: the `payload` field is a JSON-ENCODED STRING (escaped), not a nested object. It embeds dense PII
+  (merchantId/Name/Email, customerName/Email/Mobile, productName, paymentUrl host). Validation must parse
+  BOTH the outer fence AND the inner payload string — wrote a walker that json.loads every "payload" string.
+  Easy to leave real PII buried inside the escaped string; scrub the INNER json too, not just top-level keys.
+- WRITE shapes source-confirmed via glab (api/v2/webhook.js): updateUrl body{urlHook(req),webhookConfig?(obj,
+  JSON.stringify'd)}; test body{urlHook(req)}; retry body{webhookHistoryId}. ALL success = exactly
+  {statusCode:200, messages:"success"} NO data. Errors verbatim: update 400 "urlHook is required"/"urlHook
+  is not a valid URL"; test 400 "Url tidak ditemukan. Silahkan masukkan url webhook anda."/"Url tidak valid.
+  Silahkan masukkan url webhook yang valid."; retry 400 "Url tidak ditemukan. Silahkan register url webhook
+  anda terlebih dahulu."/404 "Webhook history not found". Did NOT POST these live (mutate config / trigger
+  real deliveries) — flagged representative in maintainer comments.
+- PII SCRUB: merchant userId/merchantId 8afa8430... -> 348e083d... (published); merchantName "Andika" ->
+  "Toko Mayar Demo"; merchantEmail/customerEmail -> merchant@example.com / budi.santoso@example.com /
+  siti.aminah@example.com; customers ladu/andiak/"Harus Buat auto testing" -> Budi Santoso/Siti Aminah;
+  mobiles 0888.../081320547877 -> 081234567890/081298765432; urlDestination eoze6x1sc8k58q4.m.pipedream.net
+  -> webhook.example.com; paymentUrl host andiak.myr.id -> yourstore.myr.id; product names -> Indonesian
+  synthetic; memberId F7HVWQ2E -> MBR8X2QK; pixelFbp -> null; all txn/paymentLink/record UUIDs -> synthetic
+  published-style. Grep-verified all 11 real captured tokens ABSENT.
+- GOTCHA reminders applied: kept bare "handler"/module names out of prose (leak-grep CLEAN incl webhook.js/
+  newWebhookHistory/updateUrl/scylla/returnJSON); no stray </content>; `git add` the 5 new files + docs.json
+  FIRST, then `git commit -m "msg" -- <paths>` (-m BEFORE the -- separator) so only the 6 task files
+  committed (6 files / +669), baseline/.jonggrang untouched.
+- Validation: python3 -m json.tool docs.json OK; nav<->file 1:1 for V2 "Webhook" (5==5, correct order, 0
+  missing/orphan, filtered tab=="API V2 Reference"); 5 outer json fences + all nested payload strings parse;
+  JSX tags balanced; all /hl/v2 (no /hl/v1); 0 singular message; leak-grep CLEAN; PII CLEAN.
+
+## task-025 — Author V2 'Reviews' group (Phase 4) — DONE 2026-06-29
+- Authored 8 .mdx under api-reference-v2/reviews/ (one per in-scope endpoint from task-009
+  Reviews inventory). New nav group "Reviews" appended to docs.json tabs[2] AFTER "Webhook"
+  (last group). openapi namespace /endpointreviewsv2/<slug> (v2-suffix convention; V1 had a
+  single /endpointreviews). Page order: 5 reads then 3 writes.
+    getallreviews.mdx        GET  /reviews                                 (cursor list; dashboard query)
+    productreviews.mdx       GET  /products/{paymentLinkId}/reviews         (cursor list; ACTIVE only, prioritizeMessage?)
+    productreviewcustomer.mdx GET /products/{paymentLinkId}/reviews/customer (single review|null; customerId req)
+    productreviewstats.mdx   GET  /products/{paymentLinkId}/reviews/stats    (agg stats; REPRESENTATIVE — prod 500)
+    merchantreviewstats.mdx  GET  /merchants/reviews/stats                   (store-wide stats; REPRESENTATIVE — prod 500)
+    create.mdx               POST /reviews/create                           (write; data=inserted review)
+    update.mdx               POST /reviews/{uuId}/update                     (write; id from BODY not path)
+    bulkstatusupdate.mdx     POST /reviews/bulk-status/update                (write; success NO data)
+- ENVELOPE: ENTIRE group PLURAL `messages` (reads, writes, AND errors) — source-confirmed every
+  handler emits {statusCode, messages}. CAVEAT: the Reviews DOMAIN has a legitimate review-text
+  field literally named `message` (the customer's review string) on every review record. So the
+  "0 singular message json key" check that worked for other groups does NOT apply here — grep finds
+  7 `"message":` data fields that are CORRECT. Validate by ensuring every ENVELOPE-level key is
+  `messages` (8 found) and the singular `message` only ever appears as a review data field, never
+  as the top-level/error envelope key.
+- LIVE CAPTURE (DUMMY_PROD_MERCHANT_API_KEY len 760, prod GETs): 3 of 5 reads captured key-for-key:
+  * GET /reviews: cursor envelope {statusCode, messages, data[], hasMore, nextStartingAfter}. Item =
+    V1 review shape + content[] (uploaded videos: {id,value,file{id,filename,size,mimetype}}) +
+    multipleImage[] ({id,fileType,description,url}) + nested customer{id,name} + paymentLink
+    {id,name,type,link,subType}. NOTE: V1 used page/pageSize/pageCount/page/total — V2 dropped all
+    of those for cursor hasMore+nextStartingAfter.
+  * GET /products/{plid}/reviews: SAME item shape (key order differs: status before rating; file
+    keys id/filename/mimetype/size). hasMore=false/nextStartingAfter=null when single page.
+  * GET /products/{plid}/reviews/customer?customerId=: data = ONE review object (flat: no nested
+    customer/paymentLink), or null. 400 "customerId query parameter is required" when omitted
+    (probed live, read-only/no side effect).
+- PROD BUG: BOTH stats endpoints (GET /products/{plid}/reviews/stats AND /merchants/reviews/stats)
+  return 500 {messages:"gtFetch(...).then is not a function"} live — a server-side defect (handler
+  calls .then on a non-promise in the cache-miss path). Could NOT capture; documented shape from V2
+  source as REPRESENTATIVE: data = {total, average, stats:[{rating,percentage,totalRating}]} one
+  entry per rating 5..1, or empty {} when no ACTIVE reviews. (Reported as bug separately.)
+- WRITE shapes source-confirmed via glab (api/v2/review.js + schema.js REVIEW_CREATE/EDIT/BULK_STATUS),
+  flagged REPRESENTATIVE in maintainer comments (no live POST — would mutate prod review store):
+  * create: body paymentLinkId(req,3-100), customerEmail(req email), rating(req int 1-5),
+    message?(1-2000), contentReview?[{id?,type?(image|video),multipleFileId?}] max10. Success
+    {messages:"success", data: inserted review}. Validation fail -> HTTP 200 {messages:"failed",
+    data: validationResult}. Errors: 404 "Produk tidak ditemukan", 403 "Anda belum pernah membeli
+    produk ini", 409 "Anda sudah memberikan ulasan untuk produk ini...", 500 "Gagal menambahkan
+    ulasan"/"Terjadi kesalahan saat menambahkan ulasan".
+  * update: POST /reviews/{uuId}/update but id read from BODY (Validator non-strict, so handler also
+    reads body.customerEmail though schema omits it — used to locate the paid transaction). Success
+    {messages:"success", data: edited review}. Errors: 404 "Transaksi tidak ditemukan" / "Review
+    tidak ditemukan"; validation "failed". deleteContentReview?[] removes attachments.
+  * bulk-status/update: body input:[{id(req),status(req enum ACTIVE|ARCHIVED|INACTIVE),paymentLinkId?}]
+    min1 max50. Success EXACTLY {statusCode:200, messages:"success"} NO data. 400 "Review is not
+    valid! Please check your payload." when any review not owned by caller; validation "failed".
+- PII SCRUB: real merchant userId 8afa8430-9ccd-4d33-9c1b-e0999a319994 -> 348e083d-...-5a2a98c48413
+  (published); customerId 6a38cf26... -> 22eb6224-... (V1 published); paymentLinkId a02a76e1... ->
+  e2b3f5d5-... (V1 published course); review ids f53d646d.../c5dd9a6e... -> 11f4d767.../a1b2c3d4...;
+  all content/multipleImage file UUIDs + raw filenames (e679e5796cd...mp4 etc.) -> synthetic UUIDs +
+  "ulasan-video.mp4"; customer name "andiak" -> "Budi Santoso"; review text "eeeeeesss"/"mantap " ->
+  Indonesian synthetic; product "test UIUX Kelas Online"/"test-uiux-kelas-online" -> "Kelas
+  Pemrograman Web Dasar"/"kelas-pemrograman-web-dasar" (V1 name). Kept enum/public values verbatim
+  (status ACTIVE/ARCHIVED/INACTIVE, type "course", mimetype video/mp4, media.mayar.id public CDN
+  host). Grep-verified all 19 real captured tokens ABSENT.
+- GOTCHA reminders applied: kept bare handler/module/function names out of all prose/comments
+  (leak-grep CLEAN incl review.js/schema.js/gtFetch/getReviewPage/createReview/editReview/redis/
+  reviewStatsProduct/INSERT_REVIEW/fastest-validator/req.userId); no stray </content>; `git add` the
+  new folder + docs.json FIRST, then `git commit -m "msg" -- <paths>` (-m BEFORE the -- separator)
+  so only the 9 task files committed (9 files / +1413), baseline/.jonggrang untouched.
+- Validation: python3 -m json.tool docs.json OK; nav<->file 1:1 for V2 "Reviews" (8==8, correct
+  order, 0 missing/orphan, filtered tab=="API V2 Reference"); 8 json fences parse; JSX tags balanced;
+  all /hl/v2 (no /hl/v1); envelope key `messages` preserved (singular `message` only as review data
+  field, source-correct); leak-grep CLEAN; PII CLEAN.
+
+## task-026 — Sandbox & sample fidelity pass over all V2 pages (Phase 5) — DONE 2026-06-29
+- Swept all 74 .mdx under api-reference-v2/** (71 endpoint pages + 3 doc pages introduction/
+  statuscode/rate-limit). This was a verification/fidelity pass; only 2 pages needed fixes.
+- (a) SANDBOX URLs: every endpoint page already carries a <CodeGroup> with BOTH a ```Production
+  fence (https://api.mayar.id/hl/v2/...) and a ```Sandbox fence (https://api.mayar.club/hl/v2/...).
+  Verified by-pattern: 72 api.mayar.club/hl/v2 occurrences (1 per endpoint page) all live INSIDE
+  CodeGroup sandbox fences — none leak into curl request examples (V1 precedent: curl always uses
+  prod, sandbox documented only in the endpoint CodeGroup). 0 /hl/v1 leakage anywhere. introduction.mdx
+  documents both prod+sandbox base URLs. The 3 doc pages correctly have NO CodeGroup (no endpoints).
+  NO live sandbox capture attempted (prod key 401s on api.mayar.club), per task scope.
+- (b) ENVELOPE KEY audit vs task-009 inventory — PERFECT MATCH, no drift:
+  * Singular "message" envelope appears on EXACTLY the 4 membership WRITE pages (membership/
+    register.mdx [members/create], membership/update.mdx [members/:id/update], membership/
+    createinvoice.mdx [invoice/create], membership/cancel.mdx) — and nowhere else.
+  * Those same 4 are the ONLY endpoint pages lacking a plural "messages" envelope (confirmed by
+    inverse grep). All other 67 endpoint pages use plural "messages" for reads, writes AND errors.
+  * REVIEWS CAVEAT (re-confirmed from task-025): reviews/{create,update,getallreviews,
+    productreviews,productreviewcustomer}.mdx contain a singular "message": key, but every one is the
+    DATA field holding the customer's review text (Indonesian strings, indented inside data objects;
+    ResponseField docs them as "Review message"). NONE is an envelope/error key — all review
+    envelopes are plural "messages". So the "0 singular message" heuristic does not apply to reviews;
+    validated by context instead.
+- (c) PII: ONE real-token drift found & fixed. product/changestatus.mdx still had the real captured
+  product UUID a02a76e1-25b4-49dd-9d1f-e84dd34ecbb4 in its curl path (this same real id was scrubbed
+  to e2b3f5d5-... in the reviews group during task-025, but the product page predated that scrub).
+  Replaced with the dominant synthetic product id used across product/ pages:
+  2529541f-dc98-4ca0-93bb-3c1d35a8dd07. Full sweep otherwise CLEAN: all emails @example.com
+  (budi.santoso/siti.aminah/andi.pratama/merchant + .new variant); all phones synthetic
+  (08120000000x, 081234567890, 081298765432); all human names synthetic (Budi Santoso, Siti Aminah,
+  Andi Pratama); subdomains are synthetic/public only (testingmayar.mayar.shop, testingmayar.myr.id,
+  yourstore.myr.id, public CDN media.mayar.id/web.mayar.id). All previously-scrubbed real tokens
+  (andika/andiak/ladu/8afa8430/eoze6x1sc8k58q4/pipedream/6a38cf26/F7HVWQ2E/eeeeeess/e679e5796cd)
+  grep-verified ABSENT.
+- (d) REPRESENTATIVE write flags: 2 write pages lacked a maintainer/representative flag —
+  product/changestatus.mdx and reqpayment/changestatus.mdx (the twin POST /{products|payments}/{id}/
+  {action} status-toggle handler). Added a {/* Notes for maintainers — REPRESENTATIVE write sample */}
+  block to each (notes the plural-messages envelope, no-data success body, shared handler, synthetic
+  values). All 37 POST endpoint pages now carry a representative/maintainer flag.
+- GOTCHA for future passes: status-toggle pages (product/reqpayment changestatus) are easy to miss as
+  "writes" because they have no request body and a trivial {statusCode, messages} response — but they
+  ARE writes and still need the representative flag. Also a02a76e1 shows a real-id scrub done in one
+  group (reviews) won't propagate to an earlier-authored page reusing the same captured id — grep the
+  WHOLE tree for each scrubbed token, not just the current group.
+- FILES CHANGED: api-reference-v2/product/changestatus.mdx, api-reference-v2/reqpayment/changestatus.mdx
+  (2 files). docs.json untouched (no nav change). NOTE: an api-reference-v2/.jonggrang/ dir is present
+  (untracked) — must NOT be staged.
+- Validation: write-flag audit 0 missing; a02a76e1 0 remaining; scrubbed-token sweep CLEAN; singular
+  message confined to 4 membership writes + reviews data fields; /hl/v1 0; every endpoint page has
+  Production+Sandbox CodeGroup fences; edited files comment-balanced (1 open/1 close each) + CodeGroup 1/1.
+
+## task-027 — Validation & leak-guard suite for V2 docs (Phase 6) — DONE 2026-06-29
+- Authored the documentation-validation & leak-guard suite under .jonggrang/.output/features/
+  api-v2-reference-docs-mqyl9hub/: validate-v2-docs.py (the suite) + validate-v2-docs.sh (entrypoint
+  that runs `python3 -m json.tool docs.json` then the python suite). Run from repo root:
+    bash .jonggrang/.output/features/api-v2-reference-docs-mqyl9hub/validate-v2-docs.sh   (exit 0 == green)
+- RESULT: SUITE PASS, exit 0, all 8 checks green over the 74 V2 pages + docs.json.
+- Checks (mapped to the task's 7 required + the V1-unchanged assertion):
+  * C1 docs.json valid JSON (json.loads; wrapper also runs `python3 -m json.tool`).
+  * C2 nav<->file 1:1 for tabs[2] "API V2 Reference": walked the group tree (handles NESTED group-objects
+    inside pages[]), 74 nav paths all under api-reference-v2/, each maps to an existing .mdx; 74 files on
+    disk all referenced exactly once. 0 missing, 0 orphan, 0 dup. (Tab is selected by tab=="API V2
+    Reference", not by index — avoids the V1/V2 same-group-name collision noted in task-013.)
+  * C3 frontmatter `title:` present on all 74 pages.
+  * C4 JSX tag balance for RequestExample/ResponseExample/CodeGroup/ParamField/ResponseField/Note/Warning
+    — all 7 tags are strictly PAIRED (0 self-closing across the tree), so open-count==close-count per tag
+    per file. All balanced.
+  * C5 code-fence parity: even number of ``` per file (all even).
+  * C6 embedded JSON parse: every ```json fence (fences carry a TITLE, e.g. ```json Response Example 200 —
+    regex must allow text after ```json) — 80 json blocks across the tree, all parse. (75 live inside
+    Request/ResponseExample; 5 in <Note>/body e.g. the qrcode 500-shape — suite parses ALL 80, a strict
+    superset of the spec's "Request/ResponseExample blocks".)
+  * C7 NEGATIVE leak-grep over api-reference-v2/**: denylist covers @mayarid/* packages, internal module
+    filenames (membership.js/routes.js/query.js/...), internal paths (api-custom-paymenlink, src/api/v2),
+    handler/helper FUNCTION names (returnJSON, buildCursorResponse, gtFetch, checkJwt, getMembershipMember,
+    ...), GraphQL op names (GET_*/INSERT_*/...), Redis/Scylla internals, and env var names (process.env,
+    APP_PUBLIC_URL, DUMMY_PROD_MERCHANT_API_KEY). 0 leaks. CLEAN.
+  * C8 V1 nav unchanged: asserts tabs[1].tab=="API V1 Reference" AND tabs[1] (label-normalized) is
+    byte-identical to `git show main:docs.json` tabs[1]. On main the tab was "API Reference"; the only
+    delta is the label — groups/pages identical. PASS.
+- KEY DESIGN DECISION (C7 scope): the leak-grep runs over RENDERED content — Mintlify strips `{/* ... */}`
+  MDX comments at build, so a published leak is by definition something a reader can SEE. The maintainer-
+  notes comment convention (established in the plan/task-003) deliberately holds sourcing context. The grep
+  strips `{/* */}` before matching. Proven correct by mutation: an internal id injected into rendered prose
+  FAILS C7; the same id placed only inside a `{/* */}` comment PASSES (does not reach a reader).
+- TEETH PROVEN via mutation testing in an isolated /tmp git sandbox (real worktree untouched): C1 corrupt
+  json->C1 FAIL; renamed nav file->C2 MISSING+orphan; stripped title->C3; deleted </ResponseExample>->C4;
+  stray fence->C5; corrupted json (,,) ->C6; injected @mayarid/membership.js/returnJSON/process.env into
+  rendered->C7 (4 hits) while comment-only injection->PASS; renamed V1 tab label->C8; mutated a V1 page
+  path->C8 "groups/pages DIFFER". All 8 checks falsifiable.
+- RESIDUAL HUMAN-VERIFICATION ITEMS (non-gating; rendered docs are clean):
+  * HV1 (maintainer-comment references): 5 maintainer `{/* */}` comments (webhook/history, webhook/
+    newhistory, reviews/getallreviews, reviews/productreviews, reviews/productreviewcustomer) name the
+    capture env var DUMMY_PROD_MERCHANT_API_KEY, and ~4 comments use the bare word "handler". These are
+    NON-RENDERED (stripped by Mintlify) so they don't leak to readers and C7 correctly ignores them. If a
+    zero-tolerance-even-in-source policy is desired, scrub the env-var name from those 5 comments in a
+    follow-up (out of scope here: this task may only touch .jonggrang/.output/, docs.json, progress.txt —
+    not the .mdx pages). The word "handler" also appears in 4 RENDERED <Note> bodies ("shares the same
+    handler as ...") describing API behavior; it is a generic English noun, not an internal symbol, so it
+    is intentionally NOT in the denylist.
+  * HV2 (Mintlify visual render): no Mintlify CLI / package.json in-repo, so actual rendered appearance
+    (component nesting, CodeGroup tabs) is not machine-verifiable here — visual spot-check recommended.
+  * HV3 (live-API field completeness): write-endpoint payloads + a few read shapes that 500'd live
+    (qrcode/getstaticqrcode, both reviews stats endpoints — see bug-002) are flagged REPRESENTATIVE in
+    maintainer comments; a live capture would confirm exhaustive field sets. Non-gating.
+- PRE-EXISTING out-of-scope defect (NOT fixed here, already tracked): bug-001 — the 5 invoice pages
+  (invoice/{create,edit,index,detail,filter}.mdx) end with a stray `</content>` tag. `content` is NOT one
+  of the 7 balance-checked JSX tags, so C4 does not (and per spec should not) flag it; it remains bug-001.
+- COMMIT: nothing to commit. All task files[] are under .jonggrang/ (never committed to the feature branch
+  per CLAUDE.md) EXCEPT docs.json, which is untouched (already wired in prior tasks; the suite only READS
+  it). Same as prior validation-only tasks (task-001/008). The suite/wrapper live under .jonggrang/.output/.
+
+## Phase 10 — design-verification — DONE 2026-06-29
+- VERDICT: PASS. Implementation matches plan.md design on every decision. No plan↔impl drift.
+- Evidence (all machine-checked from repo HEAD vs main):
+  * Dedicated top-level api-reference-v2/ folder (74 .mdx = 71 endpoint pages + introduction/
+    statuscode/rate-limit). No V1 file edited: docs.json is the ONLY non-v2 file in the diff
+    (75 files changed, +13094/-1 — the -1 is the tab-label rename).
+  * docs.json nav: 3 tabs — [0] Guides, [1] "API V1 Reference" (renamed from "API Reference",
+    groups/pages byte-identical vs main per suite C8), [2] "API V2 Reference" (new). nav<->file
+    1:1 (C2: 0 missing/0 orphan).
+  * Base URL fidelity: 72 endpoint pages each carry api.mayar.id/hl/v2 (prod) + api.mayar.club/hl/v2
+    (sandbox); 0 /hl/v1 leakage into V2.
+  * MCP routes (customer-detail/unpaid-transactions/product-members) excluded: 0 occurrences — matches
+    plan "Out of Scope".
+  * Leak-guard C7 clean (0 internal identifiers in rendered content); PII scrubbed (per task-026/027).
+  * Validation suite green: all 8 checks PASS, exit 0.
+- KNOWN OPEN DEFECTS (tracked, NOT plan-design mismatches — carry forward to code-quality/completion):
+  * bug-001: 5 invoice pages (create/edit/index/detail/filter) end with a stray </content> tag.
+    Authoring artifact; `content` is not among the 7 JSX tags C4 balances so suite stays green. Real
+    fidelity defect — should be fixed before completion (Phase 12/17).
+  * bug-002: upstream API defect (reviews stats endpoints 500) — not a docs-repo issue; shapes
+    documented REPRESENTATIVE. Non-gating.
+
+## Phase 11 — domain-compliance — DONE 2026-06-29
+- ADDED domain-compliance suite: .jonggrang/.output/.../domain-compliance-v2-docs.py (7 checks,
+  complements the structural validate-v2-docs.py). Verifies the REST-API-reference domain-mandatory
+  patterns the structural suite does NOT: D1 base-URL fidelity (prod api.mayar.id/hl/v2 + sandbox
+  api.mayar.club/hl/v2 on every endpoint page; no /hl/v1 leak), D2 method+path via openapi
+  frontmatter, D3 Bearer auth documented, D4 RequestExample curl on /hl/v2, D5 response envelope
+  (statusCode + exactly-one-of message|messages; data OPTIONAL), D6 field docs (ParamField/
+  ResponseField incl. statusCode; data field required only when envelope carries data), D7 no
+  stray closing tags in PROSE (code fences/inline-code excluded).
+- FIXED bug-001 (resolved): first reported as `</content>` on create+edit only; D7 revealed the
+  true scope = trailing `</content>` on 5 invoice pages (create/detail/edit/filter/index) PLUS a
+  sibling `</invoke>` on invoice/index.mdx. C4 missed these (content/invoke not among its 7 tags).
+  Removed all 6 stray lines; each page's real content ends at the last `</ResponseField>`.
+- TWO FALSE-POSITIVE classes triaged & retired from the gate (NOT defects):
+  * `</p>` on 9 pages — appears INSIDE JSON string values (`"description":"<p>...</p>\n"`), i.e.
+    real API response data containing HTML. Balanced & faithful → D7 now scans prose only.
+  * data-less envelope on 9 status-only writes (customer/update, nameservice/create,
+    product/changestatus, reqpayment/changestatus, reviews/bulkstatusupdate, webhook/
+    registerurlhook|retryhistory|testurlhook) — these legitimately return {statusCode, messages}
+    with no `data`. `data` made OPTIONAL in D5/D6.
+- VERDICT: PASS. domain-compliance 7/7 green; structural suite still 8/8 green; bug-001 closed.
+- bug-002 unchanged (upstream API 500 on reviews stats; non-gating, docs flagged REPRESENTATIVE).
+- COMMIT: invoice/*.mdx artifact removal is committable (tracked feature files). Suite/progress/
+  bugs live under .jonggrang/.output (never committed to the feature branch, per prior phases).
+
+## Phase 12 (code-quality / maintainability) — PASS
+- Scope: 74 V2 .mdx pages + docs.json + validator tooling. Both suites green before & after.
+- Template discipline strong; validators (8 structural + 7 domain) self-enforce maintainability.
+- FIXED 7 render-neutral heading inconsistencies (consistency, not correctness):
+  Q1 `## Authorizations`→`## Authorization` (product/productpage, transaction/paid+unpaid)
+  Q2 `### Authorizations`→`## Authorization` (customer/getdetail; wrong level+plural)
+  Q3 `## Path Parameter`→`## Path Parameters` (bundling/installment/discount detail; plural is
+     the dominant convention even for single-param pages)
+  Now 100% uniform: 71/71 `## Authorization`, 20/20 `## Path Parameters`.
+- Report: code-quality-review.md. Recs (deferred, non-blocking): R1 add heading-consistency check
+  to validator; R2 contributor template/README; R3 bug-002 still open non-gating (reviews stats 500).
+- These 7 .mdx edits are committable tracked feature files (validators stay under .jonggrang/.output).
+
+
+## Phase 13 (test-planning) — PASS
+- Deliverable: test-plan.md (.jonggrang/.output/.../). For a docs corpus, "tests" = static
+  validation suites; this phase formalizes the strategy, coverage/traceability, gaps, exit criteria.
+- Test architecture = 2 suites, 15 checks over 74 pages (71 endpoint + 3 overview):
+  structural validate-v2-docs.py (C1-C8) + domain-compliance-v2-docs.py (D1-D7). Both hermetic
+  (stdlib-only, no network; prod key used only at AUTHORING time, not test time).
+- Re-ran both at plan time: structural 8/8 GREEN, domain 7/7 GREEN, 80 json blocks. Feature
+  enters Phase 14 in a passing state.
+- Coverage matrix maps every P0/P1/P2 objective -> >=1 executable check; no objective unprotected.
+  C4 (balances 7 KNOWN tags) and D7 (catches UNKNOWN stray tags) are complementary by design —
+  that pairing is what exposed bug-001; must be preserved.
+- GAP FLAGGED G1 (actionable in Phase 14): validate-v2-docs.sh wires ONLY the structural suite,
+  not domain-compliance. A green .sh != domain compliance. R1 = run both, or chain both in the .sh
+  and AND their exit codes. Other gaps non-gating: G2 no CI, G3 semantic fidelity manual-only,
+  G4 no link/heading check (Phase12 R1), G5 no real mint build.
+- Exit criteria for Phase 14: structural exit0 8/8 + domain exit0 7/7; bug-002 the only permitted
+  open item (upstream 500, non-gating, REPRESENTATIVE in-page). Don't weaken a check to pass
+  without recording why (precedent: P11 false-positive retirements).
+
+
+## Phase 14 (testing / test-execution) — PASS
+- Executed both static-validation suites from repo root: structural 8/8 GREEN (C1-C8),
+  domain 7/7 GREEN (D1-D7), 74 pages / 71 endpoints / 80 json blocks. Feature gate is GREEN.
+- CLOSED G1/R1: validate-v2-docs.sh previously exec'd ONLY the structural suite. Rewrote its
+  tail to run BOTH .py suites and AND their exit codes (rc=0; <suite> || rc=1; ... exit rc).
+  Single command `bash .../validate-v2-docs.sh` now gates the whole feature → "GATE: PASS".
+- Verified fail-path: AND-logic keeps rc=1 once any suite fails, even if a later suite passes
+  (no false GREEN). Combined entrypoint exit 0 confirmed.
+- No check logic weakened to pass — only the runner was extended to chain both suites
+  (preserves the C4/D7 complementary pairing and the Phase-11 false-positive retirements).
+- Deliverable: test-execution.md (.jonggrang/.output/...). Updated test-plan.md G1 row -> CLOSED.
+- Open/non-gating carried forward: bug-002 (upstream reviews-stats 500, REPRESENTATIVE in-page,
+  permitted open item), G2 (no CI/R2), G4 (no link/heading check/R3), G3/G5 accepted.
+
+
+## Phase 15 (coverage) — PASS
+- "Coverage" for a docs corpus = corpus + objective traceability (no line/branch coverage).
+  Threshold = 100% objective coverage (every P0/P1/P2 objective -> >=1 check) AND combined gate GREEN.
+- Measured this phase: corpus 74/74 pages, 71/71 endpoints, 80/80 json blocks = 100% exercised.
+  Re-verified tree counts (find *.mdx=74; grep -rl '^openapi:'=71) match what both suites report.
+- Objective coverage 8/8 (100%) — all P0/P1/P2 mapped to >=1 executable check, none unprotected.
+  C4<->D7 pairing intact (known-tag balance vs unknown stray-tag) — preserved.
+- Gate re-run from repo root: structural 8/8 + domain 7/7 = 15/15, validate-v2-docs.sh exit 0.
+  No check logic altered this phase.
+- Deliverable: coverage.md. Non-gating coverage-depth limits carried fwd: G2/G3/G4/G5, bug-002.
+
+
+## Phase 16 (test-quality) — PASS
+- Mutation-tested all 15 checks (C1-C8 + D1-D7): injected one defect per check,
+  confirmed each turns the suite RED with the expected FAIL id, then git-restored.
+  15/15 LIVE — zero vacuous checks, assertions correct, clean restore (gate green,
+  no leftover mutations). Harness: /tmp/mutation_test.py.
+- FOUND+FIXED latent vacuous-pass smell: every PASS gate is count==total and the
+  negative checks pass on "nothing found", so an EMPTY corpus (total=0) would have
+  reported all-green asserting nothing. Added C0 guard (validate-v2-docs.py) and D0
+  guard (domain-compliance-v2-docs.py) that hard-fail when 0 pages/endpoints found.
+  Verified C0/D0 fire on an empty sandbox corpus; real corpus (74/71) stays GREEN.
+- No check logic weakened. Combined gate still PASS: structural 8/8 + domain 7/7.
+- Deliverable: test-quality.md. C4<->D7 complementarity preserved (not redundant).

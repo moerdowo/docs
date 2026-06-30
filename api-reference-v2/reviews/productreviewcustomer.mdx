@@ -1,0 +1,165 @@
+---
+title: "Get Customer Review"
+openapi: "GET /endpointreviewsv2/product-review-customer"
+description: "Endpoint to retrieve a single customer's review for a specific product"
+---
+
+{/*
+  Notes for maintainers — V2 Reviews "Get Customer Review"
+  (GET /hl/v2/products/{paymentLinkId}/reviews/customer?customerId=...).
+  Response shape captured live from production (DUMMY_PROD_MERCHANT_API_KEY) and is REAL key-for-key.
+  All PII (review message, ids, uploaded file names) has been SCRUBBED to synthetic V1-style values.
+  Envelope key is PLURAL `messages` (read). `data` is the customer's review object, or `null` when
+  the customer has not reviewed the product. The `customerId` query parameter is required — omitting
+  it returns a 400 with `messages: "customerId query parameter is required"`.
+*/}
+
+<RequestExample>
+
+```bash Request Example
+curl --request GET 'https://api.mayar.id/hl/v2/products/e2b3f5d5-0c62-47ba-8a01-6c1c209e0f77/reviews/customer?customerId=22eb6224-c20a-4bc2-9b99-13b21e7048c6' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "data": {
+        "id": "11f4d767-4d88-41ff-8777-06564d906fe7",
+        "userId": "348e083d-315a-4e5c-96b1-5a2a98c48413",
+        "updatedAt": 1767762378460,
+        "rating": 5,
+        "paymentLinkId": "e2b3f5d5-0c62-47ba-8a01-6c1c209e0f77",
+        "status": "ACTIVE",
+        "message": "Materinya jelas dan mudah dipahami, terima kasih!",
+        "customerId": "22eb6224-c20a-4bc2-9b99-13b21e7048c6",
+        "createdAt": 1767063610103,
+        "multipleImage": [],
+        "content": [
+            {
+                "id": "b2c3d4e5-f6a7-4890-b123-456789abcdef",
+                "value": "c3d4e5f6-a7b8-4901-c234-56789abcdef0",
+                "file": {
+                    "id": "c3d4e5f6-a7b8-4901-c234-56789abcdef0",
+                    "filename": "ulasan-video.mp4",
+                    "mimetype": "video/mp4",
+                    "size": 5698168
+                }
+            }
+        ]
+    }
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/products/{paymentLinkId}/reviews/customer
+```
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/products/{paymentLinkId}/reviews/customer
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+    Example:
+
+    `Authorization | Bearer Paste-Your-Api-Key-Here`
+</ResponseField>
+
+## Path Parameters
+
+<ParamField path="paymentLinkId" type="string<uuid>" required>
+  ID of the payment link / product to look up the review for.
+</ParamField>
+
+## Query Parameters
+
+<ParamField query="customerId" type="string<uuid>" required>
+  ID of the customer whose review you want to retrieve.
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer">
+  Status code returned by the API.
+</ResponseField>
+
+<ResponseField name="messages" type="string">
+  Status message that describes the API response.
+</ResponseField>
+
+<ResponseField name="data" type="object | null">
+  The customer's review for the product, or `null` when the customer has not reviewed it.
+</ResponseField>
+
+### data Structure (Object)
+
+<ResponseField name="id" type="string">
+  Unique review ID.
+</ResponseField>
+
+<ResponseField name="userId" type="string">
+  Unique user ID associated with the payment link owner.
+</ResponseField>
+
+<ResponseField name="updatedAt" type="number">
+  Unix timestamp in milliseconds indicating when the review was last updated.
+</ResponseField>
+
+<ResponseField name="rating" type="number">
+  Rating value submitted by the customer.
+</ResponseField>
+
+<ResponseField name="paymentLinkId" type="string">
+  Payment link ID associated with the review.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Current review status.
+</ResponseField>
+
+<ResponseField name="message" type="string">
+  Review message submitted by the customer.
+</ResponseField>
+
+<ResponseField name="customerId" type="string">
+  Unique customer identifier associated with the review.
+</ResponseField>
+
+<ResponseField name="createdAt" type="number">
+  Unix timestamp in milliseconds indicating when the review was created.
+</ResponseField>
+
+<ResponseField name="multipleImage" type="array of object">
+  List of review images attached by the customer.
+</ResponseField>
+
+<ResponseField name="content" type="array of object">
+  Additional review content (for example uploaded videos), each with a nested `file` object
+  (`id`, `filename`, `mimetype`, `size`).
+</ResponseField>
+
+## Errors
+
+<ResponseField name="400 Bad Request" type="object">
+  Returned with `messages` set to `"customerId query parameter is required"` when the
+  `customerId` query parameter is missing.
+</ResponseField>

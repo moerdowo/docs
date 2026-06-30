@@ -1,0 +1,152 @@
+---
+title: "Edit Digital Product"
+openapi: "POST /endpointdigitalproductv2/edit"
+description: "Endpoint used to edit a digital product"
+---
+
+{/* Notes for maintainers: this is a WRITE endpoint. The response shape below is
+REPRESENTATIVE — derived from the V1 page template and the V2 source surface,
+not captured from a live prod write. The product to edit is identified by the
+`id` field in the REQUEST BODY; the `{id}` URL segment is ignored. `messages` is
+PLURAL on this endpoint. */}
+
+<RequestExample>
+
+```bash Request Example
+curl --request POST 'https://api.mayar.id/hl/v2/products/digital-product/6894b1b2-f303-423b-a6b6-93e230e1d393/update' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--data-raw '{
+        "id": "6894b1b2-f303-423b-a6b6-93e230e1d393",
+        "name": "E-Book Panduan Bisnis Buat Pemula Edisi Revisi",
+        "description": "Panduan lengkap memulai bisnis online",
+        "amount": 85000,
+        "redirectUrl": "https://example.com/ebook-download",
+        "notes": "diskon-50",
+        "expiredAt": "2026-06-15T12:00:00.000Z"
+    }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "data": {
+        "id": "6894b1b2-f303-423b-a6b6-93e230e1d393",
+        "link": "https://testingmayar.myr.id/catalog/E-Book-Panduan-Bisnis-Buat-Pemula"
+    }
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/products/digital-product/{id}/update
+```
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/products/digital-product/{id}/update
+```
+
+</CodeGroup>
+
+<Note>
+  The product to edit is identified by the `id` field in the request body, not by
+  the `{id}` segment in the URL path.
+</Note>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+    Example:
+
+    `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Request Body
+
+<ParamField path="id" type="string" required>
+  Unique identifier of the digital product to edit. This is read from the request
+  body.
+</ParamField>
+
+<ParamField path="name" type="string">
+  Digital product name.
+</ParamField>
+
+<ParamField path="description" type="string">
+  Digital product description.
+</ParamField>
+
+<ParamField path="amount" type="integer">
+  Digital product price amount.
+</ParamField>
+
+<ParamField path="crossoutPrice" type="integer">
+  Crossed-out price displayed as the original price.
+</ParamField>
+
+<ParamField path="redirectUrl" type="string">
+  URL where the customer will be redirected after completing payment.
+</ParamField>
+
+<ParamField path="notes" type="string">
+  Additional notes for the digital product.
+</ParamField>
+
+<ParamField path="expiredAt" type="string | datetime">
+  Product expiration date in ISO 8601 format.
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer">
+  Status code from API.
+</ResponseField>
+
+<ResponseField name="messages" type="string">
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  The updated digital product data.
+</ResponseField>
+
+### data Structure (Object)
+
+<ResponseField name="data.id" type="string">
+  Unique identifier of the digital product.
+</ResponseField>
+
+<ResponseField name="data.link" type="string">
+  Public URL of the updated digital product.
+</ResponseField>
+
+### Errors
+
+<ResponseField name="200 OK (validation failed)" type="object">
+  When the request body fails validation, this endpoint still responds with HTTP
+  `200` but sets `messages` to `failed` and returns the validator errors in
+  `data`: `{ "statusCode": 200, "messages": "failed", "data": { ... } }`.
+</ResponseField>
+
+<ResponseField name="401 Unauthorized" type="object">
+  Returned when the product does not belong to the authenticated account:
+  `{ "statusCode": 401, "messages": "Unauthorized" }`.
+</ResponseField>
+
+<ResponseField name="404 Not Found" type="object">
+  Returned when the product does not exist:
+  `{ "statusCode": 404, "messages": "Product not found" }`.
+</ResponseField>

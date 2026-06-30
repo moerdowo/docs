@@ -1,0 +1,209 @@
+---
+title: "Validate Coupon"
+openapi: "POST /endpointdiscountv2/validate"
+description: "Endpoint used to validate whether a coupon code can be applied to a checkout"
+---
+
+{/* Notes for maintainers: validation depends on a live discount/coupon and a real
+    payment link, so the 200 success example below is REPRESENTATIVE, derived from
+    the V2 discount source surface. The envelope key (`messages`), status codes, and
+    error strings are source-confirmed and were verified live against /hl/v2. All
+    identifiers are synthetic. */}
+
+<RequestExample>
+
+```bash Request Example
+curl --request POST 'https://api.mayar.id/hl/v2/coupons/validate' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--data '{
+    "couponCode": "HARIBAIK",
+    "paymentLinkId": "4d26ea37-d093-4b92-8f5f-0faec64d65b0",
+    "amount": 0,
+    "customerEmail": "",
+    "tickets": []
+}'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "data": {
+        "valid": true,
+        "coupon": {
+            "id": "08d233e9-91bc-4d9b-afc2-1dbbe38a1186",
+            "code": "HARIBAIK",
+            "discountType": "percentage",
+            "discountValue": 10,
+            "minimumPurchase": null,
+            "eligibleCustomerType": "all"
+        }
+    }
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/coupons/validate
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/coupons/validate
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Request Body
+
+<ParamField path="couponCode" type="string" required>
+  Coupon code applied to the checkout.
+</ParamField>
+
+<ParamField path="paymentLinkId" type="string" required>
+  Unique identifier of the payment link the coupon is applied to.
+</ParamField>
+
+<ParamField path="amount" type="number | integer">
+  Transaction amount used to check the minimum-purchase requirement. Defaults to
+  `0` when omitted.
+</ParamField>
+
+<ParamField path="customerEmail" type="string">
+  Email address of the customer performing the checkout. Required to validate
+  coupons restricted to `new` or `old` customers.
+</ParamField>
+
+<ParamField path="membershipTierId" type="string">
+  Membership tier ID. Used together with `paymentLinkType` of
+  `membership_payment` to resolve the payment link for membership checkouts.
+</ParamField>
+
+<ParamField path="paymentLinkType" type="string">
+  Type of the payment link (example: `membership_payment`).
+</ParamField>
+
+<ParamField path="tickets" type="array">
+  List of selected tickets for the checkout. Leave empty if not applicable.
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer">
+  Status code from API.
+</ResponseField>
+
+<ResponseField name="messages" type="string">
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  Coupon validation result.
+</ResponseField>
+
+### data Structure (Object)
+
+<ResponseField name="valid" type="boolean">
+  Indicates whether the coupon is valid for the checkout.
+</ResponseField>
+
+<ResponseField name="coupon" type="object">
+  Object containing the validated coupon details.
+</ResponseField>
+
+<ResponseField name="coupon.id" type="string<uuid>">
+  Unique identifier of the coupon.
+</ResponseField>
+
+<ResponseField name="coupon.code" type="string">
+  Coupon code applied to the checkout.
+</ResponseField>
+
+<ResponseField name="coupon.discountType" type="string">
+  Type of discount applied (`monetary` or `percentage`).
+</ResponseField>
+
+<ResponseField name="coupon.discountValue" type="number">
+  Discount value based on the discount type.
+</ResponseField>
+
+<ResponseField name="coupon.minimumPurchase" type="number | null">
+  Minimum purchase amount required to use the coupon. Returns `null` if not set.
+</ResponseField>
+
+<ResponseField name="coupon.eligibleCustomerType" type="string">
+  Type of customers eligible to use the coupon (`all`, `new`, or `old`).
+</ResponseField>
+
+## Errors
+
+This endpoint returns a `messages` string describing why a coupon cannot be
+applied. The notable cases:
+
+<ResponseField name="400 Validation Error" type="object">
+  Returned with `messages: "Validation Error"` when the request body fails
+  validation (e.g. missing `couponCode` or `paymentLinkId`).
+</ResponseField>
+
+<ResponseField name="404 Coupon not found" type="object">
+  Returned with `messages: "Gagal! Kode diskon ini tidak ditemukan."` when the
+  coupon does not exist or is not valid for the payment link.
+</ResponseField>
+
+<ResponseField name="400 Coupon inactive" type="object">
+  Returned with `messages: "Gagal! Kode diskon ini sudah tidak aktif."` when the
+  discount is inactive.
+</ResponseField>
+
+<ResponseField name="400 Coupon not yet active" type="object">
+  Returned with `messages: "Gagal! Kode diskon ini belum berlaku dan tidak dapat digunakan."`
+  when the discount start date has not been reached.
+</ResponseField>
+
+<ResponseField name="400 Coupon expired" type="object">
+  Returned with `messages: "Gagal! Kode diskon ini telah kadaluarsa dan tidak dapat digunakan."`
+  when the discount has expired.
+</ResponseField>
+
+<ResponseField name="400 Excluded product type" type="object">
+  Returned with `messages: "Gagal! Kode diskon tidak dapat digunakan untuk produk {productLabel}"`
+  when the payment link type is not eligible for discounts (e.g. payment requests
+  or fundraising links).
+</ResponseField>
+
+<ResponseField name="400 Minimum purchase not met" type="object">
+  Returned with `messages: "Kode diskon ini hanya berlaku untuk transaksi dengan harga minimal {amount}."`
+  when `amount` is below the discount's minimum purchase.
+</ResponseField>
+
+<ResponseField name="400 Customer eligibility" type="object">
+  Returned with a `messages` string explaining that the coupon is restricted to
+  `new` or `old` (existing) customers when `customerEmail` does not satisfy the
+  eligibility rule.
+</ResponseField>
+
+<ResponseField name="400 Usage limit reached" type="object">
+  Returned with `messages: "Gagal! Kode diskon telah mencapai batas pemakaian dan tidak dapat digunakan kembali."`
+  when the coupon has reached its usage limit.
+</ResponseField>

@@ -1,0 +1,292 @@
+---
+title: "Create Discount with Coupon"
+openapi: "POST /endpointdiscountv2/create"
+description: "Endpoint used to create discount coupons"
+---
+
+{/* Notes for maintainers: this is a WRITE endpoint — to avoid mutating live
+    merchant data, the response example below is REPRESENTATIVE, derived from the
+    V2 discount source surface. Field names are source-confirmed; confirm exact
+    values against a live response. All values are synthetic. */}
+
+<RequestExample>
+
+```bash Request Example
+curl --request POST 'https://api.mayar.id/hl/v2/coupons/create' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--data-raw '{
+    "name": "Diskon Murmer",
+    "expiredAt": "2030-01-01T09:06:14.933Z",
+    "discount": {
+        "discountType": "monetary",
+        "eligibleCustomerType": "all",
+        "minimumPurchase": 500000,
+        "value": 100000,
+        "totalCoupons": 100
+    },
+    "coupon": {
+        "code": "haribaik",
+        "type": "reusable"
+    },
+    "products": []
+}
+'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "data": {
+        "id": "c9aa143a-53f9-44e7-a9c6-83229ad7199b",
+        "name": "Diskon Murmer",
+        "discountType": "monetary",
+        "value": 100000,
+        "minimumPurchase": 500000,
+        "eligibleCustomerType": "all",
+        "totalCoupons": 100,
+        "discountProductType": "all",
+        "expiredAt": "2030-01-01T09:06:14.933Z",
+        "isLifeTime": null,
+        "status": "active",
+        "coupons": [
+            {
+                "id": "532858fe-3722-4cf4-a8eb-f7c6765aba17",
+                "code": "haribaik",
+                "type": "reusable",
+                "expiredAt": "2030-01-01T09:06:14.933Z"
+            }
+        ],
+        "products": [],
+        "createdAt": "2026-06-29T07:12:41.029Z"
+    }
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/coupons/create
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/coupons/create
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Request Body
+
+<ParamField path="name" type="string" required>
+  Discount name (minimum 5 characters).
+</ParamField>
+
+<ParamField path="expiredAt" type="string | datetime">
+  Discount coupon expiration date. When omitted, the discount and its coupon do
+  not expire (`expiredAt` is stored as `null`).
+</ParamField>
+
+<ParamField path="discount" type="object" required>
+  Details of the discount conditions.
+</ParamField>
+
+<ParamField path="coupon" type="object" required>
+  Coupon code details.
+</ParamField>
+
+<ParamField path="products" type="array of object">
+  List of eligible products (maximum 2). Leave empty to apply the discount to all
+  products. When provided, each item requires a product `id` you own.
+</ParamField>
+
+### discount Structure (Object)
+
+<ParamField path="discountType" type="string" required>
+  Discount type:
+
+  - monetary
+  - percentage
+
+  For `percentage`, a `value` greater than `99` is automatically capped at `99`.
+</ParamField>
+
+<ParamField path="eligibleCustomerType" type="string" required>
+  Target customers who can use the discount coupon:
+
+  - all
+  - new
+  - old
+</ParamField>
+
+<ParamField path="minimumPurchase" type="number | integer">
+  Minimum purchase amount required to use the discount.
+</ParamField>
+
+<ParamField path="value" type="number | integer" required>
+  Discount amount (must be positive).
+</ParamField>
+
+<ParamField path="totalCoupons" type="number | integer" required>
+  Available coupon quota (must be positive). For `onetime` coupons, a maximum of
+  50 codes are generated per request.
+</ParamField>
+
+### coupon Structure (Object)
+
+<ParamField path="code" type="string">
+  Discount coupon code. Optional — when omitted, a random code is generated. Only
+  used for `reusable` coupons; `onetime` coupons always receive generated codes.
+</ParamField>
+
+<ParamField path="type" type="string" required>
+  Coupon type:
+
+  - reusable
+  - onetime
+</ParamField>
+
+### products Structure (Array Of Object)
+
+<ParamField path="id" type="string" required>
+  Product (payment link) ID to attach the discount to.
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer">
+  Status code from API.
+</ResponseField>
+
+<ResponseField name="messages" type="string">
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  The created discount details.
+</ResponseField>
+
+### data Structure (Object)
+
+<ResponseField name="id" type="string<uuid>">
+  Discount ID.
+</ResponseField>
+
+<ResponseField name="name" type="string">
+  Discount name.
+</ResponseField>
+
+<ResponseField name="discountType" type="string">
+  Discount type.
+</ResponseField>
+
+<ResponseField name="value" type="number">
+  Discount value.
+</ResponseField>
+
+<ResponseField name="minimumPurchase" type="number | null">
+  Minimum purchase amount to apply the discount. `null` if not set.
+</ResponseField>
+
+<ResponseField name="eligibleCustomerType" type="string">
+  Eligible customer scope.
+</ResponseField>
+
+<ResponseField name="totalCoupons" type="integer">
+  Total number of coupons available.
+</ResponseField>
+
+<ResponseField name="discountProductType" type="string">
+  Discount product scope: `all` when no products are attached, `selected` when one
+  or more products are provided.
+</ResponseField>
+
+<ResponseField name="expiredAt" type="string (ISO 8601) | null">
+  Expiration date in ISO 8601 format, or `null` when the discount does not expire.
+</ResponseField>
+
+<ResponseField name="isLifeTime" type="boolean | null">
+  Indicates if the discount is lifetime (`true`/`false`) or `null`.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Discount status (example: `"active"`).
+</ResponseField>
+
+<ResponseField name="coupons" type="array of object">
+  List of coupons created for this discount.
+</ResponseField>
+
+<ResponseField name="products" type="array of object">
+  List of products attached to the discount (empty when applied to all products).
+</ResponseField>
+
+<ResponseField name="createdAt" type="string (ISO 8601)">
+  Creation time in ISO 8601 format.
+</ResponseField>
+
+### coupons Structure (Array Of Object)
+
+<ResponseField name="id" type="string<uuid>">
+  Coupon ID. Present for `reusable` coupons; omitted for `onetime` coupons.
+</ResponseField>
+
+<ResponseField name="code" type="string">
+  Coupon code.
+</ResponseField>
+
+<ResponseField name="type" type="string">
+  Coupon type (`reusable` or `onetime`).
+</ResponseField>
+
+<ResponseField name="expiredAt" type="string (ISO 8601) | null">
+  Coupon expiration date, or `null` when it does not expire.
+</ResponseField>
+
+### products Structure (Array Of Object)
+
+<ResponseField name="id" type="string<uuid>">
+  Attached product (payment link) ID.
+</ResponseField>
+
+## Errors
+
+<ResponseField name="400 Validation Error" type="object">
+  Returned with `messages: "Validation Error"` when the request body fails
+  validation (e.g. missing or malformed `name`, `discount`, or `coupon` fields).
+</ResponseField>
+
+<ResponseField name="400 Product Tidak Bisa Ditambahkan" type="object">
+  Returned with `messages: "Product Tidak Bisa Ditambahkan"` when an attached
+  product is not owned by the authenticated account.
+</ResponseField>
+
+<ResponseField name="404 Product Tidak Ditemukan" type="object">
+  Returned with `messages: "Product Tidak Ditemukan"` when an attached product
+  cannot be found.
+</ResponseField>
+
+<ResponseField name="409 Coupon code already in use" type="object">
+  Returned with `messages: "Coupon code already in use"` when a `reusable` coupon
+  code already exists.
+</ResponseField>

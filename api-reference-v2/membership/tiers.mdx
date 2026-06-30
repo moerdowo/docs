@@ -1,0 +1,206 @@
+---
+title: "Get Membership Tiers"
+openapi: "GET /endpointmembershipv2/tiers"
+description: "Endpoint to list the membership tiers of a membership product."
+---
+
+<RequestExample>
+
+```bash Request Example
+curl --request GET 'https://api.mayar.id/hl/v2/memberships/tiers?productId=7c9d2e1f-4a5b-4c6d-8e9f-0a1b2c3d4e5f&limit=10' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "data": [
+        {
+            "id": "9b2d4f6a-8c1e-4a3b-bd5c-6e7f8a9b0c1d",
+            "createdAt": "2026-01-15T15:07:33.868Z",
+            "description": "<p>Access to all premium content and monthly live sessions.</p>\n",
+            "finishMembershipAt": null,
+            "gracePeriodInDays": 0,
+            "isSoldOut": false,
+            "isTrialAvailable": true,
+            "limit": null,
+            "name": "Paket 1",
+            "notes": "Access to all premium content and monthly live sessions.",
+            "paymentAtStart": true,
+            "paymentLinkId": "7c9d2e1f-4a5b-4c6d-8e9f-0a1b2c3d4e5f",
+            "position": null,
+            "redirectUrl": "",
+            "status": "ACTIVE",
+            "trialCredit": null,
+            "trialPeriodInDays": 0,
+            "updatedAt": "2026-01-15T15:07:33.868Z",
+            "upfrontFee": null,
+            "userId": "348e083d-315a-4e5c-96b1-5a2a98c48413"
+        }
+    ],
+    "hasMore": false,
+    "nextStartingAfter": "1768489653868"
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/memberships/tiers?productId=(productId)
+```
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/memberships/tiers?productId=(productId)
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Query Parameters
+
+<ParamField query="productId" path="productId" type="string" required>
+  The unique identifier of the membership product whose tiers you want to list.
+  If missing or malformed the endpoint responds `400 "Invalid query parameters"`.
+</ParamField>
+
+<ParamField query="limit" path="limit" default="10" type="integer">
+  Number of items to return per page. Defaults to `10`, with a maximum of `50`.
+</ParamField>
+
+<ParamField query="startingAfter" path="startingAfter" type="string">
+  Cursor for forward pagination. Pass the `nextStartingAfter` value from the
+  previous response (a Unix timestamp in milliseconds, as a string) to fetch the
+  next page.
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer" >
+  Status code form API.
+</ResponseField>
+
+<ResponseField name="messages" type="string" >
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="array of object">
+  List of membership tiers for the product.
+</ResponseField>
+
+<ResponseField name="hasMore" type="boolean" >
+  Information on whether there is additional data to be retrieved (true/false).
+</ResponseField>
+
+<ResponseField name="nextStartingAfter" type="string | null">
+  Cursor to pass as `startingAfter` to fetch the next page. `null` when there is
+  no further data.
+</ResponseField>
+
+### data Structure (Array Of Object)
+
+<ResponseField name="id" type="string<uuid>" >
+  Unique identifier of the membership tier.
+</ResponseField>
+
+<ResponseField name="createdAt" type="string" >
+  ISO 8601 timestamp (UTC) of when the tier was created.
+</ResponseField>
+
+<ResponseField name="description" type="string" >
+  HTML description of the tier.
+</ResponseField>
+
+<ResponseField name="finishMembershipAt" type="string | null" >
+  Date the membership finishes, or `null` when the tier has no fixed end.
+</ResponseField>
+
+<ResponseField name="gracePeriodInDays" type="integer" >
+  Number of grace-period days after the next payment date.
+</ResponseField>
+
+<ResponseField name="isSoldOut" type="boolean" >
+  Whether the tier has reached its member limit.
+</ResponseField>
+
+<ResponseField name="isTrialAvailable" type="boolean" >
+  Whether a trial is available for the tier.
+</ResponseField>
+
+<ResponseField name="limit" type="integer | null" >
+  Maximum number of members allowed on the tier, or `null` when unlimited.
+</ResponseField>
+
+<ResponseField name="name" type="string" >
+  Name of the membership tier.
+</ResponseField>
+
+<ResponseField name="notes" type="string | null" >
+  Free-text notes for the tier.
+</ResponseField>
+
+<ResponseField name="paymentAtStart" type="boolean" >
+  Whether payment is collected at the start of the period.
+</ResponseField>
+
+<ResponseField name="paymentLinkId" type="string<uuid>" >
+  The product (payment link) ID the tier belongs to.
+</ResponseField>
+
+<ResponseField name="position" type="integer | null" >
+  Display position of the tier.
+</ResponseField>
+
+<ResponseField name="redirectUrl" type="string" >
+  Redirect URL configured for the tier.
+</ResponseField>
+
+<ResponseField name="status" type="string" >
+  Current status of the tier (for example `ACTIVE`).
+</ResponseField>
+
+<ResponseField name="trialCredit" type="number | null" >
+  Trial credit granted, or `null` when not applicable.
+</ResponseField>
+
+<ResponseField name="trialPeriodInDays" type="integer" >
+  Number of trial days for the tier.
+</ResponseField>
+
+<ResponseField name="updatedAt" type="string" >
+  ISO 8601 timestamp (UTC) of the last update.
+</ResponseField>
+
+<ResponseField name="upfrontFee" type="number | null" >
+  Upfront fee for joining the tier, or `null` when none.
+</ResponseField>
+
+<ResponseField name="userId" type="string<uuid>" >
+  The user ID of the owner of the product.
+</ResponseField>
+
+## Errors
+
+<ResponseField name="400 Invalid query parameters" type="object">
+  Returned with `messages: "Invalid query parameters"` when `productId` is missing
+  or the query parameters fail validation.
+</ResponseField>

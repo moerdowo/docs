@@ -1,0 +1,242 @@
+---
+title: "Get List Invoice"
+openapi: "GET /endpointinvoicev2/index"
+description: "Endpoint used to view the list of invoices that have been created"
+---
+
+<RequestExample>
+
+```bash Request Example
+curl --request GET 'https://api.mayar.id/hl/v2/invoices?limit=10' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "data": [
+        {
+            "id": "6f8c19ff-5b97-4792-aa89-d2a12797b356",
+            "amount": 110000,
+            "category": null,
+            "createdAt": 1768375011056,
+            "description": "",
+            "link": "ibzfrf4880",
+            "type": "invoice",
+            "status": "paid",
+            "name": "INVOICE",
+            "redirectUrl": null,
+            "customerId": "21d84338-b46d-42d7-9b49-d402520407a5",
+            "transactions": [
+                {
+                    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+                    "status": "created",
+                    "extraData": null
+                },
+                {
+                    "id": "b2c3d4e5-f6a7-8901-bcde-f23456789012",
+                    "status": "paid",
+                    "extraData": null
+                }
+            ],
+            "customer": {
+                "id": "21d84338-b46d-42d7-9b49-d402520407a5",
+                "email": "budi.santoso@example.com",
+                "mobile": "081234567890",
+                "name": "Budi Santoso"
+            }
+        },
+        {
+            "id": "c3d4e5f6-a7b8-9012-cdef-345678901234",
+            "amount": 50000,
+            "category": null,
+            "createdAt": 1768288611056,
+            "description": "Pelunasan pesanan",
+            "link": "w2wdxisnbtp",
+            "type": "invoice",
+            "status": "closed",
+            "name": "INVOICE",
+            "redirectUrl": null,
+            "customerId": "348e083d-315a-4e5c-96b1-5a2a98c48413",
+            "transactions": [
+                {
+                    "id": "d4e5f6a7-b8c9-0123-defa-456789012345",
+                    "status": "created",
+                    "extraData": null
+                }
+            ],
+            "customer": {
+                "id": "348e083d-315a-4e5c-96b1-5a2a98c48413",
+                "email": "siti.aminah@example.com",
+                "mobile": "081298765432",
+                "name": "Siti Aminah"
+            }
+        }
+    ],
+    "hasMore": true,
+    "nextStartingAfter": "1768288611056"
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/invoices?limit=10
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/invoices?limit=10
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Query Parameters
+
+<ParamField query="limit" path="limit" default="10" type="integer">
+  Number of items to return per page. Defaults to `10`, with a maximum of `50`.
+</ParamField>
+
+<ParamField query="startingAfter" path="startingAfter" type="string">
+  Cursor for forward pagination. Pass the `nextStartingAfter` value from the
+  previous response (a Unix timestamp in milliseconds, as a string) to fetch the
+  next page.
+</ParamField>
+
+<ParamField query="status" path="status" type="string">
+  Filter invoices by status (e.g. `active`, `paid`, `closed`).
+</ParamField>
+
+<ParamField query="search" path="search" type="string">
+  Filter invoices by keyword.
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer" >
+  Status code form API.
+</ResponseField>
+
+<ResponseField name="messages" type="string" >
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="array of object">
+  List of invoices displayed.
+</ResponseField>
+
+<ResponseField name="hasMore" type="boolean" >
+  Information on whether there is additional data to be retrieved (true/false).
+</ResponseField>
+
+<ResponseField name="nextStartingAfter" type="string | null">
+  Cursor to pass as `startingAfter` to fetch the next page. `null` when there is
+  no further data.
+</ResponseField>
+
+### data Structure (Array Of Object)
+
+<ResponseField name="id" type="string<uuid>" >
+  Unique invoice ID.
+</ResponseField>
+
+<ResponseField name="amount" type="integer" >
+  Invoice price or nominal value.
+</ResponseField>
+
+<ResponseField name="category" type="string | null">
+  Product category, can be null if there is no category.
+</ResponseField>
+
+<ResponseField name="createdAt" type="number | timestamp" >
+  Invoice creation time in epoch milliseconds format.
+</ResponseField>
+
+<ResponseField name="description" type="string" >
+  Invoice description.
+</ResponseField>
+
+<ResponseField name="link" type="string" >
+  Invoice slug/short URL.
+</ResponseField>
+
+<ResponseField name="type" type="string" >
+  Product type (always `invoice` for this endpoint).
+</ResponseField>
+
+<ResponseField name="status" type="string" >
+  Invoice status (e.g. `paid`, `closed`, `active`).
+</ResponseField>
+
+<ResponseField name="name" type="string" >
+  Invoice name.
+</ResponseField>
+
+<ResponseField name="redirectUrl" type="string | null" >
+  Redirect destination URL, can be null.
+</ResponseField>
+
+<ResponseField name="customerId" type="string<uuid>" >
+  The customer ID associated with this invoice.
+</ResponseField>
+
+<ResponseField name="transactions" type="array of object">
+  List of invoice related transactions.
+</ResponseField>
+
+<ResponseField name="customer" type="object">
+  Details of the customer associated with this invoice.
+</ResponseField>
+
+### transactions Structure (Array Of Object)
+
+<ResponseField name="id" type="string <uuid>" >
+  Unique transaction ID.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Transaction status (example: `created`, `paid`).
+</ResponseField>
+
+<ResponseField name="extraData" type="object | null">
+  Additional custom data attached to the transaction, can be null.
+</ResponseField>
+
+### customer Structure (Object)
+
+<ResponseField name="id" type="string <uuid>" >
+  Unique customer ID.
+</ResponseField>
+
+<ResponseField name="email" type="string" >
+  Customer's email address.
+</ResponseField>
+
+<ResponseField name="mobile" type="string" >
+  Customer's mobile phone number.
+</ResponseField>
+
+<ResponseField name="name" type="string" >
+  Customer's name.
+</ResponseField>

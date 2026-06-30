@@ -1,0 +1,159 @@
+---
+title: "Create Single Payment Request"
+openapi: "POST /endpointreqpaymentv2/create"
+description: "Endpoint used to create a single payment request"
+---
+
+{/* Notes for maintainers: this is a WRITE endpoint. The response shape below is
+REPRESENTATIVE — derived from the V1 request-payment template and the V2 source
+surface, not captured from a live prod write. The `data` object returns the
+created payment request's id, transactionId, and public link. `messages` is
+PLURAL on this endpoint (this group never uses singular `message`). */}
+
+<RequestExample>
+
+```bash Request Example
+curl --request POST 'https://api.mayar.id/hl/v2/payments/create' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--data-raw '{
+        "name": "Penagihan",
+        "amount": 100000,
+        "email": "budi.santoso@example.com",
+        "mobile": "081234567890",
+        "description": "Pembayaran jasa konsultasi",
+        "expiredAt": "2026-07-19T16:43:23.000Z"
+    }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "data": {
+        "id": "6f8c19ff-5b97-4792-aa89-d2a12797b356",
+        "transactionId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+        "link": "https://testingmayar.myr.id/pl/rqp9x2k7m3a"
+    }
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/payments/create
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/payments/create
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Request Body
+
+<ParamField path="name" type="string" required>
+  Name/title of the payment request.
+</ParamField>
+
+<ParamField path="amount" type="integer" required>
+  Nominal amount of payment.
+</ParamField>
+
+<ParamField path="email" type="string">
+  Customer email used to send proof of payment or payment reminders.
+</ParamField>
+
+<ParamField path="mobile" type="string">
+  Customer telephone number.
+</ParamField>
+
+<ParamField path="description" type="string">
+  General description of the transaction or order.
+</ParamField>
+
+<ParamField path="notes" type="string">
+  Additional notes for the payment request.
+</ParamField>
+
+<ParamField path="expiredAt" type="string (format ISO 8601 date-time)">
+  The transaction expiration date and time. After this time, the payment link is
+  no longer valid.
+</ParamField>
+
+<ParamField path="paymentMethod" type="string">
+  Restrict the payment request to a specific payment method.
+</ParamField>
+
+<ParamField path="cashtag" type="string">
+  Cashtag associated with the payment request.
+</ParamField>
+
+<ParamField path="extraData" type="object">
+  Additional custom data attached to the payment request.
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer" >
+  Status code form API.
+</ResponseField>
+
+<ResponseField name="messages" type="string" >
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  The created payment request data.
+</ResponseField>
+
+### data Structure (Object)
+
+<ResponseField name="id" type="string<uuid>" >
+  Unique request payment ID.
+</ResponseField>
+
+<ResponseField name="transactionId" type="string<uuid>" >
+  Unique transaction ID associated with this payment request.
+</ResponseField>
+
+<ResponseField name="link" type="string" >
+  The URL that customers can access to open the payment request.
+</ResponseField>
+
+### Errors
+
+<ResponseField name="400 Bad Request" type="object">
+  Returned when the request body fails validation:
+  `{ "statusCode": 400, "messages": "Validation Error" }`.
+</ResponseField>
+
+<ResponseField name="409 Conflict" type="object">
+  Returned when a payment request with the same identifier already exists:
+  `{ "statusCode": 409, "messages": "already exist" }`.
+</ResponseField>
+
+<ResponseField name="429 Too Many Requests" type="object">
+  Returned when a duplicate create request is detected:
+  `{ "statusCode": 429, "messages": "Duplicate request detected. Please wait 1 minute before trying again." }`.
+</ResponseField>

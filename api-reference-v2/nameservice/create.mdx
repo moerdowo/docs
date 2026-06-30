@@ -1,0 +1,121 @@
+---
+title: "Create Name Service"
+openapi: "POST /endpointnameservicev2/create"
+description: "Endpoint used to create a name service (power-up store) entry"
+---
+
+{/*
+  Notes for maintainers — REPRESENTATIVE write payload.
+  POST /hl/v2/name-services/create is a write endpoint; the example below is derived from the
+  V2 source surface plus representative values. Request body fields are source-confirmed
+  (name required; payload, description, website, amount, urlHook, image optional). The success
+  body carries NO `data` — it is exactly { statusCode, messages }. Confirm values against a live
+  capture when possible. Envelope key is PLURAL `messages` for this group (writes AND errors).
+*/}
+
+<RequestExample>
+
+```bash Request Example
+curl --request POST 'https://api.mayar.id/hl/v2/name-services/create' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--data-raw '{
+    "name": "Premium Newsletter",
+    "description": "Monthly premium newsletter access",
+    "website": "https://testingmayar.myr.id",
+    "amount": 50000,
+    "urlHook": "https://webhook.example.com/name-service",
+    "image": "https://media.mayar.id/images/a1b2c3d4-e5f6-4789-a012-3456789abcde.png",
+    "payload": {
+        "plan": "premium",
+        "durationInDays": 30
+    }
+}'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success"
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/name-services/create
+```
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/name-services/create
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Request Body
+
+<ParamField body="name" type="string" required>
+  Name of the service. Used to derive a URL-friendly slug for the entry.
+</ParamField>
+
+<ParamField body="payload" type="object">
+  Arbitrary configuration object for the service. Stored as serialized JSON.
+</ParamField>
+
+<ParamField body="description" type="string">
+  Short description of the service.
+</ParamField>
+
+<ParamField body="website" type="string">
+  Public website URL associated with the service.
+</ParamField>
+
+<ParamField body="amount" type="number | integer">
+  Price (in IDR) associated with the service.
+</ParamField>
+
+<ParamField body="urlHook" type="string">
+  Webhook URL notified for events related to this service.
+</ParamField>
+
+<ParamField body="image" type="string">
+  Image URL representing the service.
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer">
+  Status code returned by the API.
+</ResponseField>
+
+<ResponseField name="messages" type="string">
+  Status message that describes the status code. Returns `"success"` when the
+  service is created. This success response does not include a `data` field.
+</ResponseField>
+
+## Errors
+
+<ResponseField name="500 Server Error" type="object">
+  Returned with `messages` set to the error description when the service cannot be
+  created (for example, when a required field such as `name` is missing or
+  malformed).
+</ResponseField>

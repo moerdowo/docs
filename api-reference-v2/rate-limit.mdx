@@ -1,0 +1,12 @@
+---
+title: "API Rate Limit"
+description: "API Rate limit per minute"
+---
+
+> Mayar API rate limits and best practices for handling them.
+
+Mayar API has rate limits to ensure fair usage and maintain performance. The limits are as follows:
+
+- 20 requests per minute per IP address.
+
+If you exceed the rate limit, you will receive a **429 Too Many Requests** response. The response will include a \*\*Retry-After \*\*header indicating how long you should wait before making another request.

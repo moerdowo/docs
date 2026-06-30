@@ -1,0 +1,109 @@
+---
+title: "Change Single Payment Request Status"
+openapi: "POST /endpointreqpaymentv2/changestatus"
+description: "Endpoint used to change the status of a single payment request"
+---
+
+{/*
+  Notes for maintainers — REPRESENTATIVE write sample.
+  POST /hl/v2/payments/{id}/{action} is a write (status toggle) endpoint; the example below uses a
+  synthetic V1-style payment-request id (no live capture, to avoid mutating merchant data). Envelope
+  key is PLURAL `messages` (this endpoint, like every non-membership-write endpoint, uses `messages`).
+  On success the response is exactly {statusCode, messages} with NO `data` key; an unaccepted action
+  or missing payment request returns the documented 400/404. This is the SAME handler as
+  POST /hl/v2/products/{id}/{action}. All values are synthetic.
+*/}
+
+<RequestExample>
+
+```bash Request Example
+curl --request POST 'https://api.mayar.id/hl/v2/payments/6f8c19ff-5b97-4792-aa89-d2a12797b356/close' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response example if success
+{
+    "statusCode": 200,
+    "messages": "success"
+}
+```
+
+
+```json Response example if failed
+{
+    "statusCode": 200,
+    "messages": "failed"
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/payments/{id}/{action}
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/payments/{id}/{action}
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Path Parameters
+
+<ParamField path="id" type="string <uuid>" required>
+  Unique request payment ID.
+</ParamField>
+
+<ParamField path="action" type="string" required>
+  The status action to apply to the payment request. One of:
+
+  - `open`
+  - `close`
+  - `active`
+  - `closed`
+  - `unlisted`
+
+  An unsupported value returns `400` with a message of the form
+  `<action>. allowed: active, closed, unlisted`.
+</ParamField>
+
+## Response
+
+Successful Response
+
+<ResponseField name="statusCode" type="integer" >
+  Status code form API.
+</ResponseField>
+
+<ResponseField name="messages" type="string" >
+  Status message that describes the status code (`success` or `failed`).
+</ResponseField>
+
+### Errors
+
+<ResponseField name="400 Bad Request" type="object">
+  Returned when the action is not supported:
+  `{ "statusCode": 400, "messages": "<action>. allowed: active, closed, unlisted" }`.
+</ResponseField>
+
+<ResponseField name="404 Not Found" type="object">
+  Returned when the payment request does not exist:
+  `{ "statusCode": 404, "messages": "Product not found" }`.
+</ResponseField>

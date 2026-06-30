@@ -1,0 +1,202 @@
+---
+title: "Get Product Reviews"
+openapi: "GET /endpointreviewsv2/product-reviews"
+description: "Endpoint to retrieve active reviews for a specific product / payment link"
+---
+
+{/*
+  Notes for maintainers — V2 Reviews "Get Product Reviews"
+  (GET /hl/v2/products/{paymentLinkId}/reviews).
+  Response shape captured live from production (DUMMY_PROD_MERCHANT_API_KEY) and is REAL key-for-key.
+  All PII (customer names, review messages, ids, product names/links, uploaded file names) has been
+  SCRUBBED to synthetic V1-style example values. Envelope key is PLURAL `messages` (read). Only
+  ACTIVE reviews for the given product are returned, sorted by `updatedAt` DESC, with cursor
+  pagination (data[]/hasMore/nextStartingAfter). When `prioritizeMessage=true`, reviews that
+  include a message are returned first.
+*/}
+
+<RequestExample>
+
+```bash Request Example
+curl --request GET 'https://api.mayar.id/hl/v2/products/e2b3f5d5-0c62-47ba-8a01-6c1c209e0f77/reviews?limit=10' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "data": [
+        {
+            "id": "11f4d767-4d88-41ff-8777-06564d906fe7",
+            "createdAt": 1767063610103,
+            "customerId": "22eb6224-c20a-4bc2-9b99-13b21e7048c6",
+            "message": "Materinya jelas dan mudah dipahami, terima kasih!",
+            "paymentLinkId": "e2b3f5d5-0c62-47ba-8a01-6c1c209e0f77",
+            "status": "ACTIVE",
+            "rating": 5,
+            "updatedAt": 1767762378460,
+            "userId": "348e083d-315a-4e5c-96b1-5a2a98c48413",
+            "multipleImage": [],
+            "content": [
+                {
+                    "id": "b2c3d4e5-f6a7-4890-b123-456789abcdef",
+                    "value": "c3d4e5f6-a7b8-4901-c234-56789abcdef0",
+                    "file": {
+                        "id": "c3d4e5f6-a7b8-4901-c234-56789abcdef0",
+                        "filename": "ulasan-video.mp4",
+                        "mimetype": "video/mp4",
+                        "size": 5698168
+                    }
+                }
+            ],
+            "customer": {
+                "id": "22eb6224-c20a-4bc2-9b99-13b21e7048c6",
+                "name": "Budi Santoso"
+            },
+            "paymentLink": {
+                "id": "e2b3f5d5-0c62-47ba-8a01-6c1c209e0f77",
+                "name": "Kelas Pemrograman Web Dasar",
+                "type": "course",
+                "link": "kelas-pemrograman-web-dasar",
+                "subType": null
+            }
+        }
+    ],
+    "hasMore": false,
+    "nextStartingAfter": null
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/products/{paymentLinkId}/reviews
+```
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/products/{paymentLinkId}/reviews
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+    Example:
+
+    `Authorization | Bearer Paste-Your-Api-Key-Here`
+</ResponseField>
+
+## Path Parameters
+
+<ParamField path="paymentLinkId" type="string<uuid>" required>
+  ID of the payment link / product whose reviews you want to retrieve.
+</ParamField>
+
+## Query Parameters
+
+<ParamField query="limit" type="number">
+  Maximum number of reviews to return per page. Used for cursor pagination.
+</ParamField>
+
+<ParamField query="startingAfter" type="string">
+  Cursor for the next page. Pass the `nextStartingAfter` value from the previous response.
+</ParamField>
+
+<ParamField query="rating" type="number">
+  Filter reviews by rating value (1–5).
+</ParamField>
+
+<ParamField query="prioritizeMessage" type="boolean">
+  When `true`, reviews that include a message are returned before reviews without a message.
+</ParamField>
+
+## Response
+
+Successful Response
+
+## Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer">
+  Status code returned by the API.
+</ResponseField>
+
+<ResponseField name="messages" type="string">
+  Status message that describes the API response.
+</ResponseField>
+
+<ResponseField name="data" type="array of object">
+  Array containing review objects for the product.
+</ResponseField>
+
+<ResponseField name="hasMore" type="boolean">
+  Indicates whether more review data is available beyond the current page.
+</ResponseField>
+
+<ResponseField name="nextStartingAfter" type="string | null">
+  Cursor to fetch the next page. `null` when there are no more results.
+</ResponseField>
+
+### data Structure (Array Of Object)
+
+<ResponseField name="data.id" type="string">
+  Unique review ID.
+</ResponseField>
+
+<ResponseField name="data.createdAt" type="number">
+  Unix timestamp in milliseconds indicating when the review was created.
+</ResponseField>
+
+<ResponseField name="data.customerId" type="string">
+  Unique customer identifier associated with the review.
+</ResponseField>
+
+<ResponseField name="data.message" type="string">
+  Review message submitted by the customer.
+</ResponseField>
+
+<ResponseField name="data.paymentLinkId" type="string">
+  Payment link ID associated with the review.
+</ResponseField>
+
+<ResponseField name="data.status" type="string">
+  Current review status.
+</ResponseField>
+
+<ResponseField name="data.rating" type="number">
+  Rating value submitted by the customer.
+</ResponseField>
+
+<ResponseField name="data.updatedAt" type="number">
+  Unix timestamp in milliseconds indicating when the review was last updated.
+</ResponseField>
+
+<ResponseField name="data.userId" type="string">
+  Unique user ID associated with the payment link owner.
+</ResponseField>
+
+<ResponseField name="data.multipleImage" type="array of object">
+  List of review images attached by the customer.
+</ResponseField>
+
+<ResponseField name="data.content" type="array of object">
+  Additional review content (for example uploaded videos), each with a nested `file` object
+  (`id`, `filename`, `mimetype`, `size`).
+</ResponseField>
+
+<ResponseField name="data.customer" type="object">
+  Customer information object (`id`, `name`).
+</ResponseField>
+
+<ResponseField name="data.paymentLink" type="object">
+  Payment link information object (`id`, `name`, `type`, `link`, `subType`).
+</ResponseField>

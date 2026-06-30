@@ -1,0 +1,221 @@
+---
+title: "Get List Single Payment Request"
+openapi: "GET /endpointreqpaymentv2/index"
+description: "Endpoint used to view the list of single payment requests that have been created"
+---
+
+<RequestExample>
+
+```bash Request Example
+curl --request GET 'https://api.mayar.id/hl/v2/payments?limit=10' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "data": [
+        {
+            "id": "6f8c19ff-5b97-4792-aa89-d2a12797b356",
+            "amount": 100000,
+            "category": null,
+            "createdAt": 1768375011056,
+            "description": "Pembayaran jasa konsultasi",
+            "link": "rqp9x2k7m3a",
+            "type": "payment_request",
+            "status": "unpaid",
+            "name": "Penagihan",
+            "limit": null,
+            "redirectUrl": null,
+            "installmentId": null,
+            "event": null,
+            "order": null,
+            "coverImageId": null,
+            "multipleImageId": null,
+            "transactions": [],
+            "coverImage": null,
+            "multipleImage": null
+        },
+        {
+            "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+            "amount": 50000,
+            "category": null,
+            "createdAt": 1768288611042,
+            "description": "Tagihan layanan bulanan",
+            "link": "rqp4t8n1b6c",
+            "type": "payment_request",
+            "status": "paid",
+            "name": "Tagihan Layanan",
+            "limit": null,
+            "redirectUrl": null,
+            "installmentId": null,
+            "event": null,
+            "order": null,
+            "coverImageId": null,
+            "multipleImageId": null,
+            "transactions": [
+                {
+                    "id": "b2c3d4e5-f6a7-8901-bcde-f23456789012",
+                    "extraData": null
+                }
+            ],
+            "coverImage": null,
+            "multipleImage": null
+        }
+    ],
+    "hasMore": true,
+    "nextStartingAfter": "1768288611042"
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/payments
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/payments
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Query Parameters
+
+<ParamField query="status" path="status" type="string">
+  Filter the list by payment request status (e.g. `unpaid`, `paid`, `closed`).
+</ParamField>
+
+<ParamField query="limit" path="limit" default="10" type="integer">
+  Number of items to return per page. Defaults to `10`, with a maximum of `50`.
+</ParamField>
+
+<ParamField query="startingAfter" path="startingAfter" type="string">
+  Cursor for forward pagination. Pass the `nextStartingAfter` value from the
+  previous response (a Unix timestamp in milliseconds, as a string) to fetch the
+  next page.
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer" >
+  Status code form API.
+</ResponseField>
+
+<ResponseField name="messages" type="string" >
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="array of object">
+  List of single payment requests displayed.
+</ResponseField>
+
+<ResponseField name="hasMore" type="boolean" >
+  Information on whether there is additional data to be retrieved (true/false).
+</ResponseField>
+
+<ResponseField name="nextStartingAfter" type="string | null">
+  Cursor to pass as `startingAfter` to fetch the next page. `null` when there is
+  no further data.
+</ResponseField>
+
+### data Structure (Array Of Object)
+
+<ResponseField name="id" type="string<uuid>" >
+  Unique request payment ID.
+</ResponseField>
+
+<ResponseField name="amount" type="integer | null" >
+  Payment request price or nominal value.
+</ResponseField>
+
+<ResponseField name="category" type="string | null" >
+  Category, can be null if there is no category.
+</ResponseField>
+
+<ResponseField name="createdAt" type="number" >
+  Creation time in epoch milliseconds format.
+</ResponseField>
+
+<ResponseField name="description" type="string" >
+  Payment request description.
+</ResponseField>
+
+<ResponseField name="link" type="string" >
+  Payment request slug/short URL.
+</ResponseField>
+
+<ResponseField name="type" type="string" >
+  Product type. Always `payment_request` for this endpoint.
+</ResponseField>
+
+<ResponseField name="status" type="string" >
+  Payment request status (e.g. `unpaid`, `paid`, `closed`).
+</ResponseField>
+
+<ResponseField name="name" type="string | null" >
+  Payment request name.
+</ResponseField>
+
+<ResponseField name="limit" type="number | null" >
+  Certain amount limit, can be null.
+</ResponseField>
+
+<ResponseField name="redirectUrl" type="string | null" >
+  Redirect destination URL, can be null.
+</ResponseField>
+
+<ResponseField name="installmentId" type="string | null" >
+  Installment ID if the payment request supports installments, can be null.
+</ResponseField>
+
+<ResponseField name="event" type="object | null" >
+  Related event data, can be null.
+</ResponseField>
+
+<ResponseField name="order" type="object | null" >
+  Related order data, can be null.
+</ResponseField>
+
+<ResponseField name="coverImageId" type="string | null" >
+  ID cover image, can be null.
+</ResponseField>
+
+<ResponseField name="multipleImageId" type="string | null" >
+  ID for multiple image group, can be null.
+</ResponseField>
+
+<ResponseField name="transactions" type="array of object">
+  List of related transactions (empty if none). Each item contains `id` and
+  `extraData`.
+</ResponseField>
+
+<ResponseField name="coverImage" type="object | null" >
+  Cover image data, can be null.
+</ResponseField>
+
+<ResponseField name="multipleImage" type="array | null">
+  List of additional images for the payment request.
+</ResponseField>

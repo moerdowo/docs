@@ -1,0 +1,165 @@
+---
+title: "Edit Single Payment Request"
+openapi: "POST /endpointreqpaymentv2/edit"
+description: "Endpoint used to edit a single payment request that has been created"
+---
+
+{/* Notes for maintainers: this is a WRITE endpoint. The response shape below is
+REPRESENTATIVE — derived from the V1 request-payment template and the V2 source
+surface, not captured from a live prod write. IMPORTANT: the payment request to
+update is selected by the `id` field in the REQUEST BODY; the `{uuId}` URL segment
+is cosmetic and is ignored by the API. `messages` is PLURAL on this endpoint. */}
+
+<RequestExample>
+
+```bash Request Example
+curl --request POST 'https://api.mayar.id/hl/v2/payments/6f8c19ff-5b97-4792-aa89-d2a12797b356/update' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--data-raw '{
+        "id": "6f8c19ff-5b97-4792-aa89-d2a12797b356",
+        "amount": 150000,
+        "description": "Penagihan yang sudah diedit",
+        "expiredAt": "2026-07-19T16:43:23.000Z"
+    }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "data": {
+        "id": "6f8c19ff-5b97-4792-aa89-d2a12797b356",
+        "link": "https://testingmayar.myr.id/pl/rqp9x2k7m3a"
+    }
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/payments/{uuId}/update
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/payments/{uuId}/update
+```
+
+</CodeGroup>
+
+<Note>
+  The payment request to update is selected by the `id` field in the **request
+  body**, not by the `{uuId}` segment in the URL path. The path segment is
+  cosmetic and is ignored by the API — always send the target payment request
+  `id` in the body.
+</Note>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Request Body
+
+<ParamField path="id" type="string<uuid>" required>
+  A unique identifier obtained when creating a single payment request. This selects
+  the payment request to update (the `{uuId}` URL segment is ignored).
+
+  Example:
+
+  `6f8c19ff-5b97-4792-aa89-d2a12797b356`
+</ParamField>
+
+<ParamField path="amount" type="integer" required>
+  Nominal amount of payment.
+</ParamField>
+
+<ParamField path="email" type="string">
+  Customer email used to send proof of payment or payment reminders.
+</ParamField>
+
+<ParamField path="mobile" type="string">
+  Customer telephone number.
+</ParamField>
+
+<ParamField path="description" type="string">
+  General description of the transaction or order.
+</ParamField>
+
+<ParamField path="notes" type="string">
+  Additional notes for the payment request.
+</ParamField>
+
+<ParamField path="expiredAt" type="string (format ISO 8601 date-time)">
+  The transaction expiration date and time. After this time, the payment link is
+  no longer valid.
+</ParamField>
+
+<ParamField path="paymentMethod" type="string">
+  Restrict the payment request to a specific payment method.
+</ParamField>
+
+<ParamField path="cashtag" type="string">
+  Cashtag associated with the payment request.
+</ParamField>
+
+<ParamField path="extraData" type="object">
+  Additional custom data attached to the payment request.
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer" >
+  Status code form API.
+</ResponseField>
+
+<ResponseField name="messages" type="string" >
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  The updated payment request data.
+</ResponseField>
+
+### data Structure (Object)
+
+<ResponseField name="id" type="string<uuid>" >
+  Unique request payment ID.
+</ResponseField>
+
+<ResponseField name="link" type="string" >
+  The URL that customers can access to open the payment request.
+</ResponseField>
+
+### Errors
+
+<ResponseField name="401 Unauthorized" type="object">
+  Returned when the API key is missing or invalid:
+  `{ "statusCode": 401, "messages": "Unauthorized" }`.
+</ResponseField>
+
+<ResponseField name="404 Not Found" type="object">
+  Returned when no payment request matches the provided `id`:
+  `{ "statusCode": 404, "messages": "Payment not found" }`.
+</ResponseField>
+
+<ResponseField name="409 Conflict" type="object">
+  Returned when the payment request has already been paid and can no longer be
+  edited:
+  `{ "statusCode": 409, "messages": "Transaction already paid. Cannot edit payment request." }`.
+</ResponseField>

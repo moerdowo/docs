@@ -95,7 +95,7 @@
         ]
       },
       {
-        "tab": "API Reference",
+        "tab": "API V1 Reference",
         "groups": [
           {
             "group": "API documentation",
@@ -251,6 +251,183 @@
             "group": "Reviews",
             "pages": [
               "api-reference/reviews/getallreviews"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API V2 Reference",
+        "groups": [
+          {
+            "group": "API documentation",
+            "pages": [
+              "api-reference-v2/introduction",
+              "api-reference-v2/statuscode",
+              "api-reference-v2/rate-limit"
+            ]
+          },
+          {
+            "group": "Products & payment links",
+            "pages": [
+              {
+                "group": "Product",
+                "pages": [
+                  "api-reference-v2/product/productpage",
+                  "api-reference-v2/product/productpagewithfilter",
+                  "api-reference-v2/product/detail",
+                  "api-reference-v2/product/transactions",
+                  "api-reference-v2/product/changestatus"
+                ]
+              },
+              {
+                "group": "Generic Link / Payment Link",
+                "pages": [
+                  "api-reference-v2/genericlink/create",
+                  "api-reference-v2/genericlink/createpaymentlink",
+                  "api-reference-v2/genericlink/edit",
+                  "api-reference-v2/genericlink/editpaymentlink",
+                  "api-reference-v2/genericlink/sort"
+                ]
+              },
+              {
+                "group": "Digital Product",
+                "pages": [
+                  "api-reference-v2/digitalproduct/create",
+                  "api-reference-v2/digitalproduct/edit"
+                ]
+              },
+              {
+                "group": "Webinar Product",
+                "pages": [
+                  "api-reference-v2/webinar/create",
+                  "api-reference-v2/webinar/edit"
+                ]
+              },
+              {
+                "group": "Event Product",
+                "pages": [
+                  "api-reference-v2/event/create",
+                  "api-reference-v2/event/edit"
+                ]
+              }
+            ]
+          },
+          {
+            "group": "Invoice",
+            "pages": [
+              "api-reference-v2/invoice/index",
+              "api-reference-v2/invoice/filter",
+              "api-reference-v2/invoice/detail",
+              "api-reference-v2/invoice/create",
+              "api-reference-v2/invoice/edit"
+            ]
+          },
+          {
+            "group": "Payments",
+            "pages": [
+              "api-reference-v2/reqpayment/index",
+              "api-reference-v2/reqpayment/detail",
+              "api-reference-v2/reqpayment/create",
+              "api-reference-v2/reqpayment/edit",
+              "api-reference-v2/reqpayment/changestatus"
+            ]
+          },
+          {
+            "group": "Transaction",
+            "pages": [
+              "api-reference-v2/transaction/paidtransaction",
+              "api-reference-v2/transaction/unpaidtransaction",
+              "api-reference-v2/transaction/dailytransaction"
+            ]
+          },
+          {
+            "group": "Customer",
+            "pages": [
+              "api-reference-v2/customer/getdetail",
+              "api-reference-v2/customer/searchcustomerbyemail",
+              "api-reference-v2/customer/create",
+              "api-reference-v2/customer/update",
+              "api-reference-v2/customer/createmagiclink"
+            ]
+          },
+          {
+            "group": "Membership",
+            "pages": [
+              "api-reference-v2/membership/tiers",
+              "api-reference-v2/membership/members",
+              "api-reference-v2/membership/memberdetail",
+              "api-reference-v2/membership/register",
+              "api-reference-v2/membership/update",
+              "api-reference-v2/membership/createinvoice",
+              "api-reference-v2/membership/cancel"
+            ]
+          },
+          {
+            "group": "QR / Payment Channels",
+            "pages": [
+              "api-reference-v2/qrcode/createdynamicqrcode",
+              "api-reference-v2/qrcode/getstaticqrcode",
+              "api-reference-v2/qrcode/paymentchannels"
+            ]
+          },
+          {
+            "group": "Balances",
+            "pages": [
+              "api-reference-v2/balance/accountbalance"
+            ]
+          },
+          {
+            "group": "Installment",
+            "pages": [
+              "api-reference-v2/installment/index",
+              "api-reference-v2/installment/detail",
+              "api-reference-v2/installment/create"
+            ]
+          },
+          {
+            "group": "Discount & Coupon",
+            "pages": [
+              "api-reference-v2/discount/create",
+              "api-reference-v2/discount/detail",
+              "api-reference-v2/discount/validate",
+              "api-reference-v2/discount/check"
+            ]
+          },
+          {
+            "group": "Bundling",
+            "pages": [
+              "api-reference-v2/bundling/index",
+              "api-reference-v2/bundling/detail"
+            ]
+          },
+          {
+            "group": "Name Services",
+            "pages": [
+              "api-reference-v2/nameservice/create",
+              "api-reference-v2/nameservice/update"
+            ]
+          },
+          {
+            "group": "Webhook",
+            "pages": [
+              "api-reference-v2/webhook/history",
+              "api-reference-v2/webhook/newhistory",
+              "api-reference-v2/webhook/registerurlhook",
+              "api-reference-v2/webhook/testurlhook",
+              "api-reference-v2/webhook/retryhistory"
+            ]
+          },
+          {
+            "group": "Reviews",
+            "pages": [
+              "api-reference-v2/reviews/getallreviews",
+              "api-reference-v2/reviews/productreviews",
+              "api-reference-v2/reviews/productreviewcustomer",
+              "api-reference-v2/reviews/productreviewstats",
+              "api-reference-v2/reviews/merchantreviewstats",
+              "api-reference-v2/reviews/create",
+              "api-reference-v2/reviews/update",
+              "api-reference-v2/reviews/bulkstatusupdate"
             ]
           }
         ]

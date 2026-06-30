@@ -1,0 +1,209 @@
+---
+title: "Get Payment Channels"
+openapi: "GET /endpointqrcodev2/paymentchannels"
+description: "Endpoint to retrieve the merchant's enabled payment channel configuration"
+---
+
+{/*
+  Notes for maintainers — response shape captured live from prod (PII scrubbed).
+  GET /hl/v2/payment-channels returns the merchant's payment-channel config object.
+  The `config` array below is a representative cross-section covering every channel `type`
+  (qris, va, ewallet, card, retail, paylater, qris_static); a real account returns the full
+  channel catalogue. Top-level `id`/`userId`/timestamps were scrubbed to synthetic values.
+  Envelope key is PLURAL `messages` for this group (reads, writes, AND errors).
+*/}
+
+<RequestExample>
+
+```bash Request Example
+curl --request GET 'https://api.mayar.id/hl/v2/payment-channels' \
+ --header 'Authorization: Bearer Paste-Your-API-Key-Here'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "data": {
+        "id": "a1b2c3d4-e5f6-4789-a012-3456789abcde",
+        "userId": "348e083d-315a-4e5c-96b1-5a2a98c48413",
+        "isAkulakuApproved": null,
+        "isCreditCardApproved": true,
+        "isQRISStaticApproved": null,
+        "isAdminFeeBorneByCustomer": true,
+        "isChannelFeeBorneByCustomer": true,
+        "isRateLimitActive": false,
+        "config": [
+            {
+                "name": "QRIS",
+                "status": true,
+                "img": "/qris-gpn.png",
+                "type": "qris",
+                "code": "QRIS"
+            },
+            {
+                "name": "Bank Transfer Mandiri",
+                "status": true,
+                "img": "/mandiri.png",
+                "type": "va",
+                "code": "MANDIRI"
+            },
+            {
+                "name": "EWallet OVO",
+                "status": true,
+                "img": "/ovo.png",
+                "type": "ewallet",
+                "code": "OVO"
+            },
+            {
+                "name": "Kartu Kredit Debit",
+                "status": true,
+                "img": "/cc.png",
+                "type": "card",
+                "code": null
+            },
+            {
+                "name": "Retail Alfamart",
+                "status": true,
+                "img": "/alfamart.png",
+                "type": "retail",
+                "code": "ALFAMART"
+            },
+            {
+                "name": "Pay Later Akulaku",
+                "status": false,
+                "img": "/akulaku.png",
+                "type": "paylater",
+                "code": "AKULAKU"
+            },
+            {
+                "name": "QRIS Statis",
+                "status": false,
+                "img": "/qris-gpn.png",
+                "type": "qris_static",
+                "code": "QRIS_STATIC"
+            }
+        ],
+        "createdAt": 1700000000000,
+        "updatedAt": 1714000000000
+    }
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/payment-channels
+```
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/payment-channels
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer">
+  Status code returned by the API.
+</ResponseField>
+
+<ResponseField name="messages" type="string">
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  The payment-channel configuration object for the merchant.
+</ResponseField>
+
+### data Structure (Object)
+
+<ResponseField name="data.id" type="string">
+  Unique identifier of the payment-channel configuration record.
+</ResponseField>
+
+<ResponseField name="data.userId" type="string">
+  Identifier of the merchant that owns this configuration.
+</ResponseField>
+
+<ResponseField name="data.isAkulakuApproved" type="boolean">
+  Whether the Akulaku (paylater) channel is approved for this merchant. May be `null` when not yet reviewed.
+</ResponseField>
+
+<ResponseField name="data.isCreditCardApproved" type="boolean">
+  Whether the credit/debit card channel is approved for this merchant. May be `null` when not yet reviewed.
+</ResponseField>
+
+<ResponseField name="data.isQRISStaticApproved" type="boolean">
+  Whether the static QRIS channel is approved for this merchant. May be `null` when not yet reviewed.
+</ResponseField>
+
+<ResponseField name="data.isAdminFeeBorneByCustomer" type="boolean">
+  Whether the admin fee is charged to the customer rather than the merchant.
+</ResponseField>
+
+<ResponseField name="data.isChannelFeeBorneByCustomer" type="boolean">
+  Whether the per-channel fee is charged to the customer rather than the merchant.
+</ResponseField>
+
+<ResponseField name="data.isRateLimitActive" type="boolean">
+  Whether rate limiting is currently active for this merchant's channels.
+</ResponseField>
+
+<ResponseField name="data.config" type="array of object">
+  List of available payment channels and their enabled state.
+</ResponseField>
+
+<ResponseField name="data.config[].name" type="string">
+  Human-readable channel name (e.g. `Bank Transfer Mandiri`).
+</ResponseField>
+
+<ResponseField name="data.config[].status" type="boolean">
+  Whether the channel is enabled for this merchant.
+</ResponseField>
+
+<ResponseField name="data.config[].img" type="string">
+  Relative path to the channel's logo image.
+</ResponseField>
+
+<ResponseField name="data.config[].type" type="string">
+  Channel type. One of `qris`, `va`, `ewallet`, `card`, `retail`, `paylater`, `qris_static`.
+</ResponseField>
+
+<ResponseField name="data.config[].code" type="string">
+  Channel code (e.g. `MANDIRI`, `OVO`, `ALFAMART`). May be `null` for some channels.
+</ResponseField>
+
+<ResponseField name="data.createdAt" type="integer">
+  Creation timestamp (Unix epoch, in milliseconds).
+</ResponseField>
+
+<ResponseField name="data.updatedAt" type="integer">
+  Last-update timestamp (Unix epoch, in milliseconds).
+</ResponseField>
+
+## Errors
+
+<ResponseField name="500" type="object">
+  Returned when the channel configuration cannot be read: `{ "statusCode": 500, "messages": "<error>" }`.
+</ResponseField>

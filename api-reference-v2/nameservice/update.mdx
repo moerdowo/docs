@@ -1,0 +1,212 @@
+---
+title: "Update Name Service"
+openapi: "POST /endpointnameservicev2/update"
+description: "Endpoint used to update an existing name service (power-up store) entry"
+---
+
+{/*
+  Notes for maintainers — REPRESENTATIVE write payload.
+  POST /hl/v2/name-services/update is a write endpoint; the example below is derived from the
+  V2 source surface plus synthetic values (no live capture to avoid mutating merchant data).
+  Field names in `data` are source-confirmed from the stored record; confirm exact values/types
+  against a live response. The resource `id` is read from the REQUEST BODY (there is no id URL
+  segment). The `payload`, `credential`, and `event` fields are stored as serialized JSON
+  strings. Envelope key is PLURAL `messages` for this group (writes AND errors).
+*/}
+
+<RequestExample>
+
+```bash Request Example
+curl --request POST 'https://api.mayar.id/hl/v2/name-services/update' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--data-raw '{
+    "id": "a1b2c3d4-e5f6-4789-a012-3456789abcde",
+    "name": "Premium Newsletter",
+    "description": "Monthly premium newsletter access",
+    "website": "https://testingmayar.myr.id",
+    "amount": 75000,
+    "urlHook": "https://webhook.example.com/name-service",
+    "image": "https://media.mayar.id/images/b2c3d4e5-f6a7-489a-b012-3456789abcde.png",
+    "payload": {
+        "plan": "premium",
+        "durationInDays": 30
+    },
+    "credential": {
+        "apiKey": "service-credential-value"
+    },
+    "event": {
+        "type": "subscription.renewed"
+    }
+}'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "data": {
+        "id": "a1b2c3d4-e5f6-4789-a012-3456789abcde",
+        "userId": "348e083d-315a-4e5c-96b1-5a2a98c48413",
+        "name": "Premium Newsletter",
+        "slug": "premium-newsletter",
+        "description": "Monthly premium newsletter access",
+        "website": "https://testingmayar.myr.id",
+        "amount": 75000,
+        "urlHook": "https://webhook.example.com/name-service",
+        "image": "https://media.mayar.id/images/b2c3d4e5-f6a7-489a-b012-3456789abcde.png",
+        "payload": "{\"plan\":\"premium\",\"durationInDays\":30}",
+        "credential": "{\"apiKey\":\"service-credential-value\"}",
+        "event": "{\"type\":\"subscription.renewed\"}"
+    }
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/name-services/update
+```
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/name-services/update
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+<Note>
+  The service `id` is read from the **request body**, not the URL. Provide the `id`
+  of the service you own in the JSON body to identify the record to update.
+</Note>
+
+## Request Body
+
+<ParamField body="id" type="string<uuid>" required>
+  ID of the name service to update. Must be a valid UUID for a service you own.
+</ParamField>
+
+<ParamField body="name" type="string">
+  Updated name of the service.
+</ParamField>
+
+<ParamField body="description" type="string">
+  Updated description of the service.
+</ParamField>
+
+<ParamField body="payload" type="object">
+  Updated configuration object for the service. Stored as serialized JSON.
+</ParamField>
+
+<ParamField body="credential" type="object">
+  Credential object for the service. Stored as serialized JSON when provided.
+</ParamField>
+
+<ParamField body="urlHook" type="string">
+  Updated webhook URL notified for events related to this service.
+</ParamField>
+
+<ParamField body="amount" type="number | integer">
+  Updated price (in IDR) associated with the service.
+</ParamField>
+
+<ParamField body="website" type="string">
+  Updated public website URL associated with the service.
+</ParamField>
+
+<ParamField body="image" type="string">
+  Updated image URL representing the service.
+</ParamField>
+
+<ParamField body="event" type="object">
+  Event configuration for the service. Stored as serialized JSON.
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer">
+  Status code returned by the API.
+</ResponseField>
+
+<ResponseField name="messages" type="string">
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  The updated name service record.
+</ResponseField>
+
+### data Structure (Object)
+
+<ResponseField name="id" type="string<uuid>">
+  Service ID.
+</ResponseField>
+
+<ResponseField name="userId" type="string<uuid>">
+  ID of the account that owns the service.
+</ResponseField>
+
+<ResponseField name="name" type="string">
+  Service name.
+</ResponseField>
+
+<ResponseField name="slug" type="string">
+  URL-friendly slug derived from the service name.
+</ResponseField>
+
+<ResponseField name="description" type="string">
+  Service description.
+</ResponseField>
+
+<ResponseField name="website" type="string">
+  Public website URL associated with the service.
+</ResponseField>
+
+<ResponseField name="amount" type="number">
+  Price (in IDR) associated with the service.
+</ResponseField>
+
+<ResponseField name="urlHook" type="string">
+  Webhook URL notified for events related to this service.
+</ResponseField>
+
+<ResponseField name="image" type="string">
+  Image URL representing the service.
+</ResponseField>
+
+<ResponseField name="payload" type="string">
+  Service configuration as a serialized JSON string.
+</ResponseField>
+
+<ResponseField name="credential" type="string">
+  Service credential as a serialized JSON string.
+</ResponseField>
+
+<ResponseField name="event" type="string">
+  Event configuration as a serialized JSON string.
+</ResponseField>
+
+## Errors
+
+<ResponseField name="500 Server Error" type="object">
+  Returned with `messages` set to the error description when the service cannot be
+  updated (for example, when `id` is missing or does not match a service you own).
+</ResponseField>

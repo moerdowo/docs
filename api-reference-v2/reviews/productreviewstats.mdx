@@ -1,0 +1,123 @@
+---
+title: "Get Product Review Statistics"
+openapi: "GET /endpointreviewsv2/product-review-stats"
+description: "Endpoint to retrieve aggregated rating statistics for a specific product"
+---
+
+{/*
+  Notes for maintainers — V2 Reviews "Get Product Review Statistics"
+  (GET /hl/v2/products/{paymentLinkId}/reviews/stats).
+  REPRESENTATIVE shape: this statistics endpoint is cache-backed and could not be safely captured
+  live, so the example below is derived from the V2 source surface plus synthetic values. Confirm
+  the exact numbers against a live response. Envelope key is PLURAL `messages` (read). `data` is an
+  object with `total`, `average`, and a `stats` array holding one entry per rating (5 down to 1).
+  When the product has no active reviews, `data` is an empty object (`{}`).
+*/}
+
+<RequestExample>
+
+```bash Request Example
+curl --request GET 'https://api.mayar.id/hl/v2/products/e2b3f5d5-0c62-47ba-8a01-6c1c209e0f77/reviews/stats' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "data": {
+        "total": 10,
+        "average": 4.6,
+        "stats": [
+            { "rating": 5, "percentage": 70, "totalRating": 7 },
+            { "rating": 4, "percentage": 20, "totalRating": 2 },
+            { "rating": 3, "percentage": 10, "totalRating": 1 },
+            { "rating": 2, "percentage": 0, "totalRating": 0 },
+            { "rating": 1, "percentage": 0, "totalRating": 0 }
+        ]
+    }
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/products/{paymentLinkId}/reviews/stats
+```
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/products/{paymentLinkId}/reviews/stats
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+    Example:
+
+    `Authorization | Bearer Paste-Your-Api-Key-Here`
+</ResponseField>
+
+## Path Parameters
+
+<ParamField path="paymentLinkId" type="string<uuid>" required>
+  ID of the payment link / product whose rating statistics you want to retrieve.
+</ParamField>
+
+<Note>
+  Statistics count only `ACTIVE` reviews. When the product has no active reviews, `data` is
+  returned as an empty object (`{}`).
+</Note>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer">
+  Status code returned by the API.
+</ResponseField>
+
+<ResponseField name="messages" type="string">
+  Status message that describes the API response.
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  Aggregated rating statistics for the product. Empty object when there are no active reviews.
+</ResponseField>
+
+### data Structure (Object)
+
+<ResponseField name="total" type="number">
+  Total number of active reviews for the product.
+</ResponseField>
+
+<ResponseField name="average" type="number">
+  Average rating across all active reviews, rounded to one decimal place.
+</ResponseField>
+
+<ResponseField name="stats" type="array of object">
+  Per-rating breakdown, one entry for each rating from 5 down to 1.
+</ResponseField>
+
+<ResponseField name="stats.rating" type="number">
+  Rating value (1–5) this breakdown entry refers to.
+</ResponseField>
+
+<ResponseField name="stats.percentage" type="number">
+  Percentage of total reviews that gave this rating.
+</ResponseField>
+
+<ResponseField name="stats.totalRating" type="number">
+  Number of reviews that gave this rating.
+</ResponseField>

@@ -1,0 +1,247 @@
+---
+title: "Get Installment Detail"
+openapi: "GET /endpointinstallmentv2/detail"
+description: "Endpoint used to view details and status of an installment that has been created"
+---
+
+{/* Notes for maintainers: the response envelope and field names are
+    source-confirmed from the V2 installment surface. Because the capture
+    account had no installments, the values below are REPRESENTATIVE (derived
+    from the V2 source shape); confirm exact values against a live response. All
+    values are synthetic. */}
+
+<RequestExample>
+
+```bash Request Example
+curl --request GET 'https://api.mayar.id/hl/v2/installments/ba82c2dd-06c1-4b6c-bc59-a9c00801c842' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "data": {
+        "id": "ba82c2dd-06c1-4b6c-bc59-a9c00801c842",
+        "amount": 1500000,
+        "interest": 0,
+        "interestType": "FLAT",
+        "period": "MONTHLY",
+        "tenure": 3,
+        "dueDate": 11,
+        "totalInterest": 0,
+        "totalAmount": 1500000,
+        "description": "Cicil Produk Kelas Online 3 Bulan",
+        "customer": {
+            "name": "Budi Santoso",
+            "email": "budi.santoso@example.com",
+            "mobile": "081234567890"
+        },
+        "status": "unpaid",
+        "invoices": [
+            {
+                "id": "9fe1b9c4-b5d5-4d45-bf1a-5c4849631725",
+                "index": 1,
+                "amount": 500000,
+                "interestAmount": 0,
+                "remainingAmount": 1000000,
+                "dueDate": "2026-07-11T00:00:00.000Z",
+                "status": "unpaid",
+                "link": "mkcn4u72ki"
+            },
+            {
+                "id": "977777d6-af25-464e-a8ca-e290b3007275",
+                "index": 2,
+                "amount": 500000,
+                "interestAmount": 0,
+                "remainingAmount": 500000,
+                "dueDate": "2026-08-11T00:00:00.000Z",
+                "status": "unpaid",
+                "link": "0ll429zxvsue"
+            },
+            {
+                "id": "1dde3426-f6a4-43d2-a1d9-2cd2fa05eb9a",
+                "index": 3,
+                "amount": 500000,
+                "interestAmount": 0,
+                "remainingAmount": 0,
+                "dueDate": "2026-09-11T00:00:00.000Z",
+                "status": "unpaid",
+                "link": "h8fiobqkek"
+            }
+        ],
+        "createdAt": "2026-06-19T17:20:09.521Z"
+    }
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/installments/{uuId}
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/installments/{uuId}
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Path Parameters
+
+<ParamField path="uuId" type="string" required>
+  A unique identifier obtained when creating an installment. If accessed through
+  the dashboard, it can be found in the URL on the installment details page.
+
+  Example:
+
+  `ba82c2dd-06c1-4b6c-bc59-a9c00801c842`
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer">
+  Status code form API.
+</ResponseField>
+
+<ResponseField name="messages" type="string">
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  The installment detail object.
+</ResponseField>
+
+### data Structure (Object)
+
+<ResponseField name="id" type="string<uuid>">
+  Main installment ID.
+</ResponseField>
+
+<ResponseField name="amount" type="integer">
+  Total installment amount.
+</ResponseField>
+
+<ResponseField name="interest" type="integer">
+  Interest value.
+</ResponseField>
+
+<ResponseField name="interestType" type="string">
+  Type of interest (example: `"FLAT"`).
+</ResponseField>
+
+<ResponseField name="period" type="string">
+  Installment period (example: `"MONTHLY"`).
+</ResponseField>
+
+<ResponseField name="tenure" type="integer">
+  Installment duration (in months).
+</ResponseField>
+
+<ResponseField name="dueDate" type="integer">
+  Due date each month (example: `11`).
+</ResponseField>
+
+<ResponseField name="totalInterest" type="integer">
+  Total interest across all installments.
+</ResponseField>
+
+<ResponseField name="totalAmount" type="integer">
+  Total amount payable across all installments.
+</ResponseField>
+
+<ResponseField name="description" type="string">
+  Installment description.
+</ResponseField>
+
+<ResponseField name="customer" type="object">
+  Customer details.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Installment status (example: `"unpaid"`).
+</ResponseField>
+
+<ResponseField name="invoices" type="array of object">
+  List of installment invoices.
+</ResponseField>
+
+<ResponseField name="createdAt" type="string (ISO 8601)">
+  Creation time in ISO 8601 format.
+</ResponseField>
+
+### customer Structure (Object)
+
+<ResponseField name="name" type="string">
+  Customer name.
+</ResponseField>
+
+<ResponseField name="email" type="string">
+  Customer email address.
+</ResponseField>
+
+<ResponseField name="mobile" type="string">
+  Customer phone number.
+</ResponseField>
+
+### invoices Structure (Array Of Object)
+
+<ResponseField name="id" type="string<uuid>">
+  Invoice ID.
+</ResponseField>
+
+<ResponseField name="index" type="integer">
+  Invoice order number.
+</ResponseField>
+
+<ResponseField name="amount" type="integer">
+  Invoice amount.
+</ResponseField>
+
+<ResponseField name="interestAmount" type="integer">
+  Interest amount for the invoice.
+</ResponseField>
+
+<ResponseField name="remainingAmount" type="integer">
+  Remaining balance after this invoice.
+</ResponseField>
+
+<ResponseField name="dueDate" type="string (ISO 8601)">
+  Invoice due date in ISO 8601 format.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Payment status (example: `"unpaid"`).
+</ResponseField>
+
+<ResponseField name="link" type="string">
+  Unique invoice link.
+</ResponseField>
+
+## Errors
+
+<ResponseField name="401 Unauthorized" type="object">
+  Returned with `messages: "Unauthorized"` when the installment does not belong
+  to the authenticated account.
+</ResponseField>

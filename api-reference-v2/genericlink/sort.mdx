@@ -1,0 +1,191 @@
+---
+title: "Sort Payment Links by Type"
+openapi: "POST /endpointgenericlinkv2/sort"
+description: "Endpoint that returns active products of a given type"
+---
+
+{/* Notes for maintainers: although this route uses the POST method, it behaves
+as a READ — it returns a cursor-paginated list of active products of the given
+type and takes no request body. `messages` is PLURAL. */}
+
+<RequestExample>
+
+```bash Request Example
+curl --request POST 'https://api.mayar.id/hl/v2/payment-links/sort/generic_link' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "data": [
+        {
+            "id": "3d4a503a-04a7-4587-915a-8983f0ab05f7",
+            "amount": 150000,
+            "category": null,
+            "createdAt": 1768375011056,
+            "description": "<p>Jasa pembuatan website company profile.</p>\n",
+            "link": "jasa-pembuatan-website",
+            "type": "generic_link",
+            "status": "active",
+            "name": "Jasa Pembuatan Website",
+            "limit": null,
+            "redirectUrl": null,
+            "installmentId": null,
+            "event": null,
+            "order": null,
+            "coverImageId": "2529541f-dc98-4ca0-93bb-3c1d35a8dd07",
+            "multipleImageId": null,
+            "transactions": [],
+            "coverImage": {
+                "id": "2529541f-dc98-4ca0-93bb-3c1d35a8dd07",
+                "fileType": "jpeg",
+                "url": "https://media.mayar.id/images/2529541f-dc98-4ca0-93bb-3c1d35a8dd07.jpeg"
+            },
+            "multipleImage": null
+        }
+    ],
+    "hasMore": true,
+    "nextStartingAfter": "1768375011056"
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/payment-links/sort/{type}
+```
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/payment-links/sort/{type}
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+    Example:
+
+    `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Path Parameters
+
+<ParamField path="type" type="string" required>
+  Product type whose active products you want to list (e.g. `generic_link`,
+  `event`, `webinar`, `digital_product`).
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer">
+  Status code from API.
+</ResponseField>
+
+<ResponseField name="messages" type="string">
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="array of object">
+  List of active products of the requested type.
+</ResponseField>
+
+<ResponseField name="hasMore" type="boolean">
+  Information on whether there is additional data to be retrieved (true/false).
+</ResponseField>
+
+<ResponseField name="nextStartingAfter" type="string | null">
+  Cursor to pass for forward pagination. `null` when there is no further data.
+</ResponseField>
+
+### data Structure (Array Of Object)
+
+<ResponseField name="id" type="string">
+  Unique identifier of the product.
+</ResponseField>
+
+<ResponseField name="amount" type="integer">
+  Product price amount.
+</ResponseField>
+
+<ResponseField name="category" type="string | null">
+  Product category if available.
+</ResponseField>
+
+<ResponseField name="createdAt" type="number">
+  Timestamp in milliseconds indicating when the product was created.
+</ResponseField>
+
+<ResponseField name="description" type="string">
+  Product description in HTML format.
+</ResponseField>
+
+<ResponseField name="link" type="string">
+  Unique slug or identifier used in the product URL.
+</ResponseField>
+
+<ResponseField name="type" type="string">
+  Product type.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Current product status (e.g., `active`, `inactive`).
+</ResponseField>
+
+<ResponseField name="name" type="string">
+  Product name.
+</ResponseField>
+
+<ResponseField name="limit" type="integer | null">
+  Purchase or access limit if configured.
+</ResponseField>
+
+<ResponseField name="redirectUrl" type="string | null">
+  URL where the customer will be redirected after checkout.
+</ResponseField>
+
+<ResponseField name="installmentId" type="string | null">
+  Installment identifier if the product supports installment payments.
+</ResponseField>
+
+<ResponseField name="event" type="object | null">
+  Event details.
+</ResponseField>
+
+<ResponseField name="order" type="object | null">
+  Order configuration if applicable.
+</ResponseField>
+
+<ResponseField name="coverImageId" type="string | null">
+  Identifier of the cover image.
+</ResponseField>
+
+<ResponseField name="multipleImageId" type="string | null">
+  Identifier list of additional images.
+</ResponseField>
+
+<ResponseField name="transactions" type="array">
+  List of related transactions (empty if none).
+</ResponseField>
+
+<ResponseField name="coverImage" type="object | null">
+  Cover image object containing image details.
+</ResponseField>
+
+<ResponseField name="multipleImage" type="array | null">
+  List of additional image objects.
+</ResponseField>

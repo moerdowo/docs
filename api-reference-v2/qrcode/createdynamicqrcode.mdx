@@ -1,0 +1,96 @@
+---
+title: "Create Dynamic QRCode"
+openapi: "POST /endpointqrcodev2/createdynamicqrcode"
+description: "Endpoint used to create a dynamic QRIS code for a specific amount"
+---
+
+{/*
+  Notes for maintainers — REPRESENTATIVE write payload.
+  POST /hl/v2/qr-codes/create is a write endpoint; the response below is derived from the
+  V2 source surface plus representative values (request body: amount; response data { url, amount }).
+  Confirm field types/values against a live capture when possible.
+  Envelope key is PLURAL `messages` for this group (reads, writes, AND errors).
+*/}
+
+<RequestExample>
+
+```bash Request Example
+curl --request POST 'https://api.mayar.id/hl/v2/qr-codes/create' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--data-raw '{
+    "amount": 10000
+}'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "data": {
+        "url": "https://media.mayar.id/images/resized/480/a1b2c3d4-e5f6-4789-a012-3456789abcde.png",
+        "amount": 10000
+    }
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/qr-codes/create
+```
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/qr-codes/create
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Request Body
+
+<ParamField body="amount" type="integer" required>
+  Nominal payment amount (in IDR) to encode into the dynamic QRIS code.
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer">
+  Status code returned by the API.
+</ResponseField>
+
+<ResponseField name="messages" type="string">
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  The generated dynamic QRIS object.
+</ResponseField>
+
+### data Structure (Object)
+
+<ResponseField name="data.url" type="string">
+  Link to the generated QR image file.
+</ResponseField>
+
+<ResponseField name="data.amount" type="integer">
+  Nominal payment amount encoded into the QR code.
+</ResponseField>

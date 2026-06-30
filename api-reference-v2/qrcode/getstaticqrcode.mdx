@@ -1,0 +1,96 @@
+---
+title: "Get Static QRCode"
+openapi: "GET /endpointqrcodev2/getstaticqrcode"
+description: "Endpoint to retrieve the merchant's static QRIS code"
+---
+
+{/*
+  Notes for maintainers — REPRESENTATIVE response.
+  GET /hl/v2/qr-codes/static returns the merchant's static QRIS image (response data { url }).
+  A live capture for the sample merchant returned 500 { statusCode: 500, messages: "Invalid data" }
+  because no static QRIS is configured for that account, so the 200 shape below is representative,
+  derived from the V2 source surface. Confirm against a merchant that has a static QRIS enabled.
+  Envelope key is PLURAL `messages` for this group (reads, writes, AND errors).
+*/}
+
+<RequestExample>
+
+```bash Request Example
+curl --request GET 'https://api.mayar.id/hl/v2/qr-codes/static' \
+ --header 'Authorization: Bearer Paste-Your-API-Key-Here'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "data": {
+        "url": "https://media.mayar.id/images/resized/480/a1b2c3d4-e5f6-4789-a012-3456789abcde.png"
+    }
+}
+```
+
+```json Response Example 500
+{
+    "statusCode": 500,
+    "messages": "Invalid data"
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/qr-codes/static
+```
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/qr-codes/static
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer">
+  Status code returned by the API.
+</ResponseField>
+
+<ResponseField name="messages" type="string">
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  The static QRIS object.
+</ResponseField>
+
+### data Structure (Object)
+
+<ResponseField name="data.url" type="string">
+  Link to the merchant's static QRIS image file.
+</ResponseField>
+
+## Errors
+
+<ResponseField name="500" type="object">
+  Returned when the merchant has no static QRIS configured: `{ "statusCode": 500, "messages": "Invalid data" }`.
+</ResponseField>

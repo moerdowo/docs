@@ -1,0 +1,170 @@
+---
+title: "Create Webinar"
+openapi: "POST /endpointwebinarv2/create"
+description: "Endpoint to create a webinar product"
+---
+
+{/* Notes for maintainers: this is a WRITE endpoint. The response shape below is
+REPRESENTATIVE — derived from the V1 page template and the V2 source surface,
+not captured from a live prod write. Creates a product of type `webinar`.
+`messages` is PLURAL on this endpoint. */}
+
+<RequestExample>
+
+```bash Request Example
+curl --request POST 'https://api.mayar.id/hl/v2/products/webinar/create' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--data-raw '{
+        "name": "Webinar Belajar Crypto Untuk Pemula",
+        "description": "Belajar dulu",
+        "amount": 100000,
+        "crossoutPrice": 199000,
+        "eventUrl": "https://zoom.us/j/123456",
+        "notes": "early-bird",
+        "terms": "Tidak ada refund setelah pembelian",
+        "redirectUrl": "https://example.com/webinar-thanks",
+        "paymentType": "paid",
+        "startAt": "2026-06-01T09:00:00.000Z",
+        "eventStartAt": "2026-06-10T09:00:00.000Z",
+        "eventEndAt": "2026-06-10T12:00:00.000Z",
+        "expiredAt": "2026-06-15T12:00:00.000Z",
+        "limit": 100
+    }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "data": {
+        "id": "3f4fc3fd-10dc-4a97-b54c-7632881858cb",
+        "link": "https://testingmayar.myr.id/pl/Webinar-Belajar-Crypto-Untuk-Pemula"
+    }
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/products/webinar/create
+```
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/products/webinar/create
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+    Example:
+
+    `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Request Body
+
+<ParamField path="name" type="string" required>
+  Webinar product name.
+</ParamField>
+
+<ParamField path="description" type="string" required>
+  Webinar product description.
+</ParamField>
+
+<ParamField path="amount" type="integer" required>
+  Webinar price amount.
+</ParamField>
+
+<ParamField path="crossoutPrice" type="integer" required>
+  Crossed-out price displayed as the original price.
+</ParamField>
+
+<ParamField path="eventUrl" type="string" required>
+  Webinar URL, such as Zoom or meeting link.
+</ParamField>
+
+<ParamField path="notes" type="string">
+  Additional notes for the webinar.
+</ParamField>
+
+<ParamField path="terms" type="string">
+  Terms and conditions for the webinar purchase.
+</ParamField>
+
+<ParamField path="redirectUrl" type="string">
+  URL where the customer will be redirected after completing payment.
+</ParamField>
+
+<ParamField path="paymentType" type="string" required>
+  Payment type for the webinar.
+</ParamField>
+
+<ParamField path="startAt" type="string | datetime" required>
+  Sales start date in ISO 8601 format.
+</ParamField>
+
+<ParamField path="eventStartAt" type="string | datetime" required>
+  Webinar start date in ISO 8601 format.
+</ParamField>
+
+<ParamField path="eventEndAt" type="string | datetime" required>
+  Webinar end date in ISO 8601 format.
+</ParamField>
+
+<ParamField path="expiredAt" type="string | datetime" required>
+  Webinar product expiration date in ISO 8601 format.
+</ParamField>
+
+<ParamField path="limit" type="number">
+  Maximum participant or purchase limit.
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer">
+  Status code from API.
+</ResponseField>
+
+<ResponseField name="messages" type="string">
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  The created webinar product data.
+</ResponseField>
+
+### data Structure (Object)
+
+<ResponseField name="data.id" type="string">
+  Unique identifier of the webinar product.
+</ResponseField>
+
+<ResponseField name="data.link" type="string">
+  Public URL of the created webinar product.
+</ResponseField>
+
+### Errors
+
+<ResponseField name="400 Bad Request" type="object">
+  Returned when the request body fails validation:
+  `{ "statusCode": 400, "messages": "Validation Error" }`.
+</ResponseField>
+
+<ResponseField name="409 Conflict" type="object">
+  Returned when a product with the same identifier already exists:
+  `{ "statusCode": 409, "messages": "already exist" }`.
+</ResponseField>

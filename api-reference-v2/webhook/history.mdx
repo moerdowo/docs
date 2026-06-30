@@ -1,0 +1,202 @@
+---
+title: "Get History"
+openapi: "GET /endpointwebhookv2/history"
+description: "Endpoint to get data webhook history"
+---
+
+{/*
+  Notes for maintainers — V2 Webhook "Get History" (GET /hl/v2/webhooks/history).
+  Response shape captured live from production (DUMMY_PROD_MERCHANT_API_KEY) and is REAL key-for-key.
+  All PII (merchant/customer names, emails, mobiles, ids, destination URL, product names, payment links)
+  has been SCRUBBED to synthetic V1-style example values. The nested `payload` is a JSON STRING; its
+  inner shape varies per event `type` — the examples below are representative of common events.
+  Envelope is PLURAL `messages` (read). V2 uses cursor pagination (data[]/hasMore/nextStartingAfter) —
+  it does NOT use the V1 page/pageSize/pageCount fields.
+*/}
+
+<RequestExample>
+
+```bash Request Example
+curl --request GET 'https://api.mayar.id/hl/v2/webhooks/history?limit=10' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "data": [
+        {
+            "id": "a1b2c3d4-e5f6-4789-a012-3456789abcde",
+            "createdAt": 1745919352229,
+            "nextDelivery": null,
+            "paymentLinkId": "7c9d2e1f-3a4b-4c5d-8e6f-1a2b3c4d5e6f",
+            "payload": "{\"event\":\"payment.received\",\"data\":{\"id\":\"c3d4e5f6-a7b8-4901-c234-56789abcdef0\",\"transactionId\":\"c3d4e5f6-a7b8-4901-c234-56789abcdef0\",\"status\":\"SUCCESS\",\"transactionStatus\":\"paid\",\"createdAt\":\"2025-04-29T09:35:43.635Z\",\"updatedAt\":\"2025-04-29T09:35:43.635Z\",\"merchantId\":\"348e083d-315a-4e5c-96b1-5a2a98c48413\",\"merchantName\":\"Toko Mayar Demo\",\"merchantEmail\":\"merchant@example.com\",\"customerName\":\"Budi Santoso\",\"customerEmail\":\"budi.santoso@example.com\",\"customerMobile\":\"081234567890\",\"amount\":150000,\"isAdminFeeBorneByCustomer\":null,\"isChannelFeeBorneByCustomer\":null,\"productId\":\"7c9d2e1f-3a4b-4c5d-8e6f-1a2b3c4d5e6f\",\"productName\":\"Buku Digital Premium\",\"productType\":\"ebook\",\"pixelFbp\":null,\"pixelFbc\":null,\"qty\":1,\"couponUsed\":null,\"paymentMethod\":null}}",
+            "status": "SUCCESS",
+            "type": "payment.received",
+            "updatedAt": 1745919352229,
+            "userId": "348e083d-315a-4e5c-96b1-5a2a98c48413",
+            "paymentLinkTransactionId": "c3d4e5f6-a7b8-4901-c234-56789abcdef0",
+            "urlDestination": "https://webhook.example.com",
+            "responsePayload": null,
+            "source": "AUTOMATIC"
+        },
+        {
+            "id": "b2c3d4e5-f6a7-4890-b123-456789abcdef",
+            "createdAt": 1745569215626,
+            "nextDelivery": null,
+            "paymentLinkId": "8d0e3f2a-4b5c-4d6e-9f7a-2b3c4d5e6f7a",
+            "payload": "{\"event\":\"payment.reminder\",\"data\":{\"id\":\"d4e5f6a7-b8c9-4012-d345-6789abcdef01\",\"transactionId\":\"d4e5f6a7-b8c9-4012-d345-6789abcdef01\",\"status\":\"SUCCESS\",\"transactionStatus\":\"created\",\"createdAt\":\"2025-04-25T07:58:27.539Z\",\"updatedAt\":\"2025-04-25T08:00:21.672Z\",\"merchantId\":\"348e083d-315a-4e5c-96b1-5a2a98c48413\",\"merchantEmail\":\"merchant@example.com\",\"customerName\":\"Siti Aminah\",\"customerEmail\":\"siti.aminah@example.com\",\"customerMobile\":\"081298765432\",\"amount\":107135,\"isAdminFeeBorneByCustomer\":true,\"isChannelFeeBorneByCustomer\":true,\"productId\":\"8d0e3f2a-4b5c-4d6e-9f7a-2b3c4d5e6f7a\",\"productName\":\"Kelas Online Dasar\",\"productType\":\"digital_product\",\"pixelFbp\":null,\"pixelFbc\":null,\"qty\":1,\"couponUsed\":null,\"paymentMethod\":\"qris\",\"paymentUrl\":\"https://yourstore.myr.id/select-channel/d4e5f6a7-b8c9-4012-d345-6789abcdef01?webhook=true\"}}",
+            "status": "SUCCESS",
+            "type": "payment.reminder",
+            "updatedAt": 1745569215626,
+            "userId": "348e083d-315a-4e5c-96b1-5a2a98c48413",
+            "paymentLinkTransactionId": "d4e5f6a7-b8c9-4012-d345-6789abcdef01",
+            "urlDestination": "https://webhook.example.com",
+            "responsePayload": null,
+            "source": "AUTOMATIC"
+        }
+    ],
+    "hasMore": true,
+    "nextStartingAfter": "1745569215626"
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/webhooks/history?limit=10
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/webhooks/history?limit=10
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Query Parameters
+
+<ParamField query="limit" path="limit" default={10} type="integer">
+  Number of records to return per page. Default `10`, maximum `50`.
+</ParamField>
+
+<ParamField query="startingAfter" path="startingAfter" type="string">
+  Cursor for forward pagination. Pass the `nextStartingAfter` value from the previous response (a unix-millisecond timestamp string) to fetch the next page.
+</ParamField>
+
+<ParamField query="status" path="status" type="string">
+  Filter by delivery status (example: `"SUCCESS"`).
+</ParamField>
+
+<ParamField query="type" path="type" type="string">
+  Filter by webhook event type (example: `"payment.received"`, `"payment.reminder"`).
+</ParamField>
+
+<ParamField query="urlDestination" path="urlDestination" type="string">
+  Filter by the destination URL the webhook was delivered to.
+</ParamField>
+
+<ParamField query="startAt" path="startAt" type="string">
+  Start of the creation-date range filter.
+</ParamField>
+
+<ParamField query="endAt" path="endAt" type="string">
+  End of the creation-date range filter.
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer" >
+  Status code form API.
+</ResponseField>
+
+<ResponseField name="messages" type="string" >
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="array of object">
+  List of webhook delivery records.
+</ResponseField>
+
+<ResponseField name="hasMore" type="boolean" >
+  Information on whether there is additional data to be retrieved (true/false).
+</ResponseField>
+
+<ResponseField name="nextStartingAfter" type="string | null" >
+  Cursor for the next page (unix-millisecond timestamp string), or `null` when there is no further data. Pass it back as the `startingAfter` query parameter.
+</ResponseField>
+
+### data Structure (Array Of Object)
+
+<ParamField path="id" type="string<uuid>" >
+  Webhook delivery record ID.
+</ParamField>
+
+<ParamField path="createdAt" type="integer (timestamp)" >
+  Creation time of the webhook delivery log.
+</ParamField>
+
+<ParamField path="nextDelivery" type="string | null" >
+  Timestamp of the next delivery attempt (if any).
+</ParamField>
+
+<ParamField path="paymentLinkId" type="string<uuid>" >
+  Associated payment link ID.
+</ParamField>
+
+<ParamField path="payload" type="string (JSON string)" >
+  Original webhook payload sent (contains event + transaction data). This is a JSON-encoded string; its inner structure varies by event `type`.
+</ParamField>
+
+<ParamField path="status" type="string" >
+  Delivery status (example: `"SUCCESS"`).
+</ParamField>
+
+<ParamField path="type" type="string" >
+  Webhook event type (example: `"payment.received"`, `"payment.reminder"`).
+</ParamField>
+
+<ParamField path="updatedAt" type="integer (timestamp)" >
+  Last update timestamp.
+</ParamField>
+
+<ParamField path="userId" type="string" >
+  User ID who owns this webhook.
+</ParamField>
+
+<ParamField path="paymentLinkTransactionId" type="string<uuid>" >
+  Associated transaction ID.
+</ParamField>
+
+<ParamField path="urlDestination" type="string (URL)" >
+  Destination endpoint where the webhook is delivered.
+</ParamField>
+
+<ParamField path="responsePayload" type="string | null" >
+  Response returned from the destination endpoint.
+</ParamField>
+
+<ParamField path="source" type="string" >
+  Indicates whether the webhook was sent automatically or manually (example: `"AUTOMATIC"`).
+</ParamField>
