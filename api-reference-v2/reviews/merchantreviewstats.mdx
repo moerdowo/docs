@@ -6,7 +6,8 @@ description: "Endpoint to retrieve aggregated rating statistics across the whole
 
 {/*
   Notes for maintainers — V2 Reviews "Get Merchant Review Statistics"
-  (GET /hl/v2/merchants/reviews/stats).
+  (GET /hl/v2/reviews/stats). The real route is /reviews/stats (a prior draft used
+  /merchants/reviews/stats, which does not exist in the source router — corrected here).
   REPRESENTATIVE shape: this store-wide statistics endpoint is cache-backed and could not be safely
   captured live, so the example below is derived from the V2 source surface plus synthetic values.
   Confirm the exact numbers against a live response. Envelope key is PLURAL `messages` (read). It
@@ -18,7 +19,7 @@ description: "Endpoint to retrieve aggregated rating statistics across the whole
 <RequestExample>
 
 ```bash Request Example
-curl --request GET 'https://api.mayar.id/hl/v2/merchants/reviews/stats' \
+curl --request GET 'https://api.mayar.id/hl/v2/reviews/stats' \
 --header 'Authorization: Bearer Paste-Your-API-Key-Here'
 ```
 
@@ -51,11 +52,11 @@ Endpoint:
 <CodeGroup>
 
 ```Production Production
-https://api.mayar.id/hl/v2/merchants/reviews/stats
+https://api.mayar.id/hl/v2/reviews/stats
 ```
 
 ```Sandbox Sandbox
-https://api.mayar.club/hl/v2/merchants/reviews/stats
+https://api.mayar.club/hl/v2/reviews/stats
 ```
 
 </CodeGroup>

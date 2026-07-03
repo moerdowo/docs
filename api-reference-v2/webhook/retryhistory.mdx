@@ -1,12 +1,15 @@
 ---
 title: "Retry History"
 openapi: "POST /endpointwebhookv2/retryhistory"
-description: "Endpoint retry your webhook history data"
+description: "Endpoint to re-queue a webhook delivery to your registered webhook URL"
 ---
 
 {/*
   Notes for maintainers — V2 Webhook "Retry History" (POST /hl/v2/webhooks/retry).
-  Re-queues a previously logged webhook delivery for re-sending, identified by webhookHistoryId.
+  Re-queues a webhook delivery to the merchant's registered webhook URL. The delivery to re-send is
+  reconstructed from the request body (paymentLinkId, type, payload, paymentLinkTransactionId) — the
+  handler does NOT look up a stored history row by id, so there is NO `webhookHistoryId` field and NO
+  "history not found" 404. It only guards that a webhook URL is already registered (400 otherwise).
   Success body is exactly {statusCode:200, messages:"success"} with NO data key. Source-confirmed;
   not captured live (it triggers a real re-delivery). Envelope is PLURAL `messages` (writes and errors).
 */}
@@ -17,7 +20,10 @@ description: "Endpoint retry your webhook history data"
 curl --request POST 'https://api.mayar.id/hl/v2/webhooks/retry' \
 --header 'Authorization: Bearer Paste-Your-API-Key-Here' \
 --data '{
-    "webhookHistoryId": "a1b2c3d4-e5f6-4789-a012-3456789abcde"
+    "paymentLinkId": "7c9d2e1f-3a4b-4c5d-8e6f-1a2b3c4d5e6f",
+    "paymentLinkTransactionId": "c3d4e5f6-a7b8-4901-c234-56789abcdef0",
+    "type": "payment.received",
+    "payload": "{\"event\":\"payment.received\",\"data\":{\"id\":\"c3d4e5f6-a7b8-4901-c234-56789abcdef0\"}}"
 }'
 ```
 
@@ -59,8 +65,24 @@ https://api.mayar.club/hl/v2/webhooks/retry
 
 ## Request Body
 
-<ParamField path="webhookHistoryId" type="string" required>
-  Unique ID for the webhook delivery history log to retry.
+The fields below describe the webhook delivery to re-send — typically copied from a webhook
+history record (see **Get History**). The webhook is delivered to the URL you registered with
+**Register URL Hook**; no destination URL is read from the request body.
+
+<ParamField body="paymentLinkId" type="string">
+  ID of the payment link / product the delivery relates to.
+</ParamField>
+
+<ParamField body="paymentLinkTransactionId" type="string">
+  ID of the transaction the delivery relates to.
+</ParamField>
+
+<ParamField body="type" type="string">
+  Webhook event type to re-send (example: `"payment.received"`).
+</ParamField>
+
+<ParamField body="payload" type="string">
+  Webhook payload to re-send, as a JSON-encoded string.
 </ParamField>
 
 ## Response
@@ -80,9 +102,5 @@ Successful Response
 ## Errors
 
 <ResponseField name="400 — no registered URL hook" type="object">
-  Returned when no webhook URL is registered yet: `{ "statusCode": 400, "messages": "Url tidak ditemukan. Silahkan register url webhook anda terlebih dahulu." }`.
-</ResponseField>
-
-<ResponseField name="404 — Webhook history not found" type="object">
-  Returned when the supplied `webhookHistoryId` does not match any record: `{ "statusCode": 404, "messages": "Webhook history not found" }`.
+  Returned when no webhook URL is registered yet: `{ "statusCode": 400, "messages": "Url tidak ditemukan. Silahkan register url webhook anda terlebih dahulu." }`. Register a webhook URL first before retrying a delivery.
 </ResponseField>
