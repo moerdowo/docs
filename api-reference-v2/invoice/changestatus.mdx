@@ -1,0 +1,119 @@
+---
+title: "Change Invoice Status"
+openapi: "POST /endpointinvoicev2/changestatus"
+description: "Endpoint used to close or re-open an invoice"
+---
+
+{/*
+  Notes for maintainers — REPRESENTATIVE write sample.
+  In V1 the invoice open/close operations were two GET routes (invoice/close/{id} and
+  invoice/open/{id}). In V2 they are consolidated into the shared payment-link status toggle:
+  POST /hl/v2/products/{id}/{action} with action `close` (-> closed) or `open` (-> active),
+  applied to the invoice id. There is NO dedicated /hl/v2/invoices/{id}/{action} route — the
+  same handler backs products, payments, and invoices. Envelope key is PLURAL `messages`; on
+  success the response is exactly {statusCode, messages} with NO `data` key. Values are synthetic.
+*/}
+
+<RequestExample>
+
+```bash Close invoice
+curl --request POST 'https://api.mayar.id/hl/v2/products/f774034d-d9cc-43a0-97d8-a2520c127f03/close' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here'
+```
+
+
+```bash Re-open invoice
+curl --request POST 'https://api.mayar.id/hl/v2/products/f774034d-d9cc-43a0-97d8-a2520c127f03/open' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response example if success
+{
+    "statusCode": 200,
+    "messages": "success"
+}
+```
+
+
+```json Response example if failed
+{
+    "statusCode": 404,
+    "messages": "Product not found"
+}
+```
+
+</ResponseExample>
+
+<Note>
+  Invoices, payment requests, and products share one status-toggle endpoint in V2.
+  To close an invoice use action `close`; to re-open it use action `open`. Pass the
+  invoice `id` as the `{id}` path segment.
+</Note>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/products/{id}/{action}
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/products/{id}/{action}
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Path Parameters
+
+<ParamField path="id" type="string <uuid>" required>
+  Unique ID of the invoice whose status you want to change.
+</ParamField>
+
+<ParamField path="action" type="string" required>
+  The status action to apply. To manage an invoice use:
+
+  - `close` — closes the invoice (maps to status `closed`)
+  - `open` — re-opens the invoice (maps to status `active`)
+
+  The endpoint also accepts `active`, `closed`, and `unlisted` directly. An
+  unsupported value returns `400` with a message of the form
+  `<action>. allowed: active, closed, unlisted`.
+</ParamField>
+
+## Response
+
+Successful Response
+
+<ResponseField name="statusCode" type="integer" >
+  Status code form API.
+</ResponseField>
+
+<ResponseField name="messages" type="string" >
+  Status message that describes the status code (`success` or `failed`).
+</ResponseField>
+
+### Errors
+
+<ResponseField name="400 Bad Request" type="object">
+  Returned when the action is not supported:
+  `{ "statusCode": 400, "messages": "<action>. allowed: active, closed, unlisted" }`.
+</ResponseField>
+
+<ResponseField name="404 Not Found" type="object">
+  Returned when the invoice does not exist:
+  `{ "statusCode": 404, "messages": "Product not found" }`.
+</ResponseField>
