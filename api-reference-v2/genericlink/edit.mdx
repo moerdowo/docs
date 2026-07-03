@@ -79,16 +79,16 @@ https://api.mayar.club/hl/v2/products/payment-link/{id}/update
   from the request body.
 </ParamField>
 
-<ParamField path="name" type="string">
-  Generic payment link product name.
+<ParamField path="name" type="string" required>
+  Generic payment link product name (5–255 characters).
 </ParamField>
 
 <ParamField path="description" type="string">
   Generic payment link product description.
 </ParamField>
 
-<ParamField path="amount" type="integer">
-  Product price amount.
+<ParamField path="amount" type="integer" required>
+  Product price amount (minimum `500`).
 </ParamField>
 
 <ParamField path="redirectUrl" type="string">

@@ -5,10 +5,12 @@ description: "Endpoint used to edit an invoice that has been created"
 ---
 
 {/* Notes for maintainers: this is a WRITE endpoint. The response shape below is
-REPRESENTATIVE — derived from the V1 invoice template and the V2 source surface,
-not captured from a live prod write. IMPORTANT: the invoice to update is selected
-by the `id` field in the REQUEST BODY; the `{uuId}` URL segment is cosmetic and is
-ignored by the API. `messages` is PLURAL on this endpoint. */}
+REPRESENTATIVE — derived from the editInvoice source handler, not captured from a
+live prod write. IMPORTANT: unlike the product/payment-link update endpoints, the
+invoice to update is selected by the `{uuId}` URL path segment (the handler reads
+req.params.uuId for the existence + ownership checks and echoes it back as `data.id`);
+there is NO `id` field in the invoice-edit request body. `messages` is PLURAL on this
+endpoint. When a `paymentMethod` is supplied the handler also appends a `paymentDetail`. */}
 
 <RequestExample>
 
@@ -16,7 +18,6 @@ ignored by the API. `messages` is PLURAL on this endpoint. */}
 curl --request POST 'https://api.mayar.id/hl/v2/invoices/6f8c19ff-5b97-4792-aa89-d2a12797b356/update' \
 --header 'Authorization: Bearer Paste-Your-API-Key-Here' \
 --data-raw '{
-        "id": "6f8c19ff-5b97-4792-aa89-d2a12797b356",
         "description": "Invoice yang sudah diedit",
         "items": [
             {
@@ -38,7 +39,21 @@ curl --request POST 'https://api.mayar.id/hl/v2/invoices/6f8c19ff-5b97-4792-aa89
     "messages": "success",
     "data": {
         "id": "6f8c19ff-5b97-4792-aa89-d2a12797b356",
-        "link": "https://testingmayar.myr.id/invoices/ibzfrf4880"
+        "transactionId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+        "link": "https://testingmayar.myr.id/invoices/ibzfrf4880",
+        "amount": 110000,
+        "items": [
+            {
+                "quantity": 2,
+                "rate": 55000,
+                "description": "Paket layanan B"
+            }
+        ],
+        "description": "Invoice yang sudah diedit",
+        "status": "unpaid",
+        "subtotal": 110000,
+        "expiredAt": "2026-07-19T16:43:23.000Z",
+        "updatedAt": "2026-07-03T09:20:41.000Z"
     }
 }
 ```
@@ -61,9 +76,11 @@ https://api.mayar.club/hl/v2/invoices/{uuId}/update
 </CodeGroup>
 
 <Note>
-  The invoice to update is selected by the `id` field in the **request body**, not
-  by the `{uuId}` segment in the URL path. The path segment is cosmetic and is
-  ignored by the API — always send the target invoice `id` in the body.
+  The invoice to update is selected by the `{uuId}` segment in the URL path. The
+  handler uses it for both the existence check (`404 Invoice not found`) and the
+  ownership check (`401 Unauthorized`), and echoes it back as `data.id`. Do not send
+  an `id` in the request body — the invoice-edit body carries only the fields to
+  change.
 </Note>
 
 ## Authorization
@@ -74,59 +91,68 @@ https://api.mayar.club/hl/v2/invoices/{uuId}/update
   `Authorization | Bearer Paste-Your-API-Key-Here`
 </ResponseField>
 
-## Request Body
+## Path Parameters
 
-<ParamField path="id" type="string<uuid>" required>
-  A unique identifier obtained when creating an invoice. This selects the invoice
-  to update (the `{uuId}` URL segment is ignored).
+<ParamField path="uuId" type="string<uuid>" required>
+  Unique identifier of the invoice to update, obtained when the invoice was created.
 
   Example:
 
   `6f8c19ff-5b97-4792-aa89-d2a12797b356`
 </ParamField>
 
-<ParamField path="items" type="array">
-  List of invoice items.
+## Request Body
+
+<ParamField path="items" type="array" required>
+  List of invoice line items. The invoice `amount` and `subtotal` are recomputed
+  from these items.
 </ParamField>
 
-<ParamField path="items[].quantity" type="number">
+<ParamField path="items[].quantity" type="number" required>
   Quantity of the item.
 </ParamField>
 
-<ParamField path="items[].rate" type="number">
+<ParamField path="items[].rate" type="number" required>
   Price per item.
 </ParamField>
 
-<ParamField path="items[].description" type="string">
+<ParamField path="items[].description" type="string" required>
   Description of the item.
 </ParamField>
 
 <ParamField path="description" type="string">
-  Description or notes related to the invoice.
+  Description or notes related to the invoice (5–555 characters).
 </ParamField>
 
 <ParamField path="expiredAt" type="string">
-  Invoice expiration time in ISO 8601 format (UTC).
+  Invoice expiration time as a 24-character ISO 8601 UTC string (e.g.
+  `2026-07-19T16:43:23.000Z`).
+</ParamField>
+
+<ParamField path="redirectUrl" type="string">
+  URL the customer is redirected to after payment.
 </ParamField>
 
 <ParamField path="notes" type="string">
-  Additional notes for the invoice.
+  Additional notes for the invoice (max 24 characters).
 </ParamField>
 
 <ParamField path="tax" type="integer">
-  Tax amount applied to the invoice.
+  Tax percentage applied to the invoice subtotal.
 </ParamField>
 
 <ParamField path="paymentMethod" type="string">
-  Restrict the invoice to a specific payment method.
+  Restrict the invoice to a specific payment method. When set, the response `data`
+  includes a `paymentDetail` object.
 </ParamField>
 
 <ParamField path="cashtag" type="string">
-  Cashtag associated with the invoice.
+  Cashtag used when `paymentMethod` targets the JeniusPay e-wallet channel.
 </ParamField>
 
 <ParamField path="extraData" type="object">
-  Additional custom data attached to the invoice.
+  Additional custom key/value data to merge into the invoice transaction. Sending an
+  empty string value for a key removes that key.
 </ParamField>
 
 ## Response
@@ -150,22 +176,68 @@ Successful Response
 ### data Structure (Object)
 
 <ResponseField name="id" type="string<uuid>" >
-  Unique invoice ID.
+  Unique invoice ID (echoed from the `{uuId}` path segment).
+</ResponseField>
+
+<ResponseField name="transactionId" type="string<uuid>" >
+  Identifier of the invoice's associated transaction.
 </ResponseField>
 
 <ResponseField name="link" type="string" >
   The URL that customers can access to open the invoice.
 </ResponseField>
 
+<ResponseField name="amount" type="number" >
+  Total invoice amount recomputed from the items (subtotal plus tax).
+</ResponseField>
+
+<ResponseField name="items" type="array of object" >
+  The updated line items (`quantity`, `rate`, `description`).
+</ResponseField>
+
+<ResponseField name="description" type="string" >
+  Updated invoice description.
+</ResponseField>
+
+<ResponseField name="status" type="string" >
+  Current invoice status (e.g. `unpaid`).
+</ResponseField>
+
+<ResponseField name="subtotal" type="number" >
+  Sum of `rate × quantity` across all items, before tax.
+</ResponseField>
+
+<ResponseField name="expiredAt" type="string | null" >
+  Invoice expiry as an ISO 8601 UTC string, or `null` when the invoice does not expire.
+</ResponseField>
+
+<ResponseField name="updatedAt" type="string" >
+  Time the invoice was updated, as an ISO 8601 UTC string.
+</ResponseField>
+
+<ResponseField name="extraData" type="object" >
+  Merged custom data, present only when `extraData` was supplied.
+</ResponseField>
+
+<ResponseField name="paymentDetail" type="object" >
+  Payment-channel details, present only when the request supplied a `paymentMethod`.
+</ResponseField>
+
 ### Errors
 
+<ResponseField name="400 Bad Request" type="object">
+  Returned when the request body fails validation:
+  `{ "statusCode": 400, "messages": "Validation Error" }` or
+  `{ "statusCode": 400, "messages": "extraData Validation Error" }`.
+</ResponseField>
+
 <ResponseField name="401 Unauthorized" type="object">
-  Returned when the API key is missing or invalid:
-  `{ "statusCode": 401, "messages": "Unauthorized" }`.
+  Returned when the API key is missing/invalid or the invoice belongs to another
+  merchant: `{ "statusCode": 401, "messages": "Unauthorized" }`.
 </ResponseField>
 
 <ResponseField name="404 Not Found" type="object">
-  Returned when no invoice matches the provided `id`:
+  Returned when no invoice matches the `{uuId}` path segment:
   `{ "statusCode": 404, "messages": "Invoice not found" }`.
 </ResponseField>
 

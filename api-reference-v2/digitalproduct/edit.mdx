@@ -77,16 +77,16 @@ https://api.mayar.club/hl/v2/products/digital-product/{id}/update
   body.
 </ParamField>
 
-<ParamField path="name" type="string">
-  Digital product name.
+<ParamField path="name" type="string" required>
+  Digital product name (5–255 characters).
 </ParamField>
 
 <ParamField path="description" type="string">
   Digital product description.
 </ParamField>
 
-<ParamField path="amount" type="integer">
-  Digital product price amount.
+<ParamField path="amount" type="integer" required>
+  Digital product price amount (minimum `500`).
 </ParamField>
 
 <ParamField path="crossoutPrice" type="integer">

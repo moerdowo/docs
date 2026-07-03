@@ -5,10 +5,13 @@ description: "Endpoint used to edit an event product"
 ---
 
 {/* Notes for maintainers: this is a WRITE endpoint. The response shape below is
-REPRESENTATIVE — derived from the V1 page template and the V2 source surface,
-not captured from a live prod write. The product to edit is identified by the
-`id` field in the REQUEST BODY; the `{id}` URL segment is ignored. `messages` is
-PLURAL on this endpoint. */}
+REPRESENTATIVE — derived from the editEvent source handler, not captured from a live
+prod write. The product to edit is identified by the `id` field in the REQUEST BODY
+(required, 13–255 chars); the `{id}` URL segment is ignored. editEvent validates the
+SHARED payment-link edit schema (required: id, name, amount; optional: description,
+redirectUrl, coverImage, expiredAt, limit, notes, tax) — the event-specific fields
+below are set at creation time. On success only `{ id, link }` is returned.
+`messages` is PLURAL on this endpoint. */}
 
 <RequestExample>
 
@@ -81,16 +84,16 @@ https://api.mayar.club/hl/v2/products/event/{id}/update
   body.
 </ParamField>
 
-<ParamField path="name" type="string">
-  Event product name.
+<ParamField path="name" type="string" required>
+  Event product name (5–255 characters).
 </ParamField>
 
 <ParamField path="description" type="string">
   Event product description in text or HTML format.
 </ParamField>
 
-<ParamField path="amount" type="integer">
-  Event ticket or product price amount.
+<ParamField path="amount" type="integer" required>
+  Event ticket or product price amount (minimum `500`).
 </ParamField>
 
 <ParamField path="crossoutPrice" type="integer">

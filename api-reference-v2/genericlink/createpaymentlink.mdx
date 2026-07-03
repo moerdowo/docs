@@ -75,8 +75,8 @@ https://api.mayar.club/hl/v2/products/payment-link/create
   Generic payment link product name.
 </ParamField>
 
-<ParamField path="amount" type="integer">
-  Product price amount.
+<ParamField path="amount" type="integer" required>
+  Product price amount (minimum `500`).
 </ParamField>
 
 <ParamField path="description" type="string">

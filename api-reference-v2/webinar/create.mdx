@@ -77,19 +77,19 @@ https://api.mayar.club/hl/v2/products/webinar/create
   Webinar product name.
 </ParamField>
 
-<ParamField path="description" type="string" required>
-  Webinar product description.
+<ParamField path="description" type="string">
+  Webinar product description (3–555 characters).
 </ParamField>
 
 <ParamField path="amount" type="integer" required>
-  Webinar price amount.
+  Webinar price amount (minimum `500`).
 </ParamField>
 
-<ParamField path="crossoutPrice" type="integer" required>
+<ParamField path="crossoutPrice" type="integer">
   Crossed-out price displayed as the original price.
 </ParamField>
 
-<ParamField path="eventUrl" type="string" required>
+<ParamField path="eventUrl" type="string">
   Webinar URL, such as Zoom or meeting link.
 </ParamField>
 
@@ -105,24 +105,24 @@ https://api.mayar.club/hl/v2/products/webinar/create
   URL where the customer will be redirected after completing payment.
 </ParamField>
 
-<ParamField path="paymentType" type="string" required>
+<ParamField path="paymentType" type="string">
   Payment type for the webinar.
 </ParamField>
 
-<ParamField path="startAt" type="string | datetime" required>
-  Sales start date in ISO 8601 format.
+<ParamField path="startAt" type="string | datetime">
+  Sales start date as a 24-character ISO 8601 UTC string.
 </ParamField>
 
-<ParamField path="eventStartAt" type="string | datetime" required>
-  Webinar start date in ISO 8601 format.
+<ParamField path="eventStartAt" type="string | datetime">
+  Webinar start date as a 24-character ISO 8601 UTC string.
 </ParamField>
 
-<ParamField path="eventEndAt" type="string | datetime" required>
-  Webinar end date in ISO 8601 format.
+<ParamField path="eventEndAt" type="string | datetime">
+  Webinar end date as a 24-character ISO 8601 UTC string.
 </ParamField>
 
-<ParamField path="expiredAt" type="string | datetime" required>
-  Webinar product expiration date in ISO 8601 format.
+<ParamField path="expiredAt" type="string | datetime">
+  Webinar product expiration date as a 24-character ISO 8601 UTC string.
 </ParamField>
 
 <ParamField path="limit" type="number">
