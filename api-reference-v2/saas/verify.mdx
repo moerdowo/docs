@@ -66,7 +66,8 @@ curl --request POST 'https://api.mayar.id/saas/v1/license/verify' \
 <Note>
   SaaS subscription license verification runs on a dedicated service at `/saas/v1`,
   so the base URL is `https://api.mayar.id/saas/v1` (sandbox
-  `https://api.mayar.club/saas/v1`) — not the `/hl/v2` base. This service returns
+  `https://api.mayar.club/saas/v1`) — separate from the shared gateway base used
+  by most endpoints. This service returns
   `isLicenseActive`, `memberStatus`, and a `licenseCode` object instead of the
   `{ statusCode, messages, data }` envelope, and its errors use the singular
   `message` key.
