@@ -1,0 +1,152 @@
+---
+title: "Add Customer Credit"
+openapi: "POST /endpointcreditbasedproductv2/addcustomercredit"
+description: "Endpoint to add credit to a customer's account on a credit based product."
+---
+
+{/*
+  Notes for maintainers — REPRESENTATIVE / synthetic sample.
+  Credit Based Product endpoints are served by a SEPARATE service mounted at /credit/v1 — they are
+  NOT part of the /hl/v2 surface, so the real base URL is kept (no fabricated /hl/v2 path). The
+  envelope is DATA-WRAPPED and uses the SINGULAR `message` key on success:
+  { statusCode, message, data:{...} }. This is the PRODUCT variant (credit_usage_product), keyed by
+  customerId + productId; `membershipTierId` is therefore null. Authorization is a Bearer API key.
+  Example ids/amounts are representative and synthetic.
+*/}
+
+<RequestExample>
+
+```bash Request Example
+curl --request POST 'https://api.mayar.id/credit/v1/credit/customer/add-credit' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--header 'Content-Type: application/json' \
+--data '{
+    "customerId": "faa4ee60-cf45-4043-b964-303890713bb9",
+    "productId": "2b649982-411e-42e0-9b9c-0a17f9a55d44",
+    "amount": 100
+}'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "message": "success",
+    "data": {
+        "customerId": "faa4ee60-cf45-4043-b964-303890713bb9",
+        "productId": "2b649982-411e-42e0-9b9c-0a17f9a55d44",
+        "membershipTierId": null,
+        "amount": 100,
+        "customerBalance": 911090
+    }
+}
+```
+
+
+```json Response Example 400
+{
+    "statusCode": 400,
+    "messages": "Validation Error",
+    "data": [
+        {
+            "field": "amount",
+            "message": "amount is required"
+        }
+    ]
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/credit/v1/credit/customer/add-credit
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/credit/v1/credit/customer/add-credit
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Request Body
+
+<ParamField body="customerId" type="string" required>
+  The unique identifier of the customer whose credit will be increased.
+</ParamField>
+
+<ParamField body="productId" type="string" required>
+  The unique identifier of the product associated with the credit.
+</ParamField>
+
+<ParamField body="amount" type="integer" required>
+  The amount of credit to add (positive integer).
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer">
+  Status code from API.
+</ResponseField>
+
+<ResponseField name="message" type="string">
+  Status message that describes the status code (`"success"` on success).
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  Object containing details of the credit that was added.
+</ResponseField>
+
+### data Structure (Object)
+
+<ResponseField name="customerId" type="string">
+  Unique identifier of the customer that received the credit.
+</ResponseField>
+
+<ResponseField name="productId" type="string">
+  Unique identifier of the product associated with the credit.
+</ResponseField>
+
+<ResponseField name="membershipTierId" type="string | null">
+  Membership tier identifier. Always `null` for a credit based product.
+</ResponseField>
+
+<ResponseField name="amount" type="integer">
+  The amount of credit that was added.
+</ResponseField>
+
+<ResponseField name="customerBalance" type="float">
+  The customer's total credit balance after the credit was added.
+</ResponseField>
+
+### Errors
+
+<ResponseField name="400 Validation Error" type="object">
+  Returned when a required body parameter is missing or invalid. Validation errors
+  use the PLURAL `messages` key with the error details in `data`:
+  `{ "statusCode": 400, "messages": "Validation Error", "data": [ ... ] }`.
+</ResponseField>
+
+<ResponseField name="500 Internal Server Error" type="object">
+  Returned on an unexpected server error:
+  `{ "statusCode": 500, "message": "..." }`.
+</ResponseField>
