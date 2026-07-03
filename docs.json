@@ -274,6 +274,7 @@
                 "pages": [
                   "api-reference-v2/product/productpage",
                   "api-reference-v2/product/productpagewithfilter",
+                  "api-reference-v2/product/search",
                   "api-reference-v2/product/detail",
                   "api-reference-v2/product/transactions",
                   "api-reference-v2/product/changestatus"
@@ -319,7 +320,8 @@
               "api-reference-v2/invoice/filter",
               "api-reference-v2/invoice/detail",
               "api-reference-v2/invoice/create",
-              "api-reference-v2/invoice/edit"
+              "api-reference-v2/invoice/edit",
+              "api-reference-v2/invoice/changestatus"
             ]
           },
           {
@@ -329,7 +331,8 @@
               "api-reference-v2/reqpayment/detail",
               "api-reference-v2/reqpayment/create",
               "api-reference-v2/reqpayment/edit",
-              "api-reference-v2/reqpayment/changestatus"
+              "api-reference-v2/reqpayment/changestatus",
+              "api-reference-v2/reqpayment/filter"
             ]
           },
           {
@@ -415,6 +418,41 @@
               "api-reference-v2/webhook/registerurlhook",
               "api-reference-v2/webhook/testurlhook",
               "api-reference-v2/webhook/retryhistory"
+            ]
+          },
+          {
+            "group": "Software License Code",
+            "pages": [
+              "api-reference-v2/licensecode/verifylicense"
+            ]
+          },
+          {
+            "group": "Membership (SaaS)",
+            "pages": [
+              "api-reference-v2/saas/verify",
+              "api-reference-v2/saas/activate",
+              "api-reference-v2/saas/deactivate"
+            ]
+          },
+          {
+            "group": "Usage-Based Membership",
+            "pages": [
+              "api-reference-v2/usagebasedmembership/customerbalance",
+              "api-reference-v2/usagebasedmembership/paginatecustomercredithistory",
+              "api-reference-v2/usagebasedmembership/spendcustomercredit",
+              "api-reference-v2/usagebasedmembership/addcustomercredit",
+              "api-reference-v2/usagebasedmembership/registnewmembershipcustomer"
+            ]
+          },
+          {
+            "group": "Credit Based Product",
+            "pages": [
+              "api-reference-v2/creditbasedproduct/customerbalance",
+              "api-reference-v2/creditbasedproduct/paginatecustomercredithistory",
+              "api-reference-v2/creditbasedproduct/spendcustomercredit",
+              "api-reference-v2/creditbasedproduct/addcustomercredit",
+              "api-reference-v2/creditbasedproduct/registernewcustomer",
+              "api-reference-v2/creditbasedproduct/generateimmutablecheckoutlink"
             ]
           },
           {
