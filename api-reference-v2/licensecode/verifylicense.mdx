@@ -62,8 +62,8 @@ curl --request POST 'https://api.mayar.id/software/v1/license/verify' \
 <Note>
   Software license verification runs on a dedicated service at `/software/v1`, so
   the base URL is `https://api.mayar.id/software/v1` (sandbox
-  `https://api.mayar.club/software/v1`) — not the `/hl/v2` base used by most
-  endpoints. This service returns `isLicenseActive` plus a `licenseCode` object
+  `https://api.mayar.club/software/v1`) — separate from the shared gateway base
+  used by most endpoints. This service returns `isLicenseActive` plus a `licenseCode` object
   instead of the `{ statusCode, messages, data }` envelope, and its errors use the
   singular `message` key.
 </Note>
