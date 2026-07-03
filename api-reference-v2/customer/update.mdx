@@ -1,22 +1,25 @@
 ---
 title: "Update Customer Email"
 openapi: "POST /endpointcustomerv2/update"
-description: "Endpoint is used to update customer email."
+description: "Endpoint used to change a customer's email address"
 ---
 
 {/* Notes for maintainers: this is a WRITE endpoint — to avoid mutating live
     merchant data, the response example below is REPRESENTATIVE, derived from the
-    V2 source surface and the V1 customer/update shape. The body schema
-    (fromEmail/toEmail) is source-confirmed; confirm the exact success body
-    against a live response. All values are synthetic. */}
+    V2 source handler (customer.updateCustomer). IMPORTANT: the customer to update
+    is selected by the `{uuId}` PATH segment (req.params.uuId = the source customer
+    id); the new email is the `toEmail` body field (UPDATE_CUSTOMER schema, its only
+    field). There is NO `fromEmail` body field in V2 — that was the V1 shape. When
+    `toEmail` already belongs to another customer the handler migrates balance and
+    transaction history to it and archives the source customer. `messages` is PLURAL.
+    All values are synthetic. */}
 
 <RequestExample>
 
 ```bash Request Example
-curl --request POST 'https://api.mayar.id/hl/v2/customers/update' \
+curl --request POST 'https://api.mayar.id/hl/v2/customers/a1b2c3d4-e5f6-4789-a012-3456789abcde/update' \
 --header 'Authorization: Bearer Paste-Your-API-Key-Here' \
 --data-raw '{
-    "fromEmail": "budi.santoso@example.com",
     "toEmail": "budi.santoso.new@example.com"
 }
 '
@@ -40,15 +43,21 @@ Endpoint:
 <CodeGroup>
 
 ```Production Production
-https://api.mayar.id/hl/v2/customers/update
+https://api.mayar.id/hl/v2/customers/{uuId}/update
 ```
 
 
 ```Sandbox Sandbox
-https://api.mayar.club/hl/v2/customers/update
+https://api.mayar.club/hl/v2/customers/{uuId}/update
 ```
 
 </CodeGroup>
+
+<Note>
+  The customer to update is selected by the `{uuId}` segment in the URL **path** —
+  this is the source customer id (the `id` returned by the customer list/detail
+  endpoints). The request body carries only the new email in `toEmail`.
+</Note>
 
 ## Authorization
 
@@ -58,14 +67,20 @@ https://api.mayar.club/hl/v2/customers/update
   `Authorization | Bearer Paste-Your-API-Key-Here`
 </ResponseField>
 
-## Request Body
+## Path Parameters
 
-<ParamField path="fromEmail" type="string" required>
-  The email of the customer to be updated from.
+<ParamField path="uuId" type="string<uuid>" required>
+  The id of the customer whose email is being changed (the source customer id).
+
+  Example:
+
+  `a1b2c3d4-e5f6-4789-a012-3456789abcde`
 </ParamField>
 
+## Request Body
+
 <ParamField path="toEmail" type="string" required>
-  The new email of the customer.
+  The new email address for the customer.
 </ParamField>
 
 ## Response
@@ -86,10 +101,10 @@ Successful Response
 
 <ResponseField name="400 Validation Error" type="object">
   Returned with `messages: "Validation Error"` when the request body fails
-  validation (e.g. missing `fromEmail` or `toEmail`).
+  validation (e.g. missing or malformed `toEmail`).
 </ResponseField>
 
 <ResponseField name="404 Customer Not Found" type="object">
-  Returned with `messages: "Email {fromEmail} tidak terdaftar sebagai customer"`
-  when no customer matches `fromEmail`.
+  Returned with `messages: "Customer not found"` when no customer matches the
+  `{uuId}` path segment.
 </ResponseField>

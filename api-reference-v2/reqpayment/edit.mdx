@@ -5,10 +5,12 @@ description: "Endpoint used to edit a single payment request that has been creat
 ---
 
 {/* Notes for maintainers: this is a WRITE endpoint. The response shape below is
-REPRESENTATIVE — derived from the V1 request-payment template and the V2 source
-surface, not captured from a live prod write. IMPORTANT: the payment request to
-update is selected by the `id` field in the REQUEST BODY; the `{uuId}` URL segment
-is cosmetic and is ignored by the API. `messages` is PLURAL on this endpoint. */}
+REPRESENTATIVE — derived from the V2 source handler (requestPayment.editPayment),
+not captured from a live prod write. IMPORTANT: the payment request to update is
+selected by the `{uuId}` PATH segment (req.params.uuId) — the handler loads the
+payment request by that id and checks ownership against it. There is NO `id` body
+field (the REQUEST_EDIT schema does not define one). `amount` is the only required
+body field. `messages` is PLURAL on this endpoint. */}
 
 <RequestExample>
 
@@ -16,7 +18,6 @@ is cosmetic and is ignored by the API. `messages` is PLURAL on this endpoint. */
 curl --request POST 'https://api.mayar.id/hl/v2/payments/6f8c19ff-5b97-4792-aa89-d2a12797b356/update' \
 --header 'Authorization: Bearer Paste-Your-API-Key-Here' \
 --data-raw '{
-        "id": "6f8c19ff-5b97-4792-aa89-d2a12797b356",
         "amount": 150000,
         "description": "Penagihan yang sudah diedit",
         "expiredAt": "2026-07-19T16:43:23.000Z"
@@ -33,7 +34,15 @@ curl --request POST 'https://api.mayar.id/hl/v2/payments/6f8c19ff-5b97-4792-aa89
     "messages": "success",
     "data": {
         "id": "6f8c19ff-5b97-4792-aa89-d2a12797b356",
-        "link": "https://testingmayar.myr.id/pl/rqp9x2k7m3a"
+        "transactionId": null,
+        "link": "https://testingmayar.myr.id/pl/rqp9x2k7m3a/",
+        "amount": 150000,
+        "description": "Penagihan yang sudah diedit",
+        "notes": null,
+        "status": "unpaid",
+        "expiredAt": "2026-07-19T16:43:23.000Z",
+        "updatedAt": "2026-07-03T09:15:00.000Z",
+        "customer": null
     }
 }
 ```
@@ -56,10 +65,9 @@ https://api.mayar.club/hl/v2/payments/{uuId}/update
 </CodeGroup>
 
 <Note>
-  The payment request to update is selected by the `id` field in the **request
-  body**, not by the `{uuId}` segment in the URL path. The path segment is
-  cosmetic and is ignored by the API — always send the target payment request
-  `id` in the body.
+  The payment request to update is selected by the `{uuId}` segment in the URL
+  **path** — send the target payment request id there. The request body carries
+  only the fields you want to change (`amount` is required).
 </Note>
 
 ## Authorization
@@ -70,23 +78,27 @@ https://api.mayar.club/hl/v2/payments/{uuId}/update
   `Authorization | Bearer Paste-Your-API-Key-Here`
 </ResponseField>
 
-## Request Body
+## Path Parameters
 
-<ParamField path="id" type="string<uuid>" required>
-  A unique identifier obtained when creating a single payment request. This selects
-  the payment request to update (the `{uuId}` URL segment is ignored).
+<ParamField path="uuId" type="string<uuid>" required>
+  The id of the payment request to update. This is the value returned as `id` when
+  the payment request was created.
 
   Example:
 
   `6f8c19ff-5b97-4792-aa89-d2a12797b356`
 </ParamField>
 
+## Request Body
+
 <ParamField path="amount" type="integer" required>
-  Nominal amount of payment.
+  Nominal amount of payment. Must be a positive integer of at least `500`. This is
+  the only required body field.
 </ParamField>
 
 <ParamField path="email" type="string">
-  Customer email used to send proof of payment or payment reminders.
+  Customer email. When present, a customer record and a transaction are created/
+  linked and a `transactionId` is returned.
 </ParamField>
 
 <ParamField path="mobile" type="string">
@@ -94,7 +106,7 @@ https://api.mayar.club/hl/v2/payments/{uuId}/update
 </ParamField>
 
 <ParamField path="description" type="string">
-  General description of the transaction or order.
+  General description of the transaction or order (HTML tags are stripped).
 </ParamField>
 
 <ParamField path="notes" type="string">
@@ -115,7 +127,8 @@ https://api.mayar.club/hl/v2/payments/{uuId}/update
 </ParamField>
 
 <ParamField path="extraData" type="object">
-  Additional custom data attached to the payment request.
+  Additional custom data attached to the payment request (merged with any existing
+  extra data).
 </ParamField>
 
 ## Response
@@ -139,22 +152,61 @@ Successful Response
 ### data Structure (Object)
 
 <ResponseField name="id" type="string<uuid>" >
-  Unique request payment ID.
+  Unique payment request id (echoes the `{uuId}` path segment).
+</ResponseField>
+
+<ResponseField name="transactionId" type="string<uuid> | null" >
+  Transaction id linked to this payment request. `null` when no customer email is
+  associated.
 </ResponseField>
 
 <ResponseField name="link" type="string" >
   The URL that customers can access to open the payment request.
 </ResponseField>
 
+<ResponseField name="amount" type="integer" >
+  The updated payment amount.
+</ResponseField>
+
+<ResponseField name="description" type="string | null" >
+  Payment request description.
+</ResponseField>
+
+<ResponseField name="notes" type="string | null" >
+  Additional notes attached to the payment request.
+</ResponseField>
+
+<ResponseField name="status" type="string" >
+  Payment request status (e.g. `unpaid`, `paid`, `closed`).
+</ResponseField>
+
+<ResponseField name="expiredAt" type="string (ISO 8601) | null" >
+  Expiration date-time as an ISO 8601 string, or `null`.
+</ResponseField>
+
+<ResponseField name="updatedAt" type="string (ISO 8601)" >
+  Last-updated date-time as an ISO 8601 string.
+</ResponseField>
+
+<ResponseField name="customer" type="object | null" >
+  Associated customer object, or `null` when the payment request has no customer.
+</ResponseField>
+
 ### Errors
 
+<ResponseField name="400 Bad Request" type="object">
+  Returned when the request body fails validation (e.g. missing `amount`):
+  `{ "statusCode": 400, "messages": "Validation Error" }`.
+</ResponseField>
+
 <ResponseField name="401 Unauthorized" type="object">
-  Returned when the API key is missing or invalid:
+  Returned when the payment request identified by `{uuId}` does not belong to the
+  authenticated account:
   `{ "statusCode": 401, "messages": "Unauthorized" }`.
 </ResponseField>
 
 <ResponseField name="404 Not Found" type="object">
-  Returned when no payment request matches the provided `id`:
+  Returned when no payment request matches the `{uuId}` path segment:
   `{ "statusCode": 404, "messages": "Payment not found" }`.
 </ResponseField>
 
