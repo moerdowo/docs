@@ -7,13 +7,17 @@ description: "Endpoint to cancel a membership member (sets status to stopped)."
 {/*
   Notes for maintainers (derived from the V2 membership source surface — this is a
   WRITE endpoint, so the response below is REPRESENTATIVE to avoid mutating live data):
-  - Success is { statusCode, message, data } where data is { membershipCustomer: {…} }.
+  - Success is { statusCode, message, data } where `data` IS the updated membership-customer
+    record spread directly — there is NO `data.membershipCustomer` sub-wrapper.
   - Response uses the SINGULAR `message` key (writes use `message`; reads use plural `messages`). Do NOT normalize.
   - `productId` is accepted from the request BODY or the QUERY string (like the invoice endpoint).
   - Cancelling flips the member's status to "stopped", but guards against members that are already
     inactive — if status is already `stopped`/`finished` it responds 400
     "Membership member ini sudah tidak aktif (status: <status>)." (the value is interpolated).
-  - The `data.membershipCustomer` FIELD NAMES/VALUES are representative — confirm against a live response.
+  - The `data` object mirrors the editMembershipCustomer GraphQL selection (field NAMES are
+    source-confirmed: id, customerId, paymentLinkId, createdAt, nextPayment, expiredAt,
+    isLifetimePeriod, status, and nested customer/membershipTier/paymentLink; the server strips
+    userId). VALUES are representative — confirm against a live response.
   - All values are synthetic.
 */}
 
@@ -42,19 +46,26 @@ curl --request POST 'https://api.mayar.id/hl/v2/memberships/members/MBR8X2QK/can
     "statusCode": 200,
     "message": "success",
     "data": {
-        "membershipCustomer": {
-            "id": "c4d5e6f7-a8b9-4c0d-8e1f-2a3b4c5d6e7f",
-            "memberId": "MBR8X2QK",
-            "userId": "348e083d-315a-4e5c-96b1-5a2a98c48413",
-            "customerId": "a1b2c3d4-e5f6-4789-a012-3456789abcde",
-            "membershipTierId": "9b2d4f6a-8c1e-4a3b-bd5c-6e7f8a9b0c1d",
-            "paymentLinkId": "7c9d2e1f-4a5b-4c6d-8e9f-0a1b2c3d4e5f",
-            "monthlyPaymentPeriod": 1,
-            "status": "stopped",
-            "nextPayment": "2026-07-20T09:10:57.994Z",
-            "expiredAt": null,
-            "createdAt": "2026-06-20T09:10:57.994Z",
-            "updatedAt": "2026-06-23T10:30:00.000Z"
+        "id": "c4d5e6f7-a8b9-4c0d-8e1f-2a3b4c5d6e7f",
+        "customerId": "a1b2c3d4-e5f6-4789-a012-3456789abcde",
+        "paymentLinkId": "7c9d2e1f-4a5b-4c6d-8e9f-0a1b2c3d4e5f",
+        "createdAt": "2026-06-20T09:10:57.994Z",
+        "nextPayment": "2026-07-20T09:10:57.994Z",
+        "expiredAt": "2026-07-20T09:10:57.994Z",
+        "isLifetimePeriod": null,
+        "status": "stopped",
+        "customer": {
+            "name": "Budi Santoso",
+            "email": "budi.santoso@example.com",
+            "mobile": "081234567890"
+        },
+        "membershipTier": {
+            "name": "Paket 1",
+            "status": "ACTIVE"
+        },
+        "paymentLink": {
+            "name": "Premium Membership",
+            "description": "<p>Premium membership subscription.</p>"
         }
     }
 }
@@ -135,11 +146,52 @@ Successful Response — HTTP `200`
 </ResponseField>
 
 <ResponseField name="data" type="object">
-  The cancellation result wrapper.
+  The cancelled membership-customer record, returned directly (there is no
+  `data.membershipCustomer` sub-wrapper). Its `status` is now `stopped`.
 </ResponseField>
 
-<ResponseField name="data.membershipCustomer" type="object">
-  The cancelled membership customer record. Its `status` is now `stopped`.
+<ResponseField name="data.id" type="string<uuid>">
+  Unique identifier of the membership-customer record.
+</ResponseField>
+
+<ResponseField name="data.customerId" type="string<uuid>">
+  Unique identifier of the customer.
+</ResponseField>
+
+<ResponseField name="data.paymentLinkId" type="string<uuid>">
+  Unique identifier of the product (payment link) the member belongs to.
+</ResponseField>
+
+<ResponseField name="data.createdAt" type="string">
+  ISO 8601 timestamp (UTC) of when the member was created.
+</ResponseField>
+
+<ResponseField name="data.nextPayment" type="string">
+  ISO 8601 timestamp (UTC) of the member's next scheduled payment.
+</ResponseField>
+
+<ResponseField name="data.expiredAt" type="string | null">
+  ISO 8601 timestamp (UTC) of when the membership expires.
+</ResponseField>
+
+<ResponseField name="data.isLifetimePeriod" type="boolean | null">
+  Whether the member is on a lifetime period.
+</ResponseField>
+
+<ResponseField name="data.status" type="string">
+  Current status of the member — `stopped` after cancellation.
+</ResponseField>
+
+<ResponseField name="data.customer" type="object">
+  The related customer summary: `name`, `email`, `mobile`.
+</ResponseField>
+
+<ResponseField name="data.membershipTier" type="object">
+  The related tier summary: `name`, `status`.
+</ResponseField>
+
+<ResponseField name="data.paymentLink" type="object">
+  The related product (payment link) summary: `name`, `description`.
 </ResponseField>
 
 ## Errors

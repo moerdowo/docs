@@ -195,6 +195,8 @@ dotted-key columns for the related tier and customer.
 ## Errors
 
 <ResponseField name="400 Invalid query parameters" type="object">
-  Returned with `messages: "Invalid query parameters"` when `productId` is missing
-  or the query parameters fail validation.
+  Returned with `message: "Invalid query parameters"` (singular `message`, alongside a
+  `data` array of validation details) when `productId` is missing or the query
+  parameters fail validation. Note the successful list response uses the plural
+  `messages` key, but validation and other error responses use the singular `message`.
 </ResponseField>
