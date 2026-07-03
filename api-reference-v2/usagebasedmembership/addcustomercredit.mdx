@@ -1,0 +1,158 @@
+---
+title: "Add Customer Credit"
+openapi: "POST /endpointusagebasedmembershipv2/addcustomercredit"
+description: "Endpoint used to add credit to a customer's or member's account on a particular membership tier."
+---
+
+{/*
+  Notes for maintainers — REPRESENTATIVE sample.
+  Usage-based membership credit is served by a SEPARATE service mounted at /credit/v1 — it is
+  NOT part of the /hl/v2 surface, so the real base URL is kept (no fabricated /hl/v2 path). The
+  success envelope is DATA-WRAPPED with a SINGULAR `message`: { statusCode, message, data:{...} }.
+  Validation errors use PLURAL `messages`. Example values (ids, amounts) are synthetic.
+*/}
+
+<RequestExample>
+
+```bash Request Example
+curl --request POST 'https://api.mayar.id/credit/v1/credit/customer/add-credit' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--header 'Content-Type: application/json' \
+--data '{
+    "memberId": "KKGOL1MV", // optionally mandatory
+    "productId": "40f26fbe-f4d8-4693-975f-e6d105d291e6",
+    "membershipTierId": "9bbbfa01-1bf8-4e4d-8470-cdf7066b6ea2",
+    "amount": 100
+}'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "message": "success",
+    "data": {
+        "customerId": "faa4ee60-cf45-4043-b964-303890713bb9",
+        "productId": "40f26fbe-f4d8-4693-975f-e6d105d291e6",
+        "membershipTierId": "9bbbfa01-1bf8-4e4d-8470-cdf7066b6ea2",
+        "amount": 100,
+        "customerBalance": 911090
+    }
+}
+```
+
+
+```json Response Example Validation Error
+{
+    "statusCode": 400,
+    "messages": "Validation Error",
+    "data": [
+        {
+            "field": "amount",
+            "message": "amount is required"
+        }
+    ]
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/credit/v1/credit/customer/add-credit
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/credit/v1/credit/customer/add-credit
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Request Body
+
+<ParamField body="memberId" type="string">
+  The unique identifier of the member to whom the credit will be added.
+</ParamField>
+
+<ParamField body="customerId" type="string">
+  The unique identifier of the customer to whom the credit will be added.
+</ParamField>
+
+<ParamField body="productId" type="string" required>
+  The unique identifier of the product associated with the credit.
+</ParamField>
+
+<ParamField body="membershipTierId" type="string" required>
+  The unique identifier of the membership tier associated with the credit.
+</ParamField>
+
+<ParamField body="amount" type="integer" required>
+  The amount of credit to add (positive integer).
+</ParamField>
+
+<Note>
+  At least **one of** `memberId` **or** `customerId` must be provided.
+</Note>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer">
+  Status code from API.
+</ResponseField>
+
+<ResponseField name="message" type="string">
+  Status message that describes the status code (`"success"` on success).
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  Object containing details of the added credit and the resulting balance.
+</ResponseField>
+
+### data Structure (Object)
+
+<ResponseField name="customerId" type="string">
+  The unique identifier of the customer to whom the credit was added.
+</ResponseField>
+
+<ResponseField name="productId" type="string">
+  The unique identifier of the product associated with the credit added.
+</ResponseField>
+
+<ResponseField name="membershipTierId" type="string">
+  The unique identifier of the membership tier associated with the credit added.
+</ResponseField>
+
+<ResponseField name="amount" type="number">
+  The amount of credit that was added.
+</ResponseField>
+
+<ResponseField name="customerBalance" type="number">
+  The credit balance after adding the credit.
+</ResponseField>
+
+### Errors
+
+<ResponseField name="400 Validation Error" type="object">
+  Returned when required fields are missing or invalid. Validation errors use the
+  PLURAL `messages` key with a `data` array of field errors:
+  `{ "statusCode": 400, "messages": "Validation Error", "data": [ ... ] }`.
+</ResponseField>

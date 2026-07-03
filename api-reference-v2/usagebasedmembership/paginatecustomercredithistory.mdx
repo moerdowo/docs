@@ -1,0 +1,232 @@
+---
+title: "Get Paginate Customer Credit History"
+openapi: "GET /endpointusagebasedmembershipv2/paginatecustomercredithistory"
+description: "Endpoint used to get a customer's credit transaction history in a paginated form."
+---
+
+{/*
+  Notes for maintainers — REPRESENTATIVE sample.
+  Usage-based membership credit is served by a SEPARATE service mounted at /credit/v1 — it is
+  NOT part of the /hl/v2 surface, so the real base URL is kept (no fabricated /hl/v2 path). This
+  endpoint uses PAGE-based pagination (total/page/limit/totalPages) alongside a `data` array, with
+  a SINGULAR `message`. Validation errors use PLURAL `messages`. Example values are synthetic.
+*/}
+
+<RequestExample>
+
+```bash Request Example
+curl --request GET 'https://api.mayar.id/credit/v1/credit/customer/paginate-credit-history/faa4ee60-cf45-4043-b964-303890713bb9?productId=40f26fbe-f4d8-4693-975f-e6d105d291e6&membershipTierId=9bbbfa01-1bf8-4e4d-8470-cdf7066b6ea2&page=1&limit=5' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "message": "success",
+    "total": 10,
+    "page": 1,
+    "limit": 5,
+    "totalPages": 2,
+    "data": [
+        {
+            "id": "68a84724c8d5f89bdeae7346",
+            "createdAt": "2025-08-22T10:32:04.204Z",
+            "credit": 0,
+            "debit": 100000,
+            "productId": "40f26fbe-f4d8-4693-975f-e6d105d291e6",
+            "status": "ACTIVE",
+            "membershipTierId": "9bbbfa01-1bf8-4e4d-8470-cdf7066b6ea2",
+            "customerId": "faa4ee60-cf45-4043-b964-303890713bb9",
+            "merchantId": "35776524-8ea9-46ac-b2dd-89efc496593f",
+            "walletType": "MEMBERSHIP",
+            "type": "EXPIRE_VOID",
+            "referenceId": "68a56306c8d5f89bdeae32fd"
+        }
+    ]
+}
+```
+
+
+```json Response Example Validation Error
+{
+    "statusCode": 400,
+    "messages": "Validation Error",
+    "data": [
+        {
+            "field": "customerId",
+            "message": "customerId is required"
+        }
+    ]
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/credit/v1/credit/customer/paginate-credit-history/{customerId}?productId={productId}&membershipTierId={membershipTierId}&page=1&limit=5
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/credit/v1/credit/customer/paginate-credit-history/{customerId}?productId={productId}&membershipTierId={membershipTierId}&page=1&limit=5
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Path Parameters
+
+<ParamField path="customerId" type="string" required>
+  The unique identifier of the customer whose credit history is being queried.
+</ParamField>
+
+## Query Parameters
+
+<ParamField query="productId" type="string">
+  The unique identifier of the product associated with the credit history.
+</ParamField>
+
+<ParamField query="membershipTierId" type="string">
+  The unique identifier of the membership tier associated with the credit history.
+</ParamField>
+
+<ParamField query="page" default="1" type="integer">
+  The page number for pagination.
+</ParamField>
+
+<ParamField query="limit" default="10" type="integer">
+  The number of items to return per page.
+</ParamField>
+
+<ParamField query="sortField" default="datetime" type="string">
+  The field name used to sort results.
+</ParamField>
+
+<ParamField query="sortOrder" default="desc" type="string">
+  The order of sorting. Accepts `"asc"` or `"desc"`.
+</ParamField>
+
+<ParamField query="startDate" type="string">
+  The start date filter for the query range.
+</ParamField>
+
+<ParamField query="endDate" type="string">
+  The end date filter for the query range.
+</ParamField>
+
+<ParamField query="walletType" type="string">
+  The type of wallet to filter credit history (e.g., `"MEMBERSHIP"`, `"ADD_ON"`).
+</ParamField>
+
+<ParamField query="type" type="string">
+  The transaction type filter (e.g., `"TOPUP"`, `"MERCHANT_TOPUP"`, `"TRIAL_TOPUP"`, `"EXPIRE_VOID"`, `"CREDIT_USAGE"`).
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer">
+  Status code from API.
+</ResponseField>
+
+<ResponseField name="message" type="string">
+  Status message that describes the status code (`"success"` on success).
+</ResponseField>
+
+<ResponseField name="total" type="integer">
+  Total number of records matching the query.
+</ResponseField>
+
+<ResponseField name="page" type="integer">
+  The current page number.
+</ResponseField>
+
+<ResponseField name="limit" type="integer">
+  The current page size (items per page).
+</ResponseField>
+
+<ResponseField name="totalPages" type="integer">
+  The total number of pages available.
+</ResponseField>
+
+<ResponseField name="data" type="array of object">
+  List of credit history records for the requested page.
+</ResponseField>
+
+### data Structure (Array Of Object)
+
+Each history item carries the ledger `credit`/`debit` amounts plus metadata.
+
+<ResponseField name="id" type="string">
+  Unique identifier of the credit history record.
+</ResponseField>
+
+<ResponseField name="createdAt" type="string">
+  Timestamp of the record as an ISO 8601 datetime.
+</ResponseField>
+
+<ResponseField name="credit" type="number">
+  Amount credited to the customer's balance in this entry.
+</ResponseField>
+
+<ResponseField name="debit" type="number">
+  Amount debited from the customer's balance in this entry.
+</ResponseField>
+
+<ResponseField name="productId" type="string">
+  The unique identifier of the product associated with the entry.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Status of the entry (e.g., `ACTIVE`).
+</ResponseField>
+
+<ResponseField name="membershipTierId" type="string">
+  The unique identifier of the membership tier associated with the entry.
+</ResponseField>
+
+<ResponseField name="customerId" type="string">
+  The unique identifier of the customer associated with the entry.
+</ResponseField>
+
+<ResponseField name="merchantId" type="string">
+  The unique identifier of the merchant associated with the entry.
+</ResponseField>
+
+<ResponseField name="walletType" type="string">
+  The wallet type of the entry (e.g., `MEMBERSHIP`, `ADD_ON`).
+</ResponseField>
+
+<ResponseField name="type" type="string">
+  The transaction type of the entry (e.g., `TOPUP`, `EXPIRE_VOID`, `CREDIT_USAGE`).
+</ResponseField>
+
+<ResponseField name="referenceId" type="string">
+  Reference identifier linking the entry to a related transaction.
+</ResponseField>
+
+### Errors
+
+<ResponseField name="400 Validation Error" type="object">
+  Returned when required parameters are missing or invalid. Validation errors use
+  the PLURAL `messages` key with a `data` array of field errors:
+  `{ "statusCode": 400, "messages": "Validation Error", "data": [ ... ] }`.
+</ResponseField>
