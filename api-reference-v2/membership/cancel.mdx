@@ -14,7 +14,7 @@ description: "Endpoint to cancel a membership member (sets status to stopped)."
   - Cancelling flips the member's status to "stopped", but guards against members that are already
     inactive — if status is already `stopped`/`finished` it responds 400
     "Membership member ini sudah tidak aktif (status: <status>)." (the value is interpolated).
-  - The `data` object mirrors the editMembershipCustomer GraphQL selection (field NAMES are
+  - The `data` object mirrors the persisted membership-customer record selection (field NAMES are
     source-confirmed: id, customerId, paymentLinkId, createdAt, nextPayment, expiredAt,
     isLifetimePeriod, status, and nested customer/membershipTier/paymentLink; the server strips
     userId). VALUES are representative — confirm against a live response.

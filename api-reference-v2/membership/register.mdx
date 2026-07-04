@@ -14,7 +14,7 @@ description: "Endpoint to register a new membership member."
     `data.membershipCustomer` sub-wrapper.
   - Response uses the SINGULAR `message` key (the four membership writes — create/update/
     invoice/cancel — use `message`; the read/list endpoints use the plural `messages`). Do NOT normalize.
-  - The `data` object mirrors the insertMembershipCustomer GraphQL selection (field NAMES are
+  - The `data` object mirrors the persisted membership-customer record selection (field NAMES are
     source-confirmed: id, customerId, paymentLinkId, createdAt, nextPayment, expiredAt,
     isLifetimePeriod, memberId, status, and nested customer/membershipTier/paymentLink; the
     server strips userId). VALUES are representative — confirm against a live response.

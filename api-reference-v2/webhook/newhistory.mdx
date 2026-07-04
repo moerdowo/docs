@@ -7,7 +7,7 @@ description: "Endpoint to get data from the new webhook history store"
 {/*
   Notes for maintainers — V2 Webhook "Get New History" (GET /hl/v2/webhooks/new-history).
   This is a V2-only endpoint backed by the newer webhook-history store; it has NO V1 equivalent.
-  Response shape captured live from production (DUMMY_PROD_MERCHANT_API_KEY) and is REAL key-for-key.
+  Response shape captured live from production and is REAL key-for-key.
   All PII has been SCRUBBED to synthetic V1-style example values. Compared with /webhooks/history:
     - `createdAt` and `nextDelivery` are ISO-8601 DATE STRINGS here (not millisecond integers).
     - the record carries an extra `Webhooktype` key (often null) and omits the integer timestamps.

@@ -5,11 +5,11 @@ description: "Endpoint used to create a single payment request"
 ---
 
 {/* Notes for maintainers: this is a WRITE endpoint. The response shape below is
-REPRESENTATIVE — derived from the V2 source handler (requestPayment.reqPayment),
+REPRESENTATIVE — derived from the V2 payment-request-create endpoint,
 not captured from a live prod write. The `data` object returns the created
 payment request's id, transactionId (null unless an email is provided),
 paymentLinkId, public link, amount, status, and timestamps. Only `amount` is a
-required body field (fastest-validator REQUEST schema); every other field is
+required body field; every other field is
 optional. `messages` is PLURAL on this endpoint (this group never uses singular
 `message`). */}
 

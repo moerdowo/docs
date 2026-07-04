@@ -14,10 +14,10 @@ description: "Endpoint to update an existing membership member."
   - Response uses the SINGULAR `message` key (writes use `message`; reads use plural `messages`). Do NOT normalize.
   - `productId` is the only required body field; everything else is optional/partial.
   - `nextPayment` and `expiredAt` are accepted as UTC ISO 8601 STRINGS, not epoch-ms.
-  - The `data` object mirrors the editMembershipCustomer GraphQL selection (field NAMES are
+  - The `data` object mirrors the persisted membership-customer record selection (field NAMES are
     source-confirmed: id, customerId, paymentLinkId, createdAt, nextPayment, expiredAt,
     isLifetimePeriod, status, and nested customer/membershipTier/paymentLink; the server
-    strips userId, and unlike register the edit selection has no memberId). VALUES are
+    strips userId, and unlike register the update selection has no memberId). VALUES are
     representative — confirm against a live response.
   - Verbatim error strings below are confirmed against the source; keep them exactly.
   - All values are synthetic.

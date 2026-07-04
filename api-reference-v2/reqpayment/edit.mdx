@@ -5,11 +5,11 @@ description: "Endpoint used to edit a single payment request that has been creat
 ---
 
 {/* Notes for maintainers: this is a WRITE endpoint. The response shape below is
-REPRESENTATIVE — derived from the V2 source handler (requestPayment.editPayment),
+REPRESENTATIVE — derived from the V2 payment-request-edit endpoint,
 not captured from a live prod write. IMPORTANT: the payment request to update is
-selected by the `{uuId}` PATH segment (req.params.uuId) — the handler loads the
+selected by the `{uuId}` PATH segment — the endpoint loads the
 payment request by that id and checks ownership against it. There is NO `id` body
-field (the REQUEST_EDIT schema does not define one). `amount` is the only required
+field. `amount` is the only required
 body field. `messages` is PLURAL on this endpoint. */}
 
 <RequestExample>

@@ -5,10 +5,10 @@ description: "Endpoint used to edit an invoice that has been created"
 ---
 
 {/* Notes for maintainers: this is a WRITE endpoint. The response shape below is
-REPRESENTATIVE — derived from the editInvoice source handler, not captured from a
+REPRESENTATIVE — derived from the invoice-edit endpoint, not captured from a
 live prod write. IMPORTANT: unlike the product/payment-link update endpoints, the
-invoice to update is selected by the `{uuId}` URL path segment (the handler reads
-req.params.uuId for the existence + ownership checks and echoes it back as `data.id`);
+invoice to update is selected by the `{uuId}` URL path segment (used
+for the existence + ownership checks and echoed back as `data.id`);
 there is NO `id` field in the invoice-edit request body. `messages` is PLURAL on this
 endpoint. When a `paymentMethod` is supplied the handler also appends a `paymentDetail`. */}
 
