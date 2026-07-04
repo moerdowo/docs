@@ -54,6 +54,14 @@ curl --request POST 'https://api.mayar.id/hl/v2/products/f774034d-d9cc-43a0-97d8
   invoice `id` as the `{id}` path segment.
 </Note>
 
+<Note>
+  A legacy, invoice-scoped alias is also available under `/hl/v2`:
+  `GET /hl/v2/invoice/{action}/{uuId}` (the original V1 form — note it is a `GET` with an
+  action-first path, and `{uuId}` is the invoice id). It toggles the same invoice status as
+  the canonical `POST /hl/v2/products/{id}/{action}` above and returns the same plural
+  `messages` envelope. New integrations should prefer the canonical `POST` form.
+</Note>
+
 Endpoint:
 
 <CodeGroup>
