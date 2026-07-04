@@ -356,6 +356,8 @@
           {
             "group": "Membership",
             "pages": [
+              "api-reference-v2/membership/producttiers",
+              "api-reference-v2/membership/productmember",
               "api-reference-v2/membership/tiers",
               "api-reference-v2/membership/members",
               "api-reference-v2/membership/memberdetail",
