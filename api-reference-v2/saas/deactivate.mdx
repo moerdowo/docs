@@ -1,0 +1,116 @@
+---
+title: "Deactivate License"
+openapi: "POST /endpointsaasv2/deactivate"
+description: "Endpoint to deactivate a SaaS subscription license by providing the license code and product ID."
+---
+
+{/*
+  Notes for maintainers — REPRESENTATIVE sample, source-corrected.
+  Served by the dedicated /saas/v1 service (NOT /hl/v2). Success and errors use the SINGULAR `message`
+  key (the V1 page mislabelled it `messages` — corrected here). Setting the license to INACTIVE is done
+  by POSTing to /saas/v1/license/deactivate; the destination status is derived from the URL. Values are
+  synthetic.
+*/}
+
+<RequestExample>
+
+```bash Request Example
+curl --request POST 'https://api.mayar.id/saas/v1/license/deactivate' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--header 'Content-Type: application/json' \
+--data '{
+    "licenseCode": "YOUR-LICENSE-CODE",
+    "productId": "YOUR-PRODUCT-ID"
+}'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "message": "Success updating license code status to INACTIVE."
+}
+```
+
+
+```json Response example if already inactive
+{
+    "statusCode": 400,
+    "message": "License code LICENSECODE12345 has already inactive."
+}
+```
+
+</ResponseExample>
+
+<Info>
+  By performing this action, the status of the license code will change to `INACTIVE`.
+</Info>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/saas/v1/license/deactivate
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/saas/v1/license/deactivate
+```
+
+</CodeGroup>
+
+<Note>
+  **Also available under `/saas/v2`.** This endpoint is mirrored under the `/saas/v2`
+  base with an identical method, parameters, authorization, and response shape — swap
+  `/saas/v1` for `/saas/v2` in the base path:
+
+  - Production: `https://api.mayar.id/saas/v2/license/deactivate`
+  - Sandbox: `https://api.mayar.club/saas/v2/license/deactivate`
+</Note>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Request Body
+
+<ParamField body="licenseCode" type="string" required>
+  The license code to deactivate.
+</ParamField>
+
+<ParamField body="productId" type="string" required>
+  The ID of the SaaS subscription product associated with the license.
+</ParamField>
+
+## Response
+
+Successful Response
+
+<ResponseField name="statusCode" type="integer" >
+  Status code from API.
+</ResponseField>
+
+<ResponseField name="message" type="string" >
+  Result message. On success: `Success updating license code status to INACTIVE.`
+  (note the singular `message` key used by this service).
+</ResponseField>
+
+### Errors
+
+<ResponseField name="400 Bad Request" type="object">
+  Returned when:
+
+  - `licenseCode`/`productId` are missing, or no matching subscription license is
+    found: `"There's no subscription license with code <code> and product id <id> registered in user <email>."`
+  - the license is already inactive:
+    `"License code <code> has already inactive."`
+</ResponseField>

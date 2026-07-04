@@ -37,22 +37,18 @@ curl --request GET 'https://api.mayar.id/hl/v2/memberships/members/MBR8X2QK?prod
         "status": "inactive",
         "updatedAt": "2026-02-15T17:30:03.531Z",
         "paymentLink": {
-            "id": "7c9d2e1f-4a5b-4c6d-8e9f-0a1b2c3d4e5f",
             "name": "Premium Membership",
             "status": "active",
             "membershipInfo": {
-                "id": "d3e4f5a6-b7c8-4d9e-0a1b-2c3d4e5f6a7b",
                 "type": "SAAS"
             }
         },
         "customer": {
-            "id": "a1b2c3d4-e5f6-4789-a012-3456789abcde",
             "email": "budi.santoso@example.com",
             "name": "Budi Santoso",
             "mobile": "081234567890"
         },
         "membershipTier": {
-            "id": "9b2d4f6a-8c1e-4a3b-bd5c-6e7f8a9b0c1d",
             "name": "Paket 1",
             "status": "ACTIVE"
         }
@@ -187,31 +183,34 @@ Successful Response
 </ResponseField>
 
 <ResponseField name="paymentLink" type="object" >
-  The related product (payment link) summary: `id`, `name`, `status`, and a nested
-  `membershipInfo` object (`id`, `type`).
+  The related product (payment link) summary: `name`, `status`, and a nested
+  `membershipInfo` object (`type`).
 </ResponseField>
 
 <ResponseField name="customer" type="object" >
-  The related customer summary: `id`, `email`, `name`, `mobile`.
+  The related customer summary: `email`, `name`, `mobile`.
 </ResponseField>
 
 <ResponseField name="membershipTier" type="object" >
-  The related tier summary: `id`, `name`, `status`.
+  The related tier summary: `name`, `status`.
 </ResponseField>
 
 ## Errors
 
+All error responses use the singular `message` key (only the successful read uses the
+plural `messages`).
+
 <ResponseField name="400 Invalid path parameter" type="object">
-  Returned with `messages: "Invalid path parameter"` when `memberId` is missing or
+  Returned with `message: "Invalid path parameter"` when `memberId` is missing or
   malformed.
 </ResponseField>
 
 <ResponseField name="400 Invalid query parameters" type="object">
-  Returned with `messages: "Invalid query parameters"` when `productId` is missing
+  Returned with `message: "Invalid query parameters"` when `productId` is missing
   or the query parameters fail validation.
 </ResponseField>
 
 <ResponseField name="404 Member not found" type="object">
-  Returned with `messages: "Member dengan ID {memberId} tidak ditemukan."` when no
+  Returned with `message: "Member dengan ID {memberId} tidak ditemukan."` when no
   member matches the given `memberId`.
 </ResponseField>

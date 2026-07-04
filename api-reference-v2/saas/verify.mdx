@@ -1,0 +1,202 @@
+---
+title: "Verify License SaaS Subscription"
+openapi: "POST /endpointsaasv2/verify"
+description: "Endpoint to verify a SaaS subscription license by providing the license code and product ID."
+---
+
+{/*
+  Notes for maintainers — REPRESENTATIVE sample, source-corrected.
+  SaaS subscription license verification is served by a SEPARATE service mounted at /saas/v1 — NOT
+  the /hl/v2 surface, so the real base URL is kept. The service uses its OWN envelope: success returns
+  {statusCode, isLicenseActive, memberStatus, licenseCode:{...}} (NO messages/data wrapper); errors use
+  SINGULAR `message`. Unlike the software license service, the SaaS `licenseCode` object OMITS
+  activationLimit/useCount and ADDS membershipTierId, membershipTierName and memberPaymentLink; the
+  root also carries memberStatus. Values are synthetic.
+*/}
+
+<RequestExample>
+
+```bash Request Example
+curl --request POST 'https://api.mayar.id/saas/v1/license/verify' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--header 'Content-Type: application/json' \
+--data '{
+    "licenseCode": "YOUR-LICENSE-CODE",
+    "productId": "YOUR-PRODUCT-ID"
+}'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "isLicenseActive": true,
+    "memberStatus": "ACTIVE",
+    "licenseCode": {
+        "licenseCode": "LICENSECODE12345",
+        "status": "ACTIVE",
+        "expiredAt": "2025-12-12T19:46:24.000Z",
+        "transactionId": "994d4071-a81e-4558-a854-47530eea9b6d",
+        "productId": "84d1d247-a8b3-4c7d-96f0-cf276edb7c33",
+        "customerId": "6a38cf26-6bab-42c8-92be-72f3a9fd4c33",
+        "customerName": "Budi Santoso",
+        "customerEmail": "budi.santoso@example.com",
+        "createdAt": "2024-02-12T08:41:13.579Z",
+        "updatedAt": "2024-02-12T08:57:36.047Z",
+        "membershipTierId": "c96850f9-b379-4ed3-bcf2-6d88a87bd20c",
+        "membershipTierName": "Master Black Belt Membership",
+        "memberPaymentLink": "https://testingmayar.myr.id/pay-membership/PQVS4KGY"
+    }
+}
+```
+
+
+```json Response example if license not found
+{
+    "statusCode": 400,
+    "message": "There's no subscription license with code YOUR-LICENSE-CODE and product id YOUR-PRODUCT-ID registered in user your-account@example.com."
+}
+```
+
+</ResponseExample>
+
+<Note>
+  SaaS subscription license verification runs on a dedicated service at `/saas/v1`,
+  so the base URL is `https://api.mayar.id/saas/v1` (sandbox
+  `https://api.mayar.club/saas/v1`) — separate from the shared gateway base used
+  by most endpoints. This service returns
+  `isLicenseActive`, `memberStatus`, and a `licenseCode` object instead of the
+  `{ statusCode, messages, data }` envelope, and its errors use the singular
+  `message` key.
+</Note>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/saas/v1/license/verify
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/saas/v1/license/verify
+```
+
+</CodeGroup>
+
+<Note>
+  **Also available under `/saas/v2`.** This endpoint is mirrored under the `/saas/v2`
+  base with an identical method, parameters, authorization, and response shape — swap
+  `/saas/v1` for `/saas/v2` in the base path:
+
+  - Production: `https://api.mayar.id/saas/v2/license/verify`
+  - Sandbox: `https://api.mayar.club/saas/v2/license/verify`
+</Note>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Request Body
+
+<ParamField body="licenseCode" type="string" required>
+  The license code to verify.
+</ParamField>
+
+<ParamField body="productId" type="string" required>
+  The ID of the SaaS subscription product associated with the license.
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer" >
+  Status code from API.
+</ResponseField>
+
+<ResponseField name="isLicenseActive" type="boolean" >
+  `true` when the license `status` is `ISSUED` or `ACTIVE` and the linked
+  membership is `active`.
+</ResponseField>
+
+<ResponseField name="memberStatus" type="string" >
+  Uppercased status of the linked membership (e.g. `ACTIVE`, `STOPPED`).
+</ResponseField>
+
+<ResponseField name="licenseCode" type="object">
+  Detailed information about the subscription license code.
+</ResponseField>
+
+### licenseCode Structure (Object)
+
+<ResponseField name="licenseCode" type="string" >
+  The license code value.
+</ResponseField>
+
+<ResponseField name="status" type="string" >
+  License status (e.g. `ACTIVE`, `INACTIVE`, `ISSUED`).
+</ResponseField>
+
+<ResponseField name="expiredAt" type="string" >
+  Subscription expiry, derived from the membership's next payment date as an
+  ISO 8601 datetime, or `"Tidak terbatas"` (Unlimited) when there is none.
+</ResponseField>
+
+<ResponseField name="transactionId" type="string<uuid>" >
+  Related transaction ID.
+</ResponseField>
+
+<ResponseField name="productId" type="string<uuid>" >
+  ID of the associated product.
+</ResponseField>
+
+<ResponseField name="customerId" type="string<uuid>" >
+  Customer ID linked to the license.
+</ResponseField>
+
+<ResponseField name="customerName" type="string" >
+  Customer's full name.
+</ResponseField>
+
+<ResponseField name="customerEmail" type="string" >
+  Customer's email address.
+</ResponseField>
+
+<ResponseField name="createdAt" type="string" >
+  License creation timestamp (ISO 8601 datetime).
+</ResponseField>
+
+<ResponseField name="updatedAt" type="string" >
+  Last updated timestamp (ISO 8601 datetime).
+</ResponseField>
+
+<ResponseField name="membershipTierId" type="string<uuid>" >
+  ID of the membership tier tied to the subscription.
+</ResponseField>
+
+<ResponseField name="membershipTierName" type="string" >
+  Name of the membership tier.
+</ResponseField>
+
+<ResponseField name="memberPaymentLink" type="string" >
+  Public payment link the member can use to pay/renew the subscription.
+</ResponseField>
+
+### Errors
+
+<ResponseField name="400 Bad Request" type="object">
+  Returned when `licenseCode`/`productId` are missing, or when no matching
+  subscription license is found for the authenticated user:
+  `{ "statusCode": 400, "message": "There's no subscription license with code <code> and product id <id> registered in user <email>." }`.
+</ResponseField>

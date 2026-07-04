@@ -6,7 +6,7 @@ description: "Endpoint to retrieve all reviews across the merchant store"
 
 {/*
   Notes for maintainers — V2 Reviews "Get All Reviews" (GET /hl/v2/reviews).
-  Response shape captured live from production (DUMMY_PROD_MERCHANT_API_KEY) and is REAL key-for-key.
+  Response shape captured live from production and is REAL key-for-key.
   All PII (customer names, review messages, ids, product names/links, uploaded file names) has been
   SCRUBBED to synthetic V1-style example values. Envelope key is PLURAL `messages` (read). V2 uses
   cursor pagination (data[]/hasMore/nextStartingAfter) — it does NOT use the V1 page/pageSize/

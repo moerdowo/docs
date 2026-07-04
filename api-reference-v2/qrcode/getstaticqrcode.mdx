@@ -7,9 +7,10 @@ description: "Endpoint to retrieve the merchant's static QRIS code"
 {/*
   Notes for maintainers — REPRESENTATIVE response.
   GET /hl/v2/qr-codes/static returns the merchant's static QRIS image (response data { url }).
-  A live capture for the sample merchant returned 500 { statusCode: 500, messages: "Invalid data" }
-  because no static QRIS is configured for that account, so the 200 shape below is representative,
-  derived from the V2 source surface. Confirm against a merchant that has a static QRIS enabled.
+  Per master source (payme.getQrCode): when the account has no static QRIS configured the
+  handler returns 404 { statusCode: 404, messages: "Static QR not configured" }; any other
+  failure returns 500 { statusCode: 500, messages: <error> }. The 200 shape below is
+  representative — confirm against a merchant that has a static QRIS enabled.
   Envelope key is PLURAL `messages` for this group (reads, writes, AND errors).
 */}
 
@@ -34,10 +35,10 @@ curl --request GET 'https://api.mayar.id/hl/v2/qr-codes/static' \
 }
 ```
 
-```json Response Example 500
+```json Response Example 404
 {
-    "statusCode": 500,
-    "messages": "Invalid data"
+    "statusCode": 404,
+    "messages": "Static QR not configured"
 }
 ```
 
@@ -91,6 +92,10 @@ Successful Response
 
 ## Errors
 
+<ResponseField name="404 Static QR not configured" type="object">
+  Returned when the merchant has no static QRIS configured: `{ "statusCode": 404, "messages": "Static QR not configured" }`.
+</ResponseField>
+
 <ResponseField name="500" type="object">
-  Returned when the merchant has no static QRIS configured: `{ "statusCode": 500, "messages": "Invalid data" }`.
+  Returned on any other failure while generating the QRIS image: `{ "statusCode": 500, "messages": "<error>" }`.
 </ResponseField>

@@ -6,13 +6,22 @@ description: "Endpoint used to update an existing name service (power-up store) 
 
 {/*
   Notes for maintainers — REPRESENTATIVE write payload.
-  POST /hl/v2/name-services/update is a write endpoint; the example below is derived from the
-  V2 source surface plus synthetic values (no live capture to avoid mutating merchant data).
-  Field names in `data` are source-confirmed from the stored record; confirm exact values/types
-  against a live response. The resource `id` is read from the REQUEST BODY (there is no id URL
-  segment). The `payload`, `credential`, and `event` fields are stored as serialized JSON
-  strings. Envelope key is PLURAL `messages` for this group (writes AND errors).
+  NOTE: the name-service handler exists in the V2 codebase but is NOT wired into the V2 router, so
+  POST /hl/v2/name-services/update is not yet reachable on the public V2 gateway (calls currently
+  return 404). This page documents the PLANNED V2 contract — see the not-yet-available notice below.
+  The example below is derived from the V2 source surface plus synthetic values (no live capture to
+  avoid mutating merchant data). Field names in `data` are source-confirmed from the stored record;
+  confirm exact values/types once the route is enabled. The resource `id` is read from the REQUEST
+  BODY (there is no id URL segment). The `payload`, `credential`, and `event` fields are stored as
+  serialized JSON strings. Envelope key is PLURAL `messages` for this group (writes AND errors).
 */}
+
+<Warning>
+  This endpoint is not yet available on API V2. The name service surface is defined in the platform
+  but not yet exposed on the public V2 gateway, so requests to this path currently return
+  `404 Not Found`. Manage name service entries from your Mayar dashboard until it is enabled — the
+  request and response shapes below document the planned V2 contract.
+</Warning>
 
 <RequestExample>
 

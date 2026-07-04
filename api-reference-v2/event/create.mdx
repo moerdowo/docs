@@ -82,12 +82,12 @@ https://api.mayar.club/hl/v2/products/event/create
   Event product name.
 </ParamField>
 
-<ParamField path="description" type="string" required>
-  Event product description in text or HTML format.
+<ParamField path="description" type="string">
+  Event product description in text or HTML format (3–555 characters).
 </ParamField>
 
 <ParamField path="amount" type="integer" required>
-  Event ticket or product price amount.
+  Event ticket or product price amount (minimum `500`).
 </ParamField>
 
 <ParamField path="crossoutPrice" type="integer">
@@ -110,31 +110,31 @@ https://api.mayar.club/hl/v2/products/event/create
   URL where the customer will be redirected after completing payment.
 </ParamField>
 
-<ParamField path="paymentType" type="string" required>
+<ParamField path="paymentType" type="string">
   Payment type for the event.
 </ParamField>
 
-<ParamField path="startAt" type="string | datetime" required>
-  Sales start date in ISO 8601 format.
+<ParamField path="startAt" type="string | datetime">
+  Sales start date as a 24-character ISO 8601 UTC string.
 </ParamField>
 
-<ParamField path="eventStartAt" type="string | datetime" required>
-  Event start date in ISO 8601 format.
+<ParamField path="eventStartAt" type="string | datetime">
+  Event start date as a 24-character ISO 8601 UTC string.
 </ParamField>
 
-<ParamField path="eventEndAt" type="string | datetime" required>
-  Event end date in ISO 8601 format.
+<ParamField path="eventEndAt" type="string | datetime">
+  Event end date as a 24-character ISO 8601 UTC string.
 </ParamField>
 
-<ParamField path="expiredAt" type="string | datetime" required>
-  Event product expiration date in ISO 8601 format.
+<ParamField path="expiredAt" type="string | datetime">
+  Event product expiration date as a 24-character ISO 8601 UTC string.
 </ParamField>
 
 <ParamField path="limit" type="number">
   Maximum participant or purchase limit.
 </ParamField>
 
-<ParamField path="event" type="object">
+<ParamField path="event" type="object" required>
   Additional event details.
 </ParamField>
 
@@ -144,13 +144,13 @@ https://api.mayar.club/hl/v2/products/event/create
   Event location or address.
 </ParamField>
 
-<ParamField path="event.isOnlineEvent" type="boolean">
+<ParamField path="event.isOnlineEvent" type="boolean" required>
   Indicates whether the event is conducted online.
 </ParamField>
 
 <ParamField path="event.maxTicket" type="number">
-  Maximum number of tickets that can be purchased per transaction. Defaults to
-  `50`.
+  Maximum number of tickets that can be purchased per transaction (1–50). Defaults
+  to `50` when omitted.
 </ParamField>
 
 ## Response

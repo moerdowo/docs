@@ -6,7 +6,7 @@ description: "Endpoint to get data webhook history"
 
 {/*
   Notes for maintainers — V2 Webhook "Get History" (GET /hl/v2/webhooks/history).
-  Response shape captured live from production (DUMMY_PROD_MERCHANT_API_KEY) and is REAL key-for-key.
+  Response shape captured live from production and is REAL key-for-key.
   All PII (merchant/customer names, emails, mobiles, ids, destination URL, product names, payment links)
   has been SCRUBBED to synthetic V1-style example values. The nested `payload` is a JSON STRING; its
   inner shape varies per event `type` — the examples below are representative of common events.

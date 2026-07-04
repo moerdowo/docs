@@ -33,10 +33,10 @@ curl --request POST 'https://api.mayar.id/hl/v2/products/2529541f-dc98-4ca0-93bb
 ```
 
 
-```json Response example if failed
+```json Response example if product not found
 {
-    "statusCode": 200,
-    "messages": "failed"
+    "statusCode": 404,
+    "messages": "Product not found"
 }
 ```
 
@@ -93,7 +93,7 @@ Successful Response
 </ResponseField>
 
 <ResponseField name="messages" type="string" >
-  Status message that describes the status code (`success` or `failed`).
+  Status message that describes the status code. On success this is `success`.
 </ResponseField>
 
 ### Errors

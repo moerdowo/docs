@@ -1,0 +1,133 @@
+---
+title: "Spend Customer Credit"
+openapi: "POST /endpointusagebasedmembershipv2/spendcustomercredit"
+description: "Endpoint used to spend a specified amount of credit from a customer's or member's account on a particular membership tier."
+---
+
+{/*
+  Notes for maintainers — REPRESENTATIVE sample.
+  Usage-based membership credit is served by a SEPARATE service mounted at /credit/v1 — it is
+  NOT part of the /hl/v2 surface, so the real base URL is kept (no fabricated /hl/v2 path). On
+  success this endpoint returns a SINGULAR `message` sentence with NO `data` key. Validation
+  errors use PLURAL `messages`. Example values (ids, amounts) are synthetic.
+*/}
+
+<RequestExample>
+
+```bash Request Example
+curl --request POST 'https://api.mayar.id/credit/v1/credit/customer/spend' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--header 'Content-Type: application/json' \
+--data '{
+    "memberId": "KKGOL1MV", // optionally mandatory
+    "productId": "40f26fbe-f4d8-4693-975f-e6d105d291e6",
+    "membershipTierId": "9bbbfa01-1bf8-4e4d-8470-cdf7066b6ea2",
+    "amount": 10
+}'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "message": "Successfully spent 10. MEMBERSHIP: 10, ADD_ON: 0"
+}
+```
+
+
+```json Response Example Insufficient Credit
+{
+    "statusCode": 400,
+    "message": "Cannot spend customer credit. Insufficient customer credit"
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/credit/v1/credit/customer/spend
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/credit/v1/credit/customer/spend
+```
+
+</CodeGroup>
+
+<Note>
+  **Also available under `/credit/v2`.** This endpoint is mirrored under the `/credit/v2` base
+  with an identical method, parameters, authorization, and response shape — swap `/credit/v1`
+  for `/credit/v2` in the base path:
+
+  - Production: `https://api.mayar.id/credit/v2/credit/customer/spend`
+  - Sandbox: `https://api.mayar.club/credit/v2/credit/customer/spend`
+</Note>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Request Body
+
+<ParamField body="memberId" type="string">
+  The unique identifier of the member whose credit will be spent.
+</ParamField>
+
+<ParamField body="customerId" type="string">
+  The unique identifier of the customer whose credit will be spent.
+</ParamField>
+
+<ParamField body="productId" type="string" required>
+  The unique identifier of the product associated with the credit.
+</ParamField>
+
+<ParamField body="membershipTierId" type="string" required>
+  The unique identifier of the membership tier associated with the credit.
+</ParamField>
+
+<ParamField body="amount" type="integer" required>
+  The amount of credit to deduct (positive integer).
+</ParamField>
+
+<Note>
+  At least **one of** `memberId` **or** `customerId` must be provided.
+</Note>
+
+## Response
+
+Successful Response
+
+<ResponseField name="statusCode" type="integer">
+  Status code from API.
+</ResponseField>
+
+<ResponseField name="message" type="string">
+  Status message that describes the result. On success it is a sentence of the form
+  `Successfully spent <amount>. MEMBERSHIP: <x>, ADD_ON: <y>`, where `<x>` and `<y>`
+  show how much was drawn from the membership and add-on balances respectively.
+</ResponseField>
+
+### Errors
+
+<ResponseField name="400 Insufficient Credit" type="object">
+  Returned when the customer does not have enough credit for the requested amount:
+  `{ "statusCode": 400, "message": "Cannot spend customer credit. Insufficient customer credit" }`.
+</ResponseField>
+
+<ResponseField name="400 Validation Error" type="object">
+  Returned when required fields are missing or invalid. Validation errors use the
+  PLURAL `messages` key with a `data` array of field errors:
+  `{ "statusCode": 400, "messages": "Validation Error", "data": [ ... ] }`.
+</ResponseField>

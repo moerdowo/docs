@@ -1,0 +1,225 @@
+---
+title: "Regist New Membership Customer"
+openapi: "POST /endpointusagebasedmembershipv2/registnewmembershipcustomer"
+description: "Endpoint used to register a new customer into a membership credit product."
+---
+
+{/*
+  Notes for maintainers — REPRESENTATIVE sample.
+  Usage-based membership credit is served by a SEPARATE service mounted at /credit/v1 — it is
+  NOT part of the /hl/v2 surface, so the real base URL is kept (no fabricated /hl/v2 path). The
+  success envelope is DATA-WRAPPED with a SINGULAR `message`: { statusCode, message, data:{...} }.
+  Validation errors use PLURAL `messages`. Example values (ids, PII) are synthetic.
+*/}
+
+<RequestExample>
+
+```bash Request Example
+curl --request POST 'https://api.mayar.id/credit/v1/credit/membership/customer/regist' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--header 'Content-Type: application/json' \
+--data '{
+    "productId": "40f26fbe-f4d8-4693-975f-e6d105d291e6",
+    "membershipTierId": "9bbbfa01-1bf8-4e4d-8470-cdf7066b6ea2",
+    "membershipMonthlyPeriod": 1,
+    "trialCredit": 1000,
+    "customerInfo": {
+        "name": "Budi Santoso",
+        "email": "budi.santoso@example.com",
+        "mobile": "081234567890"
+    }
+}'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "message": "success",
+    "data": {
+        "membershipCustomer": {
+            "id": "68ca1a1c-7ed8-47f3-a5c2-c5ff314dd750",
+            "memberId": "PQVS4KGY",
+            "customerId": "faa4ee60-cf45-4043-b964-303890713bb9",
+            "paymentLinkId": "40f26fbe-f4d8-4693-975f-e6d105d291e6",
+            "membershipTierId": "9bbbfa01-1bf8-4e4d-8470-cdf7066b6ea2",
+            "status": "active",
+            "monthlyPaymentPeriod": 1,
+            "isInTrial": true
+        },
+        "paymentLinkUrl": "https://testingmayar.myr.id/pay-membership/PQVS4KGY"
+    }
+}
+```
+
+
+```json Response Example Validation Error
+{
+    "statusCode": 400,
+    "messages": "Validation Error",
+    "data": [
+        {
+            "field": "membershipTierId",
+            "message": "membershipTierId is required"
+        }
+    ]
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/credit/v1/credit/membership/customer/regist
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/credit/v1/credit/membership/customer/regist
+```
+
+</CodeGroup>
+
+<Note>
+  **Also available under `/credit/v2`.** This endpoint is mirrored under the `/credit/v2` base
+  with an identical method, parameters, authorization, and response shape — swap `/credit/v1`
+  for `/credit/v2` in the base path:
+
+  - Production: `https://api.mayar.id/credit/v2/credit/membership/customer/regist`
+  - Sandbox: `https://api.mayar.club/credit/v2/credit/membership/customer/regist`
+</Note>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Request Body
+
+<ParamField body="productId" type="string" required>
+  The unique identifier of the product associated with the credit.
+</ParamField>
+
+<ParamField body="membershipTierId" type="string" required>
+  The unique identifier of the membership tier to assign to the customer.
+</ParamField>
+
+<ParamField body="customerInfo" type="object" required>
+  Object containing the customer's details.
+</ParamField>
+
+<ParamField body="trialCredit" type="number">
+  The trial credit amount to grant upon registration.
+</ParamField>
+
+<ParamField body="membershipMonthlyPeriod" type="number">
+  The membership period in months. Must be one of `1`, `3`, `6`, or `12`.
+</ParamField>
+
+### customerInfo Structure (Object)
+
+<ParamField body="name" type="string" required>
+  Full name of the customer.
+</ParamField>
+
+<ParamField body="email" type="string" required>
+  Email address of the customer.
+</ParamField>
+
+<ParamField body="mobile" type="string" required>
+  Mobile phone number of the customer.
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer">
+  Status code from API.
+</ResponseField>
+
+<ResponseField name="message" type="string">
+  Status message that describes the status code (`"success"` on success).
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  Object containing the registered membership customer and their payment link.
+</ResponseField>
+
+### data Structure (Object)
+
+<ResponseField name="membershipCustomer" type="object">
+  The newly registered membership customer record.
+</ResponseField>
+
+<ResponseField name="paymentLinkUrl" type="string">
+  URL the customer can use to pay for the membership.
+</ResponseField>
+
+### membershipCustomer Structure (Object)
+
+<ResponseField name="id" type="string">
+  Unique identifier of the membership customer record.
+</ResponseField>
+
+<ResponseField name="memberId" type="string">
+  The member identifier assigned to the customer.
+</ResponseField>
+
+<ResponseField name="customerId" type="string">
+  The unique identifier of the customer.
+</ResponseField>
+
+<ResponseField name="paymentLinkId" type="string">
+  Unique identifier of the payment link associated with this membership.
+</ResponseField>
+
+<ResponseField name="membershipTierId" type="string">
+  The unique identifier of the membership tier assigned to the customer.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Current membership status (e.g., `active`).
+</ResponseField>
+
+<ResponseField name="monthlyPaymentPeriod" type="number">
+  The membership billing period in months.
+</ResponseField>
+
+<ResponseField name="isInTrial" type="boolean">
+  Indicates whether the membership is currently in its trial period.
+</ResponseField>
+
+<Info>
+  `membershipCustomer` is the full member record; additional fields may be present.
+  The set above is representative.
+</Info>
+
+### Errors
+
+<ResponseField name="400 Not Authorized" type="object">
+  Returned when the authenticated user does not own the product:
+  `{ "statusCode": 400, "message": "You are not authorized to edit this product!" }`.
+</ResponseField>
+
+<ResponseField name="400 Email Already Registered" type="object">
+  Returned when the email is already registered on the tier:
+  `{ "statusCode": 400, "message": "Email sudah terdaftar pada tier ini." }`.
+</ResponseField>
+
+<ResponseField name="400 Validation Error" type="object">
+  Returned when required fields are missing or invalid. Validation errors use the
+  PLURAL `messages` key with a `data` array of field errors:
+  `{ "statusCode": 400, "messages": "Validation Error", "data": [ ... ] }`.
+</ResponseField>

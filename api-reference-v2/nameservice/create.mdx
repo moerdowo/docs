@@ -6,12 +6,22 @@ description: "Endpoint used to create a name service (power-up store) entry"
 
 {/*
   Notes for maintainers — REPRESENTATIVE write payload.
-  POST /hl/v2/name-services/create is a write endpoint; the example below is derived from the
-  V2 source surface plus representative values. Request body fields are source-confirmed
-  (name required; payload, description, website, amount, urlHook, image optional). The success
-  body carries NO `data` — it is exactly { statusCode, messages }. Confirm values against a live
-  capture when possible. Envelope key is PLURAL `messages` for this group (writes AND errors).
+  NOTE: the name-service handler exists in the V2 codebase but is NOT wired into the V2 router, so
+  POST /hl/v2/name-services/create is not yet reachable on the public V2 gateway (calls currently
+  return 404). This page documents the PLANNED V2 contract — see the not-yet-available notice below.
+  The example below is derived from the V2 source surface plus representative values. Request body
+  fields are source-confirmed (name required; payload, description, website, amount, urlHook, image
+  optional). The success body carries NO `data` — it is exactly { statusCode, messages }. Confirm
+  values against a live capture once the route is enabled. Envelope key is PLURAL `messages` for this
+  group (writes AND errors).
 */}
+
+<Warning>
+  This endpoint is not yet available on API V2. The name service surface is defined in the platform
+  but not yet exposed on the public V2 gateway, so requests to this path currently return
+  `404 Not Found`. Manage name service entries from your Mayar dashboard until it is enabled — the
+  request and response shapes below document the planned V2 contract.
+</Warning>
 
 <RequestExample>
 

@@ -1356,3 +1356,1305 @@ Paths shown are the suffix under /hl/v2. Envelope is `messages` (plural) UNLESS 
   Verified C0/D0 fire on an empty sandbox corpus; real corpus (74/71) stays GREEN.
 - No check logic weakened. Combined gate still PASS: structural 8/8 + domain 7/7.
 - Deliverable: test-quality.md. C4<->D7 complementarity preserved (not redundant).
+
+
+## Phase 17 (completion) — PASS
+- Final verification GREEN: combined gate validate-v2-docs.sh exit 0 — structural 8/8 (C1-C8)
+  + domain 7/7 (D1-D7) = 15/15. Corpus 74 pages / 71 endpoints / 80 json blocks all exercised.
+- Task ledger clean: every api-v2-reference-docs task completed; `task next` null; pending []=empty.
+- Branch state: 19 commits ahead of main, 87 files (+17899/-1) — all api-reference-v2/ docs +
+  docs.json nav + .jonggrang/.output deliverables. No infra scaffolding (.claude/.codex/.opencode/
+  hooks/.jonggrang/lib/AGENTS.md/CLAUDE.md) committed — intentionally outside the feature PR.
+- Pushed feat/api-v2-reference-docs -> origin (git@github.com:moerdowo/docs.git), upstream set.
+- PR auto-create BLOCKED: `gh pr create` -> "must be a collaborator". The SSH push identity has
+  write access but the gh API token is a non-collaborator identity. External permissions limit,
+  not a work defect. Open PR manually at:
+  https://github.com/moerdowo/docs/pull/new/feat/api-v2-reference-docs
+- Open/non-gating carried to PR: bug-002 (upstream reviews-stats 500, REPRESENTATIVE, not docs-repo).
+- Cleanup: stray untracked api-reference-v2/.jonggrang/.ephemeral/feedback-loop-state.json left
+  in place (untracked, hidden, won't ship/render). Deliverable: completion.md.
+
+
+## task-028 (api-v2-reference-full-parity) — Phase 1 branch & GREEN baseline — DONE 2026-07-03
+- Working branch: feat/v1-coverage-into-api-v2-reference (NOT main). Descends from the merged
+  api-v2-reference-docs work (HEAD 3e3abd4 = "Merge PR #10 …api-v2-reference-docs"). The V2 tab,
+  api-reference-v2/** pages, and the combined gate all exist here — correct base for full-parity.
+- (a) docs.json tabs confirmed: tabs[0]='Guides', tabs[1]='API V1 Reference' (UNCHANGED — C8 in
+  the gate re-proves V1 groups/pages byte-identical vs main), tabs[2]='API V2 Reference' present.
+  `python3 -m json.tool docs.json` exits 0 (valid JSON).
+- (b) V2 pages present: 72 api-reference-v2/**.mdx files on disk. (Task said "~74"; the merge
+  ae04b32 "remove tiersbyproduct & membersbyproduct membership endpoints" dropped 2 → 74−2=72.)
+  Nav<->file 1:1 confirmed by gate C2 (72 pages, 0 missing, 0 orphan). Recursive nav walk of the
+  V2 tab = 72 pages across 15 groups:
+    API documentation 3 | Products & payment links 16 | Invoice 5 | Payments 5 | Transaction 3 |
+    Customer 5 | Membership 7 | QR / Payment Channels 3 | Balances 1 | Installment 3 |
+    Discount & Coupon 4 | Bundling 2 | Name Services 2 | Webhook 5 | Reviews 8.
+  (69 endpoint pages + 3 group pages intro/statuscode/rate-limit = 72.)
+- (c) Combined gate GREEN, UNMODIFIED: bash .jonggrang/.output/features/api-v2-reference-docs-mqyl9hub/
+  validate-v2-docs.sh → exit 0. Structural 8/8 (C1-C8) + domain 7/7 (D1-D7) = 15/15.
+  Note: C0/D0 empty-corpus guards live inside validate-v2-docs.py / domain-compliance-v2-docs.py
+  (they hard-fail on total==0); the corpus is 72 pages / 69 endpoints / 78 json blocks — non-empty,
+  so C0/D0 stay green.
+- GOTCHA: the 3 gate scripts (validate-v2-docs.sh/.py, domain-compliance-v2-docs.py) plus several
+  api-v2-reference-docs-mqyl9hub deliverables were DELETED in the working tree (uncommitted cleanup
+  from a prior session) but still tracked in HEAD. Restored them with `git checkout HEAD -- <paths>`
+  so the gate could run. They are under .jonggrang/.output (never committed to the feature branch),
+  so this is a local restore only — no commit.
+- Baseline established. Did NOT author/edit any page (per acceptance). Ready for Phase 2 authoring
+  of the V1-parity gap pages. Files touched: .jonggrang/progress.txt only.
+
+
+## task-041 (v1-coverage-into-api-v2-reference) — Phase 1 branch & hygiene — DONE 2026-07-03
+- Branch feat/v1-coverage-into-api-v2-reference already exists and is checked out (created off
+  feat/api-v2-reference-docs, which was merged to main via PR #10). `git fetch --all` clean;
+  `git rev-list --left-right --count origin/main...HEAD` = 0 0 → HEAD sits AT the merge commit
+  3e3abd4, NOT behind main → no rebase needed.
+- docs.json three tabs confirmed: 'Guides', 'API V1 Reference', 'API V2 Reference'.
+  `python3 -m json.tool docs.json` exit 0 (valid JSON). docs.json NOT edited this task.
+- Baseline api-reference-v2/ tree = 72 .mdx pages (task said ~73; the earlier ae04b32 removed 2
+  membership endpoints → 72), across 15 nav groups under the V2 tab:
+    API documentation 3 | Products & payment links 16 | Invoice 5 | Payments 5 | Transaction 3 |
+    Customer 5 | Membership 7 | QR / Payment Channels 3 | Balances 1 | Installment 3 |
+    Discount & Coupon 4 | Bundling 2 | Name Services 2 | Webhook 5 | Reviews 8.
+- HYGIENE (task step d): removed the stray COMMITTED file
+  api-reference-v2/.jonggrang/.ephemeral/feedback-loop-state.json via `git rm` (it was tracked in
+  HEAD and would otherwise ship inside the docs tree). .jonggrang/.ephemeral dir now gone from
+  api-reference-v2/. This is the one atomic committed change for task-041.
+- Did NOT author any endpoint page (per acceptance). Ready for Phase 2 (source access resolution).
+
+
+## task-042 (v1-coverage-into-api-v2-reference) — Phase 2 source access — DONE 2026-07-03
+### SOURCE ACCESS RESOLVED — authoring mode = SOURCE-AUTHORITATIVE (upgrades plan's assumed BLOCKER)
+- `glab auth status`: logged in to gitlab.com as `teammayar` (GITLAB_TOKEN). `glab api projects/20099162`
+  succeeds; group_access.access_level=40 (Maintainer) on mayarid/source (default branch master).
+  The plan.md assumed a hard 403 BLOCKER + adaptation mode — that is NO LONGER true. Tasks 043-049
+  author in SOURCE-AUTHORITATIVE mode (shapes read from master), NOT adaptation-with-flags.
+- Read authoritative routers via `glab api projects/20099162/repository/files/<enc-path>/raw?ref=master`.
+
+### KEY STRUCTURAL FINDING — the gap groups are SEPARATE microservices, NOT /hl/v2
+- api-custom-paymenlink/api/v2/routes.js (the /hl/v2 router) contains ONLY the 71 already-documented
+  V2 endpoints. It has NONE of the gap groups (license / saas / usage-based / credit-based). Each gap
+  group is its OWN service, mounted at its OWN base prefix, with NO /hl/v2 variant:
+  * api-software  (mount /software):  POST /software/v1/license/verify            -> verifyLicenseCode
+  * api-saas      (mount /saas):      POST /saas/v1/license/verify                -> verifyLicenseCode
+                                      POST /saas/v1/license/activate              -> updateStatusLicenseCode
+                                      POST /saas/v1/license/deactivate            -> updateStatusLicenseCode
+  * api-credit    (mount /credit):    GET  /credit/v1/credit/customer/balance
+                                      POST /credit/v1/credit/customer/spend
+                                      POST /credit/v1/credit/customer/add-credit
+                                      GET  /credit/v1/credit/customer/credit-history/:customerId
+                                      GET  /credit/v1/credit/customer/paginate-credit-history/:customerId
+                                      POST /credit/v1/credit/membership/customer/regist      (usage-based regist)
+                                      POST /credit/v1/credit/credit-usage/customer/regist    (credit-based regist)
+                                      POST /credit/v1/credit/generate/immutable/checkout     (generateimmutablecheckoutlink)
+  These paths match the existing V1 pages' curl examples EXACTLY (V1 docs are source-accurate here).
+
+### ENVELOPE conventions of the gap services (DO NOT normalize to /hl/v2 plural `messages`)
+- api-saas / api-software license: SINGULAR `message` + statusCode, e.g.
+  400 {statusCode:400, message:"There's no subscription license with code <code> and product id <id>
+      registered in user <email>."}; activate/deactivate success
+  {statusCode:200, message:"Success updating license code status to <status>."};
+  verify success = successPayloadResponse(licenseCode,200) (payload wrapper — confirm exact keys when
+  authoring saas/verify + licensecode/verifylicense from the handler).
+- api-credit: MIXED envelope — success {statusCode:200, message:"success", data:{...}} SINGULAR;
+  validation error {statusCode:400, messages:"Validation Error", data:<payload>} PLURAL; 500
+  {statusCode:500, message:error.message} SINGULAR. Auth: balance/spend/add-credit/history use
+  verifyAuth+verifyMembershipAuthor; the 3 regist/checkout POSTs use checkJwt.
+- => CRITICAL GUARD for tasks 044-047: these three services do NOT use the /hl/v2 {statusCode,messages,
+  data} plural convention. Document the envelope EXACTLY as source (singular message, mixed in credit).
+  Do NOT invent /hl/v2 paths for them (no v2 backend exists) — keep real /software/v1 /saas/v1 /credit/v1
+  base paths. The existing V1 pages are the source-accurate baseline; mirror content, adapt only the
+  V2 page STYLE (skeleton/components), never the path/method/envelope.
+
+### Gap endpoints that DO have a real /hl/v2 mapping (task-043)
+- product/search: V1 GET /hl/v1/product?search= -> V2 GET /hl/v2/products?search= (routes.js:120
+  paymentlink.allPaymentlink already accepts `search` query; task-009 inventory confirms search? param).
+  Author as a focused search variant of the existing products-list page: V2 envelope {statusCode,
+  messages,data} PLURAL + cursor pagination (limit/startingAfter + hasMore/nextStartingAfter).
+- reqpayment/filter: V1 GET /hl/v1/payment?status= -> V2 GET /hl/v2/payments?status= (routes.js:92
+  requestPayment.allPayment; the existing V2 payments list page covers it — filter page = status-query
+  emphasis). V2 plural `messages` + cursor pagination.
+- invoice close/reopen & reqpayment close/reopen: NO dedicated /hl/v2 route. api/v2 invoices =
+  list/filter/create/detail/update ONLY (no status toggle). Payments HAVE POST /hl/v2/payments/:uuId/:action
+  (paymentlink.actPaymentlink, action open|close) so reqpayment close/reopen MAP to that action toggle.
+  Invoices have NO v2 status-toggle -> task-043 decision: document invoice changestatus at its real
+  /hl/v1/invoice/{close,open}/{id} path under the V2 tab for coverage completeness (flag as v1-path,
+  no v2 equivalent), OR omit. Recorded for the design call in task-043.
+
+### Leak guard (unchanged, still enforced on published .mdx)
+- No internal identifiers in any api-reference-v2/**.mdx: handler/controller/function names
+  (verifyLicenseCode, updateStatusLicenseCode, getCustomerBalanceController, handleRegist*, etc.),
+  verifyAuth/verifyMembershipAuthor/checkJwt, @mayarid/* packages, GraphQL query names, redis/scylla,
+  service module paths. Sourcing identifiers live ONLY here in progress.txt.
+- Recon/notes-only task: writes ONLY .jonggrang/progress.txt (never committed to the feature branch) —
+  nothing to commit. Authoring mode for tasks 043-049 = SOURCE-AUTHORITATIVE with the guards above.
+
+
+## task-043 (v1-coverage-into-api-v2-reference) — Phase 3 gap pages part 1 — DONE 2026-07-03
+- Authored 3 pages (source-authoritative, mode from task-042): product/search.mdx,
+  invoice/changestatus.mdx, reqpayment/filter.mdx. All plural `messages` (non-membership).
+- product/search: V1 dedicated search route is FOLDED into GET /hl/v2/products via `search` query
+  param (confirmed api/v2/routes.js:120 paymentlink.allPaymentlink + existing productpage.mdx already
+  documents the `search` param). No separate /products/search path exists — page documents the search
+  query on the products list, cursor-paginated. Response shape mirrors productpage.mdx (source-accurate).
+- reqpayment/filter: V1 GET /hl/v1/payment?status= -> V2 GET /hl/v2/payments?status= (routes.js:92
+  requestPayment.allPayment). Folded into the payments list `status` query; no /payments/filter path.
+  Response shape mirrors reqpayment/index.mdx.
+- invoice/changestatus DECISION (task allowed either changestatus OR close/reopen split, note here):
+  Chose a SINGLE changestatus page. Source shows V1 had GET /hl/v1/invoice/{action}/{uuId} routed to
+  the SHARED paymentlink.actPaymentlink handler (same handler as product & payment toggles). In V2
+  (api/v2/routes.js) the /invoices/{action} alias was DROPPED — only POST /hl/v2/products/{uuId}/{action}
+  and POST /hl/v2/payments/{uuId}/{action} remain, both -> actPaymentlink. So the source-honest V2 way to
+  open/close an invoice is POST /hl/v2/products/{id}/{action} with action open(->active)/close(->closed).
+  I did NOT invent a fictional /hl/v2/invoices/{id}/{action} route. The page documents the real products
+  toggle URL + a Note that invoices/payments/products share one status-toggle endpoint. actPaymentlink
+  authoritative: action open->active, close->closed, allowed[active,closed,unlisted]; success
+  {statusCode:200, messages:"success"} (NO data); 400 "<action>. allowed: active, closed, unlisted";
+  404 "Product not found". All PLURAL messages.
+- Validation: frontmatter OK, fences even, JSON blocks parse, JSX tags balanced, leak-grep CLEAN
+  (no handler/module/graphql/redis identifiers), no real PII (synthetic testingmayar.myr.id tenant +
+  published-style UUIDs, consistent with existing V2 pages — chose V2-tab consistency over the task's
+  korban-motivator example hint; both synthetic). Did NOT wire docs.json (task-048).
+- Committed the 3 .mdx pages only (progress.txt not committed per convention).
+
+
+## task-044 (v1-coverage) — Phase 3 licensecode group — DONE 2026-07-03
+- Authored api-reference-v2/licensecode/verifylicense.mdx (POST /software/v1/license/verify).
+- SOURCE-AUTHORITATIVE (api-software/src/api/license-code.js + src/utils/index.js). Only ONE license
+  route exists in api-software (POST /v1/license/verify) — no apply/activate here (activate/deactivate
+  belong to the SAAS service, task-045). Kept REAL base /software/v1 (dedicated service, NOT /hl/v2).
+- Envelope is the service's OWN: success {statusCode, isLicenseActive:Boolean(status==="ACTIVE"),
+  licenseCode:{licenseCode,status,expiredAt(ISO|"Tidak terbatas"),transactionId,productId,customerId,
+  customerName,customerEmail,activationLimit,useCount,createdAt,updatedAt}} — NO messages/data wrapper.
+  Errors SINGULAR `message`: 400 "There's no license with code <code> and product id <id> registered in
+  user <email>." (also missing-field 400). status enum ACTIVE|INACTIVE|EXPIRED|DISABLED (from source
+  comment). useCount increments per verify; hits activationLimit -> INACTIVE.
+- Corrected a V1-page bug: V1 used <ParamField path=> for RESPONSE fields; V2 page uses <ResponseField>.
+  Added the 400 error case (V1 omitted it). Synthetic customer (Budi Santoso/budi.santoso@example.com).
+- Validation: fm ok, fences even, 2 json blocks parse, tags balanced, leak-grep clean. Committed .mdx only.
+
+
+## task-045 (v1-coverage) — Phase 3 SaaS Membership group — DONE 2026-07-03
+- Authored saas/{verify,activate,deactivate}.mdx (POST /saas/v1/license/{verify,activate,deactivate}).
+  SOURCE-AUTHORITATIVE (api-saas/src/api/license-code.js + src/utils/index.js). Kept REAL /saas/v1 base
+  (dedicated service, NOT /hl/v2). All SINGULAR `message`.
+- verify: success = saas successPayloadResponse -> {statusCode, isLicenseActive:Boolean((status ISSUED|
+  ACTIVE) && membershipCustomer.status==="active"), memberStatus:<upper membership status>,
+  licenseCode:{licenseCode,status,expiredAt(from membershipCustomer.nextPayment ISO|"Tidak terbatas"),
+  transactionId,productId,customerId,customerName,customerEmail,createdAt,updatedAt,membershipTierId,
+  membershipTierName,memberPaymentLink}}. 400 "There's no subscription license with code <code> and
+  product id <id> registered in user <email>." + missing-field 400.
+  SOURCE CORRECTION vs V1 page: the SaaS builder OMITS activationLimit & useCount (V1 page wrongly
+  showed them — copied from the software builder) and ADDS root memberStatus + memberPaymentLink.
+  Authored the corrected shape; noted here.
+- activate/deactivate: SAME handler updateStatusLicenseCode; statusType from URL
+  (/activate->ACTIVE, /deactivate->INACTIVE). Success {statusCode:200, message:"Success updating license
+  code status to ACTIVE."/"...INACTIVE."}. Errors (all singular message): 400 "License code <code> has
+  already active."/"...inactive." (already in target status), 400 no-license, 400 "Failed when
+  identifying request. Destination status unknown." (routing guard), missing-field 400.
+  SOURCE CORRECTION vs V1: V1 activate/deactivate Response used <ResponseField name="messages"> (plural)
+  but the service returns singular `message` — corrected to `message`.
+- Validation: all 3 pages fm ok / fences even / json parse / tags balanced / leak-grep clean / synthetic
+  PII. Committed 3 .mdx only.
+
+
+## task-046 + task-047 (v1-coverage) — Phase 3 credit groups (usage-based + credit-based) — DONE 2026-07-03
+- SOURCE-AUTHORITATIVE from api-credit/src/controller/credit.controller.js (master). Both groups hit the
+  SAME api-credit service, base /credit/v1 (NOT /hl/v2). Authored via 2 parallel subagents with exhaustive
+  per-endpoint shape specs; I validated + committed each task separately.
+- task-046 usagebasedmembership/ (5): customerbalance, spendcustomercredit, addcustomercredit,
+  paginatecustomercredithistory, registnewmembershipcustomer. MEMBERSHIP context (productId+
+  membershipTierId+memberId/customerId).
+- task-047 creditbasedproduct/ (6): customerbalance, spendcustomercredit, addcustomercredit,
+  paginatecustomercredithistory, registernewcustomer, generateimmutablecheckoutlink. PRODUCT context
+  (credit_usage_product: customerId+productId, NO membershipTierId).
+- ENVELOPE (confirmed from source, applied to all 11): success {statusCode:200, message:"success",
+  data:{...}} SINGULAR message + DATA-WRAPPED; validation error {statusCode:400, messages:"Validation
+  Error", data:[...]} PLURAL messages; 500 {statusCode:500, message}.
+- KEY SOURCE CORRECTIONS vs the V1 pages (V1 was outdated/mislabelled — this is the "corrected" value-add):
+  * V1 showed responses FLAT; master DATA-WRAPS everything in `data` (confirmed on balance L139/159,
+    add-credit L385, regist L858, checkout L929). V2 pages use the data-wrapped master shape.
+  * V1 <ResponseField name="messages"> (plural) on successes though the JSON shows singular "message" —
+    corrected to `message`.
+  * balance endpoint returns DIFFERENT data by product type: membership path -> customerBalance,
+    customerBalanceMembership, customerBalanceAddon, customerEmail/Name/Mobile, status, nextPayment(ISO),
+    expiredAt(ISO), + spread member fields; credit_usage_product path -> customerBalance,
+    customerBalanceMain, customerBalanceAddon ONLY. Documented per group.
+  * paginate uses PAGE-based pagination {total,page,limit,totalPages,data[]} (NOT cursor); item =
+    {id,createdAt(ISO),credit,debit,...meta(productId,status,membershipTierId?,customerId,merchantId,
+    walletType,type,referenceId)}. V1 showed `amount`; master uses ledger credit/debit.
+  * spend success is a SENTENCE message: "Successfully spent <amt>. MEMBERSHIP: x, ADD_ON: y" (membership)
+    / "...MAIN: x, ADD_ON: y" (product); 400 "Cannot spend customer credit. Insufficient customer credit".
+  * checkout field names VERIFIED from source L929-935: data{creditUsageImmutableCheckoutUrl, paymentLinkUrl}
+    (credit_usage branch). regist errors: 400 "You are not authorized to edit this product!",
+    "Email sudah terdaftar pada tier ini." (membership) / "...pada product ini." (product).
+- Validation: all 11 fm ok / fences even (10 each) / 2 json blocks parse / tags balanced / broad leak-grep
+  CLEAN (no controller/middleware/@mayarid/redis/medici/req.inputs) / synthetic PII (Budi Santoso). Kept
+  real /credit/v1 base. Committed 046 (usagebasedmembership) and 047 (creditbasedproduct) as 2 commits.
+
+
+## task-048 (v1-coverage) — Phase 4 wire docs.json nav — DONE 2026-07-03
+- Wired all 18 new gap pages into navigation.tabs[2] ("API V2 Reference"). tabs[0]/tabs[1] untouched.
+  * product/search -> appended into Products&payment-links > Product subgroup (after productpagewithfilter).
+  * invoice/changestatus -> appended to Invoice group.
+  * reqpayment/filter -> appended to Payments group.
+  * 4 NEW groups inserted between Webhook and Reviews (mirroring V1 tab order): "Software License Code"
+    (1 pg), "Membership (SaaS)" (3), "Usage-Based Membership" (5), "Credit Based Product" (6). Group page
+    order mirrors the V1 tab.
+- python3 -m json.tool docs.json -> exit 0 (valid). Nav<->file resolution: 90 nav entries == 90 disk
+  .mdx, 0 missing / 0 orphan / 0 dupes; every new page referenced exactly once.
+- Structural gate (validate-v2-docs.py C1-C8) GREEN: 90 pages, 112 json blocks, leak-clean, C8 V1
+  unchanged. Committed docs.json only.
+- KNOWN / DEFERRED to task-052: the DOMAIN suite (domain-compliance-v2-docs.py D1/D4/D5) FAILS on the
+  new licensecode/saas/usagebasedmembership/creditbasedproduct pages — but these are NOT page defects.
+  D1 asserts every endpoint page has api.mayar.id/hl/v2 + api.mayar.club/hl/v2 base URLs; D4 asserts a
+  RequestExample curl hitting /hl/v2; D5 asserts the exactly-one-of(message|messages) /hl/v2 envelope.
+  Those assumptions are WRONG for the standalone services: license/saas correctly use /software/v1 &
+  /saas/v1 with an isLicenseActive/singular-message envelope; credit uses /credit/v1 with a data-wrapped
+  singular-message (+ plural-messages validation) envelope. The gate must become base-URL-aware
+  (exempt non-/hl/v2 service pages from D1/D4 and treat their envelopes per-service in D5). Reconcile the
+  gate in task-052. Structural integrity + nav are proven green now.
+
+
+## task-049 (v1-coverage) — Phase 5 accuracy sweep part 1 — DONE 2026-07-03
+- Groups swept: API documentation (3), Products & payment links (product/genericlink/digitalproduct/
+  webinar/event = 16 incl. new product/search), Invoice (6 incl. new changestatus), Payments/reqpayment
+  (7 incl. new filter). 32 pages scanned.
+- Automated + spot checks, ALL CLEAN — no corrections required:
+  * base URLs: every endpoint page has both api.mayar.id/hl/v2 + api.mayar.club/hl/v2; NO /hl/v1 residue.
+  * envelope key: 0 pages use singular "message" JSON key (correct — all non-membership /hl/v2 endpoints
+    use PLURAL messages). Verified programmatically.
+  * pagination: NO V1 residue (pageSize/pageCount/totalItem/currentPage/"page"/totalPages); list pages
+    (productpage, productpagewithfilter, invoice/index, reqpayment/index) carry hasMore + nextStartingAfter.
+  * leaks: none. Only grep hit was the page slug `editpaymentlink` (frontmatter + doc link) = URL slug,
+    not the source handler; false positive.
+  * PII: no real emails/phones (only synthetic example.com / testingmayar.myr.id / media.mayar.id).
+  * fields: spot-checked product/detail vs source detailPaymentlink -> field set matches.
+- Pages were source-verified in the api-v2-reference-docs feature and pass the structural gate; sweep
+  re-confirms accuracy. No .mdx edits needed -> nothing to commit. Exhaustive per-field live-API audit
+  remains an optional non-gating human-verification item.
+
+
+## task-050 (v1-coverage) — Phase 5 accuracy sweep part 2 — DONE 2026-07-03
+- Groups: Transaction (3), Customer (5), Membership (7), QR/Payment Channels (3), Balances (1),
+  Installment (3) = 22 pages. ALL CLEAN, no corrections:
+  * no /hl/v1 residue, no V1 pagination residue, no internal-identifier leaks.
+  * membership envelope quirk EXACTLY correct: reads (tiers/members/memberdetail) = PLURAL messages;
+    writes (register/update/createinvoice/cancel) = SINGULAR message. Verified per page.
+  * membership bill URL synthetic + correct shape: https://testingmayar.mayar.shop/pl/<link>.
+  * Customer group (PII-dense) PII all synthetic: Budi Santoso/Siti Aminah/Andi Pratama, @example.com,
+    08xx synthetic mobiles; merchant strings synthetic (Toko Mayar Demo / merchant@example.com).
+- No .mdx edits needed -> nothing to commit.
+
+## task-051 (v1-coverage) — Phase 5 accuracy sweep part 3 — DONE 2026-07-03
+- Groups: Discount & Coupon (4), Bundling (2), Name Services (2), Webhook (5), Reviews (8) = 21 pages.
+  ALL CLEAN, no corrections:
+  * no /hl/v1 residue (2 "page/pageSize" grep hits are MAINTAINER COMMENTS stating the page does NOT use
+    V1 pagination — intentional, in reviews/getallreviews + webhook/history); no leaks; no real PII.
+  * envelope: reviews pages' singular "message" is the REVIEW CONTENT field (source: message:review.message
+    / input.message), NOT the envelope key — verified against api/v2/review.js which uses PLURAL `messages`
+    for the envelope throughout (success + all error strings). No drift.
+  * Name Services paths reconciled vs source routes.js: /hl/v2/name-services/create + /hl/v2/name-services/
+    update (POST) — pages match exactly.
+- No .mdx edits needed -> nothing to commit.
+
+
+## task-053 (api-v2-reference-mr3501-sync) — Phase 1 branch & GREEN baseline — DONE 2026-07-04
+- Working branch: feat/api-v2-reference-mr3501-sync. Jonggrang pre-created the worktree branch at
+  3e3abd4 (main merge "PR #10 …api-v2-reference-docs", 72 pages) — the WRONG base. It had NO unique
+  commits (strict ancestor of feat/v1-coverage-into-api-v2-reference tip 5002062), so I fast-forwarded
+  it onto v1-coverage (git merge --ff-only) — equivalent to `checkout v1-coverage; checkout -b sync`.
+  HEAD now 5002062; `git merge-base --is-ancestor v1-coverage HEAD` == YES (descends from v1-coverage).
+  * NON-DESTRUCTIVE: working-tree .jonggrang/progress.txt was +301 lines ahead of v1-coverage (pure
+    append, tasks 028–052 full-parity learnings). Backed it up, `git checkout HEAD -- .jonggrang` to
+    clean tracked paths for the FF, ran FF, then restored the 1659-line superset. NO reset --hard (would
+    have destroyed those learnings). FF also restored the gate scripts + 18 gap pages + docs.json nav.
+- (b) Page tree carried over: `find api-reference-v2 -name '*.mdx' | wc -l` == 90 (72 → 90, +18 gap
+  pages: creditbasedproduct 6, licensecode 1, saas 3, usagebasedmembership 5, + product/search,
+  invoice/changestatus, reqpayment/filter). docs.json tabs == ['Guides','API V1 Reference',
+  'API V2 Reference']. V2 tab = 19 groups incl. all four external-service groups: Software License Code,
+  Membership (SaaS), Usage-Based Membership, Credit Based Product. C8 re-proves V1 tab unchanged vs main.
+- (c) `python3 -m json.tool docs.json` exit 0 (valid JSON).
+- (d) BASELINE gate result (bash .../validate-v2-docs.sh) == FAIL exit 1, EXACTLY the known state per
+  task-048/052:
+    * Structural suite C1-C8: PASS 8/8. 90 pages, nav<->file 1:1 (0 missing/orphan), 112 json blocks,
+      leak-grep clean, V1 tab unchanged.
+    * Domain suite: D2/D3/D6/D7 PASS on all 87 endpoint pages. D1/D4/D5 FAIL = 47 issues on the 15
+      non-/hl/v2 external-service pages ONLY (6 creditbasedproduct + 1 licensecode + 3 saas +
+      5 usagebasedmembership). D1 wants prod+sandbox api.mayar.id|club/hl/v2; D4 wants a /hl/v2 curl;
+      D5 wants exactly-one-of(message|messages). These services CORRECTLY use /credit/v1, /software/v1,
+      /saas/v1 with isLicenseActive / data-wrapped envelopes — so these are GATE false-positives, NOT
+      page defects. Still the state task-052 flagged for reconciliation (make gate base-URL-aware).
+- No .mdx/docs.json authored or edited this task (branch/baseline only, per acceptance). progress.txt is
+  jonggrang state (never committed to the feature branch), so this task produces NO code commit.
+
+## task-054 — Source recon: api-custom-paymenlink /v2 routing from MR !3501 branch — DONE 2026-07-04
+
+### Source of truth (via glab; mayarid/source = project id 20099162)
+- MR !3501 "mirroring route V2 from V1 api"; state opened; target master; head sha ce33ee2f.
+  Source branch: feat/api-custom-paymenlink-v2-routing (the MR head — read this, NOT master).
+- Files read raw @ ref feat/api-custom-paymenlink-v2-routing (URL-encoded ref, Files API):
+    api-custom-paymenlink/index.js                 (94 lines)
+    api-custom-paymenlink/api/v2/routes.js         (158 lines) — the RESTful /v2 router
+    api-custom-paymenlink/api/v1/routes.js         (118 lines) — the v1 router (now ALSO mounted at /v2)
+    api-custom-paymenlink/api/v1/{utils,customer,paymentlink,invoices,transactions,request-payment,
+      discount,cicilan,webhook,review,membership,powerUpStore,payme}.js — for envelope/param confirmation
+- Internal identifiers (handler/module/function/query names) below are SOURCING NOTES ONLY. They must
+  NOT appear in any published api-reference-v2/** page (leak-grep guard).
+
+### THE MR IN ONE LINE — routes.js is UNCHANGED; the only change is a v1→/v2 mirror mount
+- `diff` of api/v2/routes.js between master and this branch = IDENTICAL (0 changes). So the RESTful /v2
+  router is byte-for-byte the same 71-endpoint surface already inventoried in task-009 and already
+  authored in api-reference-v2/**. Those 71 endpoints are ALL **UNCHANGED**.
+- The ENTIRE functional delta of MR !3501 for api-custom-paymenlink is ONE added line in index.js:
+      app.use("/v1", apiV1);      // unchanged
+      app.use("/v2", apiV2);      // unchanged — RESTful v2 router, keeps precedence
+      app.use("/v2", apiV1);      // <-- ADDED: mirror EVERY v1 endpoint under /v2 (fallback)
+  Comment in source: "Mirror every v1 endpoint under /v2 (same controllers/middleware, v1 untouched).
+  Mounted after apiV2 so the RESTful v2 routes keep precedence; the v1 router (singular paths) serves
+  any /v2 path apiV2 does not define." (Single diff hunk; nothing else in index.js changed.)
+- MECHANISM / precedence: apiV2 is mounted at /v2 FIRST. For any `/v2/<path>`, Express tries apiV2; if
+  apiV2 fully matches (method+path) it wins; otherwise it falls through to apiV1 mounted at /v2, which
+  serves the v1 (singular-path) route. => the mirror surface = the whole v1 route table, re-exposed at
+  /hl/v2/<v1-path>, EXCEPT where a v2 route already owns that exact method+path.
+
+### Envelope quirk on the mirrored surface — PLURAL `messages` (with the same 429 exception as v2)
+- All v1 handlers emit PLURAL `messages` for reads, writes, AND errors (checkJwt 401/403/404 + the
+  returnJSON/cursor helpers all use `messages`). Confirmed by key-count across all 13 v1 handler files.
+- ONLY singular-`message` envelope on the v1 surface: the 429 "Duplicate request detected. Please wait
+  1 minute before trying again." on invoice-create and payment-create (identical to the v2 quirk noted
+  in task-009). The other singular `message:` hits in review.js are DATA fields (a review's own text),
+  not envelope keys.
+- NET: for the mirrored /v2 pages, envelope = **messages** everywhere (matches the whole non-membership
+  v2 surface). The singular-`message` writes remain ONLY the 4 RESTful v2 membership writes — which have
+  NO v1 twin, so the mirror does not touch them.
+
+### EXACT collisions — 5 v1 routes SHADOWED by identical v2 routes (mirror unreachable / no new surface)
+  (computed via `comm -12` of method+path sets; v2 wins by precedence; handlers are the same anyway)
+    GET  /transactions            (v2 owns it — same handler family)
+    GET  /transactions/unpaid     (v2 owns it)
+    GET  /transactions/daily      (v2 owns it)
+    GET  /reviews                 (v2 owns it)
+    POST /reviews/create          (v2 owns it)
+  => classify these as UNCHANGED/SHADOWED: no distinct mirror endpoint results.
+- No v2 PARAM route accidentally shadows any v1 mirror: v1 uses SINGULAR nouns (/customer, /product,
+  /invoice, /payment, /membership, /coupon, /installment, /webhook, /qrcode, /nameservice, /paymentlink)
+  while v2 uses PLURAL RESTful nouns (/customers, /products, ... /qr-codes, /name-services). The only
+  overlaps are the 5 exact matches above. Clean split — verified.
+
+### (b) v1 endpoints NOW MIRRORED under /v2 — 55 merchant-API routes (all NEW vs current api-reference-v2/**)
+  Computed via `comm -23` of method+path sets = 63 v1-only routes; minus 8 infra/storefront (below) = 55.
+  Paths are the suffix under /hl/v2. Envelope = `messages` (plural) unless noted. Every one is NEW vs the
+  current docs (no existing v2 page documents a singular-path route). Each maps to an already-documented
+  RESTful v2 twin (shown as "≙ <v2 path>") UNLESS flagged NO-V2-TWIN.
+
+  — QR / payment-channels (2) [group: qrcode]
+    POST /qrcode/create                 body: amount            ≙ /qr-codes/create
+    GET  /qrcode/static                 no params               ≙ /qr-codes/static
+
+  — Customers (5) [group: customer]
+    GET  /customer                      cursor list (paymentLinkId?,startAt?,endAt?,limit,startingAfter) ≙ /customers
+    GET  /customer/detail               query email(req)        ≙ /customers/detail
+    POST /customer/create               body CUSTOMER schema    ≙ /customers/create
+    POST /customer/update               body UPDATE_CUSTOMER (fromEmail,toEmail,...)  ≙ /customers/:uuId/update
+                                          NOTE: v1 mirror has NO :uuId segment (body-only); v2 twin adds :uuId.
+    POST /customer/login/portal         body email(req)         ≙ /customers/portal-login
+
+  — Memberships — legacy reads ONLY (2) [group: membership]
+    GET  /membership/:uuId              path uuId(=productId); query limit,startingAfter  ≙ /memberships/:uuId/tiers
+    GET  /membership-member-detail/:uuId path uuId; query memberId  ≙ /memberships/:uuId/members
+    NOTE: the 7 RESTful v2 membership endpoints (/memberships/tiers, /memberships/members[/*],
+    /memberships/members/create|:memberId/update|invoice/create|cancel) are v2-NATIVE — they have NO v1
+    route, so the mirror adds nothing there. Singular-`message` writes stay v2-only, untouched.
+
+  — Name-services (2) [group: nameservice]
+    POST /nameservice/create            body name(req),payload,description?,website?,amount?,urlHook?,image?  ≙ /name-services/create
+    POST /nameservice/edit              body id(req,BODY),name,payload,...  ≙ /name-services/update
+
+  — Installments (3) [group: installment]
+    POST /installment/create            body email,mobile,name,amount,installment{...}  ≙ /installments/create
+    GET  /installment                   query status?,customerId?,limit,startingAfter   ≙ /installments
+    GET  /installment/:uuId             path uuId               ≙ /installments/:uuId
+
+  — Coupons / Discount (4) [group: discount]
+    POST /coupon/create                 body name,discount{...},coupon{...},products[]  ≙ /coupons/create
+    GET  /coupon/:uuId                  path uuId               ≙ /coupons/:uuId
+    POST /coupon/validate               body couponCode,paymentLinkId?,amount?,...       ≙ /coupons/validate
+    POST /coupon/check                  body couponCode         ≙ /coupons/check
+
+  — Payments / request-payment (5) [group: reqpayment]
+    POST /payment/create                body name,amount(req),email?,mobile?,...          ≙ /payments/create
+    GET  /payment                       cursor list (status?,limit,startingAfter)         ≙ /payments
+    POST /payment/edit                  body id(req,BODY),amount,...  ≙ /payments/:uuId/update
+                                          NOTE: v1 mirror is body-id (no :uuId path); v2 twin has :uuId (also body-id).
+    GET  /payment/:action/:uuId         path action,uuId — GET-based status toggle  ≙ POST /payments/:uuId/:action
+                                          NOTE: METHOD differs (v1 mirror is GET; v2 twin is POST) + action-first path.
+    GET  /payment/:uuId                 path uuId — payment/product detail  ≙ /payments/:uuId
+
+  — Balances (1) [group: balance]
+    GET  /balance                       no params; data{balanceActive,balancePending,balance}  ≙ /balances
+
+  — Invoices (6) [group: invoice]
+    GET  /invoice/filter                query email(req)+status?+search?+limit+startingAfter  ≙ /invoices/filter
+    GET  /invoice/:action/:uuId         path action,uuId — GET-based invoice status toggle    ≙ NO-V2-TWIN
+                                          FLAG: the RESTful v2 router has NO invoice status-toggle route; this mirror
+                                          ADDS invoice open/close under /v2 that the v2 surface never had. NEW capability.
+    GET  /invoice/:uuId                 path uuId — invoice detail  ≙ /invoices/:uuId
+    POST /invoice/edit                  body id(req,BODY),items[],...; 409 "already paid"  ≙ /invoices/:uuId/update
+    POST /invoice/create                body name,email,mobile,items[{description,quantity,rate}],...;
+                                          429 dup = SINGULAR message  ≙ /invoices/create
+    GET  /invoice                       cursor list (status?,search?,limit,startingAfter)  ≙ /invoices
+
+  — Products & payment links (15) [group: product/genericlink/webinar/event/digitalproduct]
+    GET  /product                       cursor list (search?,type?,stock?,limit,startingAfter)  ≙ /products
+    GET  /product/type/:type            path type; cursor list  ≙ /products/types/:type
+    GET  /product/:action/:uuId         path action,uuId — GET-based product status toggle  ≙ POST /products/:uuId/:action
+                                          NOTE: METHOD differs (GET vs POST) + action-first path order.
+    GET  /product/:uuId                 path uuId — product detail  ≙ /products/:uuId
+    POST /product                       body name(req),amount,... (generic_link)  ≙ /products/create
+    POST /product/paymentlink/create    (same handler/body as /product)  ≙ /products/payment-link/create
+    POST /product/webinar/create        body PAYMENTLINK (webinar)  ≙ /products/webinar/create
+    POST /product/event/create          body PAYMENTLINK+event{...}  ≙ /products/event/create
+    POST /product/digital-product/create body PAYMENTLINK (digital_product)  ≙ /products/digital-product/create
+    POST /product/paymentlink/edit      body id(req,BODY)  ≙ /products/payment-link/:uuId/update
+    POST /product/webinar/edit          body id(req,BODY)  ≙ /products/webinar/:uuId/update
+    POST /product/event/edit            body id(req,BODY)  ≙ /products/event/:uuId/update
+    POST /product/digital-product/edit  body id(req,BODY)  ≙ /products/digital-product/:uuId/update
+    POST /paymentlink/edit              body id(req,BODY)  ≙ /payment-links/:uuId/update
+    POST /paymentlink/sort/:type        path type — POST-but-returns cursor list  ≙ /payment-links/sort/:type
+    NOTE: the 4 v1 edit mirrors + /paymentlink/edit all read the id from BODY (the :uuId is not even in
+    the v1 path) — same edit-by-body-id quirk as the v2 twins.
+
+  — Webhooks (4) [group: webhook]
+    GET  /webhook/history               query status?,type?,...,limit,startingAfter  ≙ /webhooks/history
+    POST /webhook/register              body urlHook(req)      ≙ /webhooks/update  BUT DIFFERENT HANDLER
+                                          FLAG: v1 mirror uses the v1 webhook.register handler; the v2 twin
+                                          /webhooks/update uses a different handler (updateUrl). Behavior/validation
+                                          may differ — verify before treating them as identical.
+    POST /webhook/test                  body urlHook(req)      ≙ /webhooks/test
+    POST /webhook/retry                 body webhookHistoryId  ≙ /webhooks/retry
+    NOTE: v2-native GET /webhooks/new-history has NO v1 twin — mirror adds nothing there.
+
+  — Reviews (6) [group: reviews]
+    GET  /reviews/product/:paymentLinkId        path paymentLinkId; query rating?,prioritizeMessage?,limit,startingAfter  ≙ /products/:paymentLinkId/reviews
+    GET  /reviews/product/:paymentLinkId/stats  path paymentLinkId  ≙ /products/:paymentLinkId/reviews/stats
+    GET  /reviews/customer/:customerId          path customerId  ≙ /products/:paymentLinkId/reviews/customer
+                                          NOTE: v1 mirror keys off :customerId in PATH; v2 twin uses query customerId
+                                          under a product path. Different addressing shape.
+    GET  /reviews/merchant/:userId/stats        path userId  ≙ /reviews/stats
+                                          NOTE: v1 mirror takes :userId in PATH; v2 twin /reviews/stats derives the
+                                          merchant from JWT (no userId segment). Different addressing shape.
+    POST /reviews/edit                          body id(req,BODY),paymentLinkId,customerEmail,rating?,...  ≙ /reviews/:uuId/update
+    POST /reviews/bulk-status                   body input:[{id,paymentLinkId,status}]  ≙ /reviews/bulk-status/update
+
+### EXCLUDED from the documented merchant surface (reachable under /v2 via the mirror, but NOT public API)
+  These 8 v1-only routes are also now served under /v2, but are infra/storefront, not the merchant REST
+  API — do NOT document (and several have NO checkJwt):
+    GET  /uptime                         health check (no auth)
+    /images                              express.static mount (not a METHOD route)
+    GET  /cart / POST /cart/add / POST /cart/update / POST /cart/remove / POST /checkout
+                                          storefront cart+checkout (NO checkJwt — public storefront flow)
+    GET  /email/unsub/:uid  /  POST /email/bounce   email/postal infra
+- MCP routes STILL EXPLICITLY EXCLUDED per Out of Scope: /v2/customer-detail, /v2/unpaid-transactions,
+  /v2/product-members are app-level app.get() routes in index.js (mounted AFTER the mirror). The v1
+  mirror has no colliding path, so they still resolve to their MCP handlers. Not documented, as before.
+
+### CLASSIFICATION SUMMARY (api-custom-paymenlink /v2, MR !3501)
+- UNCHANGED: 71 RESTful /v2 endpoints (routes.js identical to master; = task-009 inventory; already
+  authored in api-reference-v2/**). Plus 5 v1 routes SHADOWED by identical v2 routes (no new surface).
+- NEW (structural): 1 line — `app.use("/v2", apiV1)`. No new RESTful route DEFINITIONS were added.
+- MIRRORED (v1→/v2, all NEW vs current docs): 55 merchant-API endpoints (table above), each a legacy
+  singular-path twin of an already-documented RESTful v2 endpoint. Envelope = `messages` (plural), with
+  the invoice/payment-create 429 singular-`message` exception. 2 flagged NO-direct-V2-twin capabilities
+  (GET /invoice/:action/:uuId invoice status-toggle; and GET-based product/payment status toggles differ
+  in METHOD from their POST v2 twins) + 1 flagged different-handler (POST /webhook/register vs
+  /webhooks/update). 3 flagged different-addressing (customer/update body-only; reviews customer/merchant
+  path-vs-query/JWT).
+- EXCLUDED: 8 infra/storefront v1 routes (uptime/images/cart/checkout/email) + the 3 MCP routes.
+
+### DOCS DECISION (for downstream authoring tasks — NOT decided here)
+- The 55 mirrors are functional duplicates of pages that ALREADY exist in api-reference-v2/** (just at the
+  legacy singular path). Whether to (a) author 55 new pages, (b) add an "also available at <v1 path>"
+  note to each existing v2 page, or (c) document the mirror once in the introduction, is an authoring
+  decision for a later task. This recon records the full inventory + classification; it does not author.
+
+### Acceptance / commit
+- Per-group api-custom-paymenlink /v2 inventory complete: method/path/params/envelope-key + NEW/MIRRORED/
+  UNCHANGED, sourced from the MR !3501 head branch (routes.js == master; mirror = app.use("/v2", apiV1)).
+  MCP routes explicitly excluded. Recon/notes-only task: writes ONLY .jonggrang/progress.txt (never
+  committed to the feature branch per CLAUDE.md) — NOTHING to commit.
+
+## task-055 — Source recon: api-credit, api-saas & api-software from MR !3501 branch — DONE 2026-07-04
+
+### Source of truth (via glab; mayarid/source = project id 20099162)
+- MR !3501 "mirroring route V2 from V1 api"; state opened; target master; head sha ce33ee2f.
+  Source branch: feat/api-custom-paymenlink-v2-routing (MR head — read this, NOT master). NO fallback to
+  master was needed: ALL THREE services ARE touched on the MR branch (see changed-files below).
+- MR changed files touching these services (the ONLY changes): api-credit/index.js, api-saas/index.js,
+  api-software/index.js — each is a pure ADDITION of `/v2/...` mirror routes (new_file=false, deleted=false).
+- Controllers/handlers/structs/gql are BYTE-IDENTICAL to master on the branch (md5 verified):
+    api-credit/src/controller/credit.controller.js  IDENTICAL
+    api-saas/src/api/license-code.js                 IDENTICAL
+    api-software/src/api/license-code.js             IDENTICAL
+    api-software/src/struct/license-code.js          IDENTICAL
+    api-credit/gql/*                                 UNCHANGED (not in MR diff)
+  => The full param/envelope recon from tasks 042/044/045/046/047 STILL HOLDS verbatim. The v2 mirrors use
+  the SAME controller functions as v1 (same params, same auth, same envelope) — the ONLY delta is the base
+  path prefix v1 -> v2.
+- Internal identifiers (controller/handler names) below are SOURCING NOTES ONLY — must NOT appear in any
+  published api-reference-v2/** page (leak-grep guard). ESPECIALLY no GraphQL query names.
+
+### THE MR IN ONE LINE (for these 3 services) — explicit `/v2/...` mirror mounts, same controllers
+- UNLIKE api-custom-paymenlink (task-054), which mirrored via `app.use("/v2", apiV1)`, each of these 3
+  services adds EXPLICIT `app.<method>("/v2/...", <same middleware>, <same controller>)` lines. The v1
+  routes are UNTOUCHED (only additions). Public gateway mount prefix (/credit, /saas, /software) is applied
+  outside index.js (confirmed by existing published pages: https://api.mayar.id/credit/v1/... etc.), so the
+  NEW public bases are:  /credit/v2 , /saas/v2 , /software/v2  (do NOT fabricate /hl/v2 — no /hl backend).
+
+### ENVELOPE KEYS (unchanged from master recon — controllers identical)
+- api-credit  (MIXED): success {statusCode:200, message:"success", data:{...}} SINGULAR message + DATA-WRAPPED;
+  validation error {statusCode:400, messages:"Validation Error", data:[...]} PLURAL messages (task-047 quirk);
+  500 {statusCode:500, message:<err>} SINGULAR.
+- api-saas / api-software license: SINGULAR `message` throughout (verify success = payload wrapper with
+  isLicenseActive + licenseCode{...}, NO messages/data envelope; activate/deactivate success
+  {statusCode:200, message:"Success updating license code status to <STATUS>."}; errors singular `message`).
+
+=========================== PER-SERVICE ENDPOINT MAP (MR !3501 branch) ===========================
+Legend: base = REAL public base. Envelope per service above. "v1 (current pages)" = what the existing
+api-reference-v2 page documents; "v2 mirror" = the route ADDED by MR !3501.
+
+— api-credit  (index.js: v1 = 8 routes, v2 mirror = 7 routes; controllers unchanged) —
+  Auth: balance/spend/add-credit/paginate-history use [verifyAuth, verifyMembershipAuthor];
+        the 2 regist POSTs + checkout POST use [checkJwt].
+
+  1) GET  balance
+       v1 base /credit/v1 -> /credit/v1/credit/customer/balance          [current page — UNCHANGED]
+       v2 base /credit/v2 -> /credit/v2/credit/customer/balance          [NEW mirror]
+       query: membership ctx = productId, membershipTierId, memberId ; product ctx = customerId, productId
+       envelope: SINGULAR message, data-wrapped (data differs by product type — see task-046/047)
+       Pages: usagebasedmembership/customerbalance.mdx (membership), creditbasedproduct/customerbalance.mdx (product)
+  2) POST spend
+       v1 -> /credit/v1/credit/customer/spend   [UNCHANGED] ; v2 -> /credit/v2/credit/customer/spend   [NEW]
+       body: customer/product identifiers + amount; success SENTENCE message ("Successfully spent ..."),
+       400 "Cannot spend customer credit. Insufficient customer credit". data-wrapped SINGULAR message.
+       Pages: usagebasedmembership/spendcustomercredit.mdx, creditbasedproduct/spendcustomercredit.mdx
+  3) POST add-credit
+       v1 -> /credit/v1/credit/customer/add-credit  [UNCHANGED] ; v2 -> /credit/v2/credit/customer/add-credit  [NEW]
+       body: identifiers + amount; SINGULAR message, data-wrapped.
+       Pages: usagebasedmembership/addcustomercredit.mdx, creditbasedproduct/addcustomercredit.mdx
+  4) GET  paginate-credit-history/:customerId
+       v1 -> /credit/v1/credit/customer/paginate-credit-history/:customerId  [UNCHANGED]
+       v2 -> /credit/v2/credit/customer/paginate-credit-history/:customerId  [NEW]
+       path: customerId; query: productId (+membershipTierId for membership ctx), page, limit.
+       PAGE-based pagination {total,page,limit,totalPages,data[]} (NOT cursor). SINGULAR message.
+       Pages: usagebasedmembership/paginatecustomercredithistory.mdx, creditbasedproduct/paginatecustomercredithistory.mdx
+  5) POST membership/customer/regist   (usage-based / membership regist)
+       v1 -> /credit/v1/credit/membership/customer/regist  [UNCHANGED] ; v2 -> /credit/v2/credit/membership/customer/regist  [NEW]
+       body: productId, membershipTierId, customerInfo{...}, ... ; [checkJwt]; SINGULAR message, data-wrapped.
+       400 "You are not authorized to edit this product!", "Email sudah terdaftar pada tier ini."
+       Page: usagebasedmembership/registnewmembershipcustomer.mdx
+  6) POST credit-usage/customer/regist  (credit-based / product regist)
+       v1 -> /credit/v1/credit/credit-usage/customer/regist  [UNCHANGED] ; v2 -> /credit/v2/credit/credit-usage/customer/regist  [NEW]
+       body: productId, customerInfo{...}, ... (NO membershipTierId); [checkJwt]; SINGULAR message, data-wrapped.
+       400 "You are not authorized to edit this product!", "Email sudah terdaftar pada product ini."
+       Page: creditbasedproduct/registernewcustomer.mdx
+  7) POST generate/immutable/checkout
+       v1 -> /credit/v1/credit/generate/immutable/checkout  [UNCHANGED] ; v2 -> /credit/v2/credit/generate/immutable/checkout  [NEW]
+       body: product/customer identifiers; [checkJwt]; data{creditUsageImmutableCheckoutUrl, paymentLinkUrl}. SINGULAR message.
+       Page: creditbasedproduct/generateimmutablecheckoutlink.mdx
+
+  *** ASYMMETRY FLAG (api-credit) ***: the v2 mirror does NOT include the NON-paginated credit history route
+      GET /v1/credit/customer/credit-history/:customerId (getCustomerCreditHistory). v1 has BOTH
+      credit-history AND paginate-credit-history; v2 mirrors ONLY paginate-credit-history. That non-paginated
+      route is UNDOCUMENTED anyway (no current page), so ZERO page impact — but note the v2 mirror is NOT a
+      1:1 copy of the v1 surface here.
+
+— api-saas  (index.js: v1 = 3 routes, v2 mirror = 3 routes; controllers unchanged; ALL SINGULAR message) —
+  8) POST license/verify
+       v1 -> /saas/v1/license/verify   [UNCHANGED] ; v2 -> /saas/v2/license/verify   [NEW]
+       body: licenseCode, productId (+ user/email); success payload = {statusCode, isLicenseActive,
+       memberStatus, licenseCode{...incl memberStatus/memberPaymentLink, NO activationLimit/useCount}}.
+       400 "There's no subscription license with code <code> and product id <id> registered in user <email>."
+       Page: saas/verify.mdx
+  9) POST license/activate
+       v1 -> /saas/v1/license/activate  [UNCHANGED] ; v2 -> /saas/v2/license/activate  [NEW]
+       body: licenseCode/productId; success {statusCode:200, message:"Success updating license code status to ACTIVE."}
+       400 "License code <code> has already active.", 400 no-license, 400 "Failed when identifying request. ..."
+       Page: saas/activate.mdx
+ 10) POST license/deactivate
+       v1 -> /saas/v1/license/deactivate  [UNCHANGED] ; v2 -> /saas/v2/license/deactivate  [NEW]
+       SAME handler as activate (statusType from URL -> INACTIVE); success "...status to INACTIVE.".
+       Page: saas/deactivate.mdx
+
+— api-software  (index.js: v1 = 1 route, v2 mirror = 1 route; controller unchanged; SINGULAR message) —
+ 11) POST license/verify
+       v1 -> /software/v1/license/verify   [UNCHANGED] ; v2 -> /software/v2/license/verify   [NEW]
+       body: licenseCode, productId (+ user/email); success {statusCode, isLicenseActive:(status==="ACTIVE"),
+       licenseCode{licenseCode,status,expiredAt,transactionId,productId,customerId,customerName,customerEmail,
+       activationLimit,useCount,createdAt,updatedAt}}. status enum ACTIVE|INACTIVE|EXPIRED|DISABLED.
+       400 "There's no license with code <code> and product id <id> registered in user <email>."
+       Page: licensecode/verifylicense.mdx
+
+### CLASSIFICATION SUMMARY (api-credit / api-saas / api-software, MR !3501)
+- UNCHANGED: every currently-documented endpoint (15 pages: usagebasedmembership 5, creditbasedproduct 6,
+  saas 3, licensecode 1). The MR does NOT remove or alter any v1 route, param, or envelope — v1 stays at
+  /credit/v1, /saas/v1, /software/v1 exactly as the current pages document.
+- NEW: a /v2 mirror of each documented endpoint (11 distinct routes: credit 7, saas 3, software 1), at
+  bases /credit/v2, /saas/v2, /software/v2, SAME method/params/auth/envelope as the v1 twin (same controller).
+- NEW/undocumented-either-way: none (the one v1 route NOT mirrored — non-paginated credit-history — was
+  already undocumented; still undocumented).
+- CHANGED: none.
+- No /hl/v2 backend exists for these services; do NOT invent one. Base prefix is per-service (/credit,/saas,
+  /software) at gateway; internal route just flips v1->v2.
+
+### DOCS DECISION (deferred to authoring tasks — NOT decided here)
+- Each of the 15 existing external-service pages now has a NEW /v2-base twin (same shape). Whether to (a)
+  add both v1 + v2 curls per page, (b) swap the page to the /v2 base, or (c) add an "also available at
+  /<svc>/v2/..." note, is an authoring/design decision for a later task. This recon records the map +
+  NEW/UNCHANGED classification only; it authors nothing.
+
+### Acceptance / commit
+- Per-service endpoint map (method / real base URL / params / envelope-key + NEW/CHANGED/UNCHANGED) recorded
+  for api-credit, api-saas, api-software, sourced from the MR !3501 head branch (index.js diffs read live;
+  controllers md5-verified identical to master). NO GraphQL query names or internal identifiers published.
+  Recon/notes-only task: writes ONLY .jonggrang/progress.txt (never committed to the feature branch per
+  CLAUDE.md) — NOTHING to commit.
+
+## task-056 — Gap analysis: MR !3501 recon inventory vs existing api-reference-v2 pages (Phase 3) — DONE 2026-07-04
+
+### Inputs diffed
+- Recon inventory: task-054 (api-custom-paymenlink /hl/v2) + task-055 (api-credit/api-saas/api-software), both sourced from MR !3501 head branch feat/api-custom-paymenlink-v2-routing (sha ce33ee2f).
+- Existing docs: 90 api-reference-v2/**.mdx pages + docs.json tabs[2] "API V2 Reference" nav (verified 1:1, 90 nav entries == 90 files; only statuscode.mdx + rate-limit.mdx lack /hl/v2, as expected for doc-only pages).
+- Ground-truth method+path was extracted per page (not assumed) to build the mirror->twin map below.
+
+### THE GAP IN ONE LINE
+- MR !3501 adds ZERO new RESTful route DEFINITIONS. Its entire delta is MIRROR MOUNTS: (a) api-custom-paymenlink
+  mounts the whole v1 router under /v2 (app.use("/v2", apiV1)) -> 55 legacy singular-path routes now reachable at
+  /hl/v2/<v1-path>; (b) api-credit/api-saas/api-software add explicit /v2 twins of each documented /v1 endpoint.
+- => api-custom RESTful surface (71 routes / 72 pages) is UNCHANGED and OK. The gap is: (1) the 55 mirror aliases
+  are undocumented (MISSING, but 53/55 are functional duplicates of an existing v2 page); (2) all 15 external-service
+  pages document only /svc/v1 and do not yet surface the new /svc/v2 base (DRIFTED).
+
+================================================================================================
+## SURFACE 1 — api-custom-paymenlink (/hl/v2)   [nav groups: Products & payment links, Invoice,
+##   Payments, Transaction, Customer, Membership, QR/Payment Channels, Balances, Installment,
+##   Discount & Coupon, Bundling, Name Services, Webhook, Reviews]
+================================================================================================
+
+### OK (RESTful /hl/v2 surface — routes.js BYTE-IDENTICAL to master; MR changes nothing here)
+- ALL 72 existing api-custom /hl/v2 pages are OK/UNCHANGED. No method/path/param/envelope/description drift is
+  introduced by MR !3501 (the RESTful router was not touched). Group->page counts (all verified present & /hl/v2):
+    Products & payment links 17 (product 6, genericlink 5, webinar 2, event 2, digitalproduct 2)
+    Invoice 6, Payments 6, Transaction 3, Customer 5, Membership 7, QR/Payment Channels 3, Balances 1,
+    Installment 3, Discount & Coupon 4, Bundling 2, Name Services 2, Webhook 5, Reviews 8.
+- Envelope on this whole surface stays PLURAL `messages` (reads/writes/errors); SINGULAR `message` remains ONLY on
+  the 4 RESTful membership writes (register/update/createinvoice/cancel) + the invoice/payment-create 429. No flip.
+
+### DRIFTED
+- NONE. MR !3501 does not alter any RESTful v2 route, param, envelope, or description. Nothing to correct on the
+  72 existing pages from this MR. (Any accuracy fixes already landed in the source-audit commits afeab18..5002062.)
+
+### MISSING — 55 v1-endpoints-mirrored-under-/hl/v2 (singular-path aliases). ALL are "v1-endpoint-mirrored-
+###   under-/v2" (NOT genuinely new) EXCEPT where flagged NEW-CAPABILITY. Envelope = `messages` (plural) unless
+###   noted. "twin page" = the EXISTING RESTful v2 page documenting the equivalent capability = the target file
+###   for any mirror-availability note. Method/path shown is the /hl/v2 mirror route added by app.use("/v2",apiV1).
+###   >>> RECOMMENDATION for task-057 (authoring, NOT decided here): these 53 aliases are functional duplicates of
+###   pages that already exist; recommended treatment is a SINGLE "legacy /v2 singular-path aliases" note in
+###   api-reference-v2/introduction.mdx (option c from task-054 docs-decision), NOT 53 new nav pages. The handful
+###   that DIFFER from their twin (method / addressing / handler / 429) each need one clarifying sentence, and the
+###   genuinely-new + undocumented-twin items below need real treatment. Full per-endpoint data provided so 057 can act.
+
+  [group: QR / Payment Channels]
+   1. POST /hl/v2/qrcode/create        env messages   twin: qrcode/createdynamicqrcode.mdx (POST /qr-codes/create)
+   2. GET  /hl/v2/qrcode/static        env messages   twin: qrcode/getstaticqrcode.mdx     (GET  /qr-codes/static)
+
+  [group: Customer]
+   3. GET  /hl/v2/customer             env messages   twin: customer/getdetail.mdx          (GET  /customers)
+   4. GET  /hl/v2/customer/detail      env messages   twin: customer/searchcustomerbyemail.mdx (GET /customers/detail; query email req)
+   5. POST /hl/v2/customer/create      env messages   twin: customer/create.mdx             (POST /customers/create)
+   6. POST /hl/v2/customer/update      env messages   twin: customer/update.mdx             (POST /customers/{uuId}/update)
+        FLAG addressing: v1 mirror is BODY-ONLY (no :uuId segment; fromEmail/toEmail in body). v2 twin adds :uuId.
+   7. POST /hl/v2/customer/login/portal env messages  twin: customer/createmagiclink.mdx    (POST /customers/portal-login)
+
+  [group: Membership]  *** these 2 twins are THEMSELVES undocumented (pre-existing gap) ***
+   8. GET  /hl/v2/membership/{uuId}                 env messages  twin: GET /memberships/{uuId}/tiers  -> NO EXISTING PAGE
+        LEGACY read; path uuId(=productId); query limit,startingAfter. If authored: new page in Membership group.
+   9. GET  /hl/v2/membership-member-detail/{uuId}   env messages  twin: GET /memberships/{uuId}/members -> NO EXISTING PAGE
+        LEGACY read; path uuId; query memberId. If authored: new page in Membership group.
+        NOTE: these two v2 LEGACY reads were part of the task-009 71-surface but were never authored (Membership nav
+        has only the 7 RESTful pages). Pre-existing coverage gap that the mirror re-surfaces; strictly separate from
+        the MR delta but recorded here since the mirror routes now expose them.
+
+  [group: Name Services]
+  10. POST /hl/v2/nameservice/create   env messages   twin: nameservice/create.mdx          (POST /name-services/create)
+  11. POST /hl/v2/nameservice/edit     env messages   twin: nameservice/update.mdx          (POST /name-services/update; id in BODY)
+
+  [group: Installment]
+  12. POST /hl/v2/installment/create   env messages   twin: installment/create.mdx          (POST /installments/create)
+  13. GET  /hl/v2/installment          env messages   twin: installment/index.mdx           (GET  /installments)
+  14. GET  /hl/v2/installment/{uuId}   env messages   twin: installment/detail.mdx          (GET  /installments/{uuId})
+
+  [group: Discount & Coupon]
+  15. POST /hl/v2/coupon/create        env messages   twin: discount/create.mdx             (POST /coupons/create)
+  16. GET  /hl/v2/coupon/{uuId}        env messages   twin: discount/detail.mdx             (GET  /coupons/{uuId})
+  17. POST /hl/v2/coupon/validate      env messages   twin: discount/validate.mdx           (POST /coupons/validate)
+  18. POST /hl/v2/coupon/check         env messages   twin: discount/check.mdx              (POST /coupons/check)
+
+  [group: Payments]
+  19. POST /hl/v2/payment/create       env messages (429=message) twin: reqpayment/create.mdx (POST /payments/create)
+  20. GET  /hl/v2/payment              env messages   twin: reqpayment/index.mdx            (GET  /payments)
+  21. POST /hl/v2/payment/edit         env messages   twin: reqpayment/edit.mdx             (POST /payments/{uuId}/update; id in BODY)
+  22. GET  /hl/v2/payment/{action}/{uuId} env messages twin: reqpayment/changestatus.mdx    (POST /payments/{uuId}/{action})
+        FLAG method+path: v1 mirror is GET + action-first path; v2 twin is POST + uuId-first. Same capability.
+  23. GET  /hl/v2/payment/{uuId}       env messages   twin: reqpayment/detail.mdx           (GET  /payments/{uuId})
+
+  [group: Balances]
+  24. GET  /hl/v2/balance              env messages   twin: balance/accountbalance.mdx      (GET  /balances)
+
+  [group: Invoice]
+  25. GET  /hl/v2/invoice/filter       env messages   twin: invoice/filter.mdx              (GET  /invoices/filter; query email req)
+  26. GET  /hl/v2/invoice/{action}/{uuId} env messages twin: invoice/changestatus.mdx       (POST /products/{uuId}/{action} shared handler)
+        FLAG NEW-CAPABILITY (per task-054): RESTful v2 router has NO /invoices status-toggle route. invoice/changestatus.mdx
+        currently documents the SHARED product status-toggle (POST /products/{uuId}/{action}) applied to invoices; the v1
+        mirror exposes a GET, invoice-addressed toggle at /hl/v2/invoice/{action}/{uuId}. Method+addressing differ; if the
+        mirror is documented, invoice/changestatus.mdx is the target page (add the GET /invoice/{action}/{uuId} form).
+  27. GET  /hl/v2/invoice/{uuId}       env messages   twin: invoice/detail.mdx              (GET  /invoices/{uuId})
+  28. POST /hl/v2/invoice/edit         env messages   twin: invoice/edit.mdx                (POST /invoices/{uuId}/update; id in BODY)
+  29. POST /hl/v2/invoice/create       env messages (429=message) twin: invoice/create.mdx  (POST /invoices/create)
+  30. GET  /hl/v2/invoice              env messages   twin: invoice/index.mdx               (GET  /invoices)
+
+  [group: Products & payment links]
+  31. GET  /hl/v2/product              env messages   twin: product/productpage.mdx         (GET  /products)
+  32. GET  /hl/v2/product/type/{type}  env messages   twin: product/productpagewithfilter.mdx (GET /products/types/{type})
+  33. GET  /hl/v2/product/{action}/{uuId} env messages twin: product/changestatus.mdx       (POST /products/{uuId}/{action})
+        FLAG method+path: v1 mirror is GET + action-first; v2 twin is POST + uuId-first. Same capability.
+  34. GET  /hl/v2/product/{uuId}       env messages   twin: product/detail.mdx              (GET  /products/{uuId})
+  35. POST /hl/v2/product              env messages   twin: genericlink/create.mdx          (POST /products/create)
+  36. POST /hl/v2/product/paymentlink/create env messages twin: genericlink/createpaymentlink.mdx (POST /products/payment-link/create)
+  37. POST /hl/v2/product/webinar/create env messages twin: webinar/create.mdx              (POST /products/webinar/create)
+  38. POST /hl/v2/product/event/create env messages   twin: event/create.mdx                (POST /products/event/create)
+  39. POST /hl/v2/product/digital-product/create env messages twin: digitalproduct/create.mdx (POST /products/digital-product/create)
+  40. POST /hl/v2/product/paymentlink/edit env messages twin: genericlink/edit.mdx          (POST /products/payment-link/{uuId}/update; id in BODY)
+  41. POST /hl/v2/product/webinar/edit env messages   twin: webinar/edit.mdx                (POST /products/webinar/{uuId}/update; id in BODY)
+  42. POST /hl/v2/product/event/edit   env messages   twin: event/edit.mdx                  (POST /products/event/{uuId}/update; id in BODY)
+  43. POST /hl/v2/product/digital-product/edit env messages twin: digitalproduct/edit.mdx   (POST /products/digital-product/{uuId}/update; id in BODY)
+  44. POST /hl/v2/paymentlink/edit     env messages   twin: genericlink/editpaymentlink.mdx (POST /payment-links/{uuId}/update; id in BODY)
+  45. POST /hl/v2/paymentlink/sort/{type} env messages twin: genericlink/sort.mdx           (POST /payment-links/sort/{type}; POST-but-list)
+
+  [group: Webhook]
+  46. GET  /hl/v2/webhook/history      env messages   twin: webhook/history.mdx             (GET  /webhooks/history)
+  47. POST /hl/v2/webhook/register     env messages   twin: webhook/registerurlhook.mdx     (POST /webhooks/update)
+        FLAG different-handler: v1 mirror uses the v1 webhook.register handler; v2 twin /webhooks/update uses updateUrl.
+        Behavior/validation may differ — verify before presenting as identical.
+  48. POST /hl/v2/webhook/test         env messages   twin: webhook/testurlhook.mdx         (POST /webhooks/test)
+  49. POST /hl/v2/webhook/retry        env messages   twin: webhook/retryhistory.mdx        (POST /webhooks/retry)
+        NOTE: v2-native GET /webhooks/new-history (webhook/newhistory.mdx) has NO v1 twin — mirror adds nothing there.
+
+  [group: Reviews]
+  50. GET  /hl/v2/reviews/product/{paymentLinkId}       env messages twin: reviews/productreviews.mdx      (GET /products/{paymentLinkId}/reviews)
+  51. GET  /hl/v2/reviews/product/{paymentLinkId}/stats env messages twin: reviews/productreviewstats.mdx  (GET /products/{paymentLinkId}/reviews/stats)
+  52. GET  /hl/v2/reviews/customer/{customerId}         env messages twin: reviews/productreviewcustomer.mdx (GET /products/{paymentLinkId}/reviews/customer)
+        FLAG addressing: v1 mirror keys off :customerId in PATH; v2 twin uses query customerId under a product path.
+  53. GET  /hl/v2/reviews/merchant/{userId}/stats       env messages twin: reviews/merchantreviewstats.mdx (GET /reviews/stats)
+        FLAG addressing: v1 mirror takes :userId in PATH; v2 twin derives merchant from JWT (no userId segment).
+  54. POST /hl/v2/reviews/edit         env messages   twin: reviews/update.mdx              (POST /reviews/{uuId}/update; id in BODY)
+  55. POST /hl/v2/reviews/bulk-status  env messages   twin: reviews/bulkstatusupdate.mdx    (POST /reviews/bulk-status/update)
+
+### SURFACE-1 MISSING TALLY: 55 mirror aliases.
+- 53 = v1-endpoint-mirrored-under-/v2 with an EXISTING v2 twin page (target = that twin page for a note).
+- 2  = legacy membership reads (#8,#9) whose v2 twin is ITSELF undocumented (pre-existing gap; target = new Membership pages if authored).
+- 1  = flagged NEW-CAPABILITY / addressing-diff worth an explicit sentence (#26 invoice GET status-toggle).
+- Additional flags requiring a clarifying sentence if mirrors are documented: #6, #22, #33, #47, #52, #53, plus the
+  429=singular-message on #19/#29 and the edit-by-BODY-id quirk on #6,#11,#21,#28,#40-44,#54.
+- EXCLUDED (reachable under /v2 via mirror but NOT public merchant API — do NOT document): /uptime, /images static,
+  /cart[/add|/update|/remove], /checkout, /email/unsub/{uid}, /email/bounce (8 infra/storefront) + the 3 MCP routes.
+
+================================================================================================
+## SURFACE 2 — api-credit (/credit/v2)   [nav groups: Usage-Based Membership, Credit Based Product]
+================================================================================================
+Envelope (unchanged, controllers identical): SUCCESS {statusCode, message:"success", data:{...}} SINGULAR message +
+DATA-WRAPPED; 400 validation {statusCode:400, messages:"Validation Error", data:[...]} PLURAL messages; 500 SINGULAR.
+
+### OK: none in the "no-action" sense. The /credit/v1 CONTENT on every page is still accurate (v1 untouched by MR),
+###   but no page reflects the NEW /credit/v2 base -> classified DRIFTED (incomplete), not OK.
+### MISSING: none. Every /credit/v2 mirror route already has a page documenting its /credit/v1 twin.
+### DRIFTED — 11 pages document /credit/v1 base ONLY; MR !3501 adds /credit/v2 (SAME method/params/auth/envelope,
+###   same controller). Action (task-058, treatment decision deferred): surface the /credit/v2 base URL on each page
+###   (add v2 curl / swap base / add "also available at /credit/v2/..." note). method/path/envelope below.
+
+  D1. GET  /credit/v2/credit/customer/balance                        env message(succ)/messages(400)
+        pages: usagebasedmembership/customerbalance.mdx , creditbasedproduct/customerbalance.mdx
+        [group: Usage-Based Membership | Credit Based Product]  (membership ctx: productId,membershipTierId,memberId; product ctx: customerId,productId)
+  D2. POST /credit/v2/credit/customer/spend                          env message(succ)/messages(400)
+        pages: usagebasedmembership/spendcustomercredit.mdx , creditbasedproduct/spendcustomercredit.mdx
+  D3. POST /credit/v2/credit/customer/add-credit                     env message(succ)/messages(400)
+        pages: usagebasedmembership/addcustomercredit.mdx , creditbasedproduct/addcustomercredit.mdx
+  D4. GET  /credit/v2/credit/customer/paginate-credit-history/{customerId}   env message(succ) ; PAGE-based pagination {total,page,limit,totalPages,data[]}
+        pages: usagebasedmembership/paginatecustomercredithistory.mdx , creditbasedproduct/paginatecustomercredithistory.mdx
+  D5. POST /credit/v2/credit/membership/customer/regist             env message(succ)/messages(400)  [checkJwt]
+        page:  usagebasedmembership/registnewmembershipcustomer.mdx   [group: Usage-Based Membership]
+  D6. POST /credit/v2/credit/credit-usage/customer/regist          env message(succ)/messages(400)  [checkJwt]
+        page:  creditbasedproduct/registernewcustomer.mdx             [group: Credit Based Product]
+  D7. POST /credit/v2/credit/generate/immutable/checkout          env message(succ) ; data{creditUsageImmutableCheckoutUrl,paymentLinkUrl}  [checkJwt]
+        page:  creditbasedproduct/generateimmutablecheckoutlink.mdx   [group: Credit Based Product]
+- ASYMMETRY (recorded, ZERO page impact): the v2 mirror does NOT include the non-paginated GET /credit/v1/credit/customer/
+  credit-history/{customerId} — that route was undocumented in v1 and stays undocumented. No page action.
+
+================================================================================================
+## SURFACE 3 — api-saas (/saas/v2)   [nav group: Membership (SaaS)]
+================================================================================================
+Envelope (unchanged): SINGULAR `message` throughout (verify success = payload with isLicenseActive+licenseCode{...};
+activate/deactivate success {statusCode:200, message:"Success updating license code status to <STATUS>."}).
+
+### OK: none in the no-action sense (v1 content accurate, but /saas/v2 not surfaced -> DRIFTED).  MISSING: none.
+### DRIFTED — 3 pages document /saas/v1 ONLY; MR adds /saas/v2 (same shape). Action (task-059): surface /saas/v2 base.
+  D8.  POST /saas/v2/license/verify      env message   page: saas/verify.mdx       [group: Membership (SaaS)]
+  D9.  POST /saas/v2/license/activate    env message   page: saas/activate.mdx     [group: Membership (SaaS)]
+  D10. POST /saas/v2/license/deactivate  env message   page: saas/deactivate.mdx   [group: Membership (SaaS)]  (SAME handler as activate; statusType INACTIVE)
+
+================================================================================================
+## SURFACE 4 — api-software (/software/v2)   [nav group: Software License Code]
+================================================================================================
+Envelope (unchanged): SINGULAR `message`. verify success {statusCode, isLicenseActive:(status==="ACTIVE"),
+licenseCode{licenseCode,status,expiredAt,transactionId,productId,customerId,customerName,customerEmail,activationLimit,useCount,...}}.
+
+### OK: none in the no-action sense.  MISSING: none.
+### DRIFTED — 1 page documents /software/v1 ONLY; MR adds /software/v2 (same shape). Action (task-059): surface /software/v2 base.
+  D11. POST /software/v2/license/verify  env message   page: licensecode/verifylicense.mdx   [group: Software License Code]
+
+================================================================================================
+## GAP TOTALS (authoritative)
+================================================================================================
+- api-custom-paymenlink /hl/v2 : OK 72 pages (RESTful, unchanged) | DRIFTED 0 | MISSING 55 mirror aliases
+    (53 dup-of-existing-page + 2 legacy-read-with-undocumented-twin; 1 new-capability + ~6 addressing/method flags).
+- api-credit /credit/v2         : OK 0 (v1 content fine) | DRIFTED 11 page-entries (7 distinct routes) | MISSING 0.
+- api-saas /saas/v2             : OK 0 | DRIFTED 3 | MISSING 0.
+- api-software /software/v2     : OK 0 | DRIFTED 1 | MISSING 0.
+- Every MISSING/DRIFTED entry above carries target file path + nav group + method + /v2 path + envelope key, so
+  authoring tasks 057/058/059 can act WITHOUT re-sourcing. No page edits performed in this task (analysis only).
+
+### Notes for downstream (057/058/059)
+- 057 (api-custom mirrors): STRONGLY recommend a single introduction.mdx "legacy /v2 singular-path aliases" note over
+  53 duplicate nav pages; give the flagged items (#6,#22,#26,#33,#47,#52,#53) one clarifying sentence; decide separately
+  whether to finally author the 2 undocumented legacy membership reads (#8,#9).
+- 058/059 (credit/saas/software): the v2 twin is byte-identical in shape to the documented v1 endpoint — the edit is a
+  base-URL/curl addition, NOT a re-source. Preserve envelope quirks (credit: message-success/messages-400; saas/software: message).
+- Recon/analysis-only task: writes ONLY .jonggrang/progress.txt (never committed to the feature branch per CLAUDE.md)
+  — NOTHING to commit.
+
+## task-057 — Author api-custom-paymenlink /hl/v2 gap pages (incl. v1-mirrored-under-v2) — DONE 2026-07-04
+
+### What the gap report (task-056) actually left for 057 (api-custom-paymenlink surface)
+- MR !3501 delta for api-custom = ONE line `app.use("/v2", apiV1)` mirroring 55 v1 singular-path routes
+  under /hl/v2. RESTful v2 router is byte-identical to master → 72 existing pages OK, 0 DRIFTED.
+- The 55 MISSING mirror aliases decompose to: 53 functional duplicates of an EXISTING v2 page (same
+  handler/params/envelope, just the legacy singular path) + 2 genuinely-undocumented legacy membership
+  reads (no existing page) + 1 new-capability flag (invoice GET status-toggle).
+- Gap report STRONGLY recommended NOT authoring 53 duplicate nav pages; instead one consolidated
+  introduction.mdx aliases note + author the 2 real reads + clarifying sentences on flagged items.
+
+### DECISION (autonomous) — followed the gap-report recommendation, not a literal "53 new pages"
+- Rationale: the 53 aliases are byte-for-byte duplicates of pages that already exist; 53 near-identical
+  nav pages would be worse docs + a maintenance hazard + would balloon task-060 nav wiring. The gap
+  report is the explicit authoritative input this task is told to act on, and its recommendation is
+  source-grounded. Recorded here for human review in case a per-page treatment is later preferred.
+
+### Deliverables (4 files, all under api-reference-v2/; docs.json NOT touched — task-060 wires nav)
+1. NEW api-reference-v2/membership/producttiers.mdx — GET /hl/v2/memberships/{uuId}/tiers
+   (legacy read; v2 routes.js line 69 → detailMembership handler; ALSO reachable via mirror alias
+   GET /hl/v2/membership/{uuId}). SOURCE-DERIVED from api/v1/membership.js (read raw @ MR head branch
+   feat/api-custom-paymenlink-v2-routing via glab). KEY: this legacy read uses PAGE-BASED pagination
+   (page/pageSize/pageCount/total/hasMore) NOT the cursor shape — documented with a <Warning>. Filters
+   to status=ACTIVE tiers of the product. Envelope PLURAL `messages` on success AND the 500. Tier item
+   field set reused from tiers.mdx (same tier entity) and flagged REPRESENTATIVE in a maintainer comment.
+2. NEW api-reference-v2/membership/productmember.mdx — GET /hl/v2/memberships/{uuId}/members
+   (legacy read; v2 routes.js line 70 → memberDetail handler; mirror alias
+   GET /hl/v2/membership-member-detail/{uuId}). SOURCE-DERIVED. KEY SHAPE DIFF vs memberdetail.mdx:
+   productId in PATH + memberId in QUERY (memberdetail.mdx is the inverse), and the customer is FLATTENED
+   into top-level customerEmail/customerName/customerMobile (source deletes nested customer + id +
+   customerId before returning). Not-found body = { statusCode:404, messages:"Not Found" } (note the
+   handler sets HTTP 400 while the body statusCode is 404 — documented the body shape). Envelope PLURAL
+   `messages`. Membership-customer scalar set flagged REPRESENTATIVE.
+3. EDIT api-reference-v2/introduction.mdx — added "## Legacy path aliases" section: prose on the mirror
+   mount (v1 singular paths mounted under /hl/v2, same controllers, RESTful routes take precedence) + a
+   55-row mapping table (legacy alias → canonical v2 endpoint) + a <Warning> with 6 footnoted differences
+   (¹ GET-vs-POST status toggles, ² edit-by-body-id, ³ invoice status-toggle new capability, ⁴ customer
+   update body-only addressing, ⁵ webhook/register different handler, ⁶ reviews path-vs-query/JWT
+   addressing) + a <Note> on the messages/429-message envelope rule. This is the single consolidated
+   treatment for the 53 duplicate aliases + the flagged items.
+4. EDIT api-reference-v2/invoice/changestatus.mdx — added a <Note> documenting the legacy invoice-scoped
+   GET /hl/v2/invoice/{action}/{uuId} status-toggle alias (gap-report #26, the one mirror with NO RESTful
+   twin; changestatus.mdx is its designated target page).
+
+### PII / leak discipline
+- Synthetic values reused from existing membership pages: productId 7c9d2e1f-…, tier id 9b2d4f6a-…,
+  userId 348e083d-…, memberId MBR8X2QK, Budi Santoso / budi.santoso@example.com / 081234567890.
+- HARD leak grep (gtFetch|GET_MEMBERSHIP*|detailMembership|memberDetail|.controller|@mayarid|apiV1|apiV2|
+  require(|process.env) over all 4 files = CLEAN. The words "handler"/"controller" are generic English,
+  already used in 28 existing published v2 pages (not internal identifiers).
+
+### Validation
+- All embedded ```json blocks parse; JSX tags balanced (RequestExample/ResponseExample/CodeGroup/
+  ParamField/ResponseField/Note/Warning) across all 4 files; frontmatter valid; every page carries /hl/v2.
+- docs-validation suite (validate-v2-docs.sh): my 2 EDITED pages pass; my 2 NEW pages produce ONLY the
+  expected C2 "orphan .mdx not referenced in nav" warning (nav wiring is task-060 by design). The other
+  ~45 FAILs are PRE-EXISTING external-service pages (credit/saas/software use /credit,/saas,/software
+  bases, not /hl/v2 — the known suite-mismatch gap; unmodified by this task). docs.json untouched & valid.
+- GOTCHA for downstream: a naive leak grep for "struct" false-positives on the "### … Structure" section
+  headings, and "handler"/"controller" are legitimate doc vocabulary — grep for the ACTUAL internal
+  identifier names, not substrings.
+
+### For task-060 (nav wiring)
+- Wire the 2 NEW pages into the "Membership" group of docs.json tabs[2]:
+  api-reference-v2/membership/producttiers.mdx and api-reference-v2/membership/productmember.mdx.
+  introduction.mdx & invoice/changestatus.mdx are already in nav (edits only, no wiring needed).
+
+## task-058 — Author/refresh Credit Based Product + Membership (Credit) V2 pages from api-credit (Phase 5 credit) — DONE 2026-07-04
+- Acted on the task-056 gap report SURFACE-2 (api-credit): MISSING = 0, DRIFTED = 11 page-entries (7 distinct
+  routes D1-D7). Every /credit/v2 mirror route already had a page documenting its /credit/v1 twin; the v2
+  twin is BYTE-IDENTICAL in shape (same method/params/auth/envelope/controller). So this was a base-URL
+  SURFACING edit, NOT a re-source — exactly as the gap report's downstream note predicted.
+- TREATMENT (autonomous decision, gap-report deferred it): added ONE `<Note>` immediately after the
+  Endpoint `</CodeGroup>` on each of the 11 pages: "Also available under /credit/v2 ... swap /credit/v1 for
+  /credit/v2" + prod (api.mayar.id) & sandbox (api.mayar.club) v2 base URLs matching that page's exact path
+  (incl. query template for the GET pages). Chose a Note over a 2nd CodeGroup/extra curl to keep the accurate
+  /credit/v1 primary content untouched and avoid duplicating the whole example block.
+- 11 files = 6 creditbasedproduct/ (customerbalance, spendcustomercredit, addcustomercredit,
+  paginatecustomercredithistory, registernewcustomer, generateimmutablecheckoutlink) + 5 usagebasedmembership/
+  (customerbalance, spendcustomercredit, addcustomercredit, paginatecustomercredithistory,
+  registnewmembershipcustomer). Surfaces map: D1 balance, D2 spend, D3 add-credit, D4 paginate-history
+  (page-based), D5 membership/customer/regist (UBM only), D6 credit-usage/customer/regist (CBP only),
+  D7 generate/immutable/checkout (CBP only).
+- Surface DISTINCTNESS preserved verbatim in the v2 URLs: CBP balance query = customerId+productId (no
+  membershipTierId/memberId); UBM balance query = productId+membershipTierId+memberId. CBP paginate v2 URL
+  keeps productId only; UBM paginate v2 URL keeps productId+membershipTierId.
+- Envelope UNCHANGED (only prose added, zero json edits): success {statusCode:200, message:"success",
+  data:{...}} SINGULAR + data-wrapped; 400 {statusCode:400, messages:"Validation Error", data:[...]} PLURAL;
+  page-based {total,page,limit,totalPages,data[]} on both paginate pages. Verified grep counts intact.
+- LEAK/PII: hard leak grep (controller|.controller|gql|graphql|GET_|require(|process.env|@mayarid|index.js|
+  checkJwt|resolver|routes.js|!3501) over all 11 files = CLEAN. Did NOT put the MR number in page bodies
+  (kept it only in the commit message + this log). PII already synthetic (Budi Santoso / example.com /
+  081234567890 / testingmayar.myr.id), untouched.
+- GOTCHA: a naive `grep -l 'hl/v2'` FLAGS all 11 credit files — but the ONLY /hl/v2 hits are the pre-existing
+  maintainer-comment prose ("NOT part of the /hl/v2 surface ... no fabricated /hl/v2 path"). Confirm with
+  `grep -E 'https?://[^ ]*hl/v2'` (URL-shaped) = CLEAN. No fabricated /hl/v2 URL anywhere; real /credit/v1
+  base retained (5 hits/file) and /credit/v2 now surfaced (4 line-hits/file).
+- Note tags balanced per file (existing Notes + my 1 new one). docs.json NOT touched (task-060 wires nav —
+  these 11 pages were already in nav from task-046/047, so no new nav entries needed anyway).
+- For task-059 (saas/software DRIFTED D8-D11): SAME pattern applies — surface /saas/v2 and /software/v2 via
+  an "also available" Note after the CodeGroup; those envelopes are SINGULAR `message` throughout (no
+  messages/data-wrapped quirk like credit). Do NOT fabricate /hl/v2 there either.
+
+## task-059 — Author/refresh Software License Code + Membership (SaaS) V2 pages (Phase 6 saas/software) — DONE 2026-07-04
+- Acted on task-056 gap report SURFACE-3 (api-saas) + SURFACE-4 (api-software): MISSING=0, DRIFTED=4
+  page-entries (D8-D11). Every /v2 route already had a page documenting its /v1 twin; the v2 twin is
+  BYTE-IDENTICAL in shape (same method/params/auth/envelope/controller — MR !3501 only adds explicit
+  /v2 mirror mounts). So this was a base-URL SURFACING edit, NOT a re-source — exactly as task-055/056
+  predicted and mirroring the task-058 credit treatment.
+- TREATMENT: added ONE `<Note>` immediately after the Endpoint `</CodeGroup>` on each of 4 pages:
+  "Also available under /saas/v2 (or /software/v2) ... swap /saas/v1 for /saas/v2" + prod (api.mayar.id)
+  & sandbox (api.mayar.club) v2 base URLs matching that page's exact path. Chose a Note over a 2nd
+  CodeGroup to keep the accurate /v1 primary content untouched. Identical structure to task-058.
+- 4 files = 3 saas/ (verify, activate, deactivate → /saas/v2/license/{verify,activate,deactivate}) +
+  1 licensecode/ (verifylicense → /software/v2/license/verify). Real /saas/v1 & /software/v1 bases
+  RETAINED (kept as primary in RequestExample/CodeGroup/curl); NO fabricated /hl/v2 (these are dedicated
+  per-service backends, base prefix /saas & /software at gateway).
+- ENVELOPE unchanged (only prose added, zero json edits): SINGULAR `message` throughout. SaaS verify shape
+  PRESERVED verbatim — success {statusCode, isLicenseActive, memberStatus, licenseCode{...incl
+  membershipTierId/membershipTierName/memberPaymentLink}}, OMITS activationLimit/useCount (task-045
+  correction intact). Software verify keeps activationLimit/useCount, NO memberStatus/memberPaymentLink —
+  the two verify shapes stay DISTINCT. activate/deactivate return singular message sentence.
+- SaaS-membership kept DISTINCT from product-membership (membership/) and credit groups — separate nav
+  group "Membership (SaaS)" / "Software License Code", separate service base, no cross-contamination.
+- LEAK/PII grep over all 4 files CLEAN: no controller/gql/index.js/checkJwt/routes.js/!3501/license-code.js/
+  struct refs; no URL-shaped /hl/v2; no real PII (synthetic Budi Santoso / example.com / LICENSECODE12345 /
+  testingmayar.myr.id untouched). GOTCHA (same as task-058): naive greps for `messages`/`activationLimit`/
+  `useCount` FLAG the maintainer-comment prose that DESCRIBES the shape correction — confirm they are NOT in
+  any ```json block (awk-scoped check = clean). Note tags balanced per file.
+- docs.json NOT touched (task-060 wires nav — these 4 pages were already in nav from tasks 044/045, no new
+  nav entries). Committed 8fb6edf, 4 files, 36 insertions, only api-reference-v2/ staged.
+- ALL of Phase 6 (task-059) + the credit Phase 5 (task-058) surfacing is now done. Remaining: task-060
+  (nav wiring — likely a no-op for these external-service pages since all pre-existed in nav) + Phase 8
+  accuracy sweep/validation.
+
+## task-060 — Wire MR !3501 pages into docs.json + verify nav<->file 1:1 (Phase 7) — DONE 2026-07-04
+- The ONLY nav change needed: the 2 NEW legacy-read pages from task-057 were the sole orphans.
+  Inserted both at the TOP of the "Membership" group (tabs[2]) in SOURCE ORDER (routes.js lines
+  69/70 place the legacy reads BEFORE the V2 RESTful reads):
+    api-reference-v2/membership/producttiers   (GET /hl/v2/memberships/{uuId}/tiers,  legacy)
+    api-reference-v2/membership/productmember  (GET /hl/v2/memberships/{uuId}/members, legacy)
+  then the existing tiers/members/memberdetail/register/update/createinvoice/cancel unchanged.
+- task-058 (11 credit) & task-059 (4 saas/software) were EDIT-ONLY (base-URL Notes on pages already
+  in nav from tasks 044-047) — confirmed NO new nav entries needed; their pages had no orphans.
+- No new GROUP warranted: all authored pages fit existing groups. Did NOT touch tabs[0] (Guides) or
+  tabs[1] (API V1 Reference) — tabs[1].tab == "API V1 Reference" unchanged (verified). No V2 groups
+  reordered. Diff = exactly +2 lines.
+- python3 -m json.tool docs.json → exit 0 (valid JSON) after the edit.
+
+### Final tabs[2] group list (19 groups, unchanged order):
+  API documentation, Products & payment links, Invoice, Payments, Transaction, Customer, Membership,
+  QR / Payment Channels, Balances, Installment, Discount & Coupon, Bundling, Name Services, Webhook,
+  Software License Code, Membership (SaaS), Usage-Based Membership, Credit Based Product, Reviews.
+
+### nav-count == disk-count reconciliation (tabs[2] vs api-reference-v2/**):
+  nav paths: 92   disk .mdx: 92   dupes: 0   MISSING(nav->no file): 0   ORPHAN(file not in nav): 0
+  => strict 1:1 (navset == diskset). RECONCILED = True. (Pre-edit: 90 nav / 92 disk / 2 orphans =
+  producttiers + productmember; both now wired.)
+
+## task-061 — Description/accuracy sweep of all V2 pages vs MR !3501 reality (Phase 8) — DONE 2026-07-04
+- Swept ALL 92 api-reference-v2/**.mdx pages against the MR !3501 source reality captured in task-054/055
+  and the task-056 gap report. Built a per-page verifier (/tmp/sweep.py, not committed) encoding the EXACT
+  expected envelope key, pagination shape, and base URL per page/group; cross-checked with the existing
+  docs-validation gate (validate-v2-docs.py C1-C8). KEY CONTEXT: MR !3501 adds ZERO RESTful-surface changes
+  (routes.js byte-identical to master; delta = mirror mounts only), so the 72 api-custom /hl/v2 pages were
+  already reconciled by the source-audit commits afeab18..5002062 and the credit/saas/software pages by
+  task-058/059. This sweep is therefore a VERIFICATION pass + a targeted internal-identifier scrub.
+
+### (b) ENVELOPE KEY — verified correct on all 92 pages, ZERO drift
+- api-custom /hl/v2: PLURAL `messages` (reads/writes/errors) EVERYWHERE, confirmed, EXCEPT the 4 RESTful
+  membership WRITES (register/update/createinvoice/cancel) which correctly use SINGULAR `message`. Verified
+  each of the 4 writes has singular `message` and NO plural in its json blocks; all other /hl/v2 pages have
+  plural `messages`.
+- The verifier flagged 5 reviews pages (create/getallreviews/productreviewcustomer/productreviews/update) for
+  a singular `message` key — CONFIRMED FALSE POSITIVE per task-009 note: the envelope is `"messages":"success"`
+  (plural, correct) and `"message"` is the review's TEXT DATA field (e.g. "Materinya jelas..."), not an
+  envelope key. No change.
+- credit (creditbasedproduct + usagebasedmembership): SUCCESS singular `message` + data-wrapped, 400 validation
+  PLURAL `messages` — both present & correct on all 11 pages. saas + licensecode: SINGULAR `message` throughout,
+  no plural — correct on all 4 pages.
+
+### (c) PAGINATION — verified correct
+- Cursor shape (data[]/hasMore/nextStartingAfter) confirmed present on every /hl/v2 LIST page (product x3,
+  invoice index/filter, reqpayment index/filter, transaction paid/unpaid, customers, installment, bundling,
+  webhook history/newhistory, reviews getall/productreviews, etc.). NO stale V1 page/pageSize/pageCount/
+  pagination{} tokens on any cursor page.
+- The ONLY /hl/v2 page with page-based tokens is membership/producttiers.mdx (legacy read) — CORRECT per
+  task-057 (legacy read genuinely uses page/pageSize/pageCount/total/hasMore, documented with a <Warning>).
+- credit paginate-credit-history (both CBP + UBM): page-based {total,page,limit,totalPages,data[]} — correct.
+- discount/detail (GET /coupons/{uuId}) is a single-object read → no pagination (correctly absent).
+
+### (d) BASE URLs — verified correct per real base
+- api-custom pages: prod api.mayar.id/hl/v2 + sandbox api.mayar.club/hl/v2 present on all. credit pages:
+  /credit/v1 primary + /credit/v2 note present on all 11. saas: /saas/v1 + /saas/v2 note (3). licensecode:
+  /software/v1 + /software/v2 note (1). NO fabricated /hl/v2 on external-service pages; NO stray /v1/ path in
+  api-custom bodies (the V1 references that DO exist are all legitimate: PII-scrub convention "synthetic
+  V1-style values", accurate historical prose on invoice/changestatus + webhook/registerurlhook + product/
+  search, and the membership legacy-alias notes). The 47 gate FAILs (D1/D4/D5) remain the DOCUMENTED
+  false-positives — the domain gate demands /hl/v2 on the 15 external-service pages that CORRECTLY use
+  /credit,/saas,/software bases. Pages are right; gate is base-URL-unaware (task-052 reconciliation item;
+  gate script lives in .jonggrang/.output and is not committed, not in this task's files).
+
+### (e) PII + (a) internal identifiers — SCRUBBED
+- PII: all synthetic. Emails @example.com / your-account / @mayar.id only; phones 0812000000xx / 081234567890
+  / 081298765432; tenant domains testingmayar.mayar.shop|myr.id + yourstore.myr.id; names Budi Santoso/Andi
+  Pratama/Siti Aminah + generic product names. UUIDs are the canonical published/synthetic set. ZERO real PII.
+- INTERNAL IDENTIFIERS: C7 rendered-content leak-grep was already clean (Mintlify strips {/* */} comments),
+  but the task mandates ZERO internal identifiers in SOURCE. Found & scrubbed 8 genuine internal-identifier
+  references living inside maintainer comments (non-rendered but committed to the public docs repo):
+    * membership/register.mdx  — GraphQL op `insertMembershipCustomer` → "persisted membership-customer record selection"
+    * membership/update.mdx    — GraphQL op `editMembershipCustomer` (+ "edit selection"→"update selection")
+    * membership/cancel.mdx     — GraphQL op `editMembershipCustomer`
+    * customer/update.mdx       — handler `customer.updateCustomer`, schema `UPDATE_CUSTOMER`, `req.params.uuId`
+    * invoice/edit.mdx          — handler `editInvoice`, `req.params.uuId`
+    * reqpayment/edit.mdx       — handler `requestPayment.editPayment`, schema `REQUEST_EDIT`, `req.params.uuId`
+    * reqpayment/create.mdx     — handler `requestPayment.reqPayment`, validator `fastest-validator REQUEST schema`
+  Also removed the capture-time env/tooling name `DUMMY_PROD_MERCHANT_API_KEY` from 5 maintainer comments
+  (webhook/history+newhistory, reviews/getallreviews+productreviewcustomer+productreviews) — reworded to
+  "captured live from production and is REAL key-for-key." Removed the word "GraphQL" from the 3 membership
+  comments too (tech-hint). Kept generic English "handler"/"the handler"/"source handler" (accepted convention,
+  used across 28+ published pages; not an internal identifier) and PUBLIC response enum values (MERCHANT_TOPUP,
+  ADD_ON, EXPIRE_VOID, CREDIT_USAGE, TRIAL_TOPUP, MAIN, QRIS_STATIC — these are API-visible `type`/wallet values).
+- FINAL hard leak grep (raw source, incl. comments) over all 92 pages = CLEAN (0 specific internal identifier
+  names / env vars / framework names / req.*/res.* refs).
+
+### (a) DESCRIPTIONS / fields
+- All 92 frontmatter descriptions are V2-appropriate; no stale copied-from-V1 wording that misrepresents the
+  V2 surface. ParamField/ResponseField sets were already reconciled by the source-audit + author tasks; the
+  verifier found no envelope/pagination/base mismatch in any field block. GOTCHA for future sweeps: the json
+  fence in these pages carries a TITLE (```json Response Example 200```), so a naive ```json\n regex extracts
+  0 blocks — match ```json[^\n]*\n instead.
+
+### Validation / commit
+- Structural suite C1-C8: PASS 8/8 after edits (JSX balanced, 115 json blocks parse, nav 1:1, leak-grep clean,
+  V1 tab unchanged). 12 files changed — ALL comment/prose-only internal-identifier scrubs; ZERO edits to any
+  rendered content, json example, envelope key, pagination shape, or base URL. Staged ONLY api-reference-v2/**.
+
+## task-062 — Leak-guard + docs-validation suite to GREEN over full MR !3501 corpus (Phase 8 validation) — DONE 2026-07-04
+- Ran the combined gate from repo root:
+  bash .jonggrang/.output/features/api-v2-reference-docs-mqyl9hub/validate-v2-docs.sh
+  FINAL RESULT: GATE PASS, exit 0 — structural 8/8 (C1-C8) + domain 7/7 (D1-D7) over the FULL
+  92-page api-reference-v2/** corpus (89 endpoint pages + 3 overview). All MR !3501 pages included.
+- Structural (C1-C8) was ALREADY green (no page defect): C1 docs.json valid JSON (also confirmed via the
+  literal `python3 -m json.tool docs.json`, exit 0); C2 nav<->file 1:1 for tabs[2] = 92/92, 0 missing/0
+  orphan/0 dupe (incl. the 2 new legacy-read pages wired in task-060); C3 title on every page; C4 JSX balance
+  (RequestExample/ResponseExample/CodeGroup/ParamField/ResponseField/Note/Warning); C5 even code-fences;
+  C6 115 embedded json blocks all parse; C7 leak-grep CLEAN (0 internal identifiers rendered — the negative
+  handler/fn/@mayarid/*/*.js/GraphQL-op/redis-scylla/env-var grep FAILS-if-found and found nothing); C8
+  tabs[1].tab == "API V1 Reference" AND tabs[1] byte-identical to main:docs.json (label-normalized).
+
+### GATE RECONCILIATION — the ONLY real fix this task: domain suite made base-URL-aware
+- Root cause: domain-compliance-v2-docs.py hard-coded PROD="api.mayar.id/hl/v2"/SANDBOX="api.mayar.club/hl/v2"
+  and required a /hl/v2 curl + a strict message^messages envelope on EVERY endpoint page. That is WRONG for
+  the 15 external-service pages MR !3501 mirrors under their OWN gateway base (task-054/055/058/059):
+    credit   (11 pages: creditbasedproduct/* 6 + usagebasedmembership/* 5) -> api.mayar.{id,club}/credit/v2
+    saas     ( 3 pages: saas/{verify,activate,deactivate})                 -> api.mayar.{id,club}/saas/v2
+    software ( 1 page:  licensecode/verifylicense)                         -> api.mayar.{id,club}/software/v2
+  Pre-fix the gate threw 47 false FAILs on exactly these 15 pages (D1 x2, D4, + D5 on the 2 verify pages).
+  The PAGES were already correct (task-061 sweep confirmed) — the GATE was the defect.
+- FIX (edited only .jonggrang/.output/.../domain-compliance-v2-docs.py — never committed per CLAUDE.md):
+  * Added a SERVICES table {hl, credit, saas, software} with each service's prod/sandbox base, curl base,
+    and a strict_envelope flag; and service_of(raw) that classifies each endpoint page by the base path it
+    actually documents (/hl/v2 wins first, else /credit/v | /saas/v | /software/v; default hl = fail loud).
+  * service_of runs over RENDERED content ({/* ... */} MDX comments stripped) — GOTCHA: the external pages'
+    maintainer-notes comment says the phrase "/hl/v2 surface" (to explain they are NOT under it); classifying
+    on raw text mis-bucketed all 15 as hl and kept the 47 FAILs. Stripping comments first fixed it.
+  * D1 now requires each page's OWN service prod+sandbox v2 base (still bans a literal /hl/v1 leak on all).
+  * D4 now requires the curl to hit the page's own service base — external pages keep their /v1 PRIMARY curl
+    and surface /v2 via a Note, so the check accepts /credit|/saas|/software at either version (svc["curl"]).
+  * D5 is per-service: strict services (hl, credit) still require statusCode + EXACTLY-ONE-of(message|messages);
+    relaxed services (saas, software) require statusCode + AT-MOST-ONE (their verify reads return
+    {statusCode, isLicenseActive, licenseCode{...}} with NO message key on success — never both keys).
+  * D2/D3/D6/D7 needed no change (already green on all 89). C-suite untouched.
+- TEETH PROVEN via mutation on throwaway edits (git-reverted): (1) strip /credit/v2 prod base from a credit
+  page -> D1 FAIL "missing prod base URL api.mayar.id/credit/v2"; (2) inject both message+messages into
+  saas/verify success -> D5 FAIL "at-most-one-of(message|messages) [message=True messages=True]"; (3) point a
+  credit curl at a bogus /BOGUS path -> D4 FAIL "no curl hitting /credit/v". All caught; restored -> exit 0.
+- Classifier tally (endpoint pages): hl 74, credit 11, saas 3, software 1 = 89. Matches the known 15 external.
+
+### Nothing committed (validation + gate-fix only)
+- Working tree: ONLY .jonggrang/ changed (the suite py + this progress.txt) — both are never committed to the
+  feature branch per CLAUDE.md. NO api-reference-v2/** or docs.json edit was needed (0 real page defects).
+  So, like the prior validation-only phases (task-008/061), this task has nothing to commit.
+
+### MEMBERSHIP-CONVENTION NOTE (preserved, do NOT normalize)
+- The message/messages quirk is INTACT and enforced only where it belongs: default plural `messages`
+  everywhere; SINGULAR `message` only on the four api-custom-paymenlink V2 membership WRITE pages
+  (create/update/invoice/cancel) — their read siblings stay plural. The external CREDIT service also uses
+  singular `message` on success / plural `messages` on 400 (its own convention). SAAS/SOFTWARE verify reads
+  carry statusCode + domain fields and NO message key on success. D5's per-service split encodes exactly this;
+  a future "normalize the envelope" edit would (correctly) turn the gate RED.
+
+### RESIDUAL HUMAN-VERIFICATION ITEMS (non-gating, unchanged from prior phases)
+- HV1: live-API field completeness — the non-createdAt object field lists/VALUES on pages flagged
+  "REPRESENTATIVE" in their maintainer-notes comment still need one live response each to confirm exhaustively
+  (no full sample payloads in-repo). Applies to membership/credit/saas/software field tables.
+- HV2: Mintlify visual render — no Mintlify CLI/package.json in-repo, so nav rendering + component display are
+  not machine-verifiable here; a human should preview the site once.
+- HV3: /v2 base reachability — the credit/saas/software /v2 mirrors (MR !3501) are documented from source;
+  a human should smoke-test one live /credit/v2, /saas/v2, /software/v2 call once the MR is deployed.
+
+## Phase 11 — domain-compliance (api-v2-reference-mr3501-sync) — DONE 2026-07-04
+- Ran the domain suite + combined gate from repo root:
+    python3 .jonggrang/.output/features/api-v2-reference-docs-mqyl9hub/domain-compliance-v2-docs.py  -> exit 0
+    bash    .jonggrang/.output/features/api-v2-reference-docs-mqyl9hub/validate-v2-docs.sh           -> exit 0
+- RESULT: PASS. Domain 7/7 (D1-D7) over the FULL 92-page api-reference-v2/** corpus (89 endpoint + 3
+  overview). Combined gate also PASS: structural 8/8 (C1-C8) + domain 7/7.
+- The domain suite is base-URL-aware (SERVICES + service_of classifier, wired in task-062): classifier tally
+  hl 74 / credit 11 / saas 3 / software 1 = 89 endpoint pages. Strict envelope (hl,credit) = exactly-one-of
+  message|messages; relaxed (saas,software) = at-most-one (verify reads carry statusCode + domain fields, no
+  message key on success). Encodes the membership singular/plural quirk + external-service conventions intact.
+- 0 real page defects. No api-reference-v2/** or docs.json edit needed for compliance. Per CLAUDE.md only
+  .jonggrang/** changed (never committed to the feature branch) -> nothing to commit, same as task-008/061/062.
+- WORKING-TREE NOTE (not this phase): 4 pages (customer/update, invoice/edit, reqpayment/create, reqpayment/
+  edit) carry pre-existing uncommitted comment-reflow whitespace inside {/* ... */} maintainer notes — zero
+  rendered/compliance impact (D-suite strips comments before classifying). Left untouched for the user.
+- HV1/HV2/HV3 remain non-gating human-verification items, unchanged. Output: phase-11-domain-compliance.md.
+
+## Phase 12 — code-quality (api-v2-reference-mr3501-sync) — DONE 2026-07-04
+- Maintainability review of the 5 feature commits 17af576..HEAD (32 files, +741/-20): 2 new
+  membership pages (producttiers, productmember), ~20 systematic base-URL mirror notes
+  (/credit/v2, /saas/v2, /software/v2, invoice legacy alias), introduction.mdx alias table,
+  the 1e40dbc identifier scrub, and docs.json nav wiring.
+- RESULT: PASS, no maintainability defects requiring change. Base-URL notes are structurally
+  identical across pages; new pages follow the sibling membership skeleton + the repo-wide
+  openapi:"/endpointmembershipv2/<name>" stub convention (no backing spec — Mintlify renders
+  from the MDX body, which both pages fully provide). The userId 348e083d-... in the new pages
+  is the repo-canon synthetic merchant id (26 pages), not a leak.
+- Comment-stripped scan of all rendered feature content = ZERO internal-identifier leaks (only
+  the generic word "handler"). Alias-table footnotes ¹-⁶ all referenced + defined.
+- Gates re-run from repo root: docs.json valid + 0 missing nav targets; domain 7/7 (exit 0);
+  structural GATE PASS (structural 8/8 + domain 7/7).
+- Per CLAUDE.md only .jonggrang/** changed -> nothing to commit (same as phases 9-11). The 4
+  uncommitted comment-reflow-whitespace mdx files remain deliberately left for the user; zero
+  render/compliance impact. Output: phase-12-code-quality.md.
+
+## Phase 13 — test-planning (api-v2-reference-mr3501-sync) — DONE 2026-07-04
+- Docs-only feature => "tests" = executable validation gates, not unit tests (repo test cmd is a
+  no-op). Test strategy = reuse the established combined gate: structural C1-C8 (validate-v2-docs.py)
+  + domain-compliance D1-D7 (domain-compliance-v2-docs.py), exit codes AND-ed via validate-v2-docs.sh.
+- Wrote phase-13-test-planning.md: mapped every C/D check to a plan acceptance criterion
+  (C2->nav wiring/2 new membership pages; C7->1e40dbc identifier scrub; C8->V1-untouched guard;
+  D1->the /credit/v2,/saas/v2,/software/v2 + invoice-alias mirror notes = core MR!3501 assertion;
+  D5->membership singular/plural envelope quirk must stay RED-on-normalize).
+- BASELINE re-established GREEN this phase: GATE PASS = structural 8/8 (92 pages) + domain 7/7
+  (89 endpoint), docs.json valid, exit 0. Feature enters Phase 14 (testing) from green.
+- Gate-teeth already proven by mutation in task-062 (D1/D4/D5 all catch, revert->exit 0); documented
+  for Phase 16 (test-quality). D0/C0 empty-corpus guards prevent silent no-op.
+- Downstream guidance recorded: P14 run the .sh assert exit 0 (no new test code); P15 coverage =
+  corpus coverage (all 92 pages + feature-delta 17af576..HEAD inside validated set); P16 confirm teeth.
+- HV1/HV2/HV3 carried forward as non-gating human-verification (live field completeness, Mintlify
+  render, /v2 base reachability) — out of machine-verifiable scope, unchanged from prior phases.
+- Per CLAUDE.md only .jonggrang/** touched -> nothing to commit (same as phases 9-12).
+
+
+## Phase 14 — testing (api-v2-reference-mr3501-sync) — DONE 2026-07-04
+- Docs-only feature => Phase 14 "testing" = EXECUTE the Phase 13 gate, assert exit 0. No new test
+  code (repo test cmd is a no-op). Ran validate-v2-docs.sh from repo root.
+- RESULT GATE: PASS, EXIT=0. Structural 8/8 (C1-C8, 92 pages, 115 json blocks) + domain 7/7
+  (D1-D7, 89 endpoint pages). docs.json valid.
+- Feature-delta coverage confirmed inside validated corpus: 27 endpoint .mdx changed in
+  17af576..HEAD (the /credit/v2,/saas/v2,/software/v2 + invoice-alias base-URL notes); 2 new
+  legacy-membership pages (membership/producttiers.mdx, membership/productmember.mdx, added in
+  17af576) exist + nav-wired (2 docs.json refs) + resolved under C2 (0 missing/0 orphan); 4
+  uncommitted comment/whitespace mdx (customer/update, invoice/edit, reqpayment/create+edit) were
+  in the validated set, zero perturbation.
+- Core MR!3501 assertions specifically GREEN: D1 multi-service base fidelity (no /hl/v1 leak),
+  C7 identifier scrub (1e40dbc, 0 rendered leaks), C8 V1 tab byte-identical vs main, D5 membership
+  message^messages envelope quirk preserved.
+- HV1/HV2/HV3 carried forward unchanged (non-gating): live field completeness, Mintlify render,
+  /v2 base reachability.
+- Per CLAUDE.md only .jonggrang/** touched -> nothing to commit (same as phases 9-13). The 4
+  uncommitted mdx remain deliberately left for the user. Output: phase-14-testing.md.
+
+
+## Phase 15 — coverage (api-v2-reference-mr3501-sync) — DONE 2026-07-04
+- Docs-only => coverage = CORPUS coverage (every rendered page validated) + FEATURE-DELTA
+  coverage (every touched file inside validated set), NOT line coverage. No runtime to instrument.
+- THRESHOLD MET (100%/100%): gate PASS exit 0; C2 = 92 pages 0 missing/0 orphan and
+  find api-reference-v2 -name '*.mdx' = 92 (exact match, no page escapes corpus); D1-D7 all 89
+  endpoint pages.
+- Feature-delta 17af576..HEAD = 27 endpoint .mdx + docs.json. Automated cross-check: 27/27
+  present-on-disk AND nav-wired (missing_on_disk=0, not_nav_wired=0). The /credit,/saas,/software
+  /v2 base notes + invoice legacy-alias all on these 27 -> inside D-suite 89 and C-suite 92.
+- 2 new legacy-membership pages (membership/producttiers, membership/productmember; added in
+  17af576) disk OK + nav OK, resolve under C2. Zero uncovered new page.
+- 4 uncommitted mdx (customer/update, invoice/edit, reqpayment/create+edit) still inside validated
+  working-tree corpus, all passed.
+- HV1/HV2/HV3 carried forward non-gating (live field completeness, Mintlify render, /v2 reachability).
+- Per CLAUDE.md only .jonggrang/** touched -> nothing to commit (same as phases 9-14).
+  Downstream P16 (test-quality): mutation-teeth already documented (task-062 3-mutation proof);
+  confirm no check silently no-ops (D0/C0 empty-corpus guards present). Output: phase-15-coverage.md.
+
+
+## Phase 16 — test-quality (api-v2-reference-mr3501-sync) — DONE 2026-07-04
+- Docs-only => test-quality = AUDIT the validation gate (C1-C8 + D1-D7), not unit
+  assertions. GREEN baseline reconfirmed: 8/8 + 7/7, 92 pages / 89 endpoint, exit 0.
+- TEETH PROVEN by fresh fully-reversible mutation battery on THIS feature's own
+  additions (6/6 -> RED): M1 strip /credit/v2 prod base->D1, M2 strip /saas/v2->D1,
+  M3 strip /software/v2->D1, M4 inject /hl/v1 leak->D1, M5 inject message+messages
+  into a membership 'messages' read (break exactly-one)->D5, M6 inject
+  getMembershipMember/@mayarid..memberships.js into rendered content->C7. Plus
+  task-062's 3 prior mutations => every gating assertion mutation-proven.
+- NO SILENT NO-OP: empty-corpus guards fire for real (ran validators against a
+  throwaway empty repo): C0 exit 1, D0 exit 1 -> the count==n PASS gates can't
+  vacuously all-green.
+- LOW-VALUE AUDIT: no tautologies/duplicates. C4(known-tag balance) vs D7(unknown
+  closing tags, prose-only) complementary; C6(json parses) vs D5(envelope key
+  semantics) distinct; C2 is true bijection. D5 XOR(strict)/never-both(relaxed)
+  correct; D6 data-optional-when-absent correct; C8 fails loud if main unreadable;
+  service_of() defaults to STRICT hl so unclassifiable pages fail loudly. D4
+  version-agnostic external curl is documented intent, not a gap.
+- ZERO RESIDUE: post-battery git status shows only the 4 pre-existing uncommitted
+  mdx; every mutated target restored byte-exact; gate re-run exit 0.
+- HV1/HV2/HV3 carried forward non-gating. Per CLAUDE.md only .jonggrang/** touched
+  -> nothing to commit (same as phases 9-15). Output: phase-16-test-quality.md.

@@ -5,9 +5,11 @@ description: "Endpoint used to create an invoice"
 ---
 
 {/* Notes for maintainers: this is a WRITE endpoint. The response shape below is
-REPRESENTATIVE — derived from the V1 invoice template and the V2 source surface,
-not captured from a live prod write. The `data` object returns the created
-invoice's id, transactionId, public link, expiry, and any echoed extraData.
+REPRESENTATIVE — derived from the createInvoice source handler, not captured from a
+live prod write. The `data` object returns the created invoice's id, transactionId,
+public link, amount, items, customer, status ("unpaid"), subtotal, invoiceCode,
+expiredAt (ISO 8601 string or null), createdAt, and any echoed extraData. When a
+`paymentMethod` is supplied the handler also appends a `paymentDetail` object.
 `messages` is PLURAL on this endpoint (this group never uses singular `message`). */}
 
 <RequestExample>
@@ -47,7 +49,25 @@ curl --request POST 'https://api.mayar.id/hl/v2/invoices/create' \
         "id": "6f8c19ff-5b97-4792-aa89-d2a12797b356",
         "transactionId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
         "link": "https://testingmayar.myr.id/invoices/ycfyxbj2h3",
-        "expiredAt": 1784479403000,
+        "amount": 33000,
+        "items": [
+            {
+                "quantity": 3,
+                "rate": 11000,
+                "description": "Paket layanan A"
+            }
+        ],
+        "description": "Pelunasan pesanan",
+        "customer": {
+            "email": "budi.santoso@example.com",
+            "name": "Budi Santoso",
+            "mobile": "081234567890"
+        },
+        "status": "unpaid",
+        "subtotal": 33000,
+        "invoiceCode": "A1B2C3D4",
+        "expiredAt": "2026-07-19T16:43:23.000Z",
+        "createdAt": "2026-07-03T09:15:22.000Z",
         "extraData": {
             "noCustomer": "827hiueqy271hj",
             "idProd": "contoh aja"
@@ -111,28 +131,38 @@ https://api.mayar.club/hl/v2/invoices/create
   Description of the item.
 </ParamField>
 
-<ParamField path="description" type="string">
-  Description or notes related to the invoice.
+<ParamField path="description" type="string" required>
+  Description or notes related to the invoice (3–555 characters).
 </ParamField>
 
 <ParamField path="expiredAt" type="string">
-  Invoice expiration time in ISO 8601 format (UTC).
+  Invoice expiration time as a 24-character ISO 8601 UTC string (e.g.
+  `2026-07-19T16:43:23.000Z`). Defaults to one hour from creation when omitted.
 </ParamField>
 
 <ParamField path="tax" type="integer">
-  Tax amount applied to the invoice.
+  Tax percentage applied to the invoice subtotal.
+</ParamField>
+
+<ParamField path="redirectUrl" type="string">
+  URL the customer is redirected to after payment.
+</ParamField>
+
+<ParamField path="notes" type="string">
+  Additional notes for the invoice (max 24 characters).
 </ParamField>
 
 <ParamField path="paymentMethod" type="string">
-  Restrict the invoice to a specific payment method.
+  Restrict the invoice to a specific payment method. When set, the response `data`
+  includes a `paymentDetail` object.
 </ParamField>
 
 <ParamField path="cashtag" type="string">
-  Cashtag associated with the invoice.
+  Cashtag used when `paymentMethod` targets the JeniusPay e-wallet channel.
 </ParamField>
 
 <ParamField path="extraData" type="object">
-  Additional custom data attached to the invoice.
+  Additional custom key/value data attached to the invoice (string values; max 50 keys).
 </ParamField>
 
 ## Response
@@ -155,11 +185,11 @@ Successful Response
 
 ### data Structure (Object)
 
-<ResponseField name="data.id" type="string" >
-  Unique identifier of the invoice record.
+<ResponseField name="data.id" type="string<uuid>" >
+  Unique identifier of the invoice payment-link record.
 </ResponseField>
 
-<ResponseField name="data.transactionId" type="string" >
+<ResponseField name="data.transactionId" type="string<uuid>" >
   Unique identifier of the associated transaction.
 </ResponseField>
 
@@ -167,12 +197,50 @@ Successful Response
   Invoice URL that can be accessed by the customer.
 </ResponseField>
 
-<ResponseField name="data.expiredAt" type="number" >
-  Timestamp (in milliseconds) indicating when the invoice will expire.
+<ResponseField name="data.amount" type="number" >
+  Total invoice amount (subtotal plus tax).
+</ResponseField>
+
+<ResponseField name="data.items" type="array of object" >
+  The line items echoed from the request (`quantity`, `rate`, `description`).
+</ResponseField>
+
+<ResponseField name="data.description" type="string" >
+  Invoice description echoed from the request.
+</ResponseField>
+
+<ResponseField name="data.customer" type="object" >
+  The customer the invoice was issued to (`email`, `name`, `mobile`).
+</ResponseField>
+
+<ResponseField name="data.status" type="string" >
+  Invoice status on creation — always `unpaid`.
+</ResponseField>
+
+<ResponseField name="data.subtotal" type="number" >
+  Sum of `rate × quantity` across all items, before tax.
+</ResponseField>
+
+<ResponseField name="data.invoiceCode" type="string" >
+  Short human-readable invoice code generated for the transaction.
+</ResponseField>
+
+<ResponseField name="data.expiredAt" type="string | null" >
+  Invoice expiry as an ISO 8601 UTC string, or `null` when the invoice does not
+  expire.
+</ResponseField>
+
+<ResponseField name="data.createdAt" type="string" >
+  Invoice creation time as an ISO 8601 UTC string.
 </ResponseField>
 
 <ResponseField name="data.extraData" type="object" >
-  Additional custom data attached to the invoice (echoed from the request).
+  Additional custom data attached to the invoice (echoed from the request; present
+  only when supplied).
+</ResponseField>
+
+<ResponseField name="data.paymentDetail" type="object" >
+  Payment-channel details, present only when the request supplied a `paymentMethod`.
 </ResponseField>
 
 ### Errors

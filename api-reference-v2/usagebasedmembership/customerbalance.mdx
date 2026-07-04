@@ -1,0 +1,181 @@
+---
+title: "Get Customer Balance"
+openapi: "GET /endpointusagebasedmembershipv2/customerbalance"
+description: "Endpoint used to get a customer's credit balance for a membership tier."
+---
+
+{/*
+  Notes for maintainers — REPRESENTATIVE sample.
+  Usage-based membership credit is served by a SEPARATE service mounted at /credit/v1 — it is
+  NOT part of the /hl/v2 surface, so the real base URL is kept (no fabricated /hl/v2 path). The
+  success envelope is DATA-WRAPPED with a SINGULAR `message`: { statusCode, message, data:{...} }.
+  Validation errors use PLURAL `messages`. Example values (ids, amounts, PII) are synthetic.
+*/}
+
+<RequestExample>
+
+```bash Request Example
+curl --request GET 'https://api.mayar.id/credit/v1/credit/customer/balance?productId=810328a4-6eeb-4680-8f05-8d578da46c40&membershipTierId=261acae0-d6ae-4d8c-adf5-6fb8c2361514&memberId=PQVS4KGY' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "message": "success",
+    "data": {
+        "customerBalance": 50990,
+        "customerBalanceMembership": 0,
+        "customerBalanceAddon": 50990,
+        "customerEmail": "budi.santoso@example.com",
+        "customerName": "Budi Santoso",
+        "customerMobile": "081234567890",
+        "status": "active",
+        "nextPayment": "2026-08-29T10:40:00.000Z",
+        "expiredAt": "2027-08-29T10:40:00.000Z"
+    }
+}
+```
+
+
+```json Response Example Validation Error
+{
+    "statusCode": 400,
+    "messages": "Validation Error",
+    "data": [
+        {
+            "field": "productId",
+            "message": "productId is required"
+        }
+    ]
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/credit/v1/credit/customer/balance?productId={productId}&membershipTierId={membershipTierId}&memberId={memberId}
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/credit/v1/credit/customer/balance?productId={productId}&membershipTierId={membershipTierId}&memberId={memberId}
+```
+
+</CodeGroup>
+
+<Note>
+  **Also available under `/credit/v2`.** This endpoint is mirrored under the `/credit/v2` base
+  with an identical method, parameters, authorization, and response shape — swap `/credit/v1`
+  for `/credit/v2` in the base path:
+
+  - Production: `https://api.mayar.id/credit/v2/credit/customer/balance?productId={productId}&membershipTierId={membershipTierId}&memberId={memberId}`
+  - Sandbox: `https://api.mayar.club/credit/v2/credit/customer/balance?productId={productId}&membershipTierId={membershipTierId}&memberId={memberId}`
+</Note>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Query Parameters
+
+<ParamField query="productId" type="string" required>
+  The unique identifier of the product associated with the credit balance.
+</ParamField>
+
+<ParamField query="membershipTierId" type="string" required>
+  The unique identifier of the membership tier associated with the credit balance.
+</ParamField>
+
+<ParamField query="memberId" type="string">
+  The unique identifier of the member whose credit balance is being queried.
+</ParamField>
+
+<ParamField query="customerId" type="string">
+  The unique identifier of the customer whose credit balance is being queried.
+</ParamField>
+
+<Note>
+  At least **one of** `memberId` **or** `customerId` must be provided.
+</Note>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer">
+  Status code from API.
+</ResponseField>
+
+<ResponseField name="message" type="string">
+  Status message that describes the status code (`"success"` on success).
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  Object containing the customer balance and membership-customer details.
+</ResponseField>
+
+### data Structure (Object)
+
+<ResponseField name="customerBalance" type="float">
+  Total credit balance (membership plus add-on).
+</ResponseField>
+
+<ResponseField name="customerBalanceMembership" type="float">
+  Credit balance with `MEMBERSHIP` type.
+</ResponseField>
+
+<ResponseField name="customerBalanceAddon" type="float">
+  Credit balance with `ADD_ON` type.
+</ResponseField>
+
+<ResponseField name="customerEmail" type="string">
+  Email address of the customer.
+</ResponseField>
+
+<ResponseField name="customerName" type="string">
+  Full name of the customer.
+</ResponseField>
+
+<ResponseField name="customerMobile" type="string">
+  Mobile phone number of the customer.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Current membership status (e.g., `active`).
+</ResponseField>
+
+<ResponseField name="nextPayment" type="string">
+  Next scheduled payment date as an ISO 8601 datetime.
+</ResponseField>
+
+<ResponseField name="expiredAt" type="string">
+  Membership expiration date as an ISO 8601 datetime.
+</ResponseField>
+
+<Info>
+  Additional membership-customer fields may be present in `data` (the response
+  spreads the member record). The set above is representative.
+</Info>
+
+### Errors
+
+<ResponseField name="400 Bad Request" type="object">
+  Returned when required parameters are missing or invalid. Validation errors use
+  the PLURAL `messages` key with a `data` array of field errors:
+  `{ "statusCode": 400, "messages": "Validation Error", "data": [ ... ] }`.
+</ResponseField>

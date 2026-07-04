@@ -91,3 +91,108 @@ Every V2 endpoint returns its result wrapped in a consistent envelope so clients
 <ResponseField name="data" type="object">
   The payload of the response. Its shape depends on the endpoint. For list endpoints `data` is an array, and pagination is provided through cursor fields alongside it.
 </ResponseField>
+
+## Legacy path aliases
+
+Every documented V2 endpoint uses a RESTful, plural-noun path (for example
+`/hl/v2/products`, `/hl/v2/customers`, `/hl/v2/invoices`). For backward compatibility,
+the original **V1 singular-path** routes are also mounted under `/hl/v2` and resolve to
+the **same controllers, authorization, and response envelope** as their canonical V2
+counterpart. The RESTful V2 routes always take precedence; the legacy paths act as a
+fallback for any `/hl/v2` path a RESTful route does not already define.
+
+<Note>
+  These aliases exist for compatibility only. New integrations should call the canonical
+  RESTful paths documented on each endpoint page. The table below maps every legacy alias
+  to the page that documents its behavior. Unless flagged, the alias is identical to its
+  canonical twin (same parameters, same `messages` envelope).
+</Note>
+
+| Legacy alias (under `/hl/v2`) | Canonical V2 endpoint |
+| --- | --- |
+| `GET /product` | `GET /products` |
+| `GET /product/type/{type}` | `GET /products/types/{type}` |
+| `GET /product/{action}/{uuId}` ¹ | `POST /products/{uuId}/{action}` |
+| `GET /product/{uuId}` | `GET /products/{uuId}` |
+| `POST /product` | `POST /products/create` |
+| `POST /product/paymentlink/create` | `POST /products/payment-link/create` |
+| `POST /product/webinar/create` | `POST /products/webinar/create` |
+| `POST /product/event/create` | `POST /products/event/create` |
+| `POST /product/digital-product/create` | `POST /products/digital-product/create` |
+| `POST /product/paymentlink/edit` ² | `POST /products/payment-link/{uuId}/update` |
+| `POST /product/webinar/edit` ² | `POST /products/webinar/{uuId}/update` |
+| `POST /product/event/edit` ² | `POST /products/event/{uuId}/update` |
+| `POST /product/digital-product/edit` ² | `POST /products/digital-product/{uuId}/update` |
+| `POST /paymentlink/edit` ² | `POST /payment-links/{uuId}/update` |
+| `POST /paymentlink/sort/{type}` | `POST /payment-links/sort/{type}` |
+| `GET /invoice` | `GET /invoices` |
+| `GET /invoice/filter` | `GET /invoices/filter` |
+| `GET /invoice/{uuId}` | `GET /invoices/{uuId}` |
+| `GET /invoice/{action}/{uuId}` ³ | `POST /products/{uuId}/{action}` (Change Invoice Status) |
+| `POST /invoice/create` | `POST /invoices/create` |
+| `POST /invoice/edit` ² | `POST /invoices/{uuId}/update` |
+| `GET /payment` | `GET /payments` |
+| `GET /payment/{uuId}` | `GET /payments/{uuId}` |
+| `GET /payment/{action}/{uuId}` ¹ | `POST /payments/{uuId}/{action}` |
+| `POST /payment/create` | `POST /payments/create` |
+| `POST /payment/edit` ² | `POST /payments/{uuId}/update` |
+| `GET /customer` | `GET /customers` |
+| `GET /customer/detail` | `GET /customers/detail` |
+| `POST /customer/create` | `POST /customers/create` |
+| `POST /customer/update` ⁴ | `POST /customers/{uuId}/update` |
+| `POST /customer/login/portal` | `POST /customers/portal-login` |
+| `GET /membership/{uuId}` | `GET /memberships/{uuId}/tiers` (Get Membership Product Tiers) |
+| `GET /membership-member-detail/{uuId}` | `GET /memberships/{uuId}/members` (Look Up Membership Member) |
+| `GET /installment` | `GET /installments` |
+| `GET /installment/{uuId}` | `GET /installments/{uuId}` |
+| `POST /installment/create` | `POST /installments/create` |
+| `POST /coupon/create` | `POST /coupons/create` |
+| `GET /coupon/{uuId}` | `GET /coupons/{uuId}` |
+| `POST /coupon/validate` | `POST /coupons/validate` |
+| `POST /coupon/check` | `POST /coupons/check` |
+| `POST /nameservice/create` | `POST /name-services/create` |
+| `POST /nameservice/edit` ² | `POST /name-services/update` |
+| `POST /qrcode/create` | `POST /qr-codes/create` |
+| `GET /qrcode/static` | `GET /qr-codes/static` |
+| `GET /balance` | `GET /balances` |
+| `GET /webhook/history` | `GET /webhooks/history` |
+| `POST /webhook/register` ⁵ | `POST /webhooks/update` |
+| `POST /webhook/test` | `POST /webhooks/test` |
+| `POST /webhook/retry` | `POST /webhooks/retry` |
+| `GET /reviews/product/{paymentLinkId}` | `GET /products/{paymentLinkId}/reviews` |
+| `GET /reviews/product/{paymentLinkId}/stats` | `GET /products/{paymentLinkId}/reviews/stats` |
+| `GET /reviews/customer/{customerId}` ⁶ | `GET /products/{paymentLinkId}/reviews/customer` |
+| `GET /reviews/merchant/{userId}/stats` ⁶ | `GET /reviews/stats` |
+| `POST /reviews/edit` ² | `POST /reviews/{uuId}/update` |
+| `POST /reviews/bulk-status` | `POST /reviews/bulk-status/update` |
+
+<Warning>
+  A few aliases differ from their canonical twin by more than the path — use the canonical
+  V2 endpoint for predictable behavior:
+
+  - **¹ Method differs** — the legacy product/payment status toggles are `GET` with an
+    action-first path (`/{action}/{uuId}`); the canonical V2 form is `POST` with an
+    id-first path (`/{uuId}/{action}`).
+  - **² Edit by body `id`** — like their canonical twins, these update aliases read the
+    resource `id` from the request **body**, not from the `{uuId}` path segment.
+  - **³ Invoice status toggle** — the legacy `GET /invoice/{action}/{uuId}` exposes an
+    invoice open/close toggle. The RESTful V2 router has no dedicated invoice-status route;
+    the same capability is documented on the **Change Invoice Status** page via the shared
+    product status toggle (`POST /products/{uuId}/{action}`).
+  - **⁴ Addressing differs** — `POST /customer/update` is body-only (the customer is
+    identified by `fromEmail` / `toEmail` in the body); the canonical form adds a `{uuId}`
+    path segment.
+  - **⁵ Different handler** — `POST /webhook/register` and the canonical `POST /webhooks/update`
+    register a webhook URL but are backed by different handlers, so validation and behavior
+    may differ. Prefer the canonical `POST /webhooks/update`.
+  - **⁶ Addressing differs** — the legacy review lookups take `customerId` / `userId` in the
+    **path**; the canonical forms use a query `customerId` under a product path and derive the
+    merchant from the API key, respectively.
+</Warning>
+
+<Note>
+  The `messages` envelope applies to these aliases exactly as to their canonical twins:
+  plural `messages` for reads, writes, and errors — with the single exception of the
+  `429 "Duplicate request detected. Please wait 1 minute before trying again."` response on
+  `POST /invoice/create` and `POST /payment/create`, which uses the singular `message` key.
+</Note>

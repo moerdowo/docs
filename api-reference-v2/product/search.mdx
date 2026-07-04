@@ -1,13 +1,22 @@
 ---
-title: "Get Product Page with Type Filter"
-openapi: "GET /endpointproductv2/productpagewithfilter"
-description: "Endpoint where you can get your products with type filter"
+title: "Search Product"
+openapi: "GET /endpointproductv2/search"
+description: "Endpoint used to search your products by name keyword"
 ---
+
+{/*
+  Notes for maintainers — REPRESENTATIVE read sample.
+  In V2 the V1 dedicated product-search route is folded into the products list endpoint
+  GET /hl/v2/products via the `search` query parameter (no separate /search path exists).
+  Envelope key is PLURAL `messages`; the list is cursor-paginated (limit + startingAfter ->
+  hasMore + nextStartingAfter). Field values below are synthetic (testingmayar.myr.id tenant,
+  published-style UUIDs); shapes are source-accurate to the products list response.
+*/}
 
 <RequestExample>
 
 ```bash Request Example
-curl --request GET 'https://api.mayar.id/hl/v2/products/types/generic_link?limit=10' \
+curl --request GET 'https://api.mayar.id/hl/v2/products?search=website&limit=10' \
 --header 'Authorization: Bearer Paste-Your-API-Key-Here'
 ```
 
@@ -46,28 +55,36 @@ curl --request GET 'https://api.mayar.id/hl/v2/products/types/generic_link?limit
                 "url": "https://media.mayar.id/images/2529541f-dc98-4ca0-93bb-3c1d35a8dd07.jpeg"
             },
             "multipleImage": null,
+            "variants": null,
             "linkUrl": "https://testingmayar.myr.id/plink/jasa-pembuatan-website",
             "linkPayment": "https://testingmayar.myr.id/pl/jasa-pembuatan-website"
         }
     ],
-    "hasMore": true,
-    "nextStartingAfter": "1768375011056"
+    "hasMore": false,
+    "nextStartingAfter": null
 }
 ```
 
 </ResponseExample>
+
+<Note>
+  Product search in V2 is a query on the products list endpoint: pass the `search`
+  keyword to `GET /hl/v2/products`. There is no dedicated `/products/search` path.
+  The `search` parameter can be combined with `type`, `stock`, `limit`, and
+  `startingAfter`.
+</Note>
 
 Endpoint:
 
 <CodeGroup>
 
 ```Production Production
-https://api.mayar.id/hl/v2/products/types/generic_link?limit=10
+https://api.mayar.id/hl/v2/products?search=website
 ```
 
 
 ```Sandbox Sandbox
-https://api.mayar.club/hl/v2/products/types/generic_link?limit=10
+https://api.mayar.club/hl/v2/products?search=website
 ```
 
 </CodeGroup>
@@ -80,36 +97,19 @@ https://api.mayar.club/hl/v2/products/types/generic_link?limit=10
   `Authorization | Bearer Paste-Your-API-Key-Here`
 </ResponseField>
 
-## Path Parameters
-
-<ParamField path="type" type="string" required>
-  Product type for filtering, list all product with filter:
-
-  - generic_link
-  - physical_product
-  - event
-  - webinar
-  - digital_product
-  - coaching
-  - course
-  - cohort_based
-  - fundraising
-  - ebook
-  - podcast
-  - audiobook
-  - membership
-  - zakat
-  - invoice
-  - bundling
-  - saas
-  - payment_request
-  - support
-</ParamField>
-
 ## Query Parameters
 
 <ParamField query="search" path="search" type="string">
-  Filter the listed products by name keyword.
+  Keyword to filter products by name. Matching is case-insensitive.
+</ParamField>
+
+<ParamField query="type" path="type" type="string">
+  Optionally narrow the search to a product type (e.g. `generic_link`, `event`,
+  `webinar`, `digital_product`).
+</ParamField>
+
+<ParamField query="stock" path="stock" type="string">
+  Optionally filter by stock availability.
 </ParamField>
 
 <ParamField query="limit" path="limit" default="10" type="integer">
@@ -137,7 +137,7 @@ Successful Response
 </ResponseField>
 
 <ResponseField name="data" type="array of object">
-  List of products of the requested type.
+  List of products matching the search keyword. Empty array when nothing matches.
 </ResponseField>
 
 <ResponseField name="hasMore" type="boolean" >
@@ -176,7 +176,7 @@ Successful Response
 </ResponseField>
 
 <ResponseField name="type" type="string" >
-  Product type (e.g., `saas`, `event`, `membership`, `ebook`, etc.).
+  Product type (e.g., `generic_link`, `event`, `webinar`, `digital_product`).
 </ResponseField>
 
 <ResponseField name="subType" type="string | null">
@@ -184,7 +184,7 @@ Successful Response
 </ResponseField>
 
 <ResponseField name="status" type="string" >
-  Current product status (e.g., `active`, `inactive`).
+  Current product status (e.g., `active`, `closed`, `unlisted`).
 </ResponseField>
 
 <ResponseField name="name" type="string" >
@@ -233,6 +233,10 @@ Successful Response
 
 <ResponseField name="multipleImage" type="array | null">
   List of additional image objects.
+</ResponseField>
+
+<ResponseField name="variants" type="array | null">
+  Product variants.
 </ResponseField>
 
 <ResponseField name="linkUrl" type="string" >

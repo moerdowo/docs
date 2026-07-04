@@ -8,10 +8,14 @@ description: "Endpoint to create (or reuse) an invoice for a membership member's
   Notes for maintainers (derived from the V2 membership source surface — this is a
   WRITE endpoint, so the response below is REPRESENTATIVE to avoid mutating live data):
   - Response uses the SINGULAR `message` key (writes use `message`; reads use plural `messages`). Do NOT normalize.
-  - Success is { statusCode, message, data } where `data` is the invoice object plus `membershipBillUrl`.
+  - Success is { statusCode, message, data } where `data` is the membership invoice
+    (payment-link) object plus a derived `membershipBillUrl`.
   - `membershipBillUrl` has the shape `https://<tenant>.mayar.shop/pl/<link>` — the tenant's shop
     subdomain, NOT api.mayar.id.
-  - Invoice fields beyond `membershipBillUrl` are representative; confirm against a live response.
+  - The invoice object field NAMES are source-confirmed: the handler returns the invoice
+    payment-link (id, name, status, term, amount, membershipTierId, createdAt) after stripping
+    link, userId, membershipCustomerId and reminderWellcomeId, then appends membershipBillUrl.
+    VALUES are representative; confirm against a live response.
   - All values are synthetic.
 */}
 
@@ -41,12 +45,11 @@ curl --request POST 'https://api.mayar.id/hl/v2/memberships/members/MBR8X2QK/inv
     "message": "success",
     "data": {
         "id": "df65d192-8396-4f9a-b4e5-8244648c07c5",
-        "transactionId": "ca87fd13-8742-4d48-af33-7de1a417bc34",
-        "customerId": "a1b2c3d4-e5f6-4789-a012-3456789abcde",
-        "membershipTierId": "9b2d4f6a-8c1e-4a3b-bd5c-6e7f8a9b0c1d",
+        "name": "Tagihan Membership - Paket 1",
+        "status": "unpaid",
+        "term": "membershipInvoice:c4d5e6f7-a8b9-4c0d-8e1f-2a3b4c5d6e7f:6:2026",
         "amount": 150000,
-        "status": "created",
-        "expiredAt": "2026-07-20T09:10:57.994Z",
+        "membershipTierId": "9b2d4f6a-8c1e-4a3b-bd5c-6e7f8a9b0c1d",
         "createdAt": "2026-06-20T09:10:57.994Z",
         "membershipBillUrl": "https://testingmayar.mayar.shop/pl/mbr9x2k7m3a"
     }
@@ -140,31 +143,32 @@ Successful Response
 </ResponseField>
 
 <ResponseField name="data.id" type="string">
-  The unique identifier of the invoice.
+  The unique identifier of the invoice (payment link).
 </ResponseField>
 
-<ResponseField name="data.transactionId" type="string">
-  The identifier of the underlying transaction associated with the invoice.
+<ResponseField name="data.name" type="string">
+  The invoice name (for example `Tagihan Membership - <tier name>`).
 </ResponseField>
 
-<ResponseField name="data.customerId" type="string">
-  The identifier of the customer being billed.
+<ResponseField name="data.status" type="string">
+  Current status of the invoice (for example `unpaid`).
 </ResponseField>
 
-<ResponseField name="data.membershipTierId" type="string">
-  The identifier of the member's tier.
+<ResponseField name="data.term" type="string">
+  The billing-term key the invoice is idempotent on, in the form
+  `membershipInvoice:<membershipCustomerId>:<month0idx>:<year>`.
 </ResponseField>
 
 <ResponseField name="data.amount" type="number">
   The amount due for the billing term.
 </ResponseField>
 
-<ResponseField name="data.status" type="string">
-  Current status of the invoice (for example `created`).
+<ResponseField name="data.membershipTierId" type="string">
+  The identifier of the member's tier.
 </ResponseField>
 
-<ResponseField name="data.expiredAt" type="string">
-  Invoice expiration time in ISO 8601 format (UTC).
+<ResponseField name="data.createdAt" type="string">
+  Invoice creation time in ISO 8601 format (UTC).
 </ResponseField>
 
 <ResponseField name="data.membershipBillUrl" type="string">
@@ -198,3 +202,7 @@ Common errors:
 | --- | --- | --- |
 | `400` | `Invalid path parameter` | `memberId` is missing or malformed in the path. |
 | `400` | `Invalid request body` | `productId` is missing from both the body and the query, or the request fails validation. |
+| `404` | `Member dengan ID {memberId} tidak ditemukan.` | No membership member matches the given `memberId`. |
+| `400` | `produk telah ditutup/dihapus.` | The member's product is closed or deleted. |
+| `400` | `Membership member ini telah selesai (finished).` | The member's status is `finished`; no invoice can be raised. |
+| `400` | `Tagihan membership tidak dapat dibuat saat ini.` | No billable invoice could be produced for the current period. |

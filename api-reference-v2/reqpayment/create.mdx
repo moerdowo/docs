@@ -5,10 +5,12 @@ description: "Endpoint used to create a single payment request"
 ---
 
 {/* Notes for maintainers: this is a WRITE endpoint. The response shape below is
-REPRESENTATIVE — derived from the V1 request-payment template and the V2 source
-surface, not captured from a live prod write. The `data` object returns the
-created payment request's id, transactionId, and public link. `messages` is
-PLURAL on this endpoint (this group never uses singular `message`). */}
+REPRESENTATIVE — derived from the V2 payment-request-create endpoint, not captured
+from a live prod write. The `data` object returns the created payment request's id,
+transactionId (null unless an email is provided), paymentLinkId, public link, amount,
+status, and timestamps. Only `amount` is a required body field; every other field is
+optional. `messages` is PLURAL on this endpoint (this group never uses singular
+`message`). */}
 
 <RequestExample>
 
@@ -36,7 +38,14 @@ curl --request POST 'https://api.mayar.id/hl/v2/payments/create' \
     "data": {
         "id": "6f8c19ff-5b97-4792-aa89-d2a12797b356",
         "transactionId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-        "link": "https://testingmayar.myr.id/pl/rqp9x2k7m3a"
+        "paymentLinkId": "6f8c19ff-5b97-4792-aa89-d2a12797b356",
+        "link": "https://testingmayar.myr.id/invoices/rqp9x2k7m3a",
+        "amount": 100000,
+        "description": "Pembayaran jasa konsultasi",
+        "notes": null,
+        "status": "unpaid",
+        "expiredAt": "2026-07-19T16:43:23.000Z",
+        "createdAt": "2026-07-03T09:15:00.000Z"
     }
 }
 ```
@@ -68,16 +77,20 @@ https://api.mayar.club/hl/v2/payments/create
 
 ## Request Body
 
-<ParamField path="name" type="string" required>
-  Name/title of the payment request.
+<ParamField path="amount" type="integer" required>
+  Nominal amount of payment. Must be a positive integer of at least `500`. This is
+  the only required body field.
 </ParamField>
 
-<ParamField path="amount" type="integer" required>
-  Nominal amount of payment.
+<ParamField path="name" type="string">
+  Customer/payer name. When an `email` is supplied, this is used as the name of the
+  customer record created for the payer. (The payment request's own internal title
+  is set by the API.)
 </ParamField>
 
 <ParamField path="email" type="string">
-  Customer email used to send proof of payment or payment reminders.
+  Customer email used to send proof of payment or payment reminders. When present,
+  a customer record and a transaction are created and a `transactionId` is returned.
 </ParamField>
 
 <ParamField path="mobile" type="string">
@@ -86,6 +99,10 @@ https://api.mayar.club/hl/v2/payments/create
 
 <ParamField path="description" type="string">
   General description of the transaction or order.
+</ParamField>
+
+<ParamField path="redirectUrl" type="string">
+  URL to redirect the customer to after a successful payment.
 </ParamField>
 
 <ParamField path="notes" type="string">
@@ -133,12 +150,42 @@ Successful Response
   Unique request payment ID.
 </ResponseField>
 
-<ResponseField name="transactionId" type="string<uuid>" >
-  Unique transaction ID associated with this payment request.
+<ResponseField name="transactionId" type="string<uuid> | null" >
+  Unique transaction ID associated with this payment request. `null` unless an
+  `email` was provided at creation (which also creates the customer transaction).
+</ResponseField>
+
+<ResponseField name="paymentLinkId" type="string<uuid>" >
+  Payment link ID backing this payment request (equal to `id`).
 </ResponseField>
 
 <ResponseField name="link" type="string" >
   The URL that customers can access to open the payment request.
+</ResponseField>
+
+<ResponseField name="amount" type="integer" >
+  The nominal amount of the payment request.
+</ResponseField>
+
+<ResponseField name="description" type="string | null" >
+  Payment request description (HTML tags are stripped).
+</ResponseField>
+
+<ResponseField name="notes" type="string | null" >
+  Additional notes attached to the payment request.
+</ResponseField>
+
+<ResponseField name="status" type="string" >
+  Payment request status. `unpaid` for a freshly created request.
+</ResponseField>
+
+<ResponseField name="expiredAt" type="string (ISO 8601) | null" >
+  Expiration date-time as an ISO 8601 string. Defaults to one hour after creation
+  when not supplied.
+</ResponseField>
+
+<ResponseField name="createdAt" type="string (ISO 8601)" >
+  Creation date-time as an ISO 8601 string.
 </ResponseField>
 
 ### Errors
