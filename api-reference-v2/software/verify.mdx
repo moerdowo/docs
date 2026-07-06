@@ -1,0 +1,162 @@
+---
+title: "Verify License (Software)"
+openapi: "POST /endpointsoftwarev2/verify"
+description: "Endpoint to verify a software activation license code."
+---
+
+<RequestExample>
+
+```bash Request Example
+curl --request POST 'https://api.mayar.id/software/v2/license/verify' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "licenseCode": "YOUR-LICENSE-CODE",
+    "productId": "YOUR-PRODUCT-ID"
+}'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "isLicenseActive": true,
+    "licenseCode": {
+        "licenseCode": "LICENSECODE12345",
+        "status": "ACTIVE",
+        "expiredAt": "2026-12-12T19:46:24.000Z",
+        "transactionId": "994d4071-a81e-4558-a854-47530eea9b6d",
+        "productId": "84d1d247-a8b3-4c7d-96f0-cf276edb7c33",
+        "customerId": "6a38cf26-6bab-42c8-92be-72f3a9fd4c33",
+        "customerName": "John Doe",
+        "customerEmail": "johndoe@gmail.com",
+        "activationLimit": "Tidak terbatas",
+        "useCount": 10,
+        "createdAt": "2024-02-12T08:41:13.579Z",
+        "updatedAt": "2024-02-12T08:57:36.047Z"
+    }
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/software/v2/license/verify
+```
+
+```Sandbox Sandbox
+https://api.mayar.club/software/v2/license/verify
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Request Body
+
+<ParamField body="licenseCode" type="string" required>
+  The license code to verify.
+</ParamField>
+
+<ParamField body="productId" type="string" required>
+  The ID of the product (payment link) associated with the license.
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer">
+  Status code from the API.
+</ResponseField>
+
+<ResponseField name="isLicenseActive" type="boolean">
+  Shows whether the license is currently active (`true` or `false`).
+</ResponseField>
+
+<ResponseField name="licenseCode" type="object">
+  Detailed information about the license code.
+</ResponseField>
+
+### licenseCode Structure (Object)
+
+<ResponseField name="licenseCode" type="string">
+  The license code value.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  License status (for example `ACTIVE`, `INACTIVE`, `EXPIRED`, `DISABLED`).
+</ResponseField>
+
+<ResponseField name="expiredAt" type="string">
+  License expiration date (ISO 8601 datetime) or `"Tidak terbatas"` (Unlimited).
+</ResponseField>
+
+<ResponseField name="transactionId" type="string<uuid>">
+  Related transaction ID.
+</ResponseField>
+
+<ResponseField name="productId" type="string<uuid>">
+  ID of the associated product.
+</ResponseField>
+
+<ResponseField name="customerId" type="string<uuid>">
+  Customer ID linked to the license.
+</ResponseField>
+
+<ResponseField name="customerName" type="string">
+  Customer's full name.
+</ResponseField>
+
+<ResponseField name="customerEmail" type="string">
+  Customer's email address.
+</ResponseField>
+
+<ResponseField name="activationLimit" type="string">
+  Maximum number of allowed activations (for example `"Tidak terbatas"` means "Unlimited").
+</ResponseField>
+
+<ResponseField name="useCount" type="number">
+  Number of times the license has been used/verified.
+</ResponseField>
+
+<ResponseField name="createdAt" type="string">
+  License creation timestamp (ISO 8601 datetime).
+</ResponseField>
+
+<ResponseField name="updatedAt" type="string">
+  Last updated timestamp (ISO 8601 datetime).
+</ResponseField>
+
+## Errors
+
+<ResponseField name="400 Bad Request" type="object">
+  Returned when `licenseCode` or `productId` is missing or invalid.
+</ResponseField>
+
+<ResponseField name="401 Unauthorized" type="object">
+  Returned when the Authorization header is missing or invalid.
+</ResponseField>
+
+<ResponseField name="404 Not Found" type="object">
+  Returned when the license code or product is not found.
+</ResponseField>
+
+<ResponseField name="400 Activation limit reached" type="object">
+  Returned when the license has reached its maximum activation limit.
+</ResponseField>

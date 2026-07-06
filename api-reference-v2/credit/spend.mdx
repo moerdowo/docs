@@ -1,0 +1,106 @@
+---
+title: "Spend Customer Credit"
+openapi: "POST /endpointcreditv2/spend"
+description: "Endpoint to spend (deduct) customer credit from their balance."
+---
+
+<RequestExample>
+
+```bash Request Example
+curl --request POST 'https://api.mayar.id/hl/v2/credit/customer/spend' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "customerId": "a1b2c3d4-e5f6-4789-a012-3456789abcde",
+    "productId": "7c9d2e1f-4a5b-4c6d-8e9f-0a1b2c3d4e5f",
+    "amount": 10000
+}'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "data": {
+        "customerNewBalance": 90000
+    }
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/credit/customer/spend
+```
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/credit/customer/spend
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Request Body
+
+<ParamField body="customerId" type="string" required>
+  The unique identifier of the customer whose credit will be spent.
+</ParamField>
+
+<ParamField body="productId" type="string" required>
+  The unique identifier of the credit-based or membership product.
+</ParamField>
+
+<ParamField body="membershipTierId" type="string">
+  The unique identifier of the membership tier (required when the product is a membership product with multiple tiers).
+</ParamField>
+
+<ParamField body="amount" type="integer" required>
+  The amount of credit to spend. Must be a positive integer not exceeding the customer's available balance.
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer">
+  Status code from the API.
+</ResponseField>
+
+<ResponseField name="messages" type="string">
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  The spend result object.
+</ResponseField>
+
+<ResponseField name="data.customerNewBalance" type="integer">
+  The customer's remaining balance after the spend operation.
+</ResponseField>
+
+## Errors
+
+<ResponseField name="400 Insufficient balance" type="object">
+  Returned when the customer does not have enough credit to spend the requested amount.
+</ResponseField>
+
+<ResponseField name="400 Validation Error" type="object">
+  Returned when required fields are missing or the amount is invalid.
+</ResponseField>

@@ -1,0 +1,168 @@
+---
+title: "Verify License (SaaS)"
+openapi: "POST /endpointsaasv2/verify"
+description: "Endpoint to verify a SaaS subscription license by providing the license code and product ID."
+---
+
+<RequestExample>
+
+```bash Request Example
+curl --request POST 'https://api.mayar.id/saas/v2/license/verify' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "licenseCode": "YOUR-LICENSE-CODE",
+    "productId": "YOUR-PRODUCT-ID"
+}'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "isLicenseActive": true,
+    "memberStatus": "ACTIVE",
+    "licenseCode": {
+        "licenseCode": "CA5DA5D3E1AA8B74",
+        "status": "ACTIVE",
+        "expiredAt": "2026-04-22T17:12:53.646Z",
+        "transactionId": "994d4071-a81e-4558-a854-47530eea9b6d",
+        "productId": "84d1d247-a8b3-4c7d-96f0-cf276edb7c33",
+        "customerId": "6a38cf26-6bab-42c8-92be-72f3a9fd4c33",
+        "customerName": "John Doe",
+        "customerEmail": "johndoe@gmail.com",
+        "createdAt": "2024-02-12T08:41:13.579Z",
+        "updatedAt": "2024-02-12T08:57:36.047Z",
+        "membershipTierId": "c96850f9-b379-4ed3-bcf2-6d88a87bd20c",
+        "membershipTierName": "Master Black Belt Membership",
+        "memberPaymentLink": "https://johndoe.mayar.id/pay-membership/MBR8X2QK"
+    }
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/saas/v2/license/verify
+```
+
+```Sandbox Sandbox
+https://api.mayar.club/saas/v2/license/verify
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Request Body
+
+<ParamField body="licenseCode" type="string" required>
+  The SaaS license code to verify.
+</ParamField>
+
+<ParamField body="productId" type="string" required>
+  The ID of the product (payment link) associated with the license.
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer">
+  Status code from the API.
+</ResponseField>
+
+<ResponseField name="isLicenseActive" type="boolean">
+  Shows whether the license is currently active (`true` or `false`).
+</ResponseField>
+
+<ResponseField name="memberStatus" type="string">
+  The membership customer status (for example `ACTIVE`, `INACTIVE`).
+</ResponseField>
+
+<ResponseField name="licenseCode" type="object">
+  Detailed information about the license code.
+</ResponseField>
+
+### licenseCode Structure (Object)
+
+<ResponseField name="licenseCode" type="string">
+  The license code value.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  License status (for example `ISSUED`, `ACTIVE`, `INACTIVE`, `DISABLED`).
+</ResponseField>
+
+<ResponseField name="expiredAt" type="string">
+  License expiration date (ISO 8601 datetime).
+</ResponseField>
+
+<ResponseField name="transactionId" type="string<uuid>">
+  Related transaction ID.
+</ResponseField>
+
+<ResponseField name="productId" type="string<uuid>">
+  ID of the associated product.
+</ResponseField>
+
+<ResponseField name="customerId" type="string<uuid>">
+  Customer ID linked to the license.
+</ResponseField>
+
+<ResponseField name="customerName" type="string">
+  Customer's full name.
+</ResponseField>
+
+<ResponseField name="customerEmail" type="string">
+  Customer's email address.
+</ResponseField>
+
+<ResponseField name="createdAt" type="string">
+  License creation timestamp (ISO 8601 datetime).
+</ResponseField>
+
+<ResponseField name="updatedAt" type="string">
+  Last updated timestamp (ISO 8601 datetime).
+</ResponseField>
+
+<ResponseField name="membershipTierId" type="string<uuid>">
+  ID of the membership tier associated with the license.
+</ResponseField>
+
+<ResponseField name="membershipTierName" type="string">
+  Name of the membership tier.
+</ResponseField>
+
+<ResponseField name="memberPaymentLink" type="string">
+  The member-specific payment link for subscription renewal.
+</ResponseField>
+
+## Errors
+
+<ResponseField name="400 Bad Request" type="object">
+  Returned when `licenseCode` or `productId` is missing or invalid.
+</ResponseField>
+
+<ResponseField name="401 Unauthorized" type="object">
+  Returned when the Authorization header is missing or invalid.
+</ResponseField>
+
+<ResponseField name="404 Not Found" type="object">
+  Returned when the license code or product is not found.
+</ResponseField>

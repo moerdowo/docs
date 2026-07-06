@@ -333,6 +333,14 @@
             ]
           },
           {
+            "group": "QR / Payment Channels",
+            "pages": [
+              "api-reference-v2/qrcode/createdynamicqrcode",
+              "api-reference-v2/qrcode/getstaticqrcode",
+              "api-reference-v2/qrcode/paymentchannels"
+            ]
+          },
+          {
             "group": "Transaction",
             "pages": [
               "api-reference-v2/transaction/paidtransaction",
@@ -360,14 +368,6 @@
               "api-reference-v2/membership/update",
               "api-reference-v2/membership/createinvoice",
               "api-reference-v2/membership/cancel"
-            ]
-          },
-          {
-            "group": "QR / Payment Channels",
-            "pages": [
-              "api-reference-v2/qrcode/createdynamicqrcode",
-              "api-reference-v2/qrcode/getstaticqrcode",
-              "api-reference-v2/qrcode/paymentchannels"
             ]
           },
           {
@@ -401,13 +401,6 @@
             ]
           },
           {
-            "group": "Name Services",
-            "pages": [
-              "api-reference-v2/nameservice/create",
-              "api-reference-v2/nameservice/update"
-            ]
-          },
-          {
             "group": "Webhook",
             "pages": [
               "api-reference-v2/webhook/history",
@@ -428,6 +421,32 @@
               "api-reference-v2/reviews/create",
               "api-reference-v2/reviews/update",
               "api-reference-v2/reviews/bulkstatusupdate"
+            ]
+          },
+          {
+            "group": "Credit (Membership / Usage)",
+            "pages": [
+              "api-reference-v2/credit/balance",
+              "api-reference-v2/credit/spend",
+              "api-reference-v2/credit/add-credit",
+              "api-reference-v2/credit/paginate-credit-history",
+              "api-reference-v2/credit/regist-membership",
+              "api-reference-v2/credit/regist-credit-usage",
+              "api-reference-v2/credit/generate-immutable-checkout"
+            ]
+          },
+          {
+            "group": "SaaS Subscription License",
+            "pages": [
+              "api-reference-v2/saas/verify",
+              "api-reference-v2/saas/activate",
+              "api-reference-v2/saas/deactivate"
+            ]
+          },
+          {
+            "group": "Software License",
+            "pages": [
+              "api-reference-v2/software/verify"
             ]
           }
         ]

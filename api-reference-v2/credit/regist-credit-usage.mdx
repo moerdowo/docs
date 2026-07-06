@@ -1,0 +1,138 @@
+---
+title: "Register Credit Usage Customer"
+openapi: "POST /endpointcreditv2/regist-credit-usage"
+description: "Endpoint to register a new customer for a credit-usage product."
+---
+
+<RequestExample>
+
+```bash Request Example
+curl --request POST 'https://api.mayar.id/hl/v2/credit/credit-usage/customer/regist' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "productId": "7c9d2e1f-4a5b-4c6d-8e9f-0a1b2c3d4e5f",
+    "customerInfo": {
+        "name": "Budi Santoso",
+        "email": "budi.santoso@example.com",
+        "mobile": "081234567890"
+    },
+    "trialCredit": 25000
+}'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 201
+{
+    "statusCode": 201,
+    "message": "success",
+    "data": {
+        "customerId": "a1b2c3d4-e5f6-4789-a012-3456789abcde",
+        "customerName": "Budi Santoso",
+        "customerEmail": "budi.santoso@example.com",
+        "customerBalance": 25000,
+        "checkoutLink": "https://web.mayar.id/pl/checkout?product=7c9d2e1f-4a5b-4c6d-8e9f-0a1b2c3d4e5f&customer=a1b2c3d4"
+    }
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/credit/credit-usage/customer/regist
+```
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/credit/credit-usage/customer/regist
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Request Body
+
+<ParamField body="productId" type="string" required>
+  The unique identifier of the credit-usage product.
+</ParamField>
+
+<ParamField body="customerInfo" type="object" required>
+  The customer's contact details.
+</ParamField>
+
+<ParamField body="customerInfo.name" type="string" required>
+  The customer's full name.
+</ParamField>
+
+<ParamField body="customerInfo.email" type="string" required>
+  The customer's email address.
+</ParamField>
+
+<ParamField body="customerInfo.mobile" type="string" required>
+  The customer's mobile phone number.
+</ParamField>
+
+<ParamField body="trialCredit" type="integer">
+  Optional trial credit amount to grant to the customer upon registration.
+</ParamField>
+
+## Response
+
+Successful Response — HTTP `201`
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer">
+  Status code from the API. `201` on successful registration.
+</ResponseField>
+
+<ResponseField name="message" type="string">
+  Status message (singular — write endpoints use `message`).
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  The registration result containing customer details, balance, and checkout link.
+</ResponseField>
+
+<ResponseField name="data.customerId" type="string<uuid>">
+  The unique identifier of the created or existing customer.
+</ResponseField>
+
+<ResponseField name="data.customerName" type="string">
+  The customer's full name.
+</ResponseField>
+
+<ResponseField name="data.customerEmail" type="string">
+  The customer's email address.
+</ResponseField>
+
+<ResponseField name="data.customerBalance" type="integer">
+  The customer's initial credit balance (including trial credit if granted).
+</ResponseField>
+
+<ResponseField name="data.checkoutLink" type="string">
+  The checkout URL for the customer to purchase additional credit.
+</ResponseField>
+
+## Errors
+
+<ResponseField name="400 Validation Error" type="object">
+  Returned when the request body fails validation.
+</ResponseField>
+
+<ResponseField name="400 Customer already exists" type="object">
+  Returned when a customer with this email already has a paid transaction on this product.
+</ResponseField>
