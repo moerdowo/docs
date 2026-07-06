@@ -1,0 +1,150 @@
+---
+title: "Register Membership Customer"
+openapi: "POST /endpointcreditv2/regist-membership"
+description: "Endpoint to register a new customer for a membership (subscription) product with trial credit."
+---
+
+<RequestExample>
+
+```bash Request Example
+curl --request POST 'https://api.mayar.id/hl/v2/credit/membership/customer/regist' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "productId": "7c9d2e1f-4a5b-4c6d-8e9f-0a1b2c3d4e5f",
+    "membershipTierId": "9b2d4f6a-8c1e-4a3b-bd5c-6e7f8a9b0c1d",
+    "customerInfo": {
+        "name": "Budi Santoso",
+        "email": "budi.santoso@example.com",
+        "mobile": "081234567890"
+    },
+    "trialCredit": 50000,
+    "membershipMonthlyPeriod": 1
+}'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 201
+{
+    "statusCode": 201,
+    "message": "success",
+    "data": {
+        "membershipCustomer": {
+            "id": "c4d5e6f7-a8b9-4c0d-8e1f-2a3b4c5d6e7f",
+            "memberId": "MBR8X2QK",
+            "userId": "348e083d-315a-4e5c-96b1-5a2a98c48413",
+            "customerId": "a1b2c3d4-e5f6-4789-a012-3456789abcde",
+            "membershipTierId": "9b2d4f6a-8c1e-4a3b-bd5c-6e7f8a9b0c1d",
+            "paymentLinkId": "7c9d2e1f-4a5b-4c6d-8e9f-0a1b2c3d4e5f",
+            "monthlyPaymentPeriod": 1,
+            "status": "active",
+            "nextPayment": "2026-08-20T09:10:57.994Z",
+            "expiredAt": null,
+            "createdAt": "2026-07-20T09:10:57.994Z",
+            "updatedAt": "2026-07-20T09:10:57.994Z"
+        },
+        "paymentLink": "https://web.mayar.id/pay-membership/MBR8X2QK"
+    }
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/credit/membership/customer/regist
+```
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/credit/membership/customer/regist
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Request Body
+
+<ParamField body="productId" type="string" required>
+  The unique identifier of the membership product.
+</ParamField>
+
+<ParamField body="membershipTierId" type="string">
+  The unique identifier of the membership tier to enroll the customer in.
+</ParamField>
+
+<ParamField body="customerInfo" type="object" required>
+  The customer's contact details.
+</ParamField>
+
+<ParamField body="customerInfo.name" type="string" required>
+  The customer's full name (3-250 characters).
+</ParamField>
+
+<ParamField body="customerInfo.email" type="string" required>
+  The customer's email address (6-55 characters).
+</ParamField>
+
+<ParamField body="customerInfo.mobile" type="string" required>
+  The customer's mobile phone number (10-15 characters).
+</ParamField>
+
+<ParamField body="trialCredit" type="integer">
+  Optional trial credit amount to grant to the customer upon registration.
+</ParamField>
+
+<ParamField body="membershipMonthlyPeriod" type="integer" required>
+  The monthly billing period for the membership. Accepted values: `1`, `3`, `6`, `12`.
+</ParamField>
+
+## Response
+
+Successful Response — HTTP `201`
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer">
+  Status code from the API. `201` on successful registration.
+</ResponseField>
+
+<ResponseField name="message" type="string">
+  Status message (singular — write endpoints use `message`).
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  The registration result wrapper.
+</ResponseField>
+
+<ResponseField name="data.membershipCustomer" type="object">
+  The newly created membership customer record.
+</ResponseField>
+
+<ResponseField name="data.paymentLink" type="string">
+  The checkout URL for the member's first payment.
+</ResponseField>
+
+## Errors
+
+<ResponseField name="400 Validation Error" type="object">
+  Returned when the request body fails validation.
+</ResponseField>
+
+<ResponseField name="400 Email already registered" type="object">
+  Returned when a customer with this email is already registered on this tier.
+</ResponseField>
+
+<ResponseField name="400 Tier limit reached" type="object">
+  Returned when the membership tier has reached its maximum member limit.
+</ResponseField>

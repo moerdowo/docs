@@ -1,0 +1,201 @@
+---
+title: "Paginate Customer Credit History"
+openapi: "GET /endpointcreditv2/paginate-credit-history"
+description: "Endpoint to retrieve paginated credit transaction history for a customer."
+---
+
+<RequestExample>
+
+```bash Request Example
+curl --request GET 'https://api.mayar.id/hl/v2/credit/customer/paginate-credit-history/a1b2c3d4-e5f6-4789-a012-3456789abcde?productId=7c9d2e1f-4a5b-4c6d-8e9f-0a1b2c3d4e5f&page=1&limit=10' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "data": [
+        {
+            "id": "f1e2d3c4-b5a6-4789-9012-3456789abcdef",
+            "datetime": "2026-06-20T09:10:57.994Z",
+            "type": "CREDIT_USAGE",
+            "amount": 10000,
+            "balanceBefore": 60000,
+            "balanceAfter": 50000,
+            "walletType": "MAIN",
+            "description": "Credit usage for product order",
+            "customerId": "a1b2c3d4-e5f6-4789-a012-3456789abcde",
+            "productId": "7c9d2e1f-4a5b-4c6d-8e9f-0a1b2c3d4e5f"
+        },
+        {
+            "id": "a1b2c3d4-e5f6-4789-9012-3456789abcdef",
+            "datetime": "2026-06-19T15:30:00.000Z",
+            "type": "MERCHANT_TOPUP",
+            "amount": 50000,
+            "balanceBefore": 10000,
+            "balanceAfter": 60000,
+            "walletType": "ADD_ON",
+            "description": "Merchant top-up",
+            "customerId": "a1b2c3d4-e5f6-4789-a012-3456789abcde",
+            "productId": "7c9d2e1f-4a5b-4c6d-8e9f-0a1b2c3d4e5f"
+        }
+    ],
+    "metadata": {
+        "page": 1,
+        "limit": 10,
+        "totalPages": 1,
+        "totalData": 2
+    }
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/credit/customer/paginate-credit-history/(customerId)?productId=(productId)&page=1&limit=10
+```
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/credit/customer/paginate-credit-history/(customerId)?productId=(productId)&page=1&limit=10
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Path Parameters
+
+<ParamField path="customerId" type="string" required>
+  The unique identifier of the customer whose credit history you want to retrieve.
+</ParamField>
+
+## Query Parameters
+
+<ParamField query="productId" type="string" required>
+  The unique identifier of the product to filter credit history by.
+</ParamField>
+
+<ParamField query="membershipTierId" type="string">
+  The unique identifier of the membership tier to filter by.
+</ParamField>
+
+<ParamField query="page" type="integer" default="1">
+  Page number for pagination.
+</ParamField>
+
+<ParamField query="limit" type="integer" default="10">
+  Number of records per page.
+</ParamField>
+
+<ParamField query="sortField" type="string" default="datetime">
+  Field to sort by (for example `datetime`, `amount`).
+</ParamField>
+
+<ParamField query="sortOrder" type="string" default="desc">
+  Sort order: `asc` or `desc`.
+</ParamField>
+
+<ParamField query="startDate" type="string">
+  Start date filter (ISO 8601 format).
+</ParamField>
+
+<ParamField query="endDate" type="string">
+  End date filter (ISO 8601 format).
+</ParamField>
+
+<ParamField query="walletType" type="string">
+  Filter by wallet type: `MEMBERSHIP`, `ADD_ON`, or `MAIN`.
+</ParamField>
+
+<ParamField query="type" type="string">
+  Filter by transaction type: `TOPUP`, `MERCHANT_TOPUP`, `TRIAL_TOPUP`, `EXPIRE_VOID`, `CREDIT_USAGE`.
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer">
+  Status code from the API.
+</ResponseField>
+
+<ResponseField name="messages" type="string">
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="array of object">
+  Array of credit transaction records.
+</ResponseField>
+
+<ResponseField name="metadata" type="object">
+  Pagination metadata containing `page`, `limit`, `totalPages`, and `totalData`.
+</ResponseField>
+
+### data Structure (Array Of Object)
+
+<ResponseField name="id" type="string<uuid>">
+  Unique identifier of the credit transaction.
+</ResponseField>
+
+<ResponseField name="datetime" type="string">
+  ISO 8601 timestamp (UTC) of the transaction.
+</ResponseField>
+
+<ResponseField name="type" type="string">
+  Transaction type: `TOPUP`, `MERCHANT_TOPUP`, `TRIAL_TOPUP`, `EXPIRE_VOID`, or `CREDIT_USAGE`.
+</ResponseField>
+
+<ResponseField name="amount" type="integer">
+  The amount of credit involved in the transaction.
+</ResponseField>
+
+<ResponseField name="balanceBefore" type="integer">
+  Customer balance before the transaction.
+</ResponseField>
+
+<ResponseField name="balanceAfter" type="integer">
+  Customer balance after the transaction.
+</ResponseField>
+
+<ResponseField name="walletType" type="string">
+  Wallet type affected: `MAIN`, `MEMBERSHIP`, or `ADD_ON`.
+</ResponseField>
+
+<ResponseField name="description" type="string">
+  Description of the transaction.
+</ResponseField>
+
+<ResponseField name="customerId" type="string<uuid>">
+  Customer identifier associated with the transaction.
+</ResponseField>
+
+<ResponseField name="productId" type="string<uuid>">
+  Product identifier associated with the transaction.
+</ResponseField>
+
+## Errors
+
+<ResponseField name="400 Invalid query parameters" type="object">
+  Returned when required parameters are missing or fail validation.
+</ResponseField>
+
+<ResponseField name="404 Customer not found" type="object">
+  Returned when the specified customer is not found.
+</ResponseField>

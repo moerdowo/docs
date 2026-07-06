@@ -1,0 +1,118 @@
+---
+title: "Generate Immutable Checkout Link"
+openapi: "POST /endpointcreditv2/generate-immutable-checkout"
+description: "Endpoint to generate an immutable checkout link pre-filled with customer information for credit-based or membership products."
+---
+
+<RequestExample>
+
+```bash Request Example
+curl --request POST 'https://api.mayar.id/hl/v2/credit/generate/immutable/checkout' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "productId": "7c9d2e1f-4a5b-4c6d-8e9f-0a1b2c3d4e5f",
+    "customerInfo": {
+        "name": "Budi Santoso",
+        "email": "budi.santoso@example.com",
+        "mobile": "081234567890"
+    },
+    "creditAmount": 50000
+}'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "message": "success",
+    "data": {
+        "checkoutLink": "https://web.mayar.id/pl/checkout?product=7c9d2e1f-4a5b-4c6d-8e9f-0a1b2c3d4e5f&immutable=eyJhbGciOiJIUzI1NiJ9.eyJjdXN0b21lck5hbWUiOiJcdTAwMjZndDsiLCJjdXN0b21lckVtYWlsIjoiY..."
+    }
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/credit/generate/immutable/checkout
+```
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/credit/generate/immutable/checkout
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Request Body
+
+<ParamField body="productId" type="string" required>
+  The unique identifier of the credit-based or membership product.
+</ParamField>
+
+<ParamField body="customerInfo" type="object" required>
+  The customer's contact details to pre-fill in the checkout link.
+</ParamField>
+
+<ParamField body="customerInfo.name" type="string" required>
+  The customer's full name.
+</ParamField>
+
+<ParamField body="customerInfo.email" type="string" required>
+  The customer's email address.
+</ParamField>
+
+<ParamField body="customerInfo.mobile" type="string" required>
+  The customer's mobile phone number.
+</ParamField>
+
+<ParamField body="creditAmount" type="integer" required>
+  The amount of credit to set as the default value in the checkout. For membership products this determines the tier pricing displayed.
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer">
+  Status code from the API.
+</ResponseField>
+
+<ResponseField name="message" type="string">
+  Status message (singular — write endpoints use `message`).
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  The checkout link result.
+</ResponseField>
+
+<ResponseField name="data.checkoutLink" type="string">
+  The immutable checkout URL with customer information embedded as an HMAC-signed token. This URL can be safely shared with the customer.
+</ResponseField>
+
+## Errors
+
+<ResponseField name="400 Validation Error" type="object">
+  Returned when required fields are missing or fail validation.
+</ResponseField>
+
+<ResponseField name="400 Unauthorized" type="object">
+  Returned when the API key does not have access to the specified product.
+</ResponseField>

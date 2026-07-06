@@ -1,0 +1,94 @@
+---
+title: "Activate License (SaaS)"
+openapi: "POST /endpointsaasv2/activate"
+description: "Endpoint to activate a SaaS subscription license code."
+---
+
+<RequestExample>
+
+```bash Request Example
+curl --request POST 'https://api.mayar.id/saas/v2/license/activate' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "licenseCode": "YOUR-LICENSE-CODE",
+    "productId": "YOUR-PRODUCT-ID"
+}'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "message": "Success updating license code status to ACTIVE."
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/saas/v2/license/activate
+```
+
+```Sandbox Sandbox
+https://api.mayar.club/saas/v2/license/activate
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Request Body
+
+<ParamField body="licenseCode" type="string" required>
+  The license code to activate.
+</ParamField>
+
+<ParamField body="productId" type="string" required>
+  The ID of the product (payment link) associated with the license.
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer">
+  Status code from the API. `200` on successful activation.
+</ResponseField>
+
+<ResponseField name="message" type="string">
+  Status message describing the result.
+</ResponseField>
+
+<Info>
+  By performing this action, the status of the license code will change to `ACTIVE`.
+</Info>
+
+## Errors
+
+<ResponseField name="400 Bad Request" type="object">
+  Returned when `licenseCode` or `productId` is missing or invalid.
+</ResponseField>
+
+<ResponseField name="401 Unauthorized" type="object">
+  Returned when the Authorization header is missing or invalid.
+</ResponseField>
+
+<ResponseField name="400 Failed identifying request" type="object">
+  Returned when the request cannot be processed.
+</ResponseField>

@@ -1,0 +1,146 @@
+---
+title: "Get Customer Credit Balance"
+openapi: "GET /endpointcreditv2/balance"
+description: "Endpoint to get the credit balance of a customer for a specific credit-based or membership product."
+---
+
+<RequestExample>
+
+```bash Request Example
+curl --request GET 'https://api.mayar.id/hl/v2/credit/customer/balance?customerId=a1b2c3d4-e5f6-4789-a012-3456789abcde&productId=7c9d2e1f-4a5b-4c6d-8e9f-0a1b2c3d4e5f' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200 (Credit Usage Product)
+{
+    "statusCode": 200,
+    "messages": "success",
+    "data": {
+        "customerBalance": 50000,
+        "customerBalanceMain": 50000,
+        "customerBalanceAddon": 0
+    }
+}
+```
+
+</ResponseExample>
+
+<ResponseExample>
+
+```json Response Example 200 (Membership Product)
+{
+    "statusCode": 200,
+    "messages": "success",
+    "data": {
+        "customerBalance": 50000,
+        "customerBalanceMembership": 50000,
+        "customerBalanceAddon": 0,
+        "customerDetail": {
+            "customerName": "Budi Santoso",
+            "customerEmail": "budi.santoso@example.com",
+            "customerMobile": "081234567890"
+        },
+        "membershipCustomerDetail": {
+            "nextPayment": "2026-08-15T15:29:59.430Z",
+            "expiredAt": "2026-07-15T15:29:59.430Z",
+            "status": "active"
+        }
+    }
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/credit/customer/balance?customerId=(customerId)&productId=(productId)
+```
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/credit/customer/balance?customerId=(customerId)&productId=(productId)
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Query Parameters
+
+<ParamField query="customerId" type="string" required>
+  The unique identifier of the customer whose credit balance you want to retrieve.
+</ParamField>
+
+<ParamField query="productId" type="string" required>
+  The unique identifier of the credit-based or membership product.
+</ParamField>
+
+<ParamField query="membershipTierId" type="string">
+  The unique identifier of the membership tier (required when the product is a membership product with multiple tiers).
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer">
+  Status code from the API.
+</ResponseField>
+
+<ResponseField name="messages" type="string">
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  The credit balance object. Shape depends on the product type (credit-usage vs membership).
+</ResponseField>
+
+### data Structure (Object)
+
+<ResponseField name="customerBalance" type="integer">
+  Total customer balance across all wallets.
+</ResponseField>
+
+<ResponseField name="customerBalanceMain" type="integer">
+  Main wallet balance (credit-usage product only).
+</ResponseField>
+
+<ResponseField name="customerBalanceMembership" type="integer">
+  Membership wallet balance (membership product only).
+</ResponseField>
+
+<ResponseField name="customerBalanceAddon" type="integer">
+  Add-on wallet balance (merchant top-up credit).
+</ResponseField>
+
+<ResponseField name="customerDetail" type="object">
+  Customer detail information (membership product only).
+</ResponseField>
+
+<ResponseField name="membershipCustomerDetail" type="object">
+  Membership customer detail including `nextPayment`, `expiredAt`, and `status` (membership product only).
+</ResponseField>
+
+## Errors
+
+<ResponseField name="400 Invalid query parameters" type="object">
+  Returned with `messages: "Invalid query parameters"` when required parameters are missing or fail validation.
+</ResponseField>
+
+<ResponseField name="400 Unauthorized" type="object">
+  Returned when the API key does not have access to the specified product.
+</ResponseField>
