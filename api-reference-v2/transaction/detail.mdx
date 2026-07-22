@@ -1,0 +1,325 @@
+---
+title: "Get Transaction Detail"
+openapi: "GET /endpointtransactionv2/detail"
+description: "Endpoint to view the details of a transaction based on its ID"
+---
+
+<RequestExample>
+
+```bash Request Example
+curl --request GET 'https://api.mayar.id/hl/v2/transactions/a1b2c3d4-e5f6-7890-abcd-ef1234567890' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "data": {
+        "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+        "extraData": null,
+        "amount": 150000,
+        "createdAt": 1768375011056,
+        "updatedAt": 1768375112056,
+        "status": "paid",
+        "expirationDate": 1768461411056,
+        "invoiceCode": "INV-202607-XXXX",
+        "isCrossSell": false,
+        "orderVariant": null,
+        "paymentMethod": "QRIS",
+        "paymentLink": {
+            "id": "6e9f587d-8a8a-4a4e-b745-28c71d94ed9d",
+            "amount": 150000,
+            "status": "active",
+            "expiredAt": null,
+            "link": "contoh-produk",
+            "type": "payment_link"
+        },
+        "customer": {
+            "id": "c1a2b3c4-d5e6-4789-a012-3456789abcde",
+            "email": "andi.pratama@example.com",
+            "status": "active",
+            "name": "Andi Pratama",
+            "mobile": "081200000001",
+            "userId": "a0000000-0000-4000-8000-000000000001"
+        },
+        "givenCustomer": {
+            "id": "c1a2b3c4-d5e6-4789-a012-3456789abcde",
+            "email": "andi.pratama@example.com",
+            "status": "active",
+            "name": "Andi Pratama",
+            "mobile": "081200000001",
+            "userId": "a0000000-0000-4000-8000-000000000001"
+        },
+        "user": {
+            "id": "a0000000-0000-4000-8000-000000000001",
+            "name": "Toko Online",
+            "email": "merchant@example.com",
+            "account": {
+                "email": "merchant@example.com",
+                "name": "Toko Online",
+                "mobile": "081234567890",
+                "address": "Jl. Merdeka No. 123, Jakarta",
+                "logo": {
+                    "url": "https://cdn.mayar.id/logo/example.png"
+                }
+            }
+        }
+    }
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/transactions/{id}
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/transactions/{id}
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Path Parameters
+
+<ParamField path="id" type="string<uuid>" required>
+  A unique identifier of the transaction.
+
+  Example:
+
+  `a1b2c3d4-e5f6-7890-abcd-ef1234567890`
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer" >
+  Status code form API.
+</ResponseField>
+
+<ResponseField name="messages" type="string" >
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  The transaction detail object.
+</ResponseField>
+
+### data Structure (Object)
+
+<ResponseField name="id" type="string<uuid>" >
+  Unique transaction ID.
+</ResponseField>
+
+<ResponseField name="extraData" type="object | null">
+  Additional custom data attached to the transaction, can be null.
+</ResponseField>
+
+<ResponseField name="amount" type="integer" >
+  Total transaction amount.
+</ResponseField>
+
+<ResponseField name="createdAt" type="number (timestamp)" >
+  Transaction creation time in epoch format (ms).
+</ResponseField>
+
+<ResponseField name="updatedAt" type="number (timestamp)" >
+  Transaction last update time in epoch format (ms).
+</ResponseField>
+
+<ResponseField name="status" type="string" >
+  Transaction status (e.g. `paid`, `unpaid`, `created`, `expired`).
+</ResponseField>
+
+<ResponseField name="expirationDate" type="number (timestamp)" >
+  Transaction expiration time in epoch format (ms).
+</ResponseField>
+
+<ResponseField name="invoiceCode" type="string" >
+  Invoice code associated with the transaction (if any).
+</ResponseField>
+
+<ResponseField name="isCrossSell" type="boolean" >
+  Indicates whether the transaction is a cross-sell.
+</ResponseField>
+
+<ResponseField name="orderVariant" type="string | null">
+  Selected order variant (if any).
+</ResponseField>
+
+<ResponseField name="paymentMethod" type="string" >
+  Payment method used (e.g. `QRIS`, `Virtual Account`, `EWallet`).
+</ResponseField>
+
+<ResponseField name="paymentLink" type="object">
+  Payment link information used for this transaction.
+</ResponseField>
+
+<ResponseField name="customer" type="object">
+  Customer data that made the purchase.
+</ResponseField>
+
+<ResponseField name="givenCustomer" type="object">
+  Gift recipient data if the purchase is a gift for someone else.
+</ResponseField>
+
+<ResponseField name="user" type="object">
+  Merchant data (the store owner).
+</ResponseField>
+
+### paymentLink Structure (Object)
+
+<ResponseField name="id" type="string <uuid>" >
+  ID payment link.
+</ResponseField>
+
+<ResponseField name="amount" type="integer" >
+  Payment link price or nominal value.
+</ResponseField>
+
+<ResponseField name="status" type="string" >
+  Payment link status (e.g. `active`).
+</ResponseField>
+
+<ResponseField name="expiredAt" type="number | null" >
+  Payment link expiration time in epoch format (ms), can be null.
+</ResponseField>
+
+<ResponseField name="link" type="string" >
+  Payment link slug/short URL.
+</ResponseField>
+
+<ResponseField name="type" type="string" >
+  Payment link type (e.g. `payment_link`, `digital_product`, `webinar`).
+</ResponseField>
+
+### customer Structure (Object)
+
+<ResponseField name="id" type="string <uuid>" >
+  Unique customer ID.
+</ResponseField>
+
+<ResponseField name="email" type="string" >
+  Customer's email address.
+</ResponseField>
+
+<ResponseField name="status" type="string" >
+  Customer status (e.g. `active`).
+</ResponseField>
+
+<ResponseField name="name" type="string" >
+  Customer's name.
+</ResponseField>
+
+<ResponseField name="mobile" type="string" >
+  Customer's mobile phone number.
+</ResponseField>
+
+<ResponseField name="userId" type="string <uuid>" >
+  Merchant user ID that owns this customer.
+</ResponseField>
+
+### givenCustomer Structure (Object)
+
+<ResponseField name="id" type="string <uuid>" >
+  Unique customer ID of the gift recipient.
+</ResponseField>
+
+<ResponseField name="email" type="string" >
+  Gift recipient's email address.
+</ResponseField>
+
+<ResponseField name="status" type="string" >
+  Gift recipient status.
+</ResponseField>
+
+<ResponseField name="name" type="string" >
+  Gift recipient's name.
+</ResponseField>
+
+<ResponseField name="mobile" type="string" >
+  Gift recipient's mobile phone number.
+</ResponseField>
+
+<ResponseField name="userId" type="string <uuid>" >
+  Merchant user ID that owns this customer.
+</ResponseField>
+
+### user Structure (Object)
+
+<ResponseField name="id" type="string <uuid>" >
+  Unique merchant user ID.
+</ResponseField>
+
+<ResponseField name="name" type="string" >
+  Merchant store name.
+</ResponseField>
+
+<ResponseField name="email" type="string" >
+  Merchant email address.
+</ResponseField>
+
+<ResponseField name="account" type="object">
+  Merchant account details.
+</ResponseField>
+
+### account Structure (Object)
+
+<ResponseField name="email" type="string" >
+  Merchant account email.
+</ResponseField>
+
+<ResponseField name="name" type="string" >
+  Merchant account name.
+</ResponseField>
+
+<ResponseField name="mobile" type="string" >
+  Merchant account phone number.
+</ResponseField>
+
+<ResponseField name="address" type="string" >
+  Merchant account address.
+</ResponseField>
+
+<ResponseField name="logo" type="object">
+  Merchant account logo information.
+</ResponseField>
+
+### logo Structure (Object)
+
+<ResponseField name="url" type="string" >
+  URL of the merchant logo image.
+</ResponseField>
+
+### Errors
+
+<ResponseField name="401 Unauthorized" type="object">
+  Returned when the API key is missing or invalid:
+  `{ "statusCode": 401, "messages": "Unauthorized" }`.
+</ResponseField>
+
+<ResponseField name="404 Not Found" type="object">
+  Returned when no transaction matches the provided ID:
+  `{ "statusCode": 404, "messages": "Transaction not found" }`.
+</ResponseField>
