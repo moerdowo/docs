@@ -345,7 +345,8 @@
             "pages": [
               "api-reference-v2/transaction/paidtransaction",
               "api-reference-v2/transaction/unpaidtransaction",
-              "api-reference-v2/transaction/dailytransaction"
+              "api-reference-v2/transaction/dailytransaction",
+              "api-reference-v2/transaction/detail"
             ]
           },
           {
