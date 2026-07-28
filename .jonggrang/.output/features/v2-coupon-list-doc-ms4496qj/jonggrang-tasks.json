@@ -1,0 +1,80 @@
+{
+  "tasks": [
+    {
+      "id": "task-001",
+      "title": "Grounding pass: lock down V2 list-page conventions before authoring",
+      "description": "Read-only conventions pass. No source files are modified in this task; the deliverable is a short set of notes appended to .jonggrang/progress.txt that the authoring task consumes.\n\nRead in full:\n- api-reference-v2/bundling/index.mdx (canonical cursor-paginated V2 list page)\n- api-reference-v2/discount/detail.mdx, create.mdx, validate.mdx, check.mdx (sibling discount pages)\n- One more V2 list page for cross-check: api-reference-v2/invoice/index.mdx or api-reference-v2/reqpayment/index.mdx\n\nExtract and record verbatim:\n1. Frontmatter keys and their exact order/quoting (title, openapi, description) and the pseudo openapi path pattern (e.g. \"GET /endpointbundlingv2/index\", \"GET /endpointdiscountv2/detail\") so the new page can use a consistent pseudo path such as \"GET /endpointdiscountv2/index\".\n2. The maintainer-note JSX comment convention ({/* Notes for maintainers: ... */}) — placement (immediately after frontmatter), tone, and the statement that identifiers are synthetic.\n3. Ordering and exact tag usage of <RequestExample>, <ResponseExample>, <CodeGroup>, <ParamField>, <ResponseField> — including blank-line spacing around tags, code-fence language + title convention (```bash Request Example, ```json Response Example 200), and how nested object fields are expressed (nested <ResponseField> inside <Expandable> vs dotted paths).\n4. The exact heading text and phrasing used for the Production/Sandbox <CodeGroup> endpoint block, the Authorization section, the Query Parameters section, and the Response section.\n5. The sandbox host convention (api.mayar.club) and the /hl/v2 path prefix.\n\nAcceptance criteria: .jonggrang/progress.txt contains a dated entry titled with this feature id listing the above five items concretely (actual strings, not paraphrase). No .mdx or docs.json file is changed by this task.",
+      "priority": 1,
+      "status": "pending",
+      "feature_id": "v2-coupon-list-doc-ms4496qj",
+      "skill": null,
+      "blocked_by": [],
+      "passes": false,
+      "files": [
+        ".jonggrang/progress.txt"
+      ],
+      "started_at": null,
+      "completed_at": null,
+      "error_log": []
+    },
+    {
+      "id": "task-002",
+      "title": "Author api-reference-v2/discount/index.mdx (GET /hl/v2/coupons list page)",
+      "description": "Create the new file api-reference-v2/discount/index.mdx documenting the cursor-paginated coupon / discount-campaign list endpoint, mirroring api-reference-v2/bundling/index.mdx structure exactly as captured in task-001.\n\nRequired content, in order:\n1. Frontmatter: title \"Get List Coupon\", openapi \"GET /endpointdiscountv2/index\", description describing a paginated list of coupons / discount campaigns.\n2. Maintainer-note JSX comment stating that the response shape is transcribed from the supplied source specification (list projection, which differs from the single-record projection on detail.mdx), that all identifiers/names/values in examples are synthetic, and that the mobile surface is intentionally not documented.\n3. <RequestExample> with a curl GET to https://api.mayar.id/hl/v2/coupons?limit=10 using --header 'Authorization: Bearer Paste-Your-API-Key-Here'.\n4. <ResponseExample> with a ```json Response Example 200 block containing the success envelope: statusCode, messages, data, hasMore, nextStartingAfter. data holds a flat coupons[] array; each item includes id, name, status, discountValue, totalUsage, createdAt and expiredAt as ISO-8601 strings (NOT ms integers), and a nested products[] array. Also include ```json Response Example 400 and ```json Response Example 500 error blocks matching the error envelope shape used by sibling V2 discount pages.\n5. A <CodeGroup> endpoint block giving Production https://api.mayar.id/hl/v2/coupons and Sandbox https://api.mayar.club/hl/v2/coupons, using the exact phrasing/heading convention from the sibling pages.\n6. Authorization section: Bearer token header, documented with <ParamField header=\"Authorization\"> per sibling-page convention.\n7. Query Parameters section documenting exactly five OPTIONAL parameters via <ParamField query=...>: limit (page size), startingAfter (cursor — pass the nextStartingAfter value from the previous response), status (enum: active, inactive, expired, upcoming — list the accepted values without inventing transition semantics), search (free-text match on coupon/campaign name), productId (filter campaigns applying to a given product).\n8. Response section documenting via <ResponseField>: statusCode, messages, data, hasMore (boolean loop terminator), nextStartingAfter (cursor for the next page), then the nested coupons[] item fields (id, name, status, discountValue, totalUsage, createdAt, expiredAt, products) and the nested products[] item fields, using the nesting style captured in task-001.\n9. A short explicit note on cursor pagination: feed nextStartingAfter back as startingAfter and keep looping while hasMore is true.\n\nConstraints: document the headless surface only — never mention /mobile/v2/coupons. Do not modify detail.mdx, create.mdx, validate.mdx, or check.mdx. All example ids must be synthetic UUID-shaped values and all names/amounts fictional; no real merchant data or real API keys.\n\nAcceptance criteria: file exists at api-reference-v2/discount/index.mdx, all JSON code blocks parse as valid JSON, every MDX component used is one already in use elsewhere in the repo, and the page structure matches bundling/index.mdx section-for-section.",
+      "priority": 2,
+      "status": "pending",
+      "feature_id": "v2-coupon-list-doc-ms4496qj",
+      "skill": null,
+      "blocked_by": [
+        "task-001"
+      ],
+      "passes": false,
+      "files": [
+        "api-reference-v2/discount/index.mdx"
+      ],
+      "started_at": null,
+      "completed_at": null,
+      "error_log": []
+    },
+    {
+      "id": "task-003",
+      "title": "Register the new page first in the V2 Discount & Coupon nav group in docs.json",
+      "description": "Edit docs.json to add \"api-reference-v2/discount/index\" as the FIRST entry of the V2 \"Discount & Coupon\" group (the group whose pages are api-reference-v2/discount/create, detail, validate, check — around line 388; NOT the V1 group around line 179 whose pages are prefixed api-reference/discount/).\n\nResulting pages array must be exactly:\n  \"api-reference-v2/discount/index\",\n  \"api-reference-v2/discount/create\",\n  \"api-reference-v2/discount/detail\",\n  \"api-reference-v2/discount/validate\",\n  \"api-reference-v2/discount/check\"\n\nConstraints: do not reorder, rename, or remove the four existing entries; do not touch the V1 Discount & Coupon group; do not touch any other group, tab, or top-level key. Preserve the file's existing indentation style exactly.\n\nAcceptance criteria: `node -e \"JSON.parse(require('fs').readFileSync('docs.json'))\"` succeeds, and `git diff docs.json` shows exactly one added line.",
+      "priority": 3,
+      "status": "pending",
+      "feature_id": "v2-coupon-list-doc-ms4496qj",
+      "skill": null,
+      "blocked_by": [
+        "task-002"
+      ],
+      "passes": false,
+      "files": [
+        "docs.json"
+      ],
+      "started_at": null,
+      "completed_at": null,
+      "error_log": []
+    },
+    {
+      "id": "task-004",
+      "title": "Validation and consistency sweep for the new coupon list page",
+      "description": "Final verification pass over the change set. Read-only except for appending findings to .jonggrang/progress.txt.\n\nChecks to perform and report:\n1. JSON validity: docs.json parses (node -e JSON.parse round-trip).\n2. Slug resolution: every page slug added or present in the V2 Discount & Coupon group maps to a real file on disk (api-reference-v2/discount/<slug>.mdx). Confirm api-reference-v2/discount/index.mdx exists.\n3. Embedded JSON: each ```json block in api-reference-v2/discount/index.mdx parses as valid JSON.\n4. Frontmatter sanity: title, openapi, and description keys present and quoted consistently with sibling V2 pages.\n5. Data hygiene: no real merchant names, no real customer emails, no live API keys or Bearer tokens (the placeholder must be Paste-Your-API-Key-Here), all ids synthetic UUID-shaped values.\n6. Scope containment: `git status --short` and `git diff --stat` show only api-reference-v2/discount/index.mdx (new) and docs.json (modified) — plus .jonggrang bookkeeping files. Confirm detail.mdx, create.mdx, validate.mdx, check.mdx, the V1 discount pages, and api-reference/openapi.json are all untouched.\n7. Surface check: grep the new page for \"mobile\" to confirm the /mobile/v2 surface was not documented.\n\nAcceptance criteria: all seven checks pass, or any failure is fixed within the two in-scope files and re-verified. Append the check results to .jonggrang/progress.txt.",
+      "priority": 4,
+      "status": "pending",
+      "feature_id": "v2-coupon-list-doc-ms4496qj",
+      "skill": null,
+      "blocked_by": [
+        "task-003"
+      ],
+      "passes": false,
+      "files": [
+        "api-reference-v2/discount/index.mdx",
+        "docs.json",
+        ".jonggrang/progress.txt"
+      ],
+      "started_at": null,
+      "completed_at": null,
+      "error_log": []
+    }
+  ]
+}
