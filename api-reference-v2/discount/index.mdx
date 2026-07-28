@@ -1,0 +1,221 @@
+---
+title: "Get List Coupon"
+openapi: "GET /endpointdiscountv2/index"
+description: "Endpoint used to view the paginated list of coupons and discount campaigns that have been created"
+---
+
+{/* Notes for maintainers: the response example below is REPRESENTATIVE — it is
+    transcribed from the supplied source specification for this list endpoint,
+    not captured live. The list projection deliberately differs from the
+    single-record projection documented on detail.mdx: items are returned as a
+    flat `coupons` array carrying `status`, `discountValue`, `totalUsage`, and
+    `products`, and `createdAt` / `expiredAt` are ISO 8601 strings here rather
+    than millisecond timestamps. That divergence is a source-side question, not
+    a docs edit — detail.mdx is intentionally left untouched. The `products`
+    item fields beyond `id` should be confirmed against a live response. Only
+    the headless surface is documented; the mobile surface is intentionally not
+    documented here. All identifiers, names, and values are synthetic. */}
+
+<RequestExample>
+
+```bash Request Example
+curl --request GET 'https://api.mayar.id/hl/v2/coupons?limit=10' \
+--header 'Authorization: Bearer Paste-Your-API-Key-Here'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "data": {
+        "coupons": [
+            {
+                "id": "3f1c8b02-9d4a-4e17-b6c5-0a71d2e93f48",
+                "name": "Diskon Awal Tahun",
+                "status": "active",
+                "discountValue": 50000,
+                "totalUsage": 12,
+                "createdAt": "2026-01-05T04:21:37.118Z",
+                "expiredAt": "2026-12-31T16:59:59.000Z",
+                "products": []
+            },
+            {
+                "id": "8a52d7e4-6b30-4c91-9f28-4d6e1b0a75c3",
+                "name": "Promo Kelas Online",
+                "status": "inactive",
+                "discountValue": 25000,
+                "totalUsage": 0,
+                "createdAt": "2026-02-18T09:44:02.503Z",
+                "expiredAt": null,
+                "products": [
+                    {
+                        "id": "6f8c19ff-2b6a-4c7e-9f1d-1a2b3c4d5e6f",
+                        "name": "Kelas Online Dasar"
+                    }
+                ]
+            }
+        ]
+    },
+    "hasMore": false,
+    "nextStartingAfter": null
+}
+```
+
+```json Response Example 400
+{
+    "statusCode": 400,
+    "messages": "Validation Error",
+    "data": null
+}
+```
+
+```json Response Example 500
+{
+    "statusCode": 500,
+    "messages": "Internal Server Error",
+    "data": null
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/coupons
+```
+
+
+```Sandbox Sandbox
+https://api.mayar.club/hl/v2/coupons
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+  Example:
+
+  `Authorization | Bearer Paste-Your-API-Key-Here`
+</ResponseField>
+
+## Query Parameters
+
+<ParamField query="limit" path="limit" default="10" type="integer">
+  Number of items to return per page. Defaults to `10`.
+</ParamField>
+
+<ParamField query="startingAfter" path="startingAfter" type="string">
+  Cursor for forward pagination. Pass the `nextStartingAfter` value from the
+  previous response to fetch the next page.
+</ParamField>
+
+<ParamField query="status" path="status" type="string">
+  Filter the list by campaign status. Accepted values:
+
+  - active
+  - inactive
+  - expired
+  - upcoming
+</ParamField>
+
+<ParamField query="search" path="search" type="string">
+  Filter the list by keyword, matched against the coupon / discount campaign
+  name.
+</ParamField>
+
+<ParamField query="productId" path="productId" type="string">
+  Return only the campaigns that apply to the given product (payment link) ID.
+</ParamField>
+
+## Response
+
+Successful Response
+
+### Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer">
+  Status code from API.
+</ResponseField>
+
+<ResponseField name="messages" type="string">
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  The list payload, holding the `coupons` array.
+</ResponseField>
+
+<ResponseField name="hasMore" type="boolean">
+  Information on whether there is additional data to be retrieved (true/false).
+</ResponseField>
+
+<ResponseField name="nextStartingAfter" type="string | null">
+  Cursor to pass as `startingAfter` to fetch the next page. `null` when there is
+  no further data.
+</ResponseField>
+
+### data Structure (Object)
+
+<ResponseField name="coupons" type="array of object">
+  List of coupons / discount campaigns. Each item is one discount campaign.
+</ResponseField>
+
+### coupons Structure (Array Of Object)
+
+<ResponseField name="id" type="string<uuid>">
+  Discount campaign ID.
+</ResponseField>
+
+<ResponseField name="name" type="string">
+  Discount campaign name.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Campaign status (`active`, `inactive`, `expired`, or `upcoming`).
+</ResponseField>
+
+<ResponseField name="discountValue" type="number">
+  Discount value applied by the campaign.
+</ResponseField>
+
+<ResponseField name="totalUsage" type="integer">
+  Number of times the campaign's coupons have been used.
+</ResponseField>
+
+<ResponseField name="createdAt" type="string (ISO 8601)">
+  Creation time in ISO 8601 format.
+</ResponseField>
+
+<ResponseField name="expiredAt" type="string (ISO 8601) | null">
+  Expiration time in ISO 8601 format, or `null` when the campaign does not
+  expire.
+</ResponseField>
+
+<ResponseField name="products" type="array of object">
+  Products the campaign applies to (empty when it applies to all products).
+</ResponseField>
+
+### coupons.products Structure (Array Of Object)
+
+<ResponseField name="id" type="string<uuid>">
+  Product (payment link) ID the campaign applies to.
+</ResponseField>
+
+<ResponseField name="name" type="string">
+  Name of the product (payment link).
+</ResponseField>
+
+<Note>
+  This list is cursor paginated. Pass the `nextStartingAfter` value from a
+  response back as the `startingAfter` query parameter on the next request, and
+  keep looping while `hasMore` is `true`. When `hasMore` is `false`,
+  `nextStartingAfter` is `null` and the whole list has been retrieved.
+</Note>
