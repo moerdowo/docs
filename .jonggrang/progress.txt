@@ -1356,3 +1356,250 @@ Paths shown are the suffix under /hl/v2. Envelope is `messages` (plural) UNLESS 
   Verified C0/D0 fire on an empty sandbox corpus; real corpus (74/71) stays GREEN.
 - No check logic weakened. Combined gate still PASS: structural 8/8 + domain 7/7.
 - Deliverable: test-quality.md. C4<->D7 complementarity preserved (not redundant).
+
+
+## 2026-07-28 — v2-coupon-list-doc-ms4496qj / task-001 (grounding: V2 list-page conventions) — PASS
+Read in full: api-reference-v2/bundling/index.mdx, api-reference-v2/discount/{detail,create,validate,check}.mdx,
+api-reference-v2/reqpayment/index.mdx (+ cross-checked invoice/index.mdx). Read-only — no .mdx / docs.json touched.
+
+### 1. Frontmatter — exact keys, order, quoting
+Always exactly 3 keys, in this order, all double-quoted values, no blank line inside the block:
+    ---
+    title: "Get Bundling"
+    openapi: "GET /endpointbundlingv2/index"
+    description: "Endpoint to get a list of bundling products"
+    ---
+Verbatim samples (title / openapi / description):
+  bundling/index    "Get Bundling"                 "GET /endpointbundlingv2/index"     "Endpoint to get a list of bundling products"
+  reqpayment/index  "Get List Single Payment Request" "GET /endpointreqpaymentv2/index" "Endpoint used to view the list of single payment requests that have been created"
+  invoice/index     "Get List Invoice"             "GET /endpointinvoicev2/index"      "Endpoint used to view the list of invoices that have been created"
+  discount/detail   "Get Coupon Detail"            "GET /endpointdiscountv2/detail"    "Endpoint used to view details and status of coupons that have been created"
+  discount/create   "Create Discount with Coupon"  "POST /endpointdiscountv2/create"   "Endpoint used to create discount coupons"
+  discount/validate "Validate Coupon"              "POST /endpointdiscountv2/validate" "Endpoint used to validate whether a coupon code can be applied to a checkout"
+  discount/check    "Check Coupon Usage"           "POST /endpointdiscountv2/check"    "Endpoint used to check how many times a coupon has been used and how much quota remains"
+Pseudo-path pattern is `METHOD /endpoint<group>v2/<filebasename>`; ALL four existing V2 list pages
+use the literal segment `/index`. => new page MUST use: openapi: "GET /endpointdiscountv2/index".
+This is a pseudo path only — it is NOT backed by api-reference/openapi.json; do not add a spec entry.
+(Domain check D2 only requires the `openapi:` key to be `METHOD /path`.)
+
+### 2. Maintainer-note JSX comment convention
+Placement: immediately after the closing `---`, separated by exactly one blank line, and followed by
+one blank line before `<RequestExample>`. Opens `{/* Notes for maintainers: ` on the first line;
+continuation lines indented 4 spaces; closes with ` */}` on the last content line.
+Tone: terse operational sourcing note — states HOW the shape was obtained and its confidence level,
+then always ends with an explicit synthetic-data sentence. Mintlify strips these at build, so C7
+leak-grep runs on comment-stripped content and sourcing context may safely live here.
+Verbatim, bundling/index.mdx (live-confirmed GET — closest analogue for a list page):
+    {/* Notes for maintainers: the envelope below (statusCode, messages, data,
+        hasMore, nextStartingAfter) and the item field names were confirmed against
+        a live prod GET. All identifiers, names, links, and descriptions have been
+        replaced with synthetic values; the product types (course, digital_product,
+        generic_link, etc.) are public enum values kept verbatim. */}
+Verbatim, discount/detail.mdx (REPRESENTATIVE variant — the wording to reuse when the example is
+not captured live, which is the case for this feature since the shape came from a written spec):
+    {/* Notes for maintainers: this GET has no list endpoint to discover an existing
+        discount ID, and probing a non-existent ID returns a 500. To avoid creating a
+        live discount, the response example below is REPRESENTATIVE, mirroring the V2
+        discount source surface (the stored discount record plus its `coupons` items).
+        Field names are source-confirmed; confirm exact values against a live response.
+        All identifiers are synthetic. */}
+Stock closing sentences in use: "All identifiers are synthetic." / "All values are synthetic."
+The word REPRESENTATIVE is upper-cased when the example was not captured live.
+NOTE: reqpayment/index.mdx and invoice/index.mdx have NO maintainer note at all — the comment is
+conventional on the discount pages and bundling, not mandatory. Include it (spec-sourced page).
+
+### 3. Component order, spacing, fences, nesting
+Exact top-to-bottom order on every V2 list page:
+  frontmatter -> {/* maintainer note */} -> <RequestExample> -> <ResponseExample> -> `Endpoint:` line
+  -> <CodeGroup> -> `## Authorization` -> `## Query Parameters` -> `## Response` -> (`## Errors` where present)
+Spacing rule: one blank line INSIDE the opening tag before the fence and INSIDE before the closing
+tag; one blank line between every top-level block. Exact shape:
+    <RequestExample>
+    <blank>
+    ```bash Request Example
+    curl --request GET 'https://api.mayar.id/hl/v2/bundling?limit=10' \
+    --header 'Authorization: Bearer Paste-Your-API-Key-Here'
+    ```
+    <blank>
+    </RequestExample>
+Fence info-strings, verbatim: "```bash Request Example", "```json Response Example 200".
+Additional status examples use the same pattern with the code appended, e.g. discount/check.mdx has
+a second fence "```json Response Example 404" inside the SAME <ResponseExample>, separated by one
+blank line. GET curl for list pages is 2 lines (request + Authorization header, `\` continuation);
+detail.mdx adds a third line `--data ''` — omit that for a list GET (follow bundling/reqpayment).
+<ParamField> / <ResponseField>: body indented exactly 2 spaces, closing tag at column 0, one blank
+line between consecutive fields. Query params use BOTH attrs: `query="x" path="x"`; body-only params
+(create.mdx) use `path="x"` alone. `default="10"` precedes `type=`; `required` is a bare attribute last.
+    <ParamField query="limit" path="limit" default="10" type="integer">
+      Number of items to return per page. Defaults to `10`, with a maximum of `50`.
+    </ParamField>
+    <ResponseField name="Authorization" type="string" required>
+NESTING: <Expandable> is NOT used anywhere under api-reference-v2/ (grep: zero hits). Two idioms:
+  (a) list pages flatten nested objects into `### <path> Structure (Array Of Object)` /
+      `(Object)` sub-sections — bundling/index.mdx uses `### data Structure (Array Of Object)`,
+      `### products Structure (Array Of Object)`, `### products.paymentLink Structure (Object)`,
+      with plain unqualified `name="id"` inside each section;
+  (b) dotted `name="data.id"` / `name="coupon.id"` on a flat list (validate.mdx, balance, etc.).
+  For the new list page use (a) — it is what all four V2 index pages do.
+Sub-section headings are `###`; the parent field is still declared in the parent section as
+`<ResponseField name="products" type="array of object">` before its `###` section appears.
+Type strings in use, verbatim: `integer`, `string`, `number`, `boolean`, `object`, `array`,
+`array of object`, `string<uuid>`, `string | null`, `object | null`, `integer | null`,
+`number (timestamp)`, `string (ISO 8601)`, `string (ISO 8601) | null`, `string | datetime`.
+Files end with `</ResponseField>\n` — single trailing newline, no trailing blank line.
+
+### 4. Exact heading / phrasing strings (copy verbatim)
+- Endpoint block: a bare line `Endpoint:` then blank line, then:
+      <CodeGroup>
+      <blank>
+      ```Production Production
+      https://api.mayar.id/hl/v2/<path>
+      ```
+      <blank>
+      <blank>
+      ```Sandbox Sandbox
+      https://api.mayar.club/hl/v2/<path>
+      ```
+      <blank>
+      </CodeGroup>
+  NOTE the TWO blank lines between the Production and Sandbox fences — present on every page checked
+  (bundling, invoice, reqpayment, discount/*). Fence info-strings are the doubled words
+  "```Production Production" and "```Sandbox Sandbox" (no language id).
+  List pages carry the query string in the CodeGroup URL: bundling `?limit=10`, invoice `?limit=10`;
+  reqpayment/index does NOT. Recommend `?limit=10` (bundling is the canonical list template).
+- Authorization section, verbatim and byte-identical on all pages:
+      ## Authorization
+
+      <ResponseField name="Authorization" type="string" required>
+        Example:
+
+        `Authorization | Bearer Paste-Your-API-Key-Here`
+      </ResponseField>
+- Query params section heading: `## Query Parameters` (detail.mdx uses `## Path Parameters`,
+  create/validate/check use `## Request Body`).
+  Reusable verbatim bodies:
+    limit          -> "Number of items to return per page. Defaults to `10`, with a maximum of `50`."
+    startingAfter  -> "Cursor for forward pagination. Pass the `nextStartingAfter` value from the\n  previous response (a Unix timestamp in milliseconds, as a string) to fetch the\n  next page."
+    status         -> "Filter the list by payment request status (e.g. `unpaid`, `paid`, `closed`)." (reqpayment)
+                      "Filter invoices by status (e.g. `active`, `paid`, `closed`)." (invoice)
+    search         -> "Filter invoices by keyword." (invoice)
+  Param ORDER is not fixed: bundling = limit, startingAfter; reqpayment = status, limit, startingAfter;
+  invoice = limit, startingAfter, status, search.
+- Response section, verbatim:
+      ## Response
+
+      Successful Response
+
+      ### Main Structure (Root)
+  ("Successful Response" is a bare prose line, no colon, no bold.)
+  Then the envelope fields, in this order, with these exact descriptions:
+      statusCode        "Status code form API."   <-- SIC: "form", not "from", on BOTH list pages
+                        (bundling/index.mdx:128, reqpayment/index.mdx:124). The discount pages and
+                        create.mdx use the corrected "Status code from API." Pick "from API." for the
+                        new page — the typo is not worth propagating; no validator asserts either.
+      messages          "Status message that describes the status code."
+      data              "List of bundling products. Each item is a bundling-type product object."
+                        / "List of single payment requests displayed."
+      hasMore           "Information on whether there is additional data to be retrieved (true/false)."
+      nextStartingAfter "Cursor to pass as `startingAfter` to fetch the next page. `null` when there is\n  no further data."
+  Then `### data Structure (Array Of Object)` etc. Error sections use `## Errors` with one
+  <ResponseField name="400 Validation Error" type="object"> per case (see create/validate/check.mdx);
+  bodies start "Returned with `messages: \"...\"` when ...".
+  reqpayment/index.mdx has a stray space before `>` (`type="integer" >`) — a local artifact, do not copy.
+
+### 5. Host + path prefix convention
+Production `https://api.mayar.id/hl/v2/...`, Sandbox `https://api.mayar.club/hl/v2/...` — the ONLY
+difference is the host (`.id` -> `.club`); path, query string, and everything else are identical.
+The curl in <RequestExample> always uses the PRODUCTION host. Domain check D1 hard-requires BOTH
+`api.mayar.id/hl/v2` and `api.mayar.club/hl/v2` on every endpoint page and FAILS on any `/hl/v1`.
+For this feature the resource path is `/hl/v2/coupons` (matches create/detail/validate/check, which
+use /hl/v2/coupons/create, /hl/v2/coupons/{uuId}, /hl/v2/coupons/validate, /hl/v2/coupons/check).
+
+### Carry-forward for task-002/003 (authoring + nav)
+- docs.json target group is navigation.tabs[2].groups[10] `"Discount & Coupon"`, currently
+  ["api-reference-v2/discount/create","api-reference-v2/discount/detail",
+   "api-reference-v2/discount/validate","api-reference-v2/discount/check"];
+  insert "api-reference-v2/discount/index" FIRST. Do NOT touch tabs[1] (V1) — check C8 asserts V1 nav
+  is byte-identical to main.
+- C2 enforces nav<->file 1:1 under api-reference-v2/**: the new .mdx and the new nav entry must land
+  together or the gate goes red (orphan file / missing page).
+- Gate command for task-004:
+  `bash .jonggrang/.output/features/api-v2-reference-docs-mqyl9hub/validate-v2-docs.sh`
+  (runs BOTH structural C0-C8 and domain D0-D7 and ANDs their exit codes).
+- C7 leak-grep denylist gotchas for prose: avoid the bare words `redis`/`scylla`/`graphql`/`gql`,
+  any `*.js` module name (incl. `discount.js`, `index.js`), `src/api/v2`, a literal `/api/v2/`
+  substring, `@mayarid`, `process.env`, and handler names like `getDiscount`/`validateCoupon`.
+  Writing the URL as `/hl/v2/coupons` is safe; `/api/v2/coupons` would FAIL C7.
+- D5 requires the response JSON to carry `statusCode` + exactly one of `message`/`messages`
+  (use `messages`, never both). D6 requires a `statusCode` ResponseField, plus a `data`
+  ResponseField whenever the envelope has a `data` object.
+
+### task-001 addendum — VALIDATION GATE IS RED ON A CLEAN TREE (baseline, pre-existing)
+Ran `bash .jonggrang/.output/features/api-v2-reference-docs-mqyl9hub/validate-v2-docs.sh` before
+authoring anything: real exit code 1, 16 FAILs. `git diff main -- api-reference-v2/ docs.json` is
+EMPTY on this branch, so every one of them is pre-existing on main, not caused by this feature.
+Baseline FAIL set (record it; task-004 must diff against this, not against zero):
+  C2 x2  orphan .mdx not referenced in nav: api-reference-v2/nameservice/create.mdx, .../update.mdx
+  D1/D4 x3 each + D5 x2, on api-reference-v2/saas/{activate,deactivate,verify}.mdx and
+         api-reference-v2/software/verify.mdx — those pages use a different surface
+         (https://api.mayar.id/saas/v2/license/verify) and a different envelope
+         (statusCode + isLicenseActive, no message/messages), which the /hl/v2-only domain
+         suite does not model. The corpus grew 74->84 pages since the suite was written.
+Everything else is green: C1, C3-C8 pass; D2, D3, D6, D7 pass on all 81 endpoint pages.
+=> Feature-level exit criterion for task-004: FAIL set must be EXACTLY these 16 lines, with no new
+   FAIL naming api-reference-v2/discount/ or docs.json. Do NOT "fix" the gate by weakening checks.
+Logged as bug-001/bug-002 in .jonggrang/.output/features/v2-coupon-list-doc-ms4496qj/bugs.md.
+CLI gotcha: `jonggrang bug --feature <id> "..."` still errors "Multiple features found. Use
+--feature <featureId>." with the flag present (both arg orders) — bugs.md was written by hand.
+
+### Phase 11 (domain-compliance) — PASS, gate exit 1 is baseline-only
+Ran the combined gate (validate-v2-docs.sh = C1-C8 + D1-D7) unmodified. Exit 1, 16 FAILs,
+byte-identical to the task-001 baseline: C2 x2 (nameservice/{create,update}.mdx orphans),
+D1 x8 + D4 x4 + D5 x2 on saas/{activate,deactivate,verify}.mdx and software/verify.mdx.
+ZERO FAIL lines name api-reference-v2/discount/ or docs.json => feature exit criterion met.
+Report: .jonggrang/.output/features/v2-coupon-list-doc-ms4496qj/domain-compliance.md
+
+Gotchas worth keeping:
+- The domain suite exempts pages by FILE STEM, not by path: OVERVIEW = {introduction,
+  statuscode, rate-limit}. A page named `index.mdx` is NOT exempt — discount/index.mdx is
+  counted among the 82 endpoint pages and really is asserted against D1-D7. Corpus grew
+  84->85 files / 81->82 endpoint pages with this feature.
+- `openapi:` frontmatter across the WHOLE v2 corpus is a synthetic slug, not the real path:
+  `<VERB> /endpoint<domain>v2/<page>`. Do not "fix" it to the real /hl/v2 path — D2 only
+  wants METHOD + a path, and consistency with the other 81 pages is the actual convention.
+  List pages use the `index` slug (endpointbundlingv2/index, endpointinstallmentv2/index).
+- V2 list-page pagination vocabulary is fixed: query params `limit` (default 10) +
+  `startingAfter`; root response fields `hasMore` (boolean) + `nextStartingAfter`
+  (`string | null`). curl example always `...?limit=10`. Reuse verbatim on new list pages.
+- discount/index.mdx intentionally diverges from the other 5 list pages: `data` is an OBJECT
+  wrapping a `coupons` array instead of being the array itself. Source-side, permitted by
+  D5/D6, annotated in the file's maintainer comment. Do not "normalize" it.
+- Sibling pages carry a typo "Status code form API." in the statusCode ResponseField.
+  The new page says "from". Corpus-wide cleanup is a separate task, not this feature's.
+
+### Phase 12 (code-quality) — PASS, 1 fix applied
+Reviewed api-reference-v2/discount/index.mdx against the 4 sibling V2 list pages + the
+sibling discount pages. Fixed: the `Endpoint:` <CodeGroup> lines were missing `?limit=10`
+(bundling/installment/invoice all carry it on BOTH prod and sandbox lines; reqpayment is
+the lone exception). Gate re-run after the fix is byte-identical to the Phase 11 baseline
+(exit 1, 16 FAILs, none in discount/ or docs.json).
+Report: .jonggrang/.output/features/v2-coupon-list-doc-ms4496qj/code-quality.md
+
+Left open on purpose:
+- `limit` ParamField says only "Defaults to `10`." All 4 siblings say "Defaults to `10`,
+  with a maximum of `50`." Cannot confirm a 50-cap for /hl/v2/coupons from the supplied
+  spec, and inventing it would be worse than the gap. Needs a source-side answer.
+- Phase 9 removed the cursor-pagination <Note> that task-002 criterion #9 asked for. Not
+  re-added: no sibling list page has one, so re-adding would make this page the odd one
+  out. The startingAfter / hasMore / nextStartingAfter field docs still carry the semantics.
+
+Gotchas worth keeping:
+- The Authorization block convention is `<ResponseField name="Authorization" type="string"
+  required>` with the literal example `Authorization | Bearer Paste-Your-API-Key-Here` —
+  NOT `<ParamField header="Authorization">`. Zero pages in the repo use the ParamField form,
+  even though task descriptions have asked for it twice. Follow the corpus, not the task text.
+- For an object-wrapped `data`, the heading template to copy is discount/detail.mdx
+  (`### data Structure (Object)` then `### coupons Structure (Array Of Object)`), not
+  bundling/index.mdx (`### data Structure (Array Of Object)`).
+- The two blank lines between the Production and Sandbox code fences inside <CodeGroup> are
+  corpus-wide and intentional — don't collapse them to one.

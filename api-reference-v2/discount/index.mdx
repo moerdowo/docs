@@ -4,17 +4,15 @@ openapi: "GET /endpointdiscountv2/index"
 description: "Endpoint used to view the paginated list of coupons and discount campaigns that have been created"
 ---
 
-{/* Notes for maintainers: the response example below is REPRESENTATIVE — it is
+{/* Notes for maintainers: the response example below is REPRESENTATIVE —
     transcribed from the supplied source specification for this list endpoint,
-    not captured live. The list projection deliberately differs from the
-    single-record projection documented on detail.mdx: items are returned as a
-    flat `coupons` array carrying `status`, `discountValue`, `totalUsage`, and
-    `products`, and `createdAt` / `expiredAt` are ISO 8601 strings here rather
-    than millisecond timestamps. That divergence is a source-side question, not
-    a docs edit — detail.mdx is intentionally left untouched. The `products`
-    item fields beyond `id` should be confirmed against a live response. Only
-    the headless surface is documented; the mobile surface is intentionally not
-    documented here. All identifiers, names, and values are synthetic. */}
+    not captured live. The list projection differs from the single-record
+    projection on detail.mdx (flat `coupons` array with `status`,
+    `discountValue`, `totalUsage`, `products`; ISO 8601 dates instead of
+    millisecond timestamps). That divergence is source-side, so detail.mdx is
+    intentionally left untouched. Confirm the `products` item fields beyond `id`
+    against a live response. Only the headless surface is documented, not the
+    mobile one. All identifiers, names, and values are synthetic. */}
 
 <RequestExample>
 
@@ -88,12 +86,12 @@ Endpoint:
 <CodeGroup>
 
 ```Production Production
-https://api.mayar.id/hl/v2/coupons
+https://api.mayar.id/hl/v2/coupons?limit=10
 ```
 
 
 ```Sandbox Sandbox
-https://api.mayar.club/hl/v2/coupons
+https://api.mayar.club/hl/v2/coupons?limit=10
 ```
 
 </CodeGroup>
@@ -118,12 +116,8 @@ https://api.mayar.club/hl/v2/coupons
 </ParamField>
 
 <ParamField query="status" path="status" type="string">
-  Filter the list by campaign status. Accepted values:
-
-  - active
-  - inactive
-  - expired
-  - upcoming
+  Filter the list by campaign status. Accepted values: `active`, `inactive`,
+  `expired`, `upcoming`.
 </ParamField>
 
 <ParamField query="search" path="search" type="string">
@@ -190,11 +184,11 @@ Successful Response
   Number of times the campaign's coupons have been used.
 </ResponseField>
 
-<ResponseField name="createdAt" type="string (ISO 8601)">
+<ResponseField name="createdAt" type="string">
   Creation time in ISO 8601 format.
 </ResponseField>
 
-<ResponseField name="expiredAt" type="string (ISO 8601) | null">
+<ResponseField name="expiredAt" type="string | null">
   Expiration time in ISO 8601 format, or `null` when the campaign does not
   expire.
 </ResponseField>
@@ -212,10 +206,3 @@ Successful Response
 <ResponseField name="name" type="string">
   Name of the product (payment link).
 </ResponseField>
-
-<Note>
-  This list is cursor paginated. Pass the `nextStartingAfter` value from a
-  response back as the `startingAfter` query parameter on the next request, and
-  keep looping while `hasMore` is `true`. When `hasMore` is `false`,
-  `nextStartingAfter` is `null` and the whole list has been retrieved.
-</Note>
