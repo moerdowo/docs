@@ -1,0 +1,16 @@
+FAIL  C2  orphan .mdx not referenced in nav: api-reference-v2/nameservice/create.mdx
+FAIL  C2  orphan .mdx not referenced in nav: api-reference-v2/nameservice/update.mdx
+FAIL  D1  api-reference-v2/saas/activate.mdx: missing prod base URL api.mayar.id/hl/v2
+FAIL  D1  api-reference-v2/saas/activate.mdx: missing sandbox base URL api.mayar.club/hl/v2
+FAIL  D1  api-reference-v2/saas/deactivate.mdx: missing prod base URL api.mayar.id/hl/v2
+FAIL  D1  api-reference-v2/saas/deactivate.mdx: missing sandbox base URL api.mayar.club/hl/v2
+FAIL  D1  api-reference-v2/saas/verify.mdx: missing prod base URL api.mayar.id/hl/v2
+FAIL  D1  api-reference-v2/saas/verify.mdx: missing sandbox base URL api.mayar.club/hl/v2
+FAIL  D1  api-reference-v2/software/verify.mdx: missing prod base URL api.mayar.id/hl/v2
+FAIL  D1  api-reference-v2/software/verify.mdx: missing sandbox base URL api.mayar.club/hl/v2
+FAIL  D4  api-reference-v2/saas/activate.mdx: no <RequestExample> curl hitting /hl/v2
+FAIL  D4  api-reference-v2/saas/deactivate.mdx: no <RequestExample> curl hitting /hl/v2
+FAIL  D4  api-reference-v2/saas/verify.mdx: no <RequestExample> curl hitting /hl/v2
+FAIL  D4  api-reference-v2/software/verify.mdx: no <RequestExample> curl hitting /hl/v2
+FAIL  D5  api-reference-v2/saas/verify.mdx: envelope keys wrong: exactly-one-of(message|messages) [message=False messages=False]
+FAIL  D5  api-reference-v2/software/verify.mdx: envelope keys wrong: exactly-one-of(message|messages) [message=False messages=False]

@@ -224,3 +224,40 @@ T6 (field parity) was manual in the Phase 14 plan; it is now a reusable script
 (recursive key walk of all 3 JSON examples vs the ResponseField set, minus the
 Authorization header block). Re-ran clean: 14/14 both directions. T4 and T5
 remain manual — that is the residual G4.
+
+## Phase 16 — test-quality (2026-07-28)
+
+PASS with corrections. 5 findings; 3 fixed, 2 recorded. Page itself unchanged.
+
+- F1 (HIGH, fixed): gate-baseline.txt was UNTRACKED, though test-plan G1 claimed
+  "the fixture is committed with this plan". T1 is the only blocking gate and its
+  whole criterion is a diff against that fixture. test-plan.md, domain-compliance.md
+  and bugs.md were untracked too. All now committed.
+- F2 (HIGH, fixed): T6's "exact two-way match" was a FLAT-SET comparison, blind to
+  nesting. `id`/`name` recur at coupons and coupons.products, so deleting the ENTIRE
+  `### coupons.products Structure` section still produced an exact match. Replaced by
+  field-parity-check.py (resolves each `### <path> Structure` heading to an example
+  node, compares per node, and requires every object node to have a section).
+  Mutation-tested: catches whole-section deletion, single nested field drop, and a
+  renamed root field; negative control clean. Page passes at all 4 structures.
+- F3 (MEDIUM, fixed): the recorded "Status code from API." divergence was factually
+  wrong in BOTH test-execution.md and domain-compliance.md. Claimed "all siblings
+  carry the typo / corrected on the new page only / the other 81 pages" — generalised
+  from a 2-page grep. Measured: 35 pages read "form", 16 read "from". All four
+  DISCOUNT-GROUP siblings already read "from"; only the four LIST-PAGE siblings read
+  "form". The page matches its own nav group. Corrected in place.
+- F4 (LOW, recorded): T3 is 2/3 duplicate — `json.tool docs.json` == C1, `test -f`
+  == C2. Only the ordering assertion is unique, and it is the manual one.
+- F5 (LOW, recorded): "Scope honoured (headless only, no /mobile/v2)" was credited to
+  T2+T6 as "full (both scripted)". T6 asserts nothing about surfaces. Coverage is
+  7 full + 1 partial, not 8/8.
+
+Gotchas worth keeping:
+- Flat-set field-parity checks are worthless on pages that reuse a key name at two
+  depths — always compare per JSON path. This corpus reuses `id`/`name` constantly.
+- Do not generalise a corpus-wide claim from a 2-file grep. The "Status code form
+  API." typo is 35/16 split, and splits along list-pages vs nav-group lines.
+- `git ls-files` the phase artefacts before claiming a fixture is committed;
+  .jonggrang/.output files are easy to leave untracked while reports assert otherwise.
+- The suite's exit code is 1 on SUCCESS here; also note `cmd | tail` makes `$?` the
+  exit of `tail`, not the suite — redirect to a file and check the real code.

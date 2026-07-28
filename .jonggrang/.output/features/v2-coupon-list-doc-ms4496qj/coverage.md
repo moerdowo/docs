@@ -114,9 +114,16 @@ no "COVERED" verdict came from a pre-existing failure.
 | P1 | Endpoint contract correct | D1, D3, D4, D5 | full | ✅ |
 | P1 | Page reachable, first in group | C2, T3 | full | ✅ |
 | P2 | Field docs complete & corpus-consistent | D2, D6, D7 + T4 | partial — T4 manual | ✅ |
-| P2 | Scope honoured (headless only) | T2 + T6 | full (both scripted) | ✅ |
+| P2 | Scope honoured (headless only) | T2 + T6 | ~~full (both scripted)~~ **partial** — see below | ⚠️ |
 
-**Objective coverage: 8/8 (100%).** No P0/P1/P2 objective is unprotected.
+**Objective coverage: ~~8/8 (100%)~~ 7 full + 1 partial.**
+
+> **Corrected in Phase 16 (test-quality F5).** The last row was overstated. T2
+> covers "`detail.mdx` untouched" via diff containment, but T6 is field parity and
+> asserts nothing about surfaces — **nothing tests the headless-only /
+> no-`/mobile/v2` half** of that objective. The property does hold (the page has
+> no `/mobile/v2` string; `mobile` appears only in the non-rendered maintainer
+> comment), but it holds unverified. All P0/P1 objectives remain fully protected.
 
 Automation split: **5/8 fully automated**, 3 carry a manual component (T4 heading
 consistency, T5 real-vs-synthetic data judgment). T6, manual in the Phase 14 plan,
@@ -142,6 +149,10 @@ Coverage claims are grounded in measurements taken now, not inherited from Phase
   `<ResponseField>` set, minus the `Authorization` header block): 14 example keys,
   14 documented fields, `in example not documented: []`,
   `documented not in example: []` — exact two-way match.
+  - **Phase 16 correction (test-quality F2):** this flat-set comparison is blind
+    to nesting and misses the deletion of an entire nested section. Superseded by
+    `field-parity-check.py` (path-aware, mutation-proven). The page passes the
+    stronger check at all 4 structures.
 - **Gate pass rate**: 15/15 checks green *on the change surface*; the 16 corpus
   FAILs are pre-existing and `main`-side (bug-001, bug-002).
 

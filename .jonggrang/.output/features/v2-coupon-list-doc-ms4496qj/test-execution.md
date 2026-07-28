@@ -141,9 +141,18 @@ Phase 12).
 1. `### data Structure (Object)` where siblings have `(Array Of Object)`.
    Source-side: this endpoint wraps a `coupons` array in an object. The nested
    heading chain follows the convention `invoice`/`bundling` use for sub-objects.
-2. `Status code from API.` where all siblings carry the long-standing typo
-   `Status code form API.` Confirmed by grep: `invoice` and `bundling` both read
-   "form"; the new page reads "from". Corrected on the new page only.
+2. `Status code from API.` vs the long-standing typo `Status code form API.`
+
+   > **Corrected in Phase 16 — this row's original finding was wrong.** It read
+   > "all siblings carry the typo … corrected on the new page only", generalised
+   > from a grep of just `invoice` and `bundling`. Re-measured across the whole
+   > corpus: **35 pages read "form", 16 read "from"** — the corpus is split, not
+   > uniform. All four *list-page* siblings (`bundling`/`installment`/`invoice`/
+   > `reqpayment` `index.mdx`) read "form", but all four *discount-group*
+   > siblings (`create`/`detail`/`validate`/`check`) already read "from". So the
+   > new page is **consistent with its own nav group** and diverges only from the
+   > list-page template it borrowed its structure from. The page's wording needs
+   > no change; only this justification was inaccurate.
 
 ## 6. T5 — Data-safety read-through (P0)
 
@@ -179,6 +188,14 @@ T6 PASS — exact two-way match
 14/14 keys documented, 14/14 documented fields present in the example. No orphan
 `ResponseField`, no undocumented key. This closes the gap that D6 leaves open
 (D6 only asserts `statusCode` + `data` exist, not parity).
+
+> **Superseded in Phase 16 (test-quality F2).** This comparison is *flat-set*, so
+> it is blind to nesting: `id`/`name` appear at both the `coupons` and
+> `coupons.products` levels, and deleting the entire `### coupons.products
+> Structure` section still yields an exact set match. Replaced by the path-aware
+> `field-parity-check.py`, which compares key sets per structure and
+> mutation-catches that deletion. The page passes the stronger check — the result
+> above was right, the guarantee behind it was not.
 
 ---
 
