@@ -185,7 +185,8 @@ open, `main`-side, and account for all 16 baseline FAILs.
 
 - Corpus coverage: **100%** (85/85 pages, 82/82 endpoints, 94/94 JSON blocks, 1/1 nav).
 - Check-level coverage: **15/15 mutation-proven** live on the new page.
-- Objective coverage: **8/8 (100%)** P0/P1/P2 objectives enforced.
+- Objective coverage: **7 full + 1 partial** of 8 P0/P1/P2 objectives (§4, corrected
+  in Phase 16 F5 — the headless-only half of P2 holds but is unasserted).
 - Baseline delta: **empty** — no regression, no collateral change.
 
 **Coverage threshold met. Phase 15 PASS.**

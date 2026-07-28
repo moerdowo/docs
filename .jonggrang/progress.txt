@@ -1619,9 +1619,13 @@ Report: .jonggrang/.output/features/v2-coupon-list-doc-ms4496qj/test-execution.m
 - T6: scripted two-way parity — 14/14 example keys documented, 14/14 documented
   fields present. No orphan ResponseField, no undocumented key.
 - T4: only divergences vs siblings are the two already recorded in
-  domain-compliance.md §"Two deliberate, documented divergences". Confirmed the
-  `Status code form API.` typo really is corpus-wide (invoice + bundling both
-  have it) — the new page's "from" is the deliberate fix, not a slip.
+  domain-compliance.md §"Two deliberate, documented divergences".
+  CORRECTED IN PHASE 16 (F3): the claim recorded here — that the
+  `Status code form API.` typo is corpus-wide — was generalised from a 2-file
+  grep and is wrong. Measured: 35 pages read "form", 16 read "from". All four
+  discount-group siblings already read "from", so the new page is consistent
+  with its own nav group and diverges only from the four list pages that
+  supplied its structural template. The page wording needed no change.
 
 Gotchas worth keeping:
 - The suite's exit code is 1 on SUCCESS for this feature. The pass criterion is
@@ -1641,3 +1645,45 @@ Still open after Phase 14, all non-gating and source-side:
 - G2 `products[]` fields beyond `id` not live-verified (disclosed in-page).
 - G3 `limit` cap unknown; siblings say "maximum of 50", this page stays silent.
 - bug-001 / bug-002 produce all 16 baseline FAILs; both main-side, both filed.
+
+### Phase 15 (coverage) — PASS
+Corpus coverage 100% (85/85 pages, 82/82 endpoint pages, 94/94 JSON blocks,
+1/1 nav entry). 15/15 checks mutation-proven live on the new page.
+Report: .jonggrang/.output/features/v2-coupon-list-doc-ms4496qj/coverage.md
+
+### Phase 16 (test-quality) — PASS with corrections
+5 findings, 3 fixed in-phase:
+- F1 (HIGH): the blocking gate's own fixture, gate-baseline.txt, was UNTRACKED —
+  along with test-plan.md, domain-compliance.md, bugs.md. The plan's stated
+  mitigation for its own top risk did not exist. All four committed.
+- F2 (HIGH): T6's "exact two-way match" compared FLAT sets of example keys vs
+  ResponseField names. This page reuses `id`/`name` at two depths, so deleting
+  the ENTIRE `### coupons.products Structure` section still reported PASS.
+  Replaced with field-parity-check.py — resolves each `### <path> Structure`
+  heading to a node in the example and compares key sets AT that node.
+  Mutation-proven in 4 directions.
+- F3 (MEDIUM): the recorded "Status code form API. typo is corpus-wide" claim
+  was generalised from a 2-file grep and is false. Measured 35 "form" / 16
+  "from"; all four discount-group siblings already read "from". The page needed
+  no change — it was right for a reason the reports got wrong.
+- F4 / F5 (LOW, recorded): T3 duplicates C1/C2 in 2 of 3 assertions; the
+  headless-only half of objective P2 is credited to T6, which asserts nothing
+  about surfaces, so 8/8 objective coverage is really 7 full + 1 partial.
+Report: .jonggrang/.output/features/v2-coupon-list-doc-ms4496qj/test-quality.md
+
+### Phase 17 (completion) — PASS
+Re-ran the gate and the new parity check from scratch rather than trusting the
+Phase 14/16 records. Gate: exit 1, 16 FAILs, delta vs gate-baseline.txt empty
+both directions, no FAIL naming discount/ or docs.json. Parity check: exit 0,
+PASS at all 4 structures. Change surface still exactly 2 content files,
+209 insertions, 0 deletions. Nav slug still first in the V2 group; V1 group
+untouched. `openapi:` frontmatter matches the corpus slug convention.
+Cleanup: propagated the F3 correction into this file's Phase-14 entry (it still
+carried the wrong "corpus-wide" claim) and aligned coverage.md §7's verdict with
+its own already-corrected §4. No content file touched.
+Report: .jonggrang/.output/features/v2-coupon-list-doc-ms4496qj/completion.md
+
+GOTCHA that cost real time in Phase 17 — the suite prints FAIL lines INDENTED
+two spaces, but gate-baseline.txt stores them unindented. `grep "^FAIL"` matches
+zero lines and looks exactly like a flawless run. Use
+`grep -E "^\s*FAIL" | sed 's/^[[:space:]]*//' | sort` before diffing.
