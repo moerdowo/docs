@@ -1,0 +1,226 @@
+# progress — v2-coupon-list-doc-ms4496qj
+
+## 2026-07-28 — task-001 (grounding pass) — PASS
+- Deliverable written to .jonggrang/progress.txt (dated entry titled with this feature id),
+  covering the 5 required items verbatim: frontmatter keys/order/quoting + pseudo openapi path,
+  maintainer-note comment convention, component order/spacing/fence + nesting idiom,
+  exact Endpoint/Authorization/Query Parameters/Response heading strings, host + /hl/v2 prefix.
+- Read-only task: zero .mdx and zero docs.json changes (verified with git status/diff).
+
+Key findings the authoring task must honour:
+- New page frontmatter: openapi: "GET /endpointdiscountv2/index" — all four existing V2 list
+  pages (bundling, reqpayment, invoice, installment) use the literal `/index` segment.
+- <Expandable> is used NOWHERE under api-reference-v2/. Nested objects are flattened into
+  `### <path> Structure (Array Of Object)` / `(Object)` sub-sections (bundling/index.mdx even
+  has `### products.paymentLink Structure (Object)`). Use that, not Expandable, not dotted names.
+- The <CodeGroup> endpoint block has TWO blank lines between the Production and Sandbox fences,
+  and the fence info-strings are the doubled words "```Production Production" / "```Sandbox Sandbox".
+  Non-obvious and easy to lose to a formatter.
+- Both V2 list pages carry the typo "Status code form API." (bundling:128, reqpayment:124) while
+  the discount pages say "Status code from API." Decided: use "from API." on the new page. No
+  validator asserts either string, so this is a deliberate non-propagation of a typo.
+- reqpayment/index.mdx has stray spaces before `>` (`type="integer" >`) — local artifact, not convention.
+- Nav target is docs.json navigation.tabs[2].groups[10] "Discount & Coupon" (4 pages today);
+  insert "api-reference-v2/discount/index" first. Structural check C2 enforces nav<->file 1:1 under
+  api-reference-v2/**, so the .mdx and the nav entry must land in the SAME commit or the gate reds.
+- Reusable gate (from the earlier api-v2-reference-docs feature, still live):
+  `bash .jonggrang/.output/features/api-v2-reference-docs-mqyl9hub/validate-v2-docs.sh`
+  = structural C0-C8 + domain D0-D7, exit codes ANDed. Use it for task-004 validation.
+- C7 leak-grep denylist affects prose wording: never write `/api/v2/` (use `/hl/v2/`), any `*.js`
+  module name, `graphql`/`gql`, `redis`/`scylla`, `@mayarid`, `process.env`, or handler names
+  such as `getDiscount` / `validateCoupon`.
+
+## Validation baseline captured in task-001 (IMPORTANT for task-004)
+The combined gate exits 1 on a CLEAN tree: 16 pre-existing FAILs (2x C2 orphan nameservice pages;
+14x D1/D4/D5 on saas/*.mdx + software/verify.mdx, which use the /saas/v2 surface and an
+isLicenseActive envelope the /hl/v2-only domain suite does not model). `git diff main --
+api-reference-v2/ docs.json` is empty here, so none of it is ours. Task-004 must diff the FAIL set
+against this baseline rather than expect exit 0, and must not weaken any check to go green.
+Filed as bug-001 / bug-002 in bugs.md (written by hand — `jonggrang bug --feature <id> "..."`
+errors "Multiple features found. Use --feature <featureId>." even when the flag IS supplied).
+
+## 2026-07-28 — task-002 (author api-reference-v2/discount/index.mdx) — PASS
+- Created api-reference-v2/discount/index.mdx (GET /hl/v2/coupons), committed alone as cb6cc7a.
+  Section order matches bundling/index.mdx: frontmatter -> maintainer note -> RequestExample ->
+  ResponseExample -> `Endpoint:` + CodeGroup -> ## Authorization -> ## Query Parameters -> ## Response
+  (Main Structure (Root) / data Structure (Object) / coupons Structure (Array Of Object) /
+  coupons.products Structure (Array Of Object)) -> closing <Note>.
+- DEVIATION from the task text, deliberate: item 6 asked for `<ParamField header="Authorization">`,
+  but `ParamField header=` appears ZERO times in the repo, and every one of the 81 existing V2 pages
+  uses the byte-identical `<ResponseField name="Authorization" type="string" required>` block. The same
+  item said "per sibling-page convention" and the acceptance criteria require the bundling structure, so
+  the sibling ResponseField form was used. Do not "fix" this to ParamField header= without changing all
+  81 pages.
+- OTHER JUDGEMENT CALLS (all flagged in the page's maintainer note):
+  * CodeGroup URLs carry NO `?limit=10` — the task listed the bare .../coupons URLs explicitly
+    (reqpayment/index.mdx is the same; bundling/invoice do append it). The curl DOES use ?limit=10.
+  * `limit` documented as "Defaults to `10`." only — the "maximum of `50`" cap that bundling states is
+    not confirmed for this endpoint by the supplied spec, so it was not asserted.
+  * `startingAfter` doc does NOT claim the value is a unix-ms string (bundling does) — this page's
+    createdAt is ISO 8601, so the cursor format is described as opaque ("pass nextStartingAfter back").
+  * `products[]` item fields are `id` + `name`. The supplied spec is not stored in the repo and only
+    named the array; create.mdx's products[] documents `id` alone. Flagged REPRESENTATIVE in the note.
+  * Error blocks use the check.mdx 404 shape {statusCode, messages, data: null}. Strings
+    "Validation Error" (source-confirmed elsewhere in this group) and "Internal Server Error"
+    (generic — no verbatim 500 string exists for this surface).
+  * No `## Errors` section: bundling/index.mdx has none and the task's ordered content list omits it.
+  * 200 example uses hasMore:false / nextStartingAfter:null (bundling's shape) rather than inventing a
+    cursor value; the loop semantics live in the closing <Note> instead.
+- VALIDATION vs the task-001 baseline (16 pre-existing FAILs):
+  * domain suite: 14 FAILs — EXACTLY the baseline saas/*.mdx + software/verify.mdx set. The new page is
+    counted in and passes D1-D7 (endpoint pages 81 -> 82, all of D2/D3/D6/D7 green).
+  * structural suite: 3 FAILs — the 2 baseline nameservice C2 orphans PLUS
+    `C2 orphan .mdx not referenced in nav: api-reference-v2/discount/index.mdx`. That third one is
+    EXPECTED and is exactly what task-003 (docs.json nav wiring) clears; C2 is 1:1 both ways, so the
+    file and its nav entry cannot both be green in the same task. Not a regression.
+  * Local checks: 3 json blocks parse, 12 fences (even), all 6 JSX tag types balanced
+    (RequestExample/ResponseExample/CodeGroup 1:1, 5 ParamField, 17 ResponseField, 1 Note),
+    C7 leak-grep clean, no `/mobile/` string, single trailing newline.
+- No typecheck/test/lint exists in this docs repo (test cmd is a placeholder echo) — the two suites above
+  are the validation. Only the one .mdx was staged; .jonggrang/ and docs.json untouched.
+
+## 2026-07-28 — task-003 (docs.json nav wiring) — PASS
+- One line added at docs.json:391 — "api-reference-v2/discount/index" first in the V2
+  "Discount & Coupon" group (navigation.tabs[2].groups[10], the group starting line 388).
+  `git diff --stat docs.json` = 1 insertion, 0 deletions. Committed alone as 0da5a25.
+- Two same-named "Discount & Coupon" groups exist; grep -n "discount" docs.json disambiguates by
+  slug prefix: V1 = api-reference/discount/* (lines 181-183, only create/validate/detail — no
+  check page), V2 = api-reference-v2/discount/* (lines 391-394). Never match on group title alone.
+- VALIDATION vs the task-001 baseline: gate now reports exactly the 16 baseline FAILs
+  (2x C2 nameservice orphans + 14x D1/D4/D5 saas/software). The third structural FAIL that
+  task-002 left behind (C2 orphan api-reference-v2/discount/index.mdx) is GONE — the file+nav
+  pair is now 1:1, confirming the task-002/task-003 split was the only way to sequence it.
+  C8 stayed PASS, i.e. the V1 tab's groups/pages are byte-identical to main.
+- GOTCHA: validate-v2-docs.sh prints "GATE: FAIL" but the pipeline `... | tail -40; echo EXIT=$?`
+  reports EXIT=0 — that $? is tail's status, not the script's. Read the RESULT/GATE lines, or
+  capture the exit code without a pipe, if you need the real code.
+
+## 2026-07-28 — task-004 (validation & consistency sweep) — PASS
+Read-only task: ZERO edits to api-reference-v2/discount/index.mdx and docs.json. No fixes were
+needed, so there is no commit for this task. All seven checks below pass.
+
+1. JSON validity — PASS. docs.json parses (16086 bytes), parse -> stringify -> reparse round-trip
+   clean. Top-level keys: $schema, theme, name, colors, favicon, navigation, logo, navbar, footer.
+2. Slug resolution — PASS. Walked docs.json for every group literally titled "Discount & Coupon"
+   (there are TWO — see the task-003 note). V1 group: 3 pages, all resolve. V2 group: 5 pages
+   (index, create, detail, validate, check), all resolve to real .mdx on disk.
+   api-reference-v2/discount/index.mdx confirmed present (6288 bytes).
+3. Embedded JSON — PASS. 3 json blocks, all parse: 200 (statusCode, messages, data, hasMore,
+   nextStartingAfter), 400 and 500 (statusCode, messages, data). 12 fences total, even, none
+   unterminated.
+4. Frontmatter sanity — PASS. index.mdx has exactly [title, openapi, description], all three
+   double-quoted — byte-identical key set and quoting to all 4 discount siblings AND all 4 other
+   V2 list pages. openapi value "GET /endpointdiscountv2/index" matches the
+   /endpoint<group>v2/index family used by installment/invoice/reqpayment/bundling.
+5. Data hygiene — PASS. Only credential string is the required placeholder
+   `Paste-Your-API-Key-Here` (2 occurrences: curl header + Authorization example); no other
+   Bearer value. Zero email addresses. All 3 "id" values are canonical UUID shape (8-4-4-4-12).
+   Names are generic Indonesian campaign/product strings (Diskon Awal Tahun, Promo Kelas Online,
+   Kelas Online Dasar) — no real merchant or customer identity.
+6. Scope containment — PASS. `git diff main --name-status` on non-.jonggrang paths is exactly:
+   A api-reference-v2/discount/index.mdx, M docs.json (221 + 1 = 222 insertions, 0 deletions).
+   docs.json diff is the single nav line at :391. Explicitly confirmed UNTOUCHED vs main:
+   detail.mdx, create.mdx, validate.mdx, check.mdx, api-reference/openapi.json, and all V1
+   api-reference/discount/ pages. Everything else in `git status --short` is .jonggrang/.claude/
+   .codex/.opencode/hooks/AGENTS.md/CLAUDE.md bookkeeping.
+7. Mobile surface — PASS (with a deliberate note). Zero `/mobile` path strings; no mobile base
+   URL; nothing about the mobile surface in RENDERED content. The single case-insensitive
+   "mobile" hit is at line 16, INSIDE the maintainer comment block, in the sentence recording the
+   decision ("Only the headless surface is documented; the mobile surface is intentionally not
+   documented here"). Kept on purpose: it is a non-rendered decision record that prevents a future
+   maintainer from re-adding /mobile/v2, which is exactly what this check guards. A bare
+   `grep -i mobile` therefore returns 1 line — do not treat that as a regression, and do not
+   delete the sentence just to make the grep silent.
+
+Gate run vs the task-001 baseline:
+`bash .jonggrang/.output/features/api-v2-reference-docs-mqyl9hub/validate-v2-docs.sh`
+  exit 1, 16 FAILs = EXACTLY the 16 pre-existing baseline failures (2x C2 nameservice orphans;
+  14x D1/D4/D5 on saas/activate|deactivate|verify + software/verify). ZERO new failures — the
+  set is identical to what task-003 left. New page is counted in: D2/D3/D6/D7 now green on 82
+  endpoint pages (was 81 before this feature). No check was weakened to reach this.
+
+Gotchas confirmed/added:
+- Captured the real exit code by redirecting to a file and reading the status directly, with no
+  pipe — the task-003 note about `| tail` masking the status is correct and still bites.
+- When scanning json code blocks, the fences here carry INFO STRINGS (```` ```json Response
+  Example 200 ````), so an anchored "```json"-end-of-line regex silently matches ZERO blocks and
+  the check falsely "passes" with 0 failures. Match the whole info string and test it for a
+  leading `json` token instead.
+- A naive [A-Za-z0-9+/]{24,} secret-scan regex false-positives on the frontmatter line
+  `openapi: "GET /endpointdiscountv2/index"`. Not a secret.
+- A repo hook rejects heredoc writes whose body contains shell status/variable syntax, reading it
+  as a credential dump. Append long progress entries with the Edit tool, not `cat >> file <<EOF`.
+
+### Phase 13 (test-planning) — test-plan.md written
+Deliverables:
+  - test-plan.md  (6 test cases T1-T6, traceability matrix, 6 recorded gaps)
+  - gate-baseline.txt  (FIXTURE: the 16 pre-existing FAIL lines, sorted+normalised,
+    captured 2026-07-28 from this tree WITH the feature diff applied)
+
+Key decision: the absolute gate cannot be the pass criterion — validate-v2-docs.sh
+exits 1 on a clean `main` tree (bug-001 nameservice orphans x2 + bug-002 saas/software
+non-/hl/v2 surfaces x14 = 16 FAILs). Phase 14 must instead assert a BASELINE DELTA:
+
+  bash .jonggrang/.output/features/api-v2-reference-docs-mqyl9hub/validate-v2-docs.sh 2>&1 \
+    | grep -E '^\s*FAIL' | sed 's/^ *//' | sort > /tmp/gate-now.txt
+  diff .jonggrang/.output/features/v2-coupon-list-doc-ms4496qj/gate-baseline.txt /tmp/gate-now.txt
+
+Dry-run of that command today: empty diff, i.e. T1 already PASSES. Suite exit code
+stays 1 — that is expected and must NOT be "fixed" by weakening a check.
+DO NOT regenerate gate-baseline.txt during Phase 14; that would absorb a real defect
+into the baseline. T1 also fails on a *removed* baseline line (means an out-of-scope
+page got edited).
+
+Manual cases cover what the suites structurally cannot:
+  T5 data-safety read-through — C7 greps internal identifiers, it cannot tell a real
+     merchant name from a synthetic one.
+  T6 field parity example<->ResponseField — D6 only asserts statusCode+data exist.
+  T4 corpus-consistency vs the 4 sibling list pages.
+Both known divergences (object-wrapped `data`; "Status code from API." typo fix) are
+whitelisted in T4 so Phase 14 does not re-litigate them.
+
+Carried open, non-gating: G2 products[] fields not live-verified, G3 the `limit` 50-cap
+question (code-quality F2). Both need a source-side answer, neither blocks the gate.
+
+=== Phase 15 (coverage) — 2026-07-28 ===
+Result: PASS. coverage.md written. 100% objective coverage (8/8), 15/15 checks
+mutation-proven on the change surface, baseline delta empty.
+
+What this phase added over Phase 14: Phase 14 proved the checks RAN and stayed
+green. Phase 15 proves they would have CAUGHT a defect on the new page. Built a
+throwaway git repo at /tmp/covtest that reproduces the 16-FAIL baseline exactly,
+then injected one targeted defect per check into discount/index.mdx (and
+docs.json) and confirmed that check fires. 15/15 fire. Negative control after
+each probe (reset -> re-run -> exactly 16 baseline FAILs) rules out residue.
+
+Gotchas worth keeping:
+- gate-baseline.txt is stored SORTED, but the suite emits FAILs in per-file
+  order. A raw `diff baseline now` shows a spurious reordering delta (looks like
+  4 added + 4 removed). Compare as a SET: sort both sides. Phase 14's "diff
+  empty" is correct; it used the same sort. Do not "fix" the suite over this.
+- The domain suite exempts overview pages by FILE STEM:
+  OVERVIEW = {introduction, statuscode, rate-limit}. A page named index.mdx is
+  NOT exempt, so discount/index.mdx gets the full D2-D6 treatment. This was the
+  real exemption risk for this feature and it does not bite. Worth re-checking
+  if anyone ever adds "index" to OVERVIEW.
+- Two mutation probes needed corrected assertions (probe bugs, not gate gaps):
+  C1 short-circuits in the .sh entrypoint and prints "FAIL: docs.json is not
+  valid JSON" — a DIFFERENT line shape from the "FAIL  <id>  <detail>" the other
+  14 use, so an id-based grep misses it. C8 names tabs[1] in its message, not a
+  filename. Any future tooling that parses FAIL lines must handle both shapes.
+- C8 needs `git show main:docs.json`, so a scratch copy must be a git repo with
+  a `main` branch or C8 fails open with a read error.
+- A bash strict-mode nounset flag at the start of a Bash tool call is blocked by
+  a hook in this environment (read as a bare env dump). Just omit it.
+
+Newly recorded gap G7 (non-gating, source-side): the 5 documented query params
+(limit, startingAfter, status, search, productId) have no automated assertion
+and no recorded source verification. limit/startingAfter match corpus
+pagination convention; status/search/productId rest on the Phase 8 source
+transcription alone, and only limit appears in an example. Same class as G2/G3 —
+recorded, not filed as a bug, since nothing is known to be wrong.
+
+T6 (field parity) was manual in the Phase 14 plan; it is now a reusable script
+(recursive key walk of all 3 JSON examples vs the ResponseField set, minus the
+Authorization header block). Re-ran clean: 14/14 both directions. T4 and T5
+remain manual — that is the residual G4.
