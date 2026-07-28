@@ -388,6 +388,7 @@
           {
             "group": "Discount & Coupon",
             "pages": [
+              "api-reference-v2/discount/index",
               "api-reference-v2/discount/create",
               "api-reference-v2/discount/detail",
               "api-reference-v2/discount/validate",
