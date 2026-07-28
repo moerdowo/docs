@@ -1603,3 +1603,41 @@ Gotchas worth keeping:
   bundling/index.mdx (`### data Structure (Array Of Object)`).
 - The two blank lines between the Production and Sandbox code fences inside <CodeGroup> are
   corpus-wide and intentional — don't collapse them to one.
+
+### Phase 14 (testing) — PASS, 6/6 test cases, 0 regressions, 0 changes made
+Executed test-plan.md T1–T6. Nothing failed, so nothing was fixed — the working
+tree is byte-identical to what entered the phase.
+Report: .jonggrang/.output/features/v2-coupon-list-doc-ms4496qj/test-execution.md
+
+- T1 (blocking gate): suite exit 1, 16 FAILs, `diff` vs gate-baseline.txt EMPTY.
+  Set unchanged in BOTH directions — no new FAIL, and no baseline FAIL vanished
+  (a vanished one would mean an out-of-scope page got edited). No FAIL line
+  names discount/ or docs.json. Corpus counts (85 pages / 82 endpoint / 94 JSON)
+  match the Phase 13 entry state exactly, so the suite saw the expected corpus.
+- T2: 209 insertions / 0 deletions across exactly 2 content files. Everything
+  else in the diff vs main is .jonggrang/** workspace artefacts.
+- T6: scripted two-way parity — 14/14 example keys documented, 14/14 documented
+  fields present. No orphan ResponseField, no undocumented key.
+- T4: only divergences vs siblings are the two already recorded in
+  domain-compliance.md §"Two deliberate, documented divergences". Confirmed the
+  `Status code form API.` typo really is corpus-wide (invoice + bundling both
+  have it) — the new page's "from" is the deliberate fix, not a slip.
+
+Gotchas worth keeping:
+- The suite's exit code is 1 on SUCCESS for this feature. The pass criterion is
+  the baseline delta, not the exit code. Do not "fix" the exit code.
+- Do NOT regenerate gate-baseline.txt during execution (plan G1). It is a
+  post-change baseline captured 2026-07-28; regenerating on a dirtier tree would
+  silently absorb a real defect into "baseline".
+- `xxd` is not installed in this environment — use `od -c` for byte checks.
+- `jonggrang task list` (JSON mode) emits truncated/unterminated JSON on this
+  task set; `jonggrang task list --pretty` works. `jonggrang task next` returns
+  `null` when all 15 tasks are completed.
+- Verifying the "double blank line between CodeGroup fences" convention needs
+  `cat -A` (or `od`) — it is invisible in a normal read and a plain grep can't
+  see it.
+
+Still open after Phase 14, all non-gating and source-side:
+- G2 `products[]` fields beyond `id` not live-verified (disclosed in-page).
+- G3 `limit` cap unknown; siblings say "maximum of 50", this page stays silent.
+- bug-001 / bug-002 produce all 16 baseline FAILs; both main-side, both filed.
