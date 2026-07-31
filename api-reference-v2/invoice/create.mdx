@@ -124,7 +124,26 @@ https://api.mayar.club/hl/v2/invoices/create
 </ParamField>
 
 <ParamField path="paymentMethod" type="string">
-  Restrict the invoice to a specific payment method.
+  Restrict the invoice to a specific payment method (lowercase). Accepts one of
+  the following values:
+
+  - `qris`
+  - `va/bni`
+  - `va/bri`
+  - `va/mandiri`
+  - `va/cimb`
+  - `va/permata`
+  - `va/bjb`
+  - `va/bsi`
+  - `ewallet/dana`
+  - `ewallet/gopay`
+  - `ewallet/linkaja`
+  - `ewallet/shopeepay`
+  - `outlet/alfamart`
+
+  The selected channel must be enabled in your payment channel configuration;
+  otherwise the request returns a `400` with
+  `"Payment method \"...\" is not available or disabled"`.
 </ParamField>
 
 <ParamField path="cashtag" type="string">
