@@ -53,7 +53,7 @@ https://api.mayar.id/hl/v2/payments/create
 
 
 ```Sandbox Sandbox
-https://api.mayar.club/hl/v2/payments/create
+https://api.mayar.io/hl/v2/payments/create
 ```
 
 </CodeGroup>
@@ -122,7 +122,8 @@ https://api.mayar.club/hl/v2/payments/create
 </ParamField>
 
 <ParamField path="cashtag" type="string">
-  Cashtag associated with the payment request.
+  Cashtag associated with the payment request. Only required when using
+  `ewallet/jeniuspay` as the `paymentMethod`.
 </ParamField>
 
 <ParamField path="extraData" type="object">
