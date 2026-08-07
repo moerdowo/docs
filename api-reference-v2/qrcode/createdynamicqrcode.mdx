@@ -4,6 +4,11 @@ openapi: "POST /endpointqrcodev2/createdynamicqrcode"
 description: "Endpoint used to create a dynamic QRIS code for a specific amount"
 ---
 
+<Note>
+  The setting to charge admin fee and channel fee to the customer does not
+  apply to the Payme / Dynamic QR code feature.
+</Note>
+
 {/*
   Notes for maintainers — REPRESENTATIVE write payload.
   POST /hl/v2/qr-codes/create is a write endpoint; the response below is derived from the
