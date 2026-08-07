@@ -4,6 +4,11 @@ openapi: "POST /endpointreqpaymentv2/create"
 description: "Endpoint used to create a single payment request"
 ---
 
+<Note>
+  The setting to charge admin fee and channel fee to the customer does not
+  apply to the Request Payment feature.
+</Note>
+
 {/* Notes for maintainers: this is a WRITE endpoint. The response shape below is
 REPRESENTATIVE — derived from the V1 request-payment template and the V2 source
 surface, not captured from a live prod write. The `data` object returns the
