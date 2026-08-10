@@ -4,6 +4,13 @@ openapi: "GET /endpointwebhook/history"
 description: "Endpoint to get data webhook history"
 ---
 
+<Note>
+  This `/history` endpoint is **deprecated** and only returns **old** webhook
+  history. For the current and up-to-date webhook history, please use the new
+  endpoint: `GET /hl/v2/webhooks/new-history` (see
+  [Webhook New History](/api-reference-v2/webhook/newhistory)).
+</Note>
+
 <RequestExample>
 
 ```bash Request Example

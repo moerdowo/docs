@@ -4,6 +4,13 @@ openapi: "GET /endpointwebhookv2/history"
 description: "Endpoint to get data webhook history"
 ---
 
+<Note>
+  This `/history` endpoint only returns **old** webhook history. For the current
+  and up-to-date webhook history, please use the new endpoint:
+  `GET /hl/v2/webhooks/new-history` (see
+  [Webhook New History](/api-reference-v2/webhook/newhistory)).
+</Note>
+
 {/*
   Notes for maintainers — V2 Webhook "Get History" (GET /hl/v2/webhooks/history).
   Response shape captured live from production (DUMMY_PROD_MERCHANT_API_KEY) and is REAL key-for-key.
