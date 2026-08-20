@@ -1,0 +1,125 @@
+{
+  "tasks": [
+    {
+      "id": "task-001",
+      "title": "Grounding: enumerate every hl/v2/credit occurrence and confirm target prefix",
+      "description": "Read-only grounding pass, no file edits.\n\n1. Run `grep -rn \"hl/v2/credit\" .` across the whole repo (all extensions, including docs.json, *.mdx, api-reference/openapi.json, snippets, and any guide pages). Record the complete occurrence list.\n2. Expected baseline (verify it matches): 21 occurrences across exactly 7 files, all under api-reference-v2/credit/ - add-credit.mdx, balance.mdx, generate-immutable-checkout.mdx, paginate-credit-history.mdx, regist-credit-usage.mdx, regist-membership.mdx, spend.mdx. Each page has 3: the curl line inside <RequestExample>, the Production URL (api.mayar.id) and the Sandbox URL (api.mayar.io) inside the Endpoint <CodeGroup>.\n3. Cross-check the target prefix form against the V1 credit pages: grep for \"credit/v1/credit\" under api-reference/creditbasedproduct/ and api-reference/usagebasedmembership/ and confirm the shape is https://api.mayar.id/credit/v1/credit/<suffix>. The V2 target is therefore https://api.mayar.id/credit/v2/credit/<suffix> - same suffixes, only the host prefix changes.\n4. Record the exact route suffix each of the 7 pages must keep unchanged: /customer/balance, /customer/spend, /customer/add-credit, /customer/paginate-credit-history/(customerId) with its query string, /membership/customer/regist, /credit-usage/customer/regist, /generate/immutable/checkout.\n5. Confirm the deviation precedent by grepping api-reference-v2/saas/ and api-reference-v2/software/ for their inline base URLs (they state a per-service base with no explanatory note) - this justifies leaving api-reference-v2/introduction.mdx alone.\n\nAcceptance criteria: a written occurrence inventory (file:line for all 21) appended to .jonggrang/.output/features/fix-v2-credit-endpoint-base-path-mt18vmcz/progress.txt, an explicit statement that no occurrence exists outside api-reference-v2/credit/ (or, if one does, it is listed and flagged for the plan owner), and confirmation of the credit/vN/credit/ prefix form from the V1 pages. If the inventory deviates from the expected baseline, note the deviation rather than silently proceeding. No files modified in this task.",
+      "priority": 1,
+      "status": "pending",
+      "feature_id": "fix-v2-credit-endpoint-base-path-mt18vmcz",
+      "skill": null,
+      "blocked_by": [],
+      "passes": false,
+      "files": [
+        "api-reference-v2/credit/add-credit.mdx",
+        "api-reference-v2/credit/balance.mdx",
+        "api-reference-v2/credit/generate-immutable-checkout.mdx",
+        "api-reference-v2/credit/paginate-credit-history.mdx",
+        "api-reference-v2/credit/regist-credit-usage.mdx",
+        "api-reference-v2/credit/regist-membership.mdx",
+        "api-reference-v2/credit/spend.mdx",
+        ".jonggrang/.output/features/fix-v2-credit-endpoint-base-path-mt18vmcz/progress.txt"
+      ],
+      "started_at": null,
+      "completed_at": null,
+      "error_log": []
+    },
+    {
+      "id": "task-002",
+      "title": "Rewrite base path on the four customer-scoped credit pages",
+      "description": "Apply the host-prefix correction hl/v2/credit -> credit/v2/credit on these four pages, 3 occurrences each (12 total):\n\n- api-reference-v2/credit/balance.mdx - line ~10 curl (GET, api.mayar.id), ~63 Production, ~67 Sandbox. Suffix stays /customer/balance?customerId=(customerId)&productId=(productId).\n- api-reference-v2/credit/spend.mdx - ~10 curl (POST), ~41 Production, ~45 Sandbox. Suffix stays /customer/spend.\n- api-reference-v2/credit/add-credit.mdx - ~10 curl (POST), ~41 Production, ~45 Sandbox. Suffix stays /customer/add-credit.\n- api-reference-v2/credit/paginate-credit-history.mdx - ~10 curl (GET), ~64 Production, ~68 Sandbox. Suffix stays /customer/paginate-credit-history/... with its query string intact. Note the curl uses a concrete UUID example while the CodeGroup uses (customerId)/(productId) placeholders - preserve each form exactly.\n\nRules:\n- Change ONLY the path segment hl/v2/credit -> credit/v2/credit. Both hosts get the change: api.mayar.id (Production) and api.mayar.io (Sandbox).\n- Do not touch frontmatter (including the openapi: identifier), titles, descriptions, parameter tables, headers, request/response bodies, error sections, or any example UUIDs and query values.\n- Do not add notes, callouts, or restructure the pages.\n- Preferred mechanism: a targeted sed -i substitution of hl/v2/credit to credit/v2/credit per file, since the string is unambiguous and appears only in URL positions.\n\nAcceptance criteria: grepping for hl/v2/credit in balance.mdx, spend.mdx, add-credit.mdx and paginate-credit-history.mdx returns nothing; grepping for credit/v2/credit across the same four files returns exactly 12 lines (4 curl + 4 Production + 4 Sandbox); git diff --stat shows only these 4 files touched and git diff shows only URL-line changes.",
+      "priority": 2,
+      "status": "pending",
+      "feature_id": "fix-v2-credit-endpoint-base-path-mt18vmcz",
+      "skill": null,
+      "blocked_by": [
+        "task-001"
+      ],
+      "passes": false,
+      "files": [
+        "api-reference-v2/credit/balance.mdx",
+        "api-reference-v2/credit/spend.mdx",
+        "api-reference-v2/credit/add-credit.mdx",
+        "api-reference-v2/credit/paginate-credit-history.mdx"
+      ],
+      "started_at": null,
+      "completed_at": null,
+      "error_log": []
+    },
+    {
+      "id": "task-003",
+      "title": "Rewrite base path on the registration and checkout credit pages",
+      "description": "Apply the same host-prefix correction hl/v2/credit -> credit/v2/credit on the remaining three pages, 3 occurrences each (9 total):\n\n- api-reference-v2/credit/regist-membership.mdx - line ~10 curl (POST), ~61 Production, ~65 Sandbox. Suffix stays /membership/customer/regist.\n- api-reference-v2/credit/regist-credit-usage.mdx - ~10 curl (POST), ~49 Production, ~53 Sandbox. Suffix stays /credit-usage/customer/regist.\n- api-reference-v2/credit/generate-immutable-checkout.mdx - ~10 curl (POST), ~45 Production, ~49 Sandbox. Suffix stays /generate/immutable/checkout.\n\nSame rules as task-002: only the hl/v2/credit -> credit/v2/credit path segment changes, on both api.mayar.id and api.mayar.io; no frontmatter, payload, schema, or prose edits; no added notes. Use a targeted per-file sed substitution.\n\nAcceptance criteria: grepping for hl/v2/credit in regist-membership.mdx, regist-credit-usage.mdx and generate-immutable-checkout.mdx returns nothing; a count of credit/v2/credit in each of the three files returns 3; git diff for these files shows only URL-line changes.",
+      "priority": 2,
+      "status": "pending",
+      "feature_id": "fix-v2-credit-endpoint-base-path-mt18vmcz",
+      "skill": null,
+      "blocked_by": [
+        "task-001"
+      ],
+      "passes": false,
+      "files": [
+        "api-reference-v2/credit/regist-membership.mdx",
+        "api-reference-v2/credit/regist-credit-usage.mdx",
+        "api-reference-v2/credit/generate-immutable-checkout.mdx"
+      ],
+      "started_at": null,
+      "completed_at": null,
+      "error_log": []
+    },
+    {
+      "id": "task-004",
+      "title": "Consistency sweep across all seven credit pages",
+      "description": "Verify the rewrite is complete, internally consistent, and correctly scoped.\n\n1. Residual check: grepping recursively for hl/v2/credit over the entire repo must return zero results.\n2. Total check: grepping recursively for credit/v2/credit under api-reference-v2/credit/ must return exactly 21 lines - 3 per page across all 7 pages.\n3. Host coverage: on every page, confirm exactly one api.mayar.id Production entry and one api.mayar.io Sandbox entry in the Endpoint <CodeGroup>, both carrying the new prefix, and that the curl example in <RequestExample> uses the same full URL as the Production entry (identical apart from the concrete-vs-placeholder parameter values that page already used).\n4. Suffix parity with V1: for each V2 page, compare the route suffix against the corresponding V1 page under api-reference/creditbasedproduct/ or api-reference/usagebasedmembership/. The suffix must be unchanged from what the V2 page documented before this feature - do NOT fix a suffix to match V1. If a mismatch is found, record it as an out-of-scope observation and file it with: jonggrang bug \"<description>\" --feature fix-v2-credit-endpoint-base-path-mt18vmcz\n5. Scope check: git status --porcelain and git diff --name-only must list only the 7 files under api-reference-v2/credit/. Confirm api-reference-v2/introduction.mdx, docs.json, and api-reference/openapi.json are untouched.\n\nAcceptance criteria: all five checks pass and their outputs are recorded in progress.txt; any mismatch found is reported, not silently corrected.",
+      "priority": 3,
+      "status": "pending",
+      "feature_id": "fix-v2-credit-endpoint-base-path-mt18vmcz",
+      "skill": null,
+      "blocked_by": [
+        "task-002",
+        "task-003"
+      ],
+      "passes": false,
+      "files": [
+        "api-reference-v2/credit/add-credit.mdx",
+        "api-reference-v2/credit/balance.mdx",
+        "api-reference-v2/credit/generate-immutable-checkout.mdx",
+        "api-reference-v2/credit/paginate-credit-history.mdx",
+        "api-reference-v2/credit/regist-credit-usage.mdx",
+        "api-reference-v2/credit/regist-membership.mdx",
+        "api-reference-v2/credit/spend.mdx",
+        ".jonggrang/.output/features/fix-v2-credit-endpoint-base-path-mt18vmcz/progress.txt"
+      ],
+      "started_at": null,
+      "completed_at": null,
+      "error_log": []
+    },
+    {
+      "id": "task-005",
+      "title": "Validate MDX structure, docs.json parse, and Credit nav integrity",
+      "description": "Final validation that the docs still build and render the same page set.\n\n1. MDX structure per page (all 7 under api-reference-v2/credit/): frontmatter delimiters intact (opening and closing --- present, title/description/openapi keys unchanged), and every code fence balanced - count fence lines per file and confirm the count is even; confirm <RequestExample>/</RequestExample>, <ResponseExample>/</ResponseExample>, and <CodeGroup>/</CodeGroup> tags are each still paired (a loop over the 7 files counting opening vs closing tags works).\n2. Config parse: run python3 -m json.tool docs.json redirected to /dev/null (or node -e with JSON.parse of the file) and confirm exit code 0.\n3. Nav integrity: confirm the Credit (Membership / Usage) group in docs.json still lists the same 7 page slugs and that each slug resolves to an existing file under api-reference-v2/credit/. Since docs.json was not edited, this is a confirmation, not a change.\n4. Run the configured pre-commit hook command (the project testing.command, which is a no-op echo) - the project has no test suite; note this explicitly rather than claiming tests passed.\n5. Optional visual confirmation: if a local docs dev server is already trivially available, render one credit page and confirm the Endpoint block shows the credit/v2/credit URLs. Skip and say so if no server is configured - do not install tooling for this.\n\nAcceptance criteria: checks 1-4 pass with their outputs recorded in progress.txt; the completion report states plainly that no automated test suite exists for this repo and what was verified in its place.",
+      "priority": 4,
+      "status": "pending",
+      "feature_id": "fix-v2-credit-endpoint-base-path-mt18vmcz",
+      "skill": null,
+      "blocked_by": [
+        "task-004"
+      ],
+      "passes": false,
+      "files": [
+        "api-reference-v2/credit/add-credit.mdx",
+        "api-reference-v2/credit/balance.mdx",
+        "api-reference-v2/credit/generate-immutable-checkout.mdx",
+        "api-reference-v2/credit/paginate-credit-history.mdx",
+        "api-reference-v2/credit/regist-credit-usage.mdx",
+        "api-reference-v2/credit/regist-membership.mdx",
+        "api-reference-v2/credit/spend.mdx",
+        "docs.json",
+        ".jonggrang/.output/features/fix-v2-credit-endpoint-base-path-mt18vmcz/progress.txt"
+      ],
+      "started_at": null,
+      "completed_at": null,
+      "error_log": []
+    }
+  ]
+}
