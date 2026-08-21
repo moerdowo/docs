@@ -1,0 +1,337 @@
+## task-001 — Grounding: enumerate every hl/v2/credit occurrence and confirm target prefix (read-only)
+
+### 1. Occurrence inventory — `grep -rn "hl/v2/credit" .`
+Baseline MATCHES exactly: 21 occurrences across exactly 7 files, all under `api-reference-v2/credit/`.
+Per page: 1 curl line inside <RequestExample>, 1 Production URL (api.mayar.id), 1 Sandbox URL (api.mayar.io)
+inside the Endpoint <CodeGroup>.
+
+api-reference-v2/credit/add-credit.mdx:10                  curl POST  api.mayar.id
+api-reference-v2/credit/add-credit.mdx:41                  Production api.mayar.id
+api-reference-v2/credit/add-credit.mdx:45                  Sandbox    api.mayar.io
+api-reference-v2/credit/balance.mdx:10                     curl GET   api.mayar.id
+api-reference-v2/credit/balance.mdx:63                     Production api.mayar.id
+api-reference-v2/credit/balance.mdx:67                     Sandbox    api.mayar.io
+api-reference-v2/credit/generate-immutable-checkout.mdx:10 curl POST  api.mayar.id
+api-reference-v2/credit/generate-immutable-checkout.mdx:45 Production api.mayar.id
+api-reference-v2/credit/generate-immutable-checkout.mdx:49 Sandbox    api.mayar.io
+api-reference-v2/credit/paginate-credit-history.mdx:10     curl GET   api.mayar.id
+api-reference-v2/credit/paginate-credit-history.mdx:64     Production api.mayar.id
+api-reference-v2/credit/paginate-credit-history.mdx:68     Sandbox    api.mayar.io
+api-reference-v2/credit/regist-credit-usage.mdx:10         curl POST  api.mayar.id
+api-reference-v2/credit/regist-credit-usage.mdx:49         Production api.mayar.id
+api-reference-v2/credit/regist-credit-usage.mdx:53         Sandbox    api.mayar.io
+api-reference-v2/credit/regist-membership.mdx:10           curl POST  api.mayar.id
+api-reference-v2/credit/regist-membership.mdx:61           Production api.mayar.id
+api-reference-v2/credit/regist-membership.mdx:65           Sandbox    api.mayar.io
+api-reference-v2/credit/spend.mdx:10                       curl POST  api.mayar.id
+api-reference-v2/credit/spend.mdx:41                       Production api.mayar.id
+api-reference-v2/credit/spend.mdx:45                       Sandbox    api.mayar.io
+
+Line numbers match the ~estimates recorded in task-002/task-003 descriptions exactly (no drift).
+
+### 2. No occurrence exists outside api-reference-v2/credit/
+EXPLICIT STATEMENT: zero `hl/v2/credit` occurrences exist in any documentation file outside the 7
+credit pages. Checked repo-wide, all extensions: docs.json, api-reference/openapi.json, every *.mdx,
+snippets/, and guide pages contain none.
+The only other matches are Jonggrang workflow metadata describing this very feature — NOT docs content,
+NOT in scope, and must NOT be rewritten by task-002/003:
+  - .jonggrang/.output/features/fix-v2-credit-endpoint-base-path-mt18vmcz/plan.md (5 lines)
+  - .jonggrang/.output/features/fix-v2-credit-endpoint-base-path-mt18vmcz/jonggrang-tasks.json (5 lines)
+CAVEAT for task-004's residual check ("grep -rn hl/v2/credit repo-wide must return zero"): it will NOT
+return zero because of these two metadata files. Scope that check to tracked docs, e.g.
+  grep -rn "hl/v2/credit" . --exclude-dir=.git --exclude-dir=.jonggrang --exclude-dir=node_modules
+Otherwise task-004 will report a false failure.
+
+### 3. Target prefix confirmed from the V1 credit pages
+`grep -rn "credit/v1/credit"` under api-reference/creditbasedproduct/ and api-reference/usagebasedmembership/
+returns 33 lines across 10 files, all of the shape:
+  https://api.mayar.id/credit/v1/credit/<suffix>   (Production)
+  https://api.mayar.io/credit/v1/credit/<suffix>   (Sandbox)
+The `credit/vN/credit/` form is therefore confirmed — the service prefix segment is `credit`, the version
+segment is `vN`, then a second literal `credit` segment before the route. V2 target:
+  https://api.mayar.id/credit/v2/credit/<suffix>
+Only the `hl/v2/credit` -> `credit/v2/credit` segment changes; suffixes are untouched.
+`credit/v2/credit` currently appears nowhere in the repo (clean target string, no collision risk).
+
+### 4. Route suffixes that MUST stay byte-identical (extracted from the live files)
+add-credit.mdx                  x3  /customer/add-credit
+balance.mdx                     curl /customer/balance?customerId=a1b2c3d4-e5f6-4789-a012-3456789abcde&productId=7c9d2e1f-4a5b-4c6d-8e9f-0a1b2c3d4e5f
+balance.mdx                     Prod+Sandbox /customer/balance?customerId=(customerId)&productId=(productId)
+generate-immutable-checkout.mdx x3  /generate/immutable/checkout
+paginate-credit-history.mdx     curl /customer/paginate-credit-history/a1b2c3d4-e5f6-4789-a012-3456789abcde?productId=7c9d2e1f-4a5b-4c6d-8e9f-0a1b2c3d4e5f&page=1&limit=10
+paginate-credit-history.mdx     Prod+Sandbox /customer/paginate-credit-history/(customerId)?productId=(productId)&page=1&limit=10
+regist-credit-usage.mdx         x3  /credit-usage/customer/regist
+regist-membership.mdx           x3  /membership/customer/regist
+spend.mdx                       x3  /customer/spend
+Confirmed: on balance.mdx and paginate-credit-history.mdx the curl uses concrete UUIDs while the
+<CodeGroup> uses (customerId)/(productId) placeholders — preserve each form as-is. A plain
+sed 's|hl/v2/credit|credit/v2/credit|g' per file is safe: the string only ever appears in URL position.
+
+### 5. Deviation precedent confirmed — introduction.mdx stays unchanged
+api-reference-v2/saas/{activate,deactivate,verify}.mdx state https://api.mayar.i{d,o}/saas/v2/license/...
+api-reference-v2/software/verify.mdx states     https://api.mayar.i{d,o}/software/v2/license/verify
+Both declare a per-service base inline with NO explanatory note and NO change to the general V2 base.
+api-reference-v2/introduction.mdx:53/58 keeps https://api.mayar.i{d,o}/hl/v2 — correct to leave alone.
+For context: `hl/v2` appears in ~80 other V2 pages (customer, invoice, product, webhook, …); all of those
+are legitimately on the shared base and are OUT OF SCOPE.
+
+### Notes / deviations
+- Inventory matches the expected baseline in every respect (21/7, 3-per-page, line numbers). No deviation.
+- Backend source is NOT reachable: /root/.jonggrang/workspace/Mayar Source does not exist in this
+  environment. The target prefix rests on the feature request plus the V1 `credit/v1/credit/` precedent,
+  exactly as the plan's last Key Decision states. Not verified against server routing code.
+- No files modified by this task other than this progress log.
+
+## task-002 — Rewrite base path on the four customer-scoped credit pages (DONE)
+
+### What changed
+Per-file `sed -i 's|hl/v2/credit|credit/v2/credit|g'` on balance.mdx, spend.mdx, add-credit.mdx and
+paginate-credit-history.mdx. 12 lines rewritten (4 curl + 4 Production + 4 Sandbox), 12 insertions /
+12 deletions across exactly 4 files. Commit 966d248.
+
+### Verification performed
+- Pre-edit grep matched task-001's inventory line-for-line — zero drift, so the sed was safe to run blind.
+- Post-edit: `grep -n hl/v2/credit` on the 4 files returns nothing; `grep -n credit/v2/credit` returns
+  exactly 12 lines at the expected line numbers (10/63/67, 10/41/45, 10/41/45, 10/64/68).
+- `git diff` reviewed in full: every changed line is a URL line. Frontmatter (incl. the `openapi:`
+  identifiers like `GET /endpointcreditv2/balance`), descriptions, headers, bodies and error sections
+  are untouched. Concrete UUIDs in the curl examples and `(customerId)`/`(productId)` placeholders in the
+  CodeGroups each kept their own form, as required.
+- `docs.json` still parses (node JSON.parse). Code-fence counts even per file (10/8/8/8) — MDX structure
+  intact. In-line substitution can't alter block structure, but checked anyway.
+- No test/typecheck/lint exists for this repo (`echo 'no test command configured'`); docs-only change.
+
+### Notes for the next agent (task-003)
+- The sed is idempotent and collision-free: `credit/v2/credit` did not previously exist anywhere in the
+  repo, and `hl/v2/credit` only ever appears in URL position. Same one-liner works verbatim on the
+  remaining 3 pages (generate-immutable-checkout, regist-credit-usage, regist-membership).
+- Remaining `hl/v2/credit` occurrences in docs after this task: 9 (3 pages x 3). Task-001's caveat still
+  stands for task-004 — the repo-wide grep will also match this feature's own plan.md and
+  jonggrang-tasks.json, which are metadata and must NOT be rewritten. Scope residual checks with
+  `--exclude-dir=.git --exclude-dir=.jonggrang --exclude-dir=node_modules`.
+- Gotcha: `cd` inside a Bash tool call persists into the next call in this harness. A follow-up command
+  that assumed the repo root failed with "No such file or directory". Use absolute paths or re-cd.
+
+## task-003 — Rewrite base path on the registration and checkout credit pages (DONE)
+
+### What changed
+Same per-file `sed -i 's|hl/v2/credit|credit/v2/credit|g'` as task-002, on regist-membership.mdx,
+regist-credit-usage.mdx and generate-immutable-checkout.mdx. 9 lines rewritten (3 curl + 3 Production +
+3 Sandbox), 9 insertions / 9 deletions across exactly 3 files. Commit 4522e4e.
+
+### Verification performed
+- Pre-edit grep matched task-001's inventory line-for-line (10/61/65, 10/49/53, 10/45/49) — zero drift.
+- Post-edit: `grep -n hl/v2/credit` on the 3 files returns nothing (exit 1); `grep -c credit/v2/credit`
+  returns exactly 3 per file.
+- `git diff` reviewed in full: all 9 changed lines are URL lines. Frontmatter (incl. `openapi:`
+  identifiers), descriptions, headers, `--data-raw` payloads, parameter tables and response/error
+  sections untouched. Route suffixes byte-identical: /membership/customer/regist,
+  /credit-usage/customer/regist, /generate/immutable/checkout.
+- Code-fence counts even (8 per file) — MDX structure intact. `docs.json` still parses (node JSON.parse).
+- No test/typecheck/lint exists for this repo (`echo 'no test command configured'`); docs-only change.
+
+### Feature-level state after this task
+- Phase 2 of the plan is now COMPLETE: all 21 occurrences across all 7 credit pages are rewritten
+  (12 in task-002 commit 966d248, 9 in task-003 commit 4522e4e).
+- `grep -rn "hl/v2/credit" . --exclude-dir=.git --exclude-dir=.jonggrang --exclude-dir=node_modules`
+  now returns ZERO. This is the correct residual check for task-004.
+- WITHOUT the excludes the grep still matches ~10 lines in this feature's own plan.md and
+  jonggrang-tasks.json. Those are workflow metadata describing the defect, NOT docs content — task-004
+  must not treat them as a failure and must not rewrite them.
+- Still true and unverified: the target prefix rests on the feature request + the V1 `credit/v1/credit/`
+  precedent. Backend source (/root/.jonggrang/workspace/Mayar Source) is not reachable from this
+  worktree, so it was never checked against server routing code. Worth a human confirmation before merge.
+- api-reference-v2/introduction.mdx deliberately still says `https://api.mayar.i{d,o}/hl/v2` — that is
+  the general V2 base and is out of scope (saas/v2 + software/v2 precedent for inline per-service bases).
+
+## task-004 — Consistency sweep across all seven credit pages (DONE)
+
+Read-only verification pass. No docs files modified. ALL FIVE CHECKS PASS.
+
+### Check 1 — Residual `hl/v2/credit`: PASS (zero in docs content)
+`grep -rn "hl/v2/credit" . --exclude-dir=.git --exclude-dir=.jonggrang --exclude-dir=node_modules
+ --exclude-dir=.claude --exclude-dir=.codex --exclude-dir=.opencode` → exit 1, zero matches.
+Cross-checked against the git index, which is the authoritative form and needs no exclude list:
+`git grep -n "hl/v2/credit" -- .` (minus .jonggrang/) → exit 1, zero matches.
+Task-001's caveat held exactly: the UNSCOPED repo-wide grep still returns ~28 lines, ALL of them
+Jonggrang workflow metadata describing this very defect (plan.md, jonggrang-tasks.json,
+progress.txt, .ephemeral/memory/fragments/). None is docs content; none was rewritten. The
+literal task wording ("grepping recursively over the entire repo must return zero") is
+unsatisfiable by design — use `git grep` or the exclude list.
+
+### Check 2 — Total `credit/v2/credit`: PASS (exactly 21, 3 per page)
+`grep -rn "credit/v2/credit" api-reference-v2/credit/ | wc -l` → 21.
+`grep -rc` per file → 3 for every one of the 7 pages (add-credit, balance,
+generate-immutable-checkout, paginate-credit-history, regist-credit-usage, regist-membership,
+spend). No page over- or under-counted.
+
+### Check 3 — Host coverage + curl/Production agreement: PASS on all 7 pages
+Per page: exactly 2 `https://api.mayar.id/credit/v2/credit` lines (1 curl + 1 Production) and
+exactly 1 `https://api.mayar.io/credit/v2/credit` line (Sandbox); zero credit/v2 URLs on any
+other host. Structure confirmed by reading each block, not just counting: every page has exactly
+one `<CodeGroup>`/`</CodeGroup>` pair holding ```Production Production``` then ```Sandbox Sandbox```
+fences, and exactly one `<RequestExample>`/`</RequestExample>` pair holding the curl.
+curl-vs-Production compared programmatically after normalising UUIDs and (customerId)/(productId)
+to a single token → MATCH on all 7. The 5 static pages are byte-identical; balance and
+paginate-credit-history differ only in the concrete-UUID vs placeholder forms they already used.
+Production-vs-Sandbox compared with the TLD masked → MATCH on all 7 (they differ only in .id/.io).
+
+### Check 4 — Suffix parity: PASS, no mismatch, nothing to fix
+4a (the check that actually matters — suffix unchanged BY THIS FEATURE): for each page,
+`diff <(git show 19546e9:$f | sed 's|hl/v2/credit|credit/v2/credit|g') $f` → IDENTICAL, all 7.
+This is proof, not sampling: the current file equals the pre-feature file under the prefix
+substitution alone, so no suffix, parameter, payload, or prose byte could have moved.
+19546e9 is the pre-feature base (last commit before task-002's 966d248).
+
+4b (V2 suffix vs corresponding V1 page):
+  add-credit.mdx                  /customer/add-credit               → both V1 addcustomercredit.mdx
+  balance.mdx                     /customer/balance                  → both V1 customerbalance.mdx
+  generate-immutable-checkout.mdx /generate/immutable/checkout       → creditbasedproduct/generateimmutablecheckoutlink.mdx
+  regist-credit-usage.mdx         /credit-usage/customer/regist      → creditbasedproduct/registernewcustomer.mdx
+  regist-membership.mdx           /membership/customer/regist        → usagebasedmembership/registnewmembershipcustomer.mdx
+  spend.mdx                       /customer/spend                    → both V1 spendcustomercredit.mdx
+  paginate-credit-history.mdx     /customer/paginate-credit-history/(customerId)  → see below
+All 7 route paths exist in V1. paginate-credit-history was the only one that did not match on a
+naive full-string grep: V2 uses the `(customerId)` placeholder token where V1 uses `{memberId}`
+(usagebasedmembership) or an empty segment (creditbasedproduct). The ROUTE
+`/customer/paginate-credit-history/<id>` is identical in all three; only the placeholder token
+name differs, and that is a pre-existing naming difference, not a suffix mismatch. Combined with
+4a it is provably not something this feature introduced. NO suffix was "fixed" to match V1.
+
+### Check 5 — Scope: PASS
+`git diff 19546e9..HEAD --stat` → exactly the 7 files under api-reference-v2/credit/,
+21 insertions / 21 deletions, 3 lines per file. Nothing else in the feature diff.
+`git diff --name-only` (worktree vs HEAD) → only .jonggrang/ state files; zero docs files dirty,
+i.e. all docs work is committed (966d248 + 4522e4e).
+`git status --porcelain` → only .jonggrang/ state plus untracked tooling dirs (.claude/, .codex/,
+.opencode/, hooks/, AGENTS.md, CLAUDE.md) that predate this task and belong to no feature.
+Sentinels verified individually with `git diff --quiet 19546e9..HEAD -- <path>`:
+  UNTOUCHED api-reference-v2/introduction.mdx   (still declares the general V2 base at :53/:58)
+  UNTOUCHED docs.json
+  UNTOUCHED api-reference/openapi.json
+
+### Additional validation (beyond the 5 checks)
+- `docs.json` and `api-reference/openapi.json` both parse via node JSON.parse.
+- Code-fence parity per page: 8/8/8/8/8/8, 10 for balance — all even, MDX structure intact.
+- No test/typecheck/lint exists in this repo (`echo 'no test command configured'`); docs-only.
+
+### Out-of-scope defects found and REPORTED, not corrected
+Two pre-existing V1 documentation defects surfaced while building the check-4 comparison. Both
+recorded in this feature's bugs.md as bug-001 and bug-002; neither was touched.
+- bug-001: api-reference/creditbasedproduct/customerbalance.mdx:41 Sandbox URL is missing the `=`
+  after `customerId` (`?customerId{customerID}`); the Production entry at :37 is correct.
+- bug-002: api-reference/creditbasedproduct/paginatecustomercredithistory.mdx Endpoint block omits
+  the path-parameter placeholder entirely (`/paginate-credit-history/?productId=...`), contradicting
+  its own curl example and its usagebasedmembership sibling.
+
+### GOTCHA for future agents — `jonggrang bug` is broken in this repo
+`jonggrang bug "..." --feature <id>` ALWAYS fails with "Multiple features found. Use --feature
+<featureId>." no matter where the flag is placed, and `jonggrang bug --help` fails the same way.
+Root cause, confirmed by reading the CLI source: the GLOBAL option parser at
+/usr/lib/node_modules/jonggrang/bin/jonggrang.js:5191 matches `--feature` first and consumes it
+into WORK_FEATURE_ID, so it is stripped before `cmdBug` runs; `cmdBug`'s own lookup
+(`subArgs.indexOf('--feature')`, ~line 2400) then finds nothing and `forcedFeatureId` stays null.
+With more than one feature under .jonggrang/.output/features/ and non-TTY stdin, the command
+cannot succeed. `--feature=<id>` does not work either (the switch matches the bare token only).
+Workaround used here, and previously by the v2-coupon-list-doc feature: append the entry to
+.jonggrang/.output/features/<feature>/bugs.md by hand in the CLI's format
+(`## [open] bug-00N · <date> · found during <task>`).
+
+### Feature state
+Phases 1-4 of the plan are COMPLETE. The fix is verified, internally consistent and correctly
+scoped; nothing outstanding for a follow-up task.
+STILL UNVERIFIED (unchanged from task-001/002/003, flag for the human reviewer before merge): the
+`credit/v2/credit` target prefix rests on the feature request plus the V1 `credit/v1/credit/`
+precedent. It was never checked against backend routing code — the backend checkout is not
+reachable from this worktree. Project memory records it at "/root/.jonggrang/workspace/Mayar
+Source"; that path does not exist here.
+
+## task-005 — Validate MDX structure, docs.json parse, and Credit nav integrity (DONE)
+
+Read-only validation pass. NO files modified except this progress log. CHECKS 1-4 ALL PASS.
+Check 5 (visual render) SKIPPED — justified below.
+
+### Check 1 — MDX structure on all 7 credit pages: PASS
+Frontmatter delimiters: every page has `---` at line 1 and the closing `---` at line 5, with exactly
+three keys between them (title / openapi / description) — the same shape on all 7.
+Frontmatter proven UNCHANGED, not just well-formed:
+  diff <(git show 19546e9:$f | sed -n '1,5p') <(sed -n '1,5p' $f)  -> IDENTICAL on all 7.
+19546e9 is the pre-feature base (last commit before task-002). So no title, description, or
+`openapi:` identifier (e.g. "GET /endpointcreditv2/balance") moved a byte during this feature.
+
+Code fences — `grep -c '^```'` per file, all EVEN:
+  add-credit 8 · balance 10 · generate-immutable-checkout 8 · paginate-credit-history 8 ·
+  regist-credit-usage 8 · regist-membership 8 · spend 8
+balance.mdx is 10 rather than 8 because it legitimately carries TWO <ResponseExample> blocks
+(open=2/close=2) — not a defect, it is the page's pre-existing shape.
+
+JSX tag pairing — opening vs closing count per file:
+  RequestExample  1/1 on all 7
+  ResponseExample 1/1 on 6 pages, 2/2 on balance.mdx
+  CodeGroup       1/1 on all 7
+Every tag balanced; no orphan open or close anywhere.
+
+### Check 2 — Config parse: PASS
+  python3 -m json.tool docs.json > /dev/null   -> exit 0
+  node -e 'JSON.parse(readFileSync("docs.json"))' -> exit 0
+Both parsers agree. docs.json also confirmed untouched: `git diff --quiet 19546e9..HEAD -- docs.json`
+and `git diff --quiet -- docs.json` both clean (unchanged in history AND in the worktree).
+
+### Check 3 — Nav integrity: PASS (confirmation only, no change)
+The `Credit (Membership / Usage)` group in docs.json still lists exactly these 7 slugs, in this order:
+  api-reference-v2/credit/balance
+  api-reference-v2/credit/spend
+  api-reference-v2/credit/add-credit
+  api-reference-v2/credit/paginate-credit-history
+  api-reference-v2/credit/regist-membership
+  api-reference-v2/credit/regist-credit-usage
+  api-reference-v2/credit/generate-immutable-checkout
+Every slug resolves to an existing `<slug>.mdx` on disk (7/7 OK). Set equality also checked in the
+other direction: the 7 nav entries and the 7 files under api-reference-v2/credit/ are the SAME set —
+no orphan file that the nav never links, no nav entry pointing at a missing page. Same page set as
+before the feature, as expected for a URL-string-only change.
+Note for future nav work: two OTHER groups also match /credit/ — `Membership (Credit)` (5 V1 pages)
+and `Credit Based Product` (6 V1 pages). Both are V1, both out of scope, both untouched. A naive
+grep for a "credit" group in docs.json will hit all three; match on the
+`api-reference-v2/credit/` page prefix instead of on the group title.
+
+### Check 4 — Pre-commit hook / project test command: PASS, but it is a NO-OP
+jonggrang.json `hooks.pre_commit` = ["echo 'no test command configured'"] and `testing.command` is
+the identical string; `testing.framework` = "none". Ran it: printed `no test command configured`,
+exit 0.
+STATED PLAINLY: this repo has NO automated test suite, NO typecheck and NO lint. Exit 0 here means
+"the configured echo ran", NOT "tests passed". Nothing was executed that could detect a regression.
+There is also no package.json and no mint.json at the repo root, so there is no build step to run
+either. What stands in for a test suite on this feature is the structural + textual verification in
+task-004's five checks and checks 1-3 above.
+
+### Check 5 — Visual render: SKIPPED (correctly, per the task's own instruction)
+No docs dev server is available or configured: no package.json, no mint.json, `mintlify` not on PATH.
+Standing it up would mean an npx download of the Mintlify toolchain, which the task explicitly
+forbids ("do not install tooling for this"). Skipped and reported rather than worked around.
+Substituted a source-level confirmation of what WOULD render: read the Endpoint <CodeGroup> of
+balance.mdx directly — it emits
+  ```Production Production``` https://api.mayar.id/credit/v2/credit/customer/balance?customerId=(customerId)&productId=(productId)
+  ```Sandbox Sandbox```       https://api.mayar.io/credit/v2/credit/customer/balance?customerId=(customerId)&productId=(productId)
+and re-listed all 21 credit/v2/credit URL lines across the 7 pages (3 per page: curl + Production +
+Sandbox), matching task-004's count exactly. The Endpoint block content is a literal fenced string,
+so the rendered output is the file content — nothing is templated or computed at build time.
+
+### No commit produced by this task
+Validation-only, like task-004: no docs file was modified, so there is nothing to commit. The sole
+edit is this progress.txt entry, which lives under .jonggrang/ and is excluded from feature branches
+by the project rule ("never git add .jonggrang/"). The feature's docs diff remains exactly the two
+commits 966d248 (task-002, 12 lines) + 4522e4e (task-003, 9 lines).
+
+### No new bugs found
+Nothing new surfaced during this pass. bugs.md still holds only bug-001 and bug-002 from task-004,
+both pre-existing V1 defects, both still open and untouched.
+
+### Feature state — ALL 5 TASKS COMPLETE
+All four plan phases are done and verified. The fix is structurally sound, internally consistent,
+correctly scoped, and the docs still describe the same 7-page Credit section.
+CARRIED FORWARD FOR THE HUMAN REVIEWER (unchanged since task-001, still the only open question):
+the `credit/v2/credit` target prefix rests on the feature request plus the V1 `credit/v1/credit/`
+precedent. It has NEVER been checked against backend routing code — project memory records the
+backend at "/root/.jonggrang/workspace/Mayar Source", which does not exist in this worktree.
+Confirm the prefix against the server before merging.
