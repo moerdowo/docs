@@ -97,6 +97,15 @@ https://api.mayar.io/hl/v2/payments/create
   Additional notes for the payment request.
 </ParamField>
 
+<ParamField path="redirectUrl" type="string">
+  URL where the buyer is redirected after a successful payment. Supported only
+  when the created record can persist it. If the platform cannot store the value,
+  the request is **rejected loudly** with
+  `{ "statusCode": 400, "messages": "redirectUrl is not supported on payment requests and was not saved" }`
+  rather than silently dropping it. When persisted, the value is echoed in the
+  response as `data.redirectUrl`.
+</ParamField>
+
 <ParamField path="expiredAt" type="string (format ISO 8601 date-time)">
   The transaction expiration date and time. After this time, the payment link is
   no longer valid.
@@ -167,11 +176,22 @@ Successful Response
   The URL that customers can access to open the payment request.
 </ResponseField>
 
+<ResponseField name="redirectUrl" type="string | null" >
+  The redirect URL that was persisted with the payment request, or `null` when
+  none was provided.
+</ResponseField>
+
 ### Errors
 
 <ResponseField name="400 Bad Request" type="object">
   Returned when the request body fails validation:
   `{ "statusCode": 400, "messages": "Validation Error" }`.
+</ResponseField>
+
+<ResponseField name="400 redirectUrl not supported" type="object">
+  Returned when `redirectUrl` was provided but the payment-request record cannot
+  persist it:
+  `{ "statusCode": 400, "messages": "redirectUrl is not supported on payment requests and was not saved" }`.
 </ResponseField>
 
 <ResponseField name="409 Conflict" type="object">

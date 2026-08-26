@@ -63,7 +63,8 @@ curl --request POST 'https://api.mayar.id/hl/v2/installments/create' \
                 "remainingAmount": 1000000,
                 "dueDate": "2026-07-11T00:00:00.000Z",
                 "status": "unpaid",
-                "link": "mkcn4u72ki"
+                "link": "mkcn4u72ki",
+                "paymentUrl": "https://yourstore.myr.id/invoices/mkcn4u72ki"
             },
             {
                 "id": "977777d6-af25-464e-a8ca-e290b3007275",
@@ -73,7 +74,8 @@ curl --request POST 'https://api.mayar.id/hl/v2/installments/create' \
                 "remainingAmount": 500000,
                 "dueDate": "2026-08-11T00:00:00.000Z",
                 "status": "unpaid",
-                "link": "0ll429zxvsue"
+                "link": "0ll429zxvsue",
+                "paymentUrl": "https://yourstore.myr.id/invoices/0ll429zxvsue"
             },
             {
                 "id": "1dde3426-f6a4-43d2-a1d9-2cd2fa05eb9a",
@@ -83,7 +85,8 @@ curl --request POST 'https://api.mayar.id/hl/v2/installments/create' \
                 "remainingAmount": 0,
                 "dueDate": "2026-09-11T00:00:00.000Z",
                 "status": "unpaid",
-                "link": "h8fiobqkek"
+                "link": "h8fiobqkek",
+                "paymentUrl": "https://yourstore.myr.id/invoices/h8fiobqkek"
             }
         ],
         "createdAt": "2026-06-19T17:20:09.521Z"
@@ -275,7 +278,12 @@ Successful Response
 </ResponseField>
 
 <ResponseField name="link" type="string">
-  Unique invoice link.
+  Unique invoice slug.
+</ResponseField>
+
+<ResponseField name="paymentUrl" type="string">
+  Full checkout URL for this installment term, e.g.
+  `https://<merchant>.myr.id/invoices/<link>`.
 </ResponseField>
 
 ## Errors

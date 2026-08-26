@@ -109,7 +109,9 @@ https://api.mayar.io/hl/v2/invoices/create
 </ParamField>
 
 <ParamField path="items[].rate" type="number" required>
-  Price per item.
+  Price per item. Negative values are accepted and can be used as a discount line
+  (e.g. `{ "description": "Diskon", "quantity": 1, "rate": -10000 }`). The
+  invoice total must remain greater than zero.
 </ParamField>
 
 <ParamField path="items[].description" type="string" required>
@@ -207,6 +209,12 @@ Successful Response
   Returned when the request body fails validation:
   `{ "statusCode": 400, "messages": "Validation Error" }` or
   `{ "statusCode": 400, "messages": "extraData Validation Error" }`.
+</ResponseField>
+
+<ResponseField name="400 Invoice total must be greater than zero" type="object">
+  Returned when the sum of `rate × quantity` (plus tax) is not positive, e.g. a
+  discount line larger than the subtotal:
+  `{ "statusCode": 400, "messages": "Invoice total must be greater than zero" }`.
 </ResponseField>
 
 <ResponseField name="404 Not Found" type="object">

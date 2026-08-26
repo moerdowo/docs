@@ -4,6 +4,13 @@ openapi: "POST /endpointsaasv2/verify"
 description: "Endpoint to verify a SaaS subscription license by providing the license code and product ID."
 ---
 
+<Note>
+  The same API key used for `/hl/v2` works on `/saas/v2` (and on
+  `/software/v2`). A `401 "Failed authentication! Please check your token authorization."`
+  is an **authentication** failure — the request never reaches the license
+  lookup — and must not be read as "license code not found".
+</Note>
+
 <RequestExample>
 
 ```bash Request Example

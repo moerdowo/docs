@@ -131,11 +131,14 @@ https://api.mayar.io/hl/v2/transactions/unpaid?limit=10
 </ParamField>
 
 <ParamField query="startAt" path="startAt" type="string">
-  Start of the date range to filter by (Unix timestamp in milliseconds).
+  Start of the date range to filter by. Accepts a Unix timestamp in milliseconds
+  or an ISO 8601 date/datetime (e.g. `1755993600000`, `2026-08-24`, or
+  `2026-08-24T00:00:00.000Z`).
 </ParamField>
 
 <ParamField query="endAt" path="endAt" type="string">
-  End of the date range to filter by (Unix timestamp in milliseconds).
+  End of the date range to filter by. Accepts a Unix timestamp in milliseconds or
+  an ISO 8601 date/datetime.
 </ParamField>
 
 <ParamField query="fields" path="fields" type="string">

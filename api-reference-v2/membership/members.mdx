@@ -34,7 +34,16 @@ curl --request GET 'https://api.mayar.id/hl/v2/memberships/members?productId=7c9
             "membershipTier.gracePeriodInDays": "0",
             "customer.name": "Budi Santoso",
             "customer.mobile": "081234567890",
-            "customer.email": "budi.santoso@example.com"
+            "customer.email": "budi.santoso@example.com",
+            "membershipTier": {
+                "name": "Paket 1",
+                "gracePeriodInDays": "0"
+            },
+            "customer": {
+                "name": "Budi Santoso",
+                "mobile": "081234567890",
+                "email": "budi.santoso@example.com"
+            }
         }
     ],
     "hasMore": false,
@@ -133,8 +142,13 @@ Successful Response
 
 ### data Structure (Array Of Object)
 
-Each member row carries the membership-customer fields plus a few flattened,
-dotted-key columns for the related tier and customer.
+Each member row carries the membership-customer fields plus the related tier and
+customer, exposed in **both** forms:
+
+- nested objects (`customer`, `membershipTier`) — the shape used by every other
+  endpoint in this app, and
+- the flattened dotted-key columns (`customer.email`,
+  `membershipTier.name`, ...) kept for backward compatibility.
 
 <ResponseField name="id" type="string<uuid>" >
   Unique identifier of the membership-customer record.
@@ -190,6 +204,14 @@ dotted-key columns for the related tier and customer.
 
 <ResponseField name="customer.email" type="string" >
   Email address of the customer (flattened dotted-key column).
+</ResponseField>
+
+<ResponseField name="membershipTier" type="object" >
+  Nested tier object: `{ "name": "...", "gracePeriodInDays": "..." }`.
+</ResponseField>
+
+<ResponseField name="customer" type="object" >
+  Nested customer object: `{ "name": "...", "mobile": "...", "email": "..." }`.
 </ResponseField>
 
 ## Errors
