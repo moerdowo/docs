@@ -167,8 +167,13 @@ applied. The notable cases:
 </ResponseField>
 
 <ResponseField name="404 Coupon not found" type="object">
-  Returned with `messages: "Gagal! Kode diskon ini tidak ditemukan."` when the
-  coupon does not exist or is not valid for the payment link.
+  Returned with `messages: "Gagal! Kode diskon ini tidak ditemukan."` when no
+  coupon with that code exists for this account.
+</ResponseField>
+
+<ResponseField name="400 Coupon not applicable to this product" type="object">
+  Returned with `messages: "Gagal! Kode diskon ini tidak berlaku untuk produk yang dipilih."`
+  when the coupon exists but is not bound to the `paymentLinkId` being checked.
 </ResponseField>
 
 <ResponseField name="400 Coupon inactive" type="object">

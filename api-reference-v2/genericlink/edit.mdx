@@ -95,6 +95,13 @@ https://api.mayar.io/hl/v2/products/payment-link/{id}/update
   URL where the customer will be redirected after completing payment.
 </ParamField>
 
+<ParamField path="link" type="string">
+  Optional slug that replaces the product's public URL path. The slug is normally
+  fixed at creation from the original `name`; sending `link` moves the public URL,
+  e.g. `{ "id": "...", "link": "superapp-demo-saas" }` answers
+  `data.link: "https://<merchant>.myr.id/pl/superapp-demo-saas"`.
+</ParamField>
+
 <ParamField path="notes" type="string">
   Additional notes for the payment link.
 </ParamField>
@@ -133,10 +140,23 @@ Successful Response
 
 ### Errors
 
-<ResponseField name="200 OK (validation failed)" type="object">
-  When the request body fails validation, this endpoint still responds with HTTP
-  `200` but sets `messages` to `failed` and returns the validator errors in
-  `data`: `{ "statusCode": 200, "messages": "failed", "data": { ... } }`.
+<ResponseField name="400 Bad Request (validation failed)" type="object">
+  When the request body fails validation, the endpoint responds with HTTP `400`
+  and sets `messages` to `failed`, returning the validator errors in `data`:
+  `{ "statusCode": 400, "messages": "failed", "data": [ ... ] }`.
+</ResponseField>
+
+<ResponseField name="400 At least one field to update" type="object">
+  Returned when the body carries `id` but no updatable field:
+  `{ "statusCode": 400, "messages": "At least one field to update is required" }`.
+  `name` and `amount` are optional — the body must contain at least one of
+  `name`, `description`, `amount`, `redirectUrl`, `link`, `coverImage`,
+  `expiredAt`, `limit`, `notes`, or `tax`.
+</ResponseField>
+
+<ResponseField name="400 Membership requires amount" type="object">
+  For membership-family products (`membership`, `saas`, `credit`), `amount` is
+  required: `{ "statusCode": 400, "messages": "amount is required to update a membership product" }`.
 </ResponseField>
 
 <ResponseField name="401 Unauthorized" type="object">

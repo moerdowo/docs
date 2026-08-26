@@ -4,6 +4,14 @@ openapi: "GET /endpointmembershipv2/tiers"
 description: "Endpoint to list the membership tiers of a membership product."
 ---
 
+<Note>
+  Tier creation (`POST /memberships/tiers/create`, exposed by the CLI as
+  `mayar membership tier create`) requires `periods` to contain **at least one
+  priced period** — an item whose `amount` is set. An empty list or a list whose
+  items carry no amount (e.g. `periods: [{}]`) is rejected with `400`:
+  `"Field `periods` must contain at least one priced period. A tier with no priced period cannot be sold."`
+</Note>
+
 <RequestExample>
 
 ```bash Request Example

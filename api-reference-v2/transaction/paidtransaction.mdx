@@ -4,6 +4,25 @@ openapi: "GET /endpointtransactionv2/paidtransaction"
 description: "Endpoint to get paid data transactions"
 ---
 
+<Note>
+  This endpoint returns the merchant's **balance history**, not the transactions
+  created by `payments/create` / `invoices/create`. Consequences:
+
+  - `id` is the balance-history row id. The underlying transaction id is in
+    `paymentLinkTransactionId` and the `transactionId` alias.
+  - The nominal is `credit`; an `amount` alias is provided with the same value.
+  - Rows appear once the payment is settled (a small lag after a successful
+    payment is expected). To narrow to paid rows use `status=settled` (or
+    `status=paid` for the freshly settled view).
+</Note>
+
+<Note>
+  Date fields such as `createdAt` (and `updatedAt`/`expiredAt` on sibling list
+  and detail endpoints) are returned as **Unix timestamps in milliseconds**
+  (numbers), not ISO 8601 strings. Convert with `new Date(value).toISOString()`
+  when an ISO string is required.
+</Note>
+
 <RequestExample>
 
 ```bash Request Example
@@ -22,7 +41,9 @@ curl --request GET 'https://api.mayar.id/hl/v2/transactions?limit=10' \
     "data": [
         {
             "id": "025b0f2a-dbc0-46aa-ae5b-326cc394c6c1",
+            "transactionId": "dc37faf8-4908-4994-a6d4-b18dbd68852b",
             "credit": 1059,
+            "amount": 1059,
             "status": "settled",
             "balanceHistoryType": "digital_product",
             "paymentMethod": "QRIS",
@@ -73,7 +94,9 @@ curl --request GET 'https://api.mayar.id/hl/v2/transactions?limit=10' \
         },
         {
             "id": "91220b8b-ebdc-4154-b617-492dacc98662",
+            "transactionId": "00617429-fc1c-44db-a0ba-e31d3f0edd70",
             "credit": 0,
+            "amount": 0,
             "status": "settled",
             "balanceHistoryType": "saas",
             "paymentMethod": "Gratis",
@@ -154,11 +177,14 @@ https://api.mayar.io/hl/v2/transactions?limit=10
 </ParamField>
 
 <ParamField query="startAt" path="startAt" type="string">
-  Start of the date range to filter by (Unix timestamp in milliseconds).
+  Start of the date range to filter by. Accepts a Unix timestamp in milliseconds
+  or an ISO 8601 date/datetime (e.g. `1755993600000`, `2026-08-24`, or
+  `2026-08-24T00:00:00.000Z`).
 </ParamField>
 
 <ParamField query="endAt" path="endAt" type="string">
-  End of the date range to filter by (Unix timestamp in milliseconds).
+  End of the date range to filter by. Accepts a Unix timestamp in milliseconds or
+  an ISO 8601 date/datetime.
 </ParamField>
 
 <ParamField query="fields" path="fields" type="string">
@@ -205,11 +231,20 @@ Successful Response
 ### data Structure (Array Of Object)
 
 <ResponseField name="id" type="string<uuid>" >
-  Unique ID for the balance transaction history.
+  Unique ID for the balance transaction history row.
+</ResponseField>
+
+<ResponseField name="transactionId" type="string<uuid>" >
+  Alias of `paymentLinkTransactionId` — the ID of the underlying payment link
+  transaction.
 </ResponseField>
 
 <ResponseField name="credit" type="integer" >
   The amount of credit received from the transaction.
+</ResponseField>
+
+<ResponseField name="amount" type="integer" >
+  Alias of `credit` — the transaction nominal.
 </ResponseField>
 
 <ResponseField name="status" type="string" >
@@ -233,7 +268,8 @@ Successful Response
 </ResponseField>
 
 <ResponseField name="paymentLinkTransactionId" type="string<uuid>" >
-  The transaction ID associated with the payment link.
+  The ID of the underlying payment link transaction — the id returned by
+  `payments/create` or `invoices/create`.
 </ResponseField>
 
 <ResponseField name="fee" type="array of object" >

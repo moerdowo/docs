@@ -111,9 +111,13 @@ https://api.mayar.io/hl/v2/coupons/create
   Coupon code details.
 </ParamField>
 
-<ParamField path="products" type="array of object">
+<ParamField path="products" type="array">
   List of eligible products (maximum 2). Leave empty to apply the discount to all
-  products. When provided, each item requires a product `id` you own.
+  products. Each item can be either a product `id` string or an object with an
+  `id` field you own — both forms are accepted:
+
+  - `"products": ["c9aa143a-53f9-44e7-a9c6-83229ad7199b"]`
+  - `"products": [{ "id": "c9aa143a-53f9-44e7-a9c6-83229ad7199b" }]`
 </ParamField>
 
 ### discount Structure (Object)
