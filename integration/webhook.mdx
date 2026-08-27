@@ -18,7 +18,7 @@ Webhook provide a way for notifications to be delivered to an external web serve
 You can configure Webhooks via the Mayar dashboard, here are the steps:
 
 1. For starting using Mayar Webhook, you need account at https://mayar.id. Please use https://web.mayar.io for testing
-2. Go to Integration -\> Webhook page
+2. Go to **Integration** -\> **Webhook page**
 3. In the "URL Webhook" field, input the URL you got from a third-party integration platform (such as pipedream, zapier, or others) to trigger and send the webhook event
 4. Click save then test the URL to see the status of the Webhook URL. 
 
@@ -67,3 +67,42 @@ Each type of webhook sends a slightly different payload data.
 | **data.pixelFbc**                    | String    | pixelFbc for this transaction                                    |
 | **data.addOn**                       | Array     | only available if your customer add add-on option on transaction |
 | **data.custom_field**                | Array     | it only available if you set custom form on your product         |
+
+### Security & Verification
+
+To ensure that webhook payloads are genuinely from Mayar, each webhook request includes a verification token in the request header.
+
+#### X-Callback-Token Header
+
+Every webhook request from Mayar includes an `X-Callback-Token` header that you should validate on your server:
+
+```
+X-Callback-Token: <your_webhook_token>
+```
+
+#### How to Get Your Webhook Token
+
+1. Log in to your Mayar dashboard at https://web.mayar.id
+2. Go to **Integration** -\> **Webhook page**
+3. Copy your **Webhook Token**
+
+#### Validating Webhook Authenticity
+
+Compare the `X-Callback-Token` header from the incoming webhook request with your stored Webhook Token. If they match, the webhook is authentic and from Mayar.
+
+**Example (Node.js):**
+```javascript
+const webhookToken = 'your_webhook_token';
+
+app.post('/webhook', (req, res) => {
+  const receivedToken = req.headers['x-callback-token'];
+  
+  if (receivedToken !== webhookToken) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+  
+  // Process webhook payload
+  console.log('Valid webhook received:', req.body);
+  res.status(200).json({ success: true });
+});
+```
