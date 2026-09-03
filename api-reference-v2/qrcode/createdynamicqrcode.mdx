@@ -12,7 +12,7 @@ description: "Endpoint used to create a dynamic QRIS code for a specific amount"
 {/*
   Notes for maintainers — REPRESENTATIVE write payload.
   POST /hl/v2/qr-codes/create is a write endpoint; the response below is derived from the
-  V2 source surface plus representative values (request body: amount; response data { url, amount }).
+  V2 source surface plus representative values (request body: amount; response data { url, amount, qrString }).
   Confirm field types/values against a live capture when possible.
   Envelope key is PLURAL `messages` for this group (reads, writes, AND errors).
 */}
@@ -37,7 +37,8 @@ curl --request POST 'https://api.mayar.id/hl/v2/qr-codes/create' \
     "messages": "success",
     "data": {
         "url": "https://media.mayar.id/images/resized/480/a1b2c3d4-e5f6-4789-a012-3456789abcde.png",
-        "amount": 10000
+        "amount": 10000,
+        "qrString": "00020101021126620014COM.GO-JEK.WWW01189360091300000000000000005802ID5909MAYAR6007JAKARTA6105121006304A1B2"
     }
 }
 ```
@@ -98,4 +99,9 @@ Successful Response
 
 <ResponseField name="data.amount" type="integer">
   Nominal payment amount encoded into the QR code.
+</ResponseField>
+
+<ResponseField name="data.qrString" type="string">
+  The raw QRIS payload string used to generate the QR image. Can be decoded directly by
+  standard QRIS readers or used to render the code without relying on the image URL.
 </ResponseField>
