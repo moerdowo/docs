@@ -6,7 +6,7 @@ description: "Endpoint to retrieve the merchant's static QRIS code"
 
 {/*
   Notes for maintainers — REPRESENTATIVE response.
-  GET /hl/v2/qr-codes/static returns the merchant's static QRIS image (response data { url }).
+  GET /hl/v2/qr-codes/static returns the merchant's static QRIS image (response data { url, qrString }).
   A live capture for the sample merchant returned 500 { statusCode: 500, messages: "Invalid data" }
   because no static QRIS is configured for that account, so the 200 shape below is representative,
   derived from the V2 source surface. Confirm against a merchant that has a static QRIS enabled.
@@ -29,7 +29,8 @@ curl --request GET 'https://api.mayar.id/hl/v2/qr-codes/static' \
     "statusCode": 200,
     "messages": "success",
     "data": {
-        "url": "https://media.mayar.id/images/resized/480/a1b2c3d4-e5f6-4789-a012-3456789abcde.png"
+        "url": "https://media.mayar.id/images/resized/480/a1b2c3d4-e5f6-4789-a012-3456789abcde.png",
+        "qrString": "00020101021126620014COM.GO-JEK.WWW01189360091300000000000000005802ID5909MAYAR6007JAKARTA6105121006304A1B2"
     }
 }
 ```
@@ -87,6 +88,11 @@ Successful Response
 
 <ResponseField name="data.url" type="string">
   Link to the merchant's static QRIS image file.
+</ResponseField>
+
+<ResponseField name="data.qrString" type="string">
+  The merchant's raw static QRIS payload string used to generate the QR image. Can be decoded
+  directly by standard QRIS readers or used to render the code without relying on the image URL.
 </ResponseField>
 
 ## Errors
