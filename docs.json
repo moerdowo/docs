@@ -262,6 +262,7 @@
             "group": "API documentation",
             "pages": [
               "api-reference-v2/introduction",
+              "api-reference-v2/migration-from-v1",
               "api-reference-v2/statuscode",
               "api-reference-v2/rate-limit"
             ]

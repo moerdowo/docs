@@ -4,19 +4,12 @@ openapi: "POST /endpointcustomerv2/update"
 description: "Endpoint is used to update customer email."
 ---
 
-{/* Notes for maintainers: this is a WRITE endpoint — to avoid mutating live
-    merchant data, the response example below is REPRESENTATIVE, derived from the
-    V2 source surface and the V1 customer/update shape. The body schema
-    (fromEmail/toEmail) is source-confirmed; confirm the exact success body
-    against a live response. All values are synthetic. */}
-
 <RequestExample>
 
 ```bash Request Example
-curl --request POST 'https://api.mayar.id/hl/v2/customers/update' \
+curl --request POST 'https://api.mayar.id/hl/v2/customers/c3f8a1b2-4d5e-6f70-8a9b-0c1d2e3f4a5b/update' \
 --header 'Authorization: Bearer Paste-Your-API-Key-Here' \
 --data-raw '{
-    "fromEmail": "budi.santoso@example.com",
     "toEmail": "budi.santoso.new@example.com"
 }
 '
@@ -40,12 +33,12 @@ Endpoint:
 <CodeGroup>
 
 ```Production Production
-https://api.mayar.id/hl/v2/customers/update
+https://api.mayar.id/hl/v2/customers/{uuid}/update
 ```
 
 
 ```Sandbox Sandbox
-https://api.mayar.io/hl/v2/customers/update
+https://api.mayar.io/hl/v2/customers/{uuid}/update
 ```
 
 </CodeGroup>
@@ -58,11 +51,14 @@ https://api.mayar.io/hl/v2/customers/update
   `Authorization | Bearer Paste-Your-API-Key-Here`
 </ResponseField>
 
-## Request Body
+## Path Parameters
 
-<ParamField path="fromEmail" type="string" required>
-  The email of the customer to be updated from.
+<ParamField path="uuid" type="string" required>
+  The unique identifier of the customer to update. Obtain it from
+  `GET /hl/v2/customers` or `GET /hl/v2/customers/detail`.
 </ParamField>
+
+## Request Body
 
 <ParamField path="toEmail" type="string" required>
   The new email of the customer.
@@ -86,10 +82,10 @@ Successful Response
 
 <ResponseField name="400 Validation Error" type="object">
   Returned with `messages: "Validation Error"` when the request body fails
-  validation (e.g. missing `fromEmail` or `toEmail`).
+  validation (for example a missing or invalid `toEmail`).
 </ResponseField>
 
 <ResponseField name="404 Customer Not Found" type="object">
-  Returned with `messages: "Email {fromEmail} tidak terdaftar sebagai customer"`
-  when no customer matches `fromEmail`.
+  Returned with `messages: "Customer not found"` when no customer matches the
+  `uuid` path parameter.
 </ResponseField>
