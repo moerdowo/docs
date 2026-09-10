@@ -1,0 +1,410 @@
+---
+title: "Migrating from API V1 to V2"
+description: "Breaking changes between Mayar Headless API V1 and V2, and what you need to update in your integration."
+---
+
+<Warning>
+  **API V1 is deprecated on 1 October 2026.** After that date, all `https://api.mayar.id/hl/v1/*`
+  endpoints will stop working. This guide lists every breaking change you must handle to move your
+  integration to [API V2](/api-reference-v2/introduction) before the deadline.
+</Warning>
+
+## TL;DR
+
+Most of the migration is mechanical. The five changes that break existing code are:
+
+1. **Base URL** — `/hl/v1` becomes `/hl/v2`.
+2. **Pagination** — `page`/`pageSize`/`pageCount` is replaced by cursor pagination with
+   `limit`/`startingAfter` and the response fields `hasMore`/`nextStartingAfter`.
+3. **Path and HTTP method changes** — several endpoints are renamed and some V1 `GET` actions
+   become `POST` (see section 5, "Endpoint mapping").
+4. **Request body changes** — the target `id` moves into the URL path for edits, some fields are
+   added, and the webhook retry body is different.
+5. **Moved actions** — V1 `GET` close/reopen calls become `POST .../{action}`.
+
+## 1. Base URL
+
+<CodeGroup>
+
+```bash V1 (deprecated)
+https://api.mayar.id/hl/v1   # Production
+https://api.mayar.io/hl/v1   # Sandbox
+```
+
+```bash V2
+https://api.mayar.id/hl/v2   # Production
+https://api.mayar.io/hl/v2   # Sandbox
+```
+
+</CodeGroup>
+
+Credit endpoints use a different prefix in both versions: `/credit/v1/*` becomes `/credit/v2/*`.
+SaaS license endpoints use `/saas/v1/license/*` → `/saas/v2/license/*`.
+
+## 2. Authentication
+
+No change. V2 uses the same API key, created at
+[https://web.mayar.id/api-keys](https://web.mayar.id/api-keys), sent the same way:
+
+```bash Authorization Header
+Authorization: Bearer Paste-Your-API-Key-Here
+```
+
+The **Read Only** / **Read & Write** scopes behave the same: a read-only key can only call `GET`
+endpoints, a read-and-write key can call `GET` and `POST`. Because the base URL changes, make sure
+your key is used against the matching environment (production key with `api.mayar.id`, sandbox key
+with `api.mayar.io`).
+
+## 3. Pagination (the biggest change)
+
+Every V2 list endpoint uses **cursor pagination**. The V1 offset model no longer exists.
+
+| | V1 | V2 |
+|---|---|---|
+| Request | `page`, `pageSize` | `limit`, `startingAfter` |
+| Default / max page size | `pageSize` default `10` | `limit` default `10`, **max `50`** |
+| Response — current page | `page`, `pageSize`, `pageCount` (+ `total`/`totalTransaction`/`totalCustomer` on some endpoints) | *removed* |
+| Response — next page | `hasMore` | `hasMore` |
+| Response — cursor | *none* | `nextStartingAfter` (string or `null`) |
+
+### How to migrate a list loop
+
+V1 — offset pagination:
+
+```bash
+# Repeat while page <= pageCount
+curl 'https://api.mayar.id/hl/v1/product?page=1&pageSize=50' \
+  --header 'Authorization: Bearer Paste-Your-API-Key-Here'
+```
+
+V2 — cursor pagination:
+
+```bash
+# First page
+curl 'https://api.mayar.id/hl/v2/products?limit=50' \
+  --header 'Authorization: Bearer Paste-Your-API-Key-Here'
+
+# Next pages: repeat while hasMore is true, passing the previous nextStartingAfter
+curl 'https://api.mayar.id/hl/v2/products?limit=50&startingAfter=1732509188760' \
+  --header 'Authorization: Bearer Paste-Your-API-Key-Here'
+```
+
+Pseudocode:
+
+```js
+let startingAfter = null;
+let hasMore = true;
+const all = [];
+
+while (hasMore) {
+  const url = new URL("https://api.mayar.id/hl/v2/products");
+  url.searchParams.set("limit", "50");
+  if (startingAfter) url.searchParams.set("startingAfter", startingAfter);
+
+  const res = await fetch(url, {
+    headers: { Authorization: `Bearer ${API_KEY}` },
+  }).then((r) => r.json());
+
+  all.push(...res.data);
+  hasMore = res.hasMore;
+  startingAfter = res.nextStartingAfter;
+}
+```
+
+<Note>
+  `startingAfter` is an opaque cursor — pass the exact `nextStartingAfter` string from the previous
+  response. Do not compute or modify it. When `hasMore` is `false`, `nextStartingAfter` is `null`.
+</Note>
+
+## 4. Response envelope
+
+V2 moves toward a single response envelope. Most endpoints return
+`{ statusCode, messages, data }` (list endpoints add `hasMore`/`nextStartingAfter`), but it is not
+universal — some write endpoints return only `{ statusCode, messages }`. Compare:
+
+<CodeGroup>
+
+```json V1 (inconsistent)
+{
+  "statusCode": 200,
+  "messages": "success",
+  "hasMore": true,
+  "pageCount": 14,
+  "pageSize": "10",
+  "page": 1,
+  "data": []
+}
+```
+
+```json V2 (standard)
+{
+  "statusCode": 200,
+  "messages": "success",
+  "data": [],
+  "hasMore": true,
+  "nextStartingAfter": "1768288611042"
+}
+```
+
+</CodeGroup>
+
+<Warning>
+  One naming quirk to keep in mind: most V2 endpoints return `messages` (plural), but **some write
+  endpoints** (for example membership writes and SaaS license activate/deactivate) return
+  `message` (singular). Read the exact shape on each endpoint page before parsing it.
+</Warning>
+
+## 5. Endpoint mapping (V1 → V2)
+
+### Products & payment links
+
+| Feature | V1 | V2 |
+|---|---|---|
+| List products | `GET /hl/v1/product?page=&pageSize=` | `GET /hl/v2/products?limit=&startingAfter=` |
+| List products by type | `GET /hl/v1/product/type/{type}` | `GET /hl/v2/products/types/{type}` |
+| Search products | `GET /hl/v1/product?search=` | `GET /hl/v2/products?search=` |
+| Product detail | `GET /hl/v1/product/{id}` | `GET /hl/v2/products/{uuid}` |
+| Close product | `GET /hl/v1/product/close/{id}` | `POST /hl/v2/products/{uuid}/close` |
+| Reopen product | `GET /hl/v1/product/open/{id}` | `POST /hl/v2/products/{uuid}/open` |
+| Product transactions | — | `GET /hl/v2/products/{uuid}/transactions` *(V2-only)* |
+| Create payment link | `POST /hl/v1/product/paymentlink/create` | `POST /hl/v2/products/create` |
+| Edit payment link | `POST /hl/v1/product/paymentlink/edit` | `POST /hl/v2/products/payment-link/{id}/update` |
+| Sort payment links | `POST /hl/v1/paymentlink/sort/{type}` | `POST /hl/v2/payment-links/sort/{type}` |
+| Create digital product | `POST /hl/v1/product/digital-product/create` | `POST /hl/v2/products/digital-product/create` |
+| Edit digital product | `POST /hl/v1/product/digital-product/edit` | `POST /hl/v2/products/digital-product/{id}/update` |
+| Create webinar | `POST /hl/v1/product/webinar/create` | `POST /hl/v2/products/webinar/create` |
+| Edit webinar | `POST /hl/v1/product/webinar/edit` | `POST /hl/v2/products/webinar/{id}/update` |
+| Create event | `POST /hl/v1/product/event/create` | `POST /hl/v2/products/event/create` |
+| Edit event | `POST /hl/v1/product/event/edit` | `POST /hl/v2/products/event/{id}/update` |
+
+<Note>
+  The product status action accepts `active`, `closed`, and `unlisted` on V2. The old `open`/`close`
+  wording is still accepted as an alias, but use `active`/`closed` in new code. The status action is
+  a `POST` on V2 — the V1 `GET /product/close|open/{id}` calls will not work.
+</Note>
+
+### Invoice & payments
+
+| Feature | V1 | V2 |
+|---|---|---|
+| List invoices | `GET /hl/v1/invoice` | `GET /hl/v2/invoices` |
+| Filter invoices by email | `GET /hl/v1/invoice/filter?email=` | `GET /hl/v2/invoices/filter?email=` |
+| Invoice detail | `GET /hl/v1/invoice/{id}` | `GET /hl/v2/invoices/{uuid}` |
+| Create invoice | `POST /hl/v1/invoice/create` | `POST /hl/v2/invoices/create` |
+| Edit invoice | `POST /hl/v1/invoice/edit` | `POST /hl/v2/invoices/{uuid}/update` |
+| Close / reopen invoice | `GET /hl/v1/invoice/close\|open/{id}` | `POST /hl/v2/products/{uuid}/{action}` |
+| List payment requests | `GET /hl/v1/payment` | `GET /hl/v2/payments` |
+| Payment request detail | `GET /hl/v1/payment/{id}` | `GET /hl/v2/payments/{uuid}` |
+| Create payment request | `POST /hl/v1/payment/create` | `POST /hl/v2/payments/create` |
+| Edit payment request | `POST /hl/v1/payment/edit` | `POST /hl/v2/payments/{uuid}/update` |
+| Close / reopen payment request | `GET /hl/v1/payment/close\|open/{id}` | `POST /hl/v2/payments/{uuid}/{action}` |
+| Simulate payment | — | `POST /hl/v2/payments/simulate` *(V2-only; **sandbox only**)* |
+
+<Note>
+  `POST /hl/v2/payments/simulate` is **sandbox only**. On production it returns
+  `403 { "statusCode": 403, "messages": "Simulate payment is not available in this environment" }`.
+</Note>
+
+### Customers, installments, coupons
+
+| Feature | V1 | V2 |
+|---|---|---|
+| List customers | `GET /hl/v1/customer?page=&pageSize=` | `GET /hl/v2/customers?limit=&startingAfter=` |
+| Customer detail | `GET /hl/v1/customer/detail?email=` | `GET /hl/v2/customers/detail?email=` |
+| Create customer | `POST /hl/v1/customer/create` | `POST /hl/v2/customers/create` |
+| Update customer email | `POST /hl/v1/customer/update` | `POST /hl/v2/customers/{uuid}/update` |
+| Customer portal magic link | `POST /hl/v1/customer/login/portal` | `POST /hl/v2/customers/portal-login` |
+| Create installment | `POST /hl/v1/installment/create` | `POST /hl/v2/installments/create` |
+| Installment detail | `GET /hl/v1/installment/{id}` | `GET /hl/v2/installments/{uuid}` |
+| List installments | `GET /hl/v1/installment` | `GET /hl/v2/installments` |
+| Create coupon | `POST /hl/v1/coupon/create` | `POST /hl/v2/coupons/create` |
+| Validate coupon | `POST /hl/v1/coupon/validate` | `POST /hl/v2/coupons/validate` |
+| Coupon detail | `GET /hl/v1/coupon/{id}` | `GET /hl/v2/coupons/{uuid}` |
+| List coupons | — | `GET /hl/v2/coupons` *(V2-only)* |
+| Check coupon | `POST /hl/v1/coupon/check` | `POST /hl/v2/coupons/check` |
+
+### Transactions, balance, QR, webhooks
+
+| Feature | V1 | V2 |
+|---|---|---|
+| Paid transactions | `GET /hl/v1/transactions` | `GET /hl/v2/transactions` |
+| Unpaid transactions | `GET /hl/v1/transactions/unpaid` | `GET /hl/v2/transactions/unpaid` |
+| Daily transactions | `GET /hl/v1/transactions/daily` | `GET /hl/v2/transactions/daily` |
+| Transaction detail | — | `GET /hl/v2/transactions/{uuid}` *(V2-only)* |
+| Account balance | `GET /hl/v1/balance` | `GET /hl/v2/balances` |
+| Create dynamic QR | `POST /hl/v1/qrcode/create` | `POST /hl/v2/qr-codes/create` |
+| Static QR | `GET /hl/v1/qrcode/static` | `GET /hl/v2/qr-codes/static` |
+| Payment channels | — | `GET /hl/v2/payment-channels` *(V2-only)* |
+| Webhook history | `GET /hl/v1/webhook/history` | `GET /hl/v2/webhooks/history` |
+| New webhook history | — | `GET /hl/v2/webhooks/new-history` *(V2-only)* |
+| Register webhook URL | `POST /hl/v1/webhook/register` | `POST /hl/v2/webhooks/update` |
+| Test webhook URL | `POST /hl/v1/webhook/test` | `POST /hl/v2/webhooks/test` |
+| Retry webhook | `POST /hl/v1/webhook/retry` | `POST /hl/v2/webhooks/retry` |
+
+### Membership, reviews, licenses
+
+| Feature | V1 | V2 |
+|---|---|---|
+| Membership tiers (detail) | `GET /hl/v1/membership/{productId}` | `GET /hl/v2/memberships/{productId}/tiers` |
+| Membership member detail | `GET /hl/v1/membership-member-detail/{productId}?memberId=` | `GET /hl/v2/memberships/{productId}/members?memberId=` |
+| Membership tiers / members (cursor list) | — | `GET /hl/v2/memberships/tiers?productId=`, `GET /hl/v2/memberships/members?productId=` *(V2-only)* |
+| Membership member by id | — | `GET /hl/v2/memberships/members/{memberId}?productId=` *(V2-only)* |
+| Register / update member, create invoice, cancel | — | `POST /hl/v2/memberships/members/*` *(V2-only)* |
+| All reviews | `GET /hl/v1/reviews` | `GET /hl/v2/reviews` |
+| Product reviews | `GET /hl/v1/reviews/product/{paymentLinkId}` | `GET /hl/v2/products/{paymentLinkId}/reviews` |
+| Product review stats | `GET /hl/v1/reviews/product/{paymentLinkId}/stats` | `GET /hl/v2/products/{paymentLinkId}/reviews/stats` |
+| Customer review | `GET /hl/v1/reviews/customer/{customerId}` | `GET /hl/v2/products/{paymentLinkId}/reviews/customer?customerId=` |
+| Merchant review stats | `GET /hl/v1/reviews/merchant/{userId}/stats` | `GET /hl/v2/reviews/stats` |
+| Create review | `POST /hl/v1/reviews/create` | `POST /hl/v2/reviews/create` |
+| Update review | `POST /hl/v1/reviews/edit` | `POST /hl/v2/reviews/{uuId}/update` |
+| Bulk review status | `POST /hl/v1/reviews/bulk-status` | `POST /hl/v2/reviews/bulk-status/update` |
+| Software license verify | `POST /hl/v1/licensecode/verify` | `POST /hl/v2/software/verify` |
+| SaaS license verify / activate / deactivate | `/saas/v1/license/*` | `/saas/v2/license/*` |
+| Credit (membership / credit-based product) | `/credit/v1/*` | `/credit/v2/*` |
+| Bundling | — | `GET /hl/v2/bundling`, `GET /hl/v2/bundling/{uuid}` *(V2-only)* |
+
+<Warning>
+  **Membership routes were reshaped.** The V1 detail reads map to V2 as
+  `GET /hl/v1/membership/{productId}` → `GET /hl/v2/memberships/{productId}/tiers` and
+  `GET /hl/v1/membership-member-detail/{productId}?memberId=` →
+  `GET /hl/v2/memberships/{productId}/members?memberId=`. V2 also adds cursor list endpoints
+  (`GET /hl/v2/memberships/tiers?productId=`, `GET /hl/v2/memberships/members?productId=`) and a
+  member-by-id read where the member id is the path parameter:
+  `GET /hl/v2/memberships/members/{memberId}?productId=`.
+</Warning>
+
+## 6. Request body changes
+
+### Products / payment links
+
+- **Create payment link** — request body is unchanged from V1: `name` and `amount` are required;
+  `description`, `redirectUrl`, `notes`, and `expiredAt` are optional; `coverImage`, `limit`, and
+  `tax` were already supported in V1.
+- **Edit any product** — `name`, `description`, and `amount` become **optional** (partial update),
+  and `link` is **added** (changes the public URL slug). Editing still requires the product `id` in
+  the body; the `{id}` in the URL is cosmetic.
+- **Edit digital / webinar / event** — every field except `id` is optional on V2; at least one field
+  must be provided.
+- **Membership products** — `amount` is **required** when editing.
+
+### Invoice
+
+- **Create** — `paymentMethod` and `cashtag` are **added**. `tax`, `redirectUrl`, `description`,
+  `expiredAt`, and `extraData` behave as in V1 (`description` is still required). An item `rate` may
+  be **negative** to represent a discount line, as long as the invoice total is greater than zero.
+- **Edit** — the invoice `id` is no longer sent in the body; it comes from the `{uuid}` path segment.
+  `items` remains required; `description`, `redirectUrl`, `expiredAt`, `notes`, and `tax` stay
+  optional. An item `rate` may be **negative**.
+
+### Payment request
+
+- **Create** — `paymentMethod` and `cashtag` are **added**. `amount` remains the only required
+  field; `email`, `mobile`, `description`, `redirectUrl`, `notes`, and `extraData` stay optional.
+- **Edit** — the payment `id` is no longer sent in the body; it comes from the `{uuid}` path segment.
+  `amount` is required; `email`, `mobile`, `description`, `notes`, `extraData`, `paymentMethod`, and
+  `cashtag` are optional.
+
+### Webhook
+
+- **Retry** — the request body changed. V1 sends `{ webhookHistoryId }`; V2 sends
+  `{ paymentLinkId, type, payload, paymentLinkTransactionId }` and uses the `urlHook` registered on
+  your account as the destination.
+
+### Coupon
+
+- **Validate** — the request body is unchanged, but the error split changed: a missing or invalid
+  coupon now returns `404`, while a coupon that exists but does not apply to the product returns
+  `400`. V1 returned `404` for both.
+- **Create** — request body is unchanged from V1 (`expiredAt`, `discount.minimumPurchase`, and
+  `coupon.code` were already optional, and `eligibleCustomerType` already accepted
+  `all`/`new`/`old`).
+
+### Customer
+
+<Warning>
+  The V1 body field `fromEmail` is **not** used by V2. V2 identifies the customer by the path
+  parameter and only accepts the new email in the body.
+
+  ```bash V1
+  POST /hl/v1/customer/update
+  { "fromEmail": "old@example.com", "toEmail": "new@example.com" }
+  ```
+
+  ```bash V2
+  POST /hl/v2/customers/{uuid}/update
+  { "toEmail": "new@example.com" }
+  ```
+</Warning>
+
+## 7. Response field changes
+
+- **Product list items** — the embedded `transactions` array is no longer returned on the product
+  list (V1 always returned an empty `[]`). Use `GET /hl/v2/products/{uuid}/transactions` for
+  transaction data.
+- **Paid transactions** — the item gains `transactionId` (alias of `paymentLinkTransactionId`) and
+  `amount` (alias of `credit`). All V1 fields are still present.
+- **Installment create / detail** — `createdAt` is now an ISO 8601 string. The response adds
+  `amount`, `totalInterest`, `totalAmount`, `description`, `customer`, and `status`; invoice lines
+  now expose `dueDate` (mapped from the old `expiredAt`) and `paymentUrl`, and drop `customerId`,
+  `customer`, `category`, and `description`. The detail response no longer returns `paymentLinkId`,
+  `updatedAt`, `userId`, or `paymentLink`.
+- **Membership member read** — the new by-id read `GET /hl/v2/memberships/members/{memberId}` returns a
+  richer object: the flattened `customerEmail`/`customerName`/`customerMobile` become a nested
+  `customer { id, email, name, mobile }`, and it adds `paymentLink`, `membershipTier`, and
+  status/trial fields.
+- **QR create** — the `data` object adds `qrString`; the success message is lowercased to
+  `"success"`.
+
+## 8. Status codes and errors
+
+V1 pages document almost no error responses. V2 consistently documents:
+
+| Code | Meaning |
+|---|---|
+| `400` | Validation error or an invalid operation |
+| `401` | Missing or invalid API key, or the resource belongs to another account |
+| `404` | The resource does not exist |
+| `409` | Conflict — for example the resource already exists, or a transaction is already paid |
+| `429` | Rate limited (see [Rate Limit](/api-reference-v2/rate-limit)) |
+| `500` | Server error |
+
+In most cases the HTTP status matches the `statusCode` field, but not always: some V2 write
+endpoints return HTTP `200` with a non-200 `statusCode` in the body (for example the product and
+payment status action). **Treat the body `statusCode` as authoritative.** Two behavior changes worth
+noting:
+
+- **Coupon validate** now distinguishes a missing coupon (`404 "Gagal! Kode diskon ini tidak
+  ditemukan."`) from a coupon that exists but is not applicable (`400`).
+- Some V2 write endpoints return `messages` (plural) on success but `message` (singular) on
+  membership/SaaS writes. Don't assume a single key across all endpoints.
+
+## 9. Removed or moved endpoints
+
+The following V1 calls are no longer drop-in compatible in V2:
+
+- The V1 `GET`-based close/reopen pattern for **products**, **payment requests**, and **invoices** is
+  replaced by `POST /hl/v2/products/{uuid}/{action}` and `POST /hl/v2/payments/{uuid}/{action}`.
+  Invoices are payment links, so the generic product action endpoint applies to them too. Use
+  `active`, `closed`, or `unlisted`; `open`/`close` are still accepted as aliases.
+
+The standalone V1 pages `GET /hl/v1/product?search=` and `GET /hl/v1/payment?status=` are not
+separate endpoints in V2 — the same filters are query parameters on `GET /hl/v2/products` and
+`GET /hl/v2/payments`.
+
+## 10. Migration checklist
+
+- [ ] Replace the base URL `/hl/v1` with `/hl/v2` (and `/credit/v1` → `/credit/v2`,
+      `/saas/v1/license` → `/saas/v2/license`).
+- [ ] Rewrite every list call to cursor pagination: `limit` + `startingAfter`, loop on `hasMore`,
+      and stop when `hasMore` is `false`. Set `limit` no higher than `50`.
+- [ ] Stop reading `page`, `pageSize`, `pageCount`, and `total` from list responses.
+- [ ] Update renamed paths and change V1 `GET` close/open calls to V2 `POST` status actions.
+- [ ] Update request bodies: send `id` via the path for invoice/payment/product edits, use the new
+      webhook retry body, and update the customer update to `POST /hl/v2/customers/{uuid}/update`
+      with `toEmail`.
+- [ ] Update parsers for changed response fields (product list, installments, membership member
+      detail, transactions).
+- [ ] Handle the documented `400`/`401`/`404`/`409`/`429` error responses.
+- [ ] Replace the V1 close/reopen calls described in section 9 with the V2 `POST .../{action}`
+      endpoints.
+- [ ] Re-test against the sandbox base URL `https://api.mayar.io/hl/v2` before switching production.
