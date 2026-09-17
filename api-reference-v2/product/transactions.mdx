@@ -4,6 +4,18 @@ openapi: "GET /endpointproductv2/transactions"
 description: "Endpoint where you can get the transactions of a product"
 ---
 
+<Note>
+  This endpoint returns the product's **balance history** rows — the same source
+  as `GET /hl/v2/transactions` — not checkout attempts. `id` is the balance
+  history row id, the nominal is `credit` (with an `amount` alias), and
+  successful payments have `status: "settled"`.
+</Note>
+
+<Note>
+  `total` is the number of successful transactions for the product: all-time, or
+  scoped to the `startAt`/`endAt` range when those are provided.
+</Note>
+
 <RequestExample>
 
 ```bash Request Example
@@ -19,45 +31,57 @@ curl --request GET 'https://api.mayar.id/hl/v2/products/6f8c19ff-5b97-4792-aa89-
 {
     "statusCode": 200,
     "messages": "success",
+    "total": 1,
     "data": [
         {
-            "id": "b2c3d4e5-f6a7-8901-bcde-f23456789012",
-            "createdAt": 1768375011056,
-            "type": "CHILD",
+            "id": "a1b2c3d4-e5f6-4789-a012-3456789abcde",
+            "transactionId": "b2c3d4e5-f6a7-4890-b123-456789abcdef",
+            "credit": 150000,
             "amount": 150000,
-            "status": "created",
-            "urlParamTrackingData": null,
+            "status": "settled",
+            "balanceHistoryType": "membership",
+            "paymentMethod": "QRIS",
+            "customerId": "c3d4e5f6-a7b8-4901-c234-56789abcdef0",
+            "createdAt": 1768375011056,
+            "paymentLinkTransactionId": "b2c3d4e5-f6a7-4890-b123-456789abcdef",
+            "fee": [
+                {
+                    "id": "d4e5f6a7-b8c9-4012-d345-6789abcdef01",
+                    "balanceHistoryType": "xendit_fee",
+                    "debit": 6
+                },
+                {
+                    "id": "e5f6a7b8-c9d0-4123-e456-789abcdef012",
+                    "balanceHistoryType": "mayar_fee",
+                    "debit": 53
+                }
+            ],
             "paymentLinkId": "6f8c19ff-5b97-4792-aa89-d2a12797b356",
-            "customerId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+            "subscriptionId": null,
+            "xenditTransactionId": null,
+            "subscription": null,
+            "paymentLinkTransaction": {
+                "id": "b2c3d4e5-f6a7-4890-b123-456789abcdef",
+                "urlParamTrackingData": null,
+                "isAdminFeeBorneByCustomer": true,
+                "isChannelFeeBorneByCustomer": true
+            },
             "customeField": null,
             "customer": {
-                "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-                "email": "budi.santoso@example.com",
+                "id": "c3d4e5f6-a7b8-4901-c234-56789abcdef0",
                 "name": "Budi Santoso",
+                "email": "budi.santoso@example.com",
                 "mobile": "081234567890"
             },
             "paymentLink": {
                 "id": "6f8c19ff-5b97-4792-aa89-d2a12797b356",
-                "type": "generic_link",
-                "category": null,
-                "createdAt": 1768375011056,
-                "description": "<p>Jasa pembuatan website company profile.</p>\n",
-                "link": "jasa-pembuatan-website",
-                "name": "Jasa Pembuatan Website",
-                "redirectUrl": null,
-                "userId": "348e083d-315a-4e5c-96b1-5a2a98c48413",
-                "coverImageId": "2529541f-dc98-4ca0-93bb-3c1d35a8dd07",
-                "multipleImageId": null,
-                "coverImage": null,
-                "multipleImage": null
+                "name": "Membership Premium 2026"
             },
-            "productName": "Jasa Pembuatan Website",
-            "productType": "generic_link",
-            "productLink": "jasa-pembuatan-website"
+            "xenditTransaction": null
         }
     ],
     "hasMore": false,
-    "nextStartingAfter": "1768375011056"
+    "nextStartingAfter": null
 }
 ```
 
@@ -102,6 +126,17 @@ https://api.mayar.io/hl/v2/products/{id}/transactions?limit=10
   Filter transactions belonging to a specific customer.
 </ParamField>
 
+<ParamField query="startAt" path="startAt" type="string">
+  Start of the date range to filter by. Accepts a Unix timestamp in milliseconds
+  or an ISO 8601 date/datetime (e.g. `1755993600000`, `2026-08-24`, or
+  `2026-08-24T00:00:00.000Z`).
+</ParamField>
+
+<ParamField query="endAt" path="endAt" type="string">
+  End of the date range to filter by. Accepts a Unix timestamp in milliseconds or
+  an ISO 8601 date/datetime.
+</ParamField>
+
 <ParamField query="fields" path="fields" type="string">
   Comma-separated list of fields to include in each transaction object. Use it to
   trim the payload to only the fields you need.
@@ -131,6 +166,11 @@ Successful Response
   Status message that describes the status code.
 </ResponseField>
 
+<ResponseField name="total" type="integer" >
+  Number of successful transactions for the product. All-time, or scoped to the
+  `startAt`/`endAt` range when provided (it does not follow other filters).
+</ResponseField>
+
 <ResponseField name="data" type="array of object">
   List of transactions for the product.
 </ResponseField>
@@ -146,58 +186,83 @@ Successful Response
 
 ### data Structure (Array Of Object)
 
-<ResponseField name="id" type="string" >
-  Unique identifier of the transaction.
+<ResponseField name="id" type="string<uuid>" >
+  Unique ID of the balance history row.
 </ResponseField>
 
-<ResponseField name="createdAt" type="number" >
-  Timestamp in milliseconds indicating when the transaction was created.
+<ResponseField name="transactionId" type="string<uuid>" >
+  Alias of `paymentLinkTransactionId` — the ID of the underlying payment link
+  transaction.
 </ResponseField>
 
-<ResponseField name="type" type="string" >
-  Transaction type.
+<ResponseField name="credit" type="integer" >
+  The amount of credit received from the transaction.
 </ResponseField>
 
 <ResponseField name="amount" type="integer" >
-  Transaction amount.
+  Alias of `credit` — the transaction nominal.
 </ResponseField>
 
 <ResponseField name="status" type="string" >
-  Current transaction status (e.g., `created`, `paid`, `expired`).
+  Balance history status (`settled` = completed/successful).
 </ResponseField>
 
-<ResponseField name="urlParamTrackingData" type="object | null">
-  URL parameter tracking data attached to the transaction, if any.
+<ResponseField name="balanceHistoryType" type="string" >
+  The transaction type (e.g. `generic_link`, `membership`, `digital_product`).
 </ResponseField>
 
-<ResponseField name="paymentLinkId" type="string" >
-  Identifier of the product (payment link) the transaction belongs to.
+<ResponseField name="paymentMethod" type="string" >
+  The payment method used.
 </ResponseField>
 
-<ResponseField name="customerId" type="string | null">
-  Identifier of the customer who made the transaction.
+<ResponseField name="customerId" type="string<uuid>" >
+  The unique ID of the customer who made the transaction.
 </ResponseField>
 
-<ResponseField name="customeField" type="object | null">
-  Custom field data captured at checkout, if any.
+<ResponseField name="createdAt" type="number (timestamp)" >
+  The transaction creation time in epoch format (ms).
 </ResponseField>
 
-<ResponseField name="customer" type="object | null">
-  Customer details associated with the transaction.
+<ResponseField name="paymentLinkTransactionId" type="string<uuid>" >
+  The ID of the underlying payment link transaction.
 </ResponseField>
 
-<ResponseField name="paymentLink" type="object | null">
-  Product (payment link) details associated with the transaction.
+<ResponseField name="fee" type="array of object" >
+  Additional fees applied to the transaction (empty if none).
 </ResponseField>
 
-<ResponseField name="productName" type="string" >
-  Name of the product the transaction belongs to.
+<ResponseField name="paymentLinkId" type="string<uuid>" >
+  The ID of the product (payment link) the transaction belongs to.
 </ResponseField>
 
-<ResponseField name="productType" type="string" >
-  Type of the product the transaction belongs to.
+<ResponseField name="subscriptionId" type="string | null" >
+  The subscription ID (if the transaction is a subscription).
 </ResponseField>
 
-<ResponseField name="productLink" type="string" >
-  Slug of the product the transaction belongs to.
+<ResponseField name="xenditTransactionId" type="string | null" >
+  The Xendit transaction ID (if using the Xendit gateway).
+</ResponseField>
+
+<ResponseField name="subscription" type="object | null" >
+  Subscription details (if any).
+</ResponseField>
+
+<ResponseField name="xenditTransaction" type="object | null" >
+  Xendit transaction details (if any).
+</ResponseField>
+
+<ResponseField name="paymentLinkTransaction" type="object" >
+  Object that stores transaction details related to the payment link.
+</ResponseField>
+
+<ResponseField name="customeField" type="object | null" >
+  Additional custom fields filled by the customer (if any).
+</ResponseField>
+
+<ResponseField name="customer" type="object" >
+  Customer data that made the transaction.
+</ResponseField>
+
+<ResponseField name="paymentLink" type="object" >
+  Payment link (product) information used for the transaction.
 </ResponseField>
