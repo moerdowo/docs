@@ -4,6 +4,14 @@ openapi: "GET /endpointproductv2/productpagewithfilter"
 description: "Endpoint where you can get your products with type filter"
 ---
 
+<Note>
+  **Need the total number of products?** This endpoint only returns the product
+  list and does **not** include a `total`. For aggregated statistics — product
+  count, customer count, transaction count, and TPV — use the
+  **[statistics endpoint](/api-reference-v2/statistics/statistics)**
+  (`GET /v2/statistics`) instead.
+</Note>
+
 <RequestExample>
 
 ```bash Request Example

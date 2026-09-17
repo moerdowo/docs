@@ -1,0 +1,90 @@
+---
+title: "Get Statistics"
+openapi: "GET /endpointstatisticsv2/statistics"
+description: "Endpoint to retrieve aggregated statistics (products, customers, and transactions) for your account"
+---
+
+<RequestExample>
+
+```bash Request Example
+curl --request GET 'https://api.mayar.id/hl/v2/statistics' \
+ --header 'Authorization: Bearer Paste-Your-API-Key-Here'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response Example 200
+{
+    "statusCode": 200,
+    "messages": "success",
+    "data": {
+        "totalProduct": 1567,
+        "totalCustomer": 6282,
+        "totalTransaction": 6025,
+        "tpvTransaction": 51087750000
+    }
+}
+```
+
+</ResponseExample>
+
+Endpoint:
+
+<CodeGroup>
+
+```Production Production
+https://api.mayar.id/hl/v2/statistics
+```
+
+```Sandbox Sandbox
+https://api.mayar.io/hl/v2/statistics
+```
+
+</CodeGroup>
+
+## Authorization
+
+<ResponseField name="Authorization" type="string" required>
+    Example:
+
+    `Authorization | Bearer Paste-Your-Api-Key-Here`
+</ResponseField>
+
+## Response
+
+Successful Response
+
+## Main Structure (Root)
+
+<ResponseField name="statusCode" type="integer">
+  Status code returned by the API.
+</ResponseField>
+
+<ResponseField name="messages" type="string">
+  Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  Aggregated statistics object for the authenticated account.
+</ResponseField>
+
+### data Structure (Object)
+
+<ResponseField name="data.totalProduct" type="number">
+  Total number of products (payment links) created by the account (all-time).
+</ResponseField>
+
+<ResponseField name="data.totalCustomer" type="number">
+  Total number of customers of the account (all-time).
+</ResponseField>
+
+<ResponseField name="data.totalTransaction" type="number">
+  Total number of successful transactions of the account (all-time).
+</ResponseField>
+
+<ResponseField name="data.tpvTransaction" type="number">
+  Total payment volume (sum of successful transaction amounts) of the account in
+  IDR (all-time).
+</ResponseField>

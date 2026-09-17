@@ -351,6 +351,12 @@
             ]
           },
           {
+            "group": "Statistics",
+            "pages": [
+              "api-reference-v2/statistics/statistics"
+            ]
+          },
+          {
             "group": "Customer",
             "pages": [
               "api-reference-v2/customer/getdetail",
