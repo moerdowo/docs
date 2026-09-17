@@ -110,6 +110,13 @@ https://api.mayar.io/hl/v2/payments/{uuId}/update
   Restrict the payment request to a specific payment method.
 </ParamField>
 
+<Note>
+  `paymentMethod` determines the payment code returned by the API (for example a
+  VA number or a QRIS payload) for that specific method. The Mayar checkout page
+  link (`link`) still follows the payment methods configured in your Mayar
+  settings.
+</Note>
+
 <ParamField path="cashtag" type="string">
   Cashtag associated with the payment request.
 </ParamField>
