@@ -38,6 +38,7 @@ curl --request GET 'https://api.mayar.id/hl/v2/transactions?limit=10' \
 {
     "statusCode": 200,
     "messages": "success",
+    "total": 6025,
     "data": [
         {
             "id": "025b0f2a-dbc0-46aa-ae5b-326cc394c6c1",
@@ -213,6 +214,12 @@ Successful Response
 
 <ResponseField name="messages" type="string" >
   Status message that describes the status code.
+</ResponseField>
+
+<ResponseField name="total" type="integer" >
+  Total number of successful transactions for the account. All-time, or scoped
+  to the `startAt`/`endAt` range when provided (it does not follow the other
+  filters).
 </ResponseField>
 
 <ResponseField name="data" type="array of object">

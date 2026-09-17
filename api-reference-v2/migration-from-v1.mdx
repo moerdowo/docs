@@ -63,7 +63,7 @@ Every V2 list endpoint uses **cursor pagination**. The V1 offset model no longer
 |---|---|---|
 | Request | `page`, `pageSize` | `limit`, `startingAfter` |
 | Default / max page size | `pageSize` default `10` | `limit` default `10`, **max `50`** |
-| Response — current page | `page`, `pageSize`, `pageCount` (+ `total`/`totalTransaction`/`totalCustomer` on some endpoints) | `page`/`pageSize`/`pageCount` **removed**. Some list endpoints still return `total` (customers) or `totalTransaction` (transactions), but those are **all-time** totals that do **not** follow the request filters/date range, and the product list returns no `total`. For aggregated totals use [`GET /hl/v2/statistics`](/api-reference-v2/statistics/statistics). |
+| Response — current page | `page`, `pageSize`, `pageCount` (+ `total`/`totalTransaction`/`totalCustomer` on some endpoints) | `page`/`pageSize`/`pageCount` **removed**. Some list endpoints still return a `total` (e.g. `/hl/v2/customers` and `/hl/v2/transactions`), but it is **all-time** and does **not** follow the request filters/date range, and the product list returns no `total`. For aggregated totals use [`GET /hl/v2/statistics`](/api-reference-v2/statistics/statistics). |
 | Response — next page | `hasMore` | `hasMore` |
 | Response — cursor | *none* | `nextStartingAfter` (string or `null`) |
 
@@ -344,9 +344,9 @@ universal — some write endpoints return only `{ statusCode, messages }`. Compa
   transaction data.
 - **Paid transactions** — the item gains `transactionId` (alias of `paymentLinkTransactionId`) and
   `amount` (alias of `credit`). All V1 fields are still present.
-- **List totals** — `total` (customers) and `totalTransaction` (transactions) are **all-time**
-  account totals; they do **not** follow the request filters or date range, and the product list
-  returns no `total`. For aggregated counts (products, customers, transactions) and TPV, use
+- **List totals** — `/hl/v2/customers` and `/hl/v2/transactions` return a `total` that is **all-time**
+  (it does **not** follow the request filters or date range), and the product list returns no
+  `total`. For aggregated counts (products, customers, transactions) and TPV, use
   [`GET /hl/v2/statistics`](/api-reference-v2/statistics/statistics).
 - **Installment create / detail** — `createdAt` is now an ISO 8601 string. The response adds
   `amount`, `totalInterest`, `totalAmount`, `description`, `customer`, and `status`; invoice lines
@@ -402,9 +402,9 @@ separate endpoints in V2 — the same filters are query parameters on `GET /hl/v
       `/saas/v1/license` → `/saas/v2/license`).
 - [ ] Rewrite every list call to cursor pagination: `limit` + `startingAfter`, loop on `hasMore`,
       and stop when `hasMore` is `false`. Set `limit` no higher than `50`.
-- [ ] Stop reading `page`, `pageSize`, and `pageCount` from list responses. If you used
-      `total`/`totalTransaction`/`totalCustomer`, note they are **all-time** (not filter-aware) or
-      absent (product list) — use `GET /hl/v2/statistics` for aggregated totals.
+- [ ] Stop reading `page`, `pageSize`, and `pageCount` from list responses. If you relied on list
+      totals, note they are **all-time** (not filter-aware) or absent (product list) — in V2 the
+      field is `total`; use `GET /hl/v2/statistics` for aggregated totals.
 - [ ] Update renamed paths and change V1 `GET` close/open calls to V2 `POST` status actions.
 - [ ] Update request bodies: send `id` via the path for invoice/payment/product edits, use the new
       webhook retry body, and update the customer update to `POST /hl/v2/customers/{uuid}/update`
