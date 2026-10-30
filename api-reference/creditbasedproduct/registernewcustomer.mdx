@@ -9,6 +9,7 @@ description: "This endpoint is used to register new customers into the membershi
 ```bash Request Example
 curl --request POST 'https://api.mayar.id/credit/v1/credit/credit-usage/customer/regist' \
 --header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--header 'Content-Type: application/json' \
 --data-raw '{
     "productId": "43eadce2-bc52-4e38-a832-93fb835f2a69",
     "trialCredit": 300, //optional

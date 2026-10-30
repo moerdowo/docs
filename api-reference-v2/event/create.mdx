@@ -14,6 +14,7 @@ not captured from a live prod write. Creates a product of type `event`.
 ```bash Request Example
 curl --request POST 'https://api.mayar.id/hl/v2/products/event/create' \
 --header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--header 'Content-Type: application/json' \
 --data-raw '{
         "name": "Bootcamp Coding Fullstack Asix",
         "description": "Workshop fullstack development 2 hari",

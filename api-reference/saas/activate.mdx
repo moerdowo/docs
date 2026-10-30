@@ -9,6 +9,7 @@ description: "Endpoint to activate a license by providing the license code and p
 ```bash Request Example
 curl --request POST 'https://api.mayar.id/saas/v1/license/activate' \
 --header 'Authorization: Bearer YOUR-TOKEN-API' \
+--header 'Content-Type: application/json' \
 --data '{
     "licenseCode":  "YOUR-LICENSE-CODE",
     "productId":  "YOUR-PRODUCT-ID"

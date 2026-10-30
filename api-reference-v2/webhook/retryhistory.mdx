@@ -16,6 +16,7 @@ description: "Endpoint retry your webhook history data"
 ```bash Request Example
 curl --request POST 'https://api.mayar.id/hl/v2/webhooks/retry' \
 --header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--header 'Content-Type: application/json' \
 --data '{
     "webhookHistoryId": "a1b2c3d4-e5f6-4789-a012-3456789abcde"
 }'

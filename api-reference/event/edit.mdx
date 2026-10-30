@@ -8,7 +8,8 @@ description: "Endpoint used to edit event product"
 
 ```bash Request Example
 curl --request POST 'https://api.mayar.id/hl/v1/product/event/create'\
---header 'Authorization: Bearer Paste-Your-API-Key-Here'\
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--header 'Content-Type: application/json' \
 --data-raw '{
         "id": "7f992557-8791-41b5-a1c8-c5641c3e72b5",
         "name": "Bootcamp Coding Fullstack Asix Editan",

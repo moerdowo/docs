@@ -14,6 +14,7 @@ not captured from a live prod write. Creates a product of type `webinar`.
 ```bash Request Example
 curl --request POST 'https://api.mayar.id/hl/v2/products/webinar/create' \
 --header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--header 'Content-Type: application/json' \
 --data-raw '{
         "name": "Webinar Belajar Crypto Untuk Pemula",
         "description": "Belajar dulu",

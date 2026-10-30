@@ -19,6 +19,7 @@ description: "Endpoint used to update an existing name service (power-up store) 
 ```bash Request Example
 curl --request POST 'https://api.mayar.id/hl/v2/name-services/update' \
 --header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--header 'Content-Type: application/json' \
 --data-raw '{
     "id": "a1b2c3d4-e5f6-4789-a012-3456789abcde",
     "name": "Premium Newsletter",

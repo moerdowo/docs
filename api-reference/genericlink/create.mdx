@@ -8,7 +8,8 @@ description: "Endpoint used to create generic link product"
 
 ```bash Request Example
 curl --request POST 'https:api.mayar.id//hl/v1/product/paymentlink/create'\
---header 'Authorization: Bearer Paste-Your-API-Key-Here'\
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--header 'Content-Type: application/json' \
 --data-raw'{
         "name": "Jasa Buat Website Kece",
         "description": "Untuk testing API",

@@ -15,6 +15,7 @@ ignored. `messages` is PLURAL on this endpoint. */}
 ```bash Request Example
 curl --request POST 'https://api.mayar.id/hl/v2/products/payment-link/21d84338-b46d-42d7-9b49-d402520407a5/update' \
 --header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--header 'Content-Type: application/json' \
 --data-raw '{
         "id": "21d84338-b46d-42d7-9b49-d402520407a5",
         "name": "Jasa Buat Website Kece Editan",

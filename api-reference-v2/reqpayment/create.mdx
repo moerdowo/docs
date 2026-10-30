@@ -20,6 +20,7 @@ PLURAL on this endpoint (this group never uses singular `message`). */}
 ```bash Request Example
 curl --request POST 'https://api.mayar.id/hl/v2/payments/create' \
 --header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--header 'Content-Type: application/json' \
 --data-raw '{
         "name": "Penagihan",
         "amount": 100000,

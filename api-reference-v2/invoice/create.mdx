@@ -20,6 +20,7 @@ invoice's id, transactionId, public link, expiry, and any echoed extraData.
 ```bash Request Example
 curl --request POST 'https://api.mayar.id/hl/v2/invoices/create' \
 --header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--header 'Content-Type: application/json' \
 --data-raw '{
         "name": "Budi Santoso",
         "email": "budi.santoso@example.com",

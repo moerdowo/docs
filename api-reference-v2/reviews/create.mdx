@@ -19,6 +19,7 @@ description: "Endpoint to create a review on behalf of a customer who purchased 
 ```bash Request Example
 curl --request POST 'https://api.mayar.id/hl/v2/reviews/create' \
 --header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--header 'Content-Type: application/json' \
 --data-raw '{
     "paymentLinkId": "e2b3f5d5-0c62-47ba-8a01-6c1c209e0f77",
     "customerEmail": "budi.santoso@example.com",

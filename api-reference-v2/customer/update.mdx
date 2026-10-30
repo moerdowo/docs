@@ -9,6 +9,7 @@ description: "Endpoint is used to update customer email."
 ```bash Request Example
 curl --request POST 'https://api.mayar.id/hl/v2/customers/c3f8a1b2-4d5e-6f70-8a9b-0c1d2e3f4a5b/update' \
 --header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--header 'Content-Type: application/json' \
 --data-raw '{
     "toEmail": "budi.santoso.new@example.com"
 }

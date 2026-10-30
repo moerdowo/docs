@@ -8,7 +8,8 @@ description: "Endpoint to create webinar product"
 
 ```bash Request Example
 curl --request POST 'https://api.mayar.id/hl/v1/product/webinar/create'\
---header 'Authorization: Bearer Paste-Your-API-Key-Here'\
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--header 'Content-Type: application/json' \
 --data-raw '{
         "name": "Webinar Belajar Crypto Untuk Pemula",
         "description": "Belajar dulu",

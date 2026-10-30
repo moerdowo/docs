@@ -15,6 +15,7 @@ ignored by the API. `messages` is PLURAL on this endpoint. */}
 ```bash Request Example
 curl --request POST 'https://api.mayar.id/hl/v2/invoices/6f8c19ff-5b97-4792-aa89-d2a12797b356/update' \
 --header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--header 'Content-Type: application/json' \
 --data-raw '{
         "id": "6f8c19ff-5b97-4792-aa89-d2a12797b356",
         "description": "Invoice yang sudah diedit",

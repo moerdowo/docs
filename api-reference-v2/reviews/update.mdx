@@ -19,6 +19,7 @@ description: "Endpoint to update an existing review and its media attachments"
 ```bash Request Example
 curl --request POST 'https://api.mayar.id/hl/v2/reviews/11f4d767-4d88-41ff-8777-06564d906fe7/update' \
 --header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--header 'Content-Type: application/json' \
 --data-raw '{
     "id": "11f4d767-4d88-41ff-8777-06564d906fe7",
     "paymentLinkId": "e2b3f5d5-0c62-47ba-8a01-6c1c209e0f77",

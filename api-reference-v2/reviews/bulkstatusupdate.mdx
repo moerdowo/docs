@@ -19,6 +19,7 @@ description: "Endpoint to update the status of multiple reviews in a single requ
 ```bash Request Example
 curl --request POST 'https://api.mayar.id/hl/v2/reviews/bulk-status/update' \
 --header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--header 'Content-Type: application/json' \
 --data-raw '{
     "input": [
         {
