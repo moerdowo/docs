@@ -8,7 +8,8 @@ description: "Endpoint used to edit digital product"
 
 ```bash Request Example
 curl --request POST 'https://api.mayar.id/hl/v1/product/digital-product/edit'\
---header 'Authorization: Bearer Paste Your-API-Key-Here'\
+--header 'Authorization: Bearer Paste Your-API-Key-Here' \
+--header 'Content-Type: application/json' \
 --data-raw '{
         "id": "6894b1b2-f303-423b-a6b6-93e230e1d393",
         "name": "E-Book Panduan Bisnis Untuk Pemula Editan",

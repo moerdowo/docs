@@ -15,6 +15,7 @@ description: "Endpoint used to validate whether a coupon code can be applied to 
 ```bash Request Example
 curl --request POST 'https://api.mayar.id/hl/v2/coupons/validate' \
 --header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--header 'Content-Type: application/json' \
 --data '{
     "couponCode": "HARIBAIK",
     "paymentLinkId": "4d26ea37-d093-4b92-8f5f-0faec64d65b0",

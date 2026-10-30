@@ -9,6 +9,7 @@ description: "Endpoint to verify license by providing license code and product I
 ```bash Request Example
 curl --request POST 'https://api.mayar.id/saas/v1/license/verify' \
 --header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--header 'Content-Type: application/json' \
 --data '{
     "licenseCode": "YOUR-LICENSE-CODE",
     "productId": "YOUR-PRODUCT-ID"

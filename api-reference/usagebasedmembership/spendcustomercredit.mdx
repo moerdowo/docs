@@ -9,6 +9,7 @@ description: "This endpoint is used to spend a specified amount of credit from a
 ```bash Request Example
 curl --request POST 'https://api.mayar.id/credit/v1/credit/customer/spend' \
 --header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--header 'Content-Type: application/json' \
 --data '{
     "memberId" : "KKGOL1MV", // optionally mandatory
     "productId": "40f26fbe-f4d8-4693-975f-e6d105d291e6",

@@ -18,6 +18,7 @@ description: "Endpoint used to create a name service (power-up store) entry"
 ```bash Request Example
 curl --request POST 'https://api.mayar.id/hl/v2/name-services/create' \
 --header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--header 'Content-Type: application/json' \
 --data-raw '{
     "name": "Premium Newsletter",
     "description": "Monthly premium newsletter access",

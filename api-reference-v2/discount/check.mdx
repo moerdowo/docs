@@ -15,6 +15,7 @@ description: "Endpoint used to check how many times a coupon has been used and h
 ```bash Request Example
 curl --request POST 'https://api.mayar.id/hl/v2/coupons/check' \
 --header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--header 'Content-Type: application/json' \
 --data '{
     "couponCode": "HARIBAIK"
 }'

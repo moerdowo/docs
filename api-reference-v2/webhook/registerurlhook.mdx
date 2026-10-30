@@ -17,6 +17,7 @@ description: "Endpoint to register your URL Hook for Webhook"
 ```bash Request Example
 curl --request POST 'https://api.mayar.id/hl/v2/webhooks/update' \
 --header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--header 'Content-Type: application/json' \
 --data '{
     "urlHook": "https://webhook.example.com"
 }'

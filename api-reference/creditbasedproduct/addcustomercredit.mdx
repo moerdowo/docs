@@ -9,6 +9,7 @@ description: "This endpoint is used to add credit to a customer’s on particula
 ```bash Request Example
 curl --request POST 'https://api.mayar.id/credit/v1/credit/customer/add-credit' \
 --header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--header 'Content-Type: application/json' \
 --data '{
     "customerId": "9de4b4b4-525c-4ee0-ac9c-b29c3e10fe55",
     "productId": "40f26fbe-f4d8-4693-975f-e6d105d291e6",

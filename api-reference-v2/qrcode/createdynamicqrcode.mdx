@@ -22,6 +22,7 @@ description: "Endpoint used to create a dynamic QRIS code for a specific amount"
 ```bash Request Example
 curl --request POST 'https://api.mayar.id/hl/v2/qr-codes/create' \
 --header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--header 'Content-Type: application/json' \
 --data-raw '{
     "amount": 10000
 }'

@@ -8,7 +8,8 @@ description: "Endpoint used to edit webinar product"
 
 ```bash Request Example
 curl --request POST 'https://api.mayar.id/hl/v1/product/webinar/edit`\
---header 'Authorization: Bearer Paste-Your-API-Key-Here'\
+--header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--header 'Content-Type: application/json' \
 --data-raw '{
         "id": "3f4fc3fd-10dc-4a97-b54c-7632881858cb",
         "name": "Webinar Belajar Crypto Untuk Pemula",

@@ -14,6 +14,7 @@ request body as POST /products/create. `messages` is PLURAL on this endpoint. */
 ```bash Request Example
 curl --request POST 'https://api.mayar.id/hl/v2/products/payment-link/create' \
 --header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--header 'Content-Type: application/json' \
 --data-raw '{
         "name": "Jasa Buat Website Kece",
         "description": "Untuk testing API",

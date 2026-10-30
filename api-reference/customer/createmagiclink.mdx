@@ -9,6 +9,7 @@ description: "Endpoint to create magic link and send to customer email for their
 ```bash Request Example
 curl --request POST 'https://api.mayar.id/hl/v1/customer/login/portal' \
 --header 'Authorization: Bearer Paste-Your-API-Key-Here' \
+--header 'Content-Type: application/json' \
 --data-raw '{
     	"email": "mraihannanewpatch@gmail.com"
 	}
